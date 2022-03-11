@@ -53,6 +53,7 @@ model penilaian {
   acc_kinerja_bulanan acc_kinerja_bulanan[]
   kinerja_bulanan     kinerja_bulanan[]
   target_penilaian    target_penilaian[]
+  pekerjaan_tambahan  String[]
 }
 
 model ref_satuan_kinerja {

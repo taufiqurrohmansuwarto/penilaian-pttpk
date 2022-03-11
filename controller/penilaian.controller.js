@@ -9,9 +9,15 @@ const get = async (req, res) => {
   const { id } = req.query;
   const result = await prisma.penilaian.findUnique({
     where: {
-      id,
+      id: parseInt(id),
+    },
+    include: {
+      acc_kinerja_bulanan: true,
+      kinerja_bulanan: true,
+      target_penilaian: true,
     },
   });
+  console.log(result);
   res.json(result);
 };
 
@@ -35,10 +41,39 @@ const remove = async (req, res) => {
   });
 };
 
+const active = async (req, res) => {
+  const { id } = req.query;
+  await prisma.$transaction([
+    prisma.penilaian.update({
+      data: {
+        aktif: true,
+      },
+      where: {
+        id,
+      },
+    }),
+    prisma.penilaian.updateMany({
+      data: {
+        aktif: false,
+      },
+      where: {
+        NOT: {
+          id: {
+            notIn: id,
+          },
+        },
+      },
+    }),
+  ]);
+
+  res.json({ code: 200, message: "success" });
+};
+
 export default {
   index,
   get,
   create,
   update,
   remove,
+  active,
 };
