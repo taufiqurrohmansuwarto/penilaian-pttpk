@@ -35,3 +35,11 @@
 .row > img {
   margin-right: 15px;
 }
+
+.rbc-month-view {
+      height: 100vh;
+}
+
+.rbc-calendar {
+    min-height: 580px;
+}
