@@ -1,7 +1,28 @@
 // next.config.js
 const withAntdLess = require("next-plugin-antd-less");
 
+// production
+const isProd = process.env.NODE_ENV === "production";
+
+function getBasePath() {
+  var basePath = "";
+
+  if (isProd && process.env.BASE_PATH) {
+    if (process.env.BASE_PATH.startsWith("/")) {
+      basePath = process.env.BASE_PATH;
+    } else {
+      basePath = "/" + process.env.BASE_PATH;
+    }
+  }
+
+  return basePath;
+}
+
 module.exports = withAntdLess({
+  basePath: "/pttpk-penilaian",
+  publicRuntimeConfig: {
+    basePath: getBasePath(),
+  },
   modifyVars: { "@primary-color": "#04f" }, // optional
   lessVarsFilePath: "./src/styles/variables.less", // optional
   lessVarsFilePathAppendToEndOfContent: false, // optional
