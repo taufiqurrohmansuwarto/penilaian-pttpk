@@ -3,14 +3,17 @@ import NextAuth from "next-auth/next";
 const masterClientId = process.env.MASTER_ID;
 const masterClientSecret = process.env.MASTER_SECRET;
 const masterWellKnown = process.env.MASTER_WELLKNOWN;
+const masterScope = process.env.MASTER_SCOPE;
 
 const pttpkClientId = process.env.PTTPK_ID;
 const pttpkClientSecret = process.env.PTTPK_SECRET;
 const pttpkWellKnowon = process.env.PTTPK_WELLKNOWN;
+const pttpkScope = process.env.PTTPK_SCOPE;
 
 const pttpkFasilitatorClientId = process.env.PTTPKFASILITATOR_ID;
 const pttpkFasilitatorClientSecret = process.env.PTTPKFASILITATOR_SECRET;
 const pttpkFasilitatorWellKnown = process.env.PTTPKFASILITATOR_WELLKNOWN;
+const pttpkFasilitatorScope = process.env.PTTPKFASILITATOR_SCOPE;
 
 export default NextAuth({
   pages: {
@@ -26,7 +29,7 @@ export default NextAuth({
       clientSecret: masterClientSecret,
       authorization: {
         params: {
-          scope,
+          scope: masterScope,
           prompt: "login",
         },
       },
@@ -59,7 +62,7 @@ export default NextAuth({
       clientSecret: pttpkClientSecret,
       authorization: {
         params: {
-          scope,
+          scope: pttpkScope,
           prompt: "login",
         },
       },
@@ -92,7 +95,7 @@ export default NextAuth({
       clientSecret: pttpkFasilitatorClientSecret,
       authorization: {
         params: {
-          scope,
+          scope: pttpkFasilitatorScope,
           prompt: "login",
         },
       },

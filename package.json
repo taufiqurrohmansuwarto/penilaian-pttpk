@@ -7,16 +7,19 @@
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",
+    "antd": "^4.19.2",
     "axios": "^0.26.1",
     "next": "^12.1.0",
     "next-auth": "^4.2.1",
     "next-connect": "^0.12.2",
+    "next-plugin-antd-less": "^1.8.0",
     "prisma": "^3.10.0",
     "react": "^17.0.2",
     "react-big-calendar": "^0.39.3",
     "react-dom": "^17.0.2",
-    "react-query": "^3.34.16",
-    "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^2.1.2"
+    "react-query": "^3.34.16"
+  },
+  "devDependencies": {
+    "babel-plugin-import": "^1.13.3"
   }
 }
