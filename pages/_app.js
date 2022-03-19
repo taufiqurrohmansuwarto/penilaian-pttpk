@@ -1,3 +1,4 @@
+import { Spin } from "antd";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
@@ -15,7 +16,16 @@ export default function MyApp({
     >
       <QueryClientProvider client={queryClient}>
         <Hydrate state={pageProps?.dehydrateState}>
-          {Component.Auth ? <Auth /> : <Component {...pageProps} />}
+          {Component.Auth ? (
+            <Auth
+              roles={Component?.Auth?.roles}
+              groups={Component?.Auth?.groups}
+            >
+              <Component {...pageProps} />
+            </Auth>
+          ) : (
+            <Component {...pageProps} />
+          )}
         </Hydrate>
       </QueryClientProvider>
     </SessionProvider>
@@ -29,7 +39,7 @@ function Auth({ children, roles, groups }) {
   });
 
   const currentRole = data?.user?.role;
-  const currentGroup = data?.user?.groupa;
+  const currentGroup = data?.user?.group;
 
   if (status === "loading") {
     return <Spin />;
@@ -37,11 +47,11 @@ function Auth({ children, roles, groups }) {
 
   if (
     data?.user &&
-    roles.includes(currentRole) &&
+    roles?.includes(currentRole) &&
     groups?.includes(currentGroup)
   ) {
     return children;
   } else {
-    return <div>error</div>;
+    return <div>404</div>;
   }
 }
