@@ -22,19 +22,24 @@ export default function MyApp({
   );
 }
 
-function Auth({ children, roles }) {
+function Auth({ children, roles, groups }) {
   const { data, status } = useSession({
     required: true,
     onUnauthenticated: () => signIn(),
   });
 
   const currentRole = data?.user?.role;
+  const currentGroup = data?.user?.groupa;
 
   if (status === "loading") {
     return <Spin />;
   }
 
-  if (data?.user && roles.includes(currentRole)) {
+  if (
+    data?.user &&
+    roles.includes(currentRole) &&
+    groups?.includes(currentGroup)
+  ) {
     return children;
   } else {
     return <div>error</div>;

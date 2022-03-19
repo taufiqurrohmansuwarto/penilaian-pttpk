@@ -1,7 +1,12 @@
-import Layout from "../../src/components/Layout";
+import { Button } from "antd";
 
-const DashboardUser = () => {
-  return <Layout></Layout>;
+const Dashboard = () => {
+  return (
+    <div>
+      Dashboard fasilitator
+      <Button>hello world</Button>
+    </div>
+  );
 };
 
-export default DashboardUser;
+export default Dashboard;

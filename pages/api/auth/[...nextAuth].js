@@ -1,5 +1,7 @@
 import NextAuth from "next-auth/next";
 
+const jsonwebtoken = require("jsonwebtoken");
+
 const masterClientId = process.env.MASTER_ID;
 const masterClientSecret = process.env.MASTER_SECRET;
 const masterWellKnown = process.env.MASTER_WELLKNOWN;
@@ -9,8 +11,6 @@ const pttpkClientId = process.env.PTTPK_ID;
 const pttpkClientSecret = process.env.PTTPK_SECRET;
 const pttpkWellKnowon = process.env.PTTPK_WELLKNOWN;
 const pttpkScope = process.env.PTTPK_SCOPE;
-
-console.log(pttpkWellKnowon, pttpkScope);
 
 const pttpkFasilitatorClientId = process.env.PTTPKFASILITATOR_ID;
 const pttpkFasilitatorClientSecret = process.env.PTTPKFASILITATOR_SECRET;
@@ -121,7 +121,8 @@ export default NextAuth({
   ],
   callbacks: {
     redirect: async (url, baseUrl) => {
-      return Promise.resolve(`${url?.baseUrl}${process.env.BASE_PATH}`);
+      const urlCallback = `${url?.baseUrl}${process.env.BASE_PATH}`;
+      return urlCallback;
     },
     async session({ session, token, user }) {
       session.accessToken = token.accessToken;
