@@ -13,7 +13,8 @@ export const getUnor = () => {
   return fetcher.get("/user/unor").then((res) => res?.data);
 };
 
-//  create penialain tahunana
+//  penilaian
+
 export const getPenilaian = () => {
   return fetcher.get("/user/penilaian").then((res) => res?.data);
 };
@@ -31,6 +32,12 @@ export const buatPenilaian = (data) => {
 export const aktifPenilaian = (id) => {
   return fetcher.put(`/user/penilaian/${id}`).then((res) => res?.data);
 };
+
+export const detailPenilaian = (id) => {
+  return fetcher.get(`/user/penilaian/${id}`).then((res) => res?.data);
+};
+
+// end of penilaian
 
 // crate penilaain bulanan
 export const getPenilaianBulanan = () => {};

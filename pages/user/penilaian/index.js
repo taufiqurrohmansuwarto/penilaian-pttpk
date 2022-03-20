@@ -10,6 +10,7 @@ import {
 const Penilaian = () => {
   const createPenilaian = () => router.push("/user/penilaian/create");
   const router = useRouter();
+
   const { data, isLoading } = useQuery("penilaian", () => getPenilaian());
   const queryClient = useQueryClient();
 
@@ -30,6 +31,7 @@ const Penilaian = () => {
 
   const handleRemove = (id) => hapusMutation.mutate(id);
   const handleUpdate = (id) => aktifMutation.mutate(id);
+  const gotoDetail = (id) => router.push(`/user/penilaian/${id}/detail`);
 
   const columns = [
     { dataIndex: "tahun", title: "Tahun" },
@@ -38,6 +40,7 @@ const Penilaian = () => {
       title: "Aksi",
       render: (_, row) => (
         <Space>
+          <Button onClick={() => gotoDetail(row?.id)}>Detial</Button>
           <Button
             loading={aktifMutation.isLoading}
             onClick={async () => await handleUpdate(row?.id)}

@@ -19,11 +19,12 @@ const index = async (req, res) => {
 
 const get = async (req, res) => {
   const { id } = req.query;
-  console.log(req.user);
+  const { userId } = req.user;
 
-  const result = await prisma.penilaian.findUnique({
+  const result = await prisma.penilaian.findFirst({
     where: {
       id: parseInt(id),
+      id_ptt: userId,
     },
     include: {
       acc_kinerja_bulanan: true,
