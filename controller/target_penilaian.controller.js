@@ -23,24 +23,83 @@ const index = async (req, res) => {
   }
 };
 
-const detail = async (req, res) => {};
+const detail = async (req, res) => {
+  const { id } = req.query;
+  const { userId } = req.user;
+  try {
+    const result = prisma.target_penilaian.findFirst({
+      where: {
+        id_penilaian: parseInt(id),
+        penilaian: {
+          id_ptt: userId,
+        },
+      },
+    });
+    res.json(result);
+  } catch (error) {
+    console.log(error);
+    res.json({ code: 400, message: "Internal Server Error" });
+  }
+};
 
 const create = async (req, res) => {
   const { id } = req.query;
-  const { userId } = rq.query;
+  const { userId } = req.user;
   const { body } = req;
-  const data = { ...body, id_ptt: userId };
+  const data = { ...body, id_ptt: userId, id_penilaian: parseInt(id) };
 
   try {
-    const result = await prisma.target_penilaian.create({
+    await prisma.target_penilaian.create({
       data,
     });
-  } catch (error) {}
+    res.json({ code: 200, message: "success" });
+  } catch (error) {
+    res.json({ code: 400, message: "Internal Server Errror" });
+    console.log(error);
+  }
 };
 
-const update = async (req, res) => {};
+const update = async (req, res) => {
+  const { id } = req.query;
+  const { userId } = req.user;
+  const { body } = req;
+  const data = { ...body, id_ptt: userId, id_penilaian: parseInt(id) };
 
-const remove = async (req, res) => {};
+  try {
+    await prisma.target_penilaian.updateMany({
+      data,
+      where: {
+        id: parseInt(id),
+        penilaian: {
+          id_ptt: userId,
+        },
+      },
+    });
+    res.json({ code: 200, message: "success" });
+  } catch (error) {
+    console.log(error);
+    res.json({ code: 400, message: "Internal Server Error" });
+  }
+};
+
+const remove = async (req, res) => {
+  const { id } = req.query;
+  const { userId } = req.user;
+
+  try {
+    await prisma.target_penilaian.deleteMany({
+      where: {
+        id: parseInt(id),
+        penilaian: {
+          id_ptt: userId,
+        },
+      },
+    });
+    res.json({ code: 200, message: "success" });
+  } catch (error) {
+    res.json({ code: 400, message: "Internal Server Error" });
+  }
+};
 
 export default {
   index,
