@@ -6,4 +6,4 @@ const handler = nc();
 export default handler
   .use(auth)
   .patch(target_penilaianController.update)
-  .remove(target_penilaianController.remove);
+  .delete(target_penilaianController.remove);

@@ -37,7 +37,27 @@ export const detailPenilaian = (id) => {
   return fetcher.get(`/user/penilaian/${id}`).then((res) => res?.data);
 };
 
-// end of penilaian
+// target penilaian
+export const getTargetPenilaian = (id) =>
+  fetcher.get(`/user/penilaian/${id}/target`).then((res) => res?.data);
+
+export const createTargetPenilaian = ({ data, id }) =>
+  fetcher.post(`/user/penilaian/${id}/target`, data).then((res) => res?.data);
+
+export const updateTargetPenilaian = ({ data, id, targetId }) =>
+  fetcher
+    .patch(`/user/penilaian/${id}/target/${targetId}`, data)
+    .then((res) => res?.data);
+
+export const detailTargetPenilaian = ({ id, targetId }) =>
+  fetcher
+    .get(`/user/penilaian/${id}/target/${targetId}`)
+    .then((res) => res?.data);
+
+export const removeTargetPenilaian = ({ id, targetId }) =>
+  fetcher
+    .delete(`/user/penilaian/${id}/target/${targetId}`)
+    .then((res) => res?.data);
 
 // crate penilaain bulanan
 export const getPenilaianBulanan = () => {};

@@ -32,7 +32,6 @@ const get = async (req, res) => {
       target_penilaian: true,
     },
   });
-  console.log(result);
   res.json(result);
 };
 

@@ -13,7 +13,10 @@ const index = async (req, res) => {
         },
       },
       include: {
-        penilaian: true,
+        ref_satuan_kinerja: true,
+      },
+      orderBy: {
+        created_at: "asc",
       },
     });
     res.json(result);
@@ -50,7 +53,21 @@ const create = async (req, res) => {
 
   try {
     await prisma.target_penilaian.create({
-      data,
+      data: {
+        kuantitas: data?.kuantitas,
+        pekerjaan: data?.pekerjaan,
+        id_ptt: userId,
+        ref_satuan_kinerja: {
+          connect: {
+            id: parseInt(data?.ref_satuan_kinerja_id),
+          },
+        },
+        penilaian: {
+          connect: {
+            id: parseInt(data?.id_penilaian),
+          },
+        },
+      },
     });
     res.json({ code: 200, message: "success" });
   } catch (error) {
@@ -60,7 +77,7 @@ const create = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { id } = req.query;
+  const { id, targetId } = req.query;
   const { userId } = req.user;
   const { body } = req;
   const data = { ...body, id_ptt: userId, id_penilaian: parseInt(id) };
@@ -69,10 +86,9 @@ const update = async (req, res) => {
     await prisma.target_penilaian.updateMany({
       data,
       where: {
-        id: parseInt(id),
-        penilaian: {
-          id_ptt: userId,
-        },
+        id: parseInt(targetId),
+        id_penilaian: parseInt(id),
+        id_ptt: userId,
       },
     });
     res.json({ code: 200, message: "success" });
@@ -83,15 +99,16 @@ const update = async (req, res) => {
 };
 
 const remove = async (req, res) => {
-  const { id } = req.query;
+  const { id, targetId } = req.query;
   const { userId } = req.user;
 
   try {
     await prisma.target_penilaian.deleteMany({
       where: {
-        id: parseInt(id),
+        id: parseInt(targetId),
         penilaian: {
           id_ptt: userId,
+          id: parseInt(id),
         },
       },
     });

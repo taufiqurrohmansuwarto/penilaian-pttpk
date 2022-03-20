@@ -2,7 +2,6 @@ import prisma from "../lib/prisma";
 
 const ref = async (req, res) => {
   const show = req.query?.show || "satuan";
-  console.log(show);
 
   try {
     if (show === "satuan") {
