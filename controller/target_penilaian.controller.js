@@ -25,7 +25,18 @@ const index = async (req, res) => {
 
 const detail = async (req, res) => {};
 
-const create = async (req, res) => {};
+const create = async (req, res) => {
+  const { id } = req.query;
+  const { userId } = rq.query;
+  const { body } = req;
+  const data = { ...body, id_ptt: userId };
+
+  try {
+    const result = await prisma.target_penilaian.create({
+      data,
+    });
+  } catch (error) {}
+};
 
 const update = async (req, res) => {};
 

@@ -14,4 +14,9 @@ const TargetTahunan = () => {
   return <div>{JSON.stringify(refSatuan)}</div>;
 };
 
+TargetTahunan.Auth = {
+  roles: ["USER"],
+  groups: ["PTTPK"],
+};
+
 export default TargetTahunan;
