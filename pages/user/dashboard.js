@@ -1,11 +1,17 @@
 import { Button } from "antd";
-import { signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Dashboard = () => {
+  const router = useRouter();
+
+  const gotoPenilaian = () => {
+    router.push("/user/penilaian");
+  };
+
   return (
     <div>
       Dashboard fasilitator
-      <Button onClick={signOut}>hello world</Button>
+      <Button onClick={gotoPenilaian}>hello world</Button>
     </div>
   );
 };

@@ -1,12 +1,26 @@
 import prisma from "../lib/prisma";
 
 const index = async (req, res) => {
-  const result = await prisma.penilaian.findMany();
-  res.json(result);
+  try {
+    const { userId } = req.user;
+    const result = await prisma.penilaian.findMany({
+      where: {
+        id_ptt: userId,
+      },
+      orderBy: {
+        tahun: "desc",
+      },
+    });
+    res.json(result);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const get = async (req, res) => {
   const { id } = req.query;
+  console.log(req.user);
+
   const result = await prisma.penilaian.findUnique({
     where: {
       id: parseInt(id),
@@ -22,51 +36,74 @@ const get = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const { body } = req;
-  await prisma.penilaian.create({
-    data: body,
-  });
-  res.json({ code: 200, message: "success" });
+  try {
+    const { body } = req;
+    const { userId } = req.user;
+    const data = { ...body, id_ptt: userId };
+
+    await prisma.penilaian.create({
+      data,
+    });
+
+    res.json({ code: 200, message: "success" });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const update = async (req, res) => {};
 
 const remove = async (req, res) => {
-  const { id } = req.query;
-  // should be end
-  await prisma.penilaian.delete({
-    where: {
-      id,
-    },
-  });
+  try {
+    const { id } = req.query;
+    const { userId } = req.user;
+    // should be end
+    await prisma.penilaian.deleteMany({
+      where: {
+        id: parseInt(id),
+        id_ptt: userId,
+      },
+    });
+    res.json({ code: 200, message: "succes" });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const active = async (req, res) => {
-  const { id } = req.query;
-  await prisma.$transaction([
-    prisma.penilaian.update({
-      data: {
-        aktif: true,
-      },
-      where: {
-        id,
-      },
-    }),
-    prisma.penilaian.updateMany({
-      data: {
-        aktif: false,
-      },
-      where: {
-        NOT: {
-          id: {
-            notIn: id,
-          },
+  try {
+    const { id } = req.query;
+    const currentId = parseInt(id, 10);
+    const { userId } = req.user;
+    await prisma.$transaction([
+      prisma.penilaian.updateMany({
+        data: {
+          aktif: true,
         },
-      },
-    }),
-  ]);
+        where: {
+          id: currentId,
+          id_ptt: userId,
+        },
+      }),
+      prisma.penilaian.updateMany({
+        data: {
+          aktif: false,
+        },
+        where: {
+          NOT: {
+            id: {
+              in: currentId,
+            },
+          },
+          id_ptt: userId,
+        },
+      }),
+    ]);
 
-  res.json({ code: 200, message: "success" });
+    res.json({ code: 200, message: "success" });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export default {

@@ -1,5 +1,6 @@
-import { Spin } from "antd";
-import { SessionProvider, useSession } from "next-auth/react";
+import { ConfigProvider, Spin } from "antd";
+import id from "antd/lib/locale/id_ID";
+import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 
@@ -8,6 +9,7 @@ export default function MyApp({
   pageProps: { session, ...pageProps },
 }) {
   const [queryClient] = useState(() => new QueryClient());
+
   return (
     <SessionProvider
       basePath="/pttpk-penilaian/api/auth"
@@ -15,18 +17,20 @@ export default function MyApp({
       session={session}
     >
       <QueryClientProvider client={queryClient}>
-        <Hydrate state={pageProps?.dehydrateState}>
-          {Component.Auth ? (
-            <Auth
-              roles={Component?.Auth?.roles}
-              groups={Component?.Auth?.groups}
-            >
+        <ConfigProvider locale={id}>
+          <Hydrate state={pageProps?.dehydrateState}>
+            {Component.Auth ? (
+              <Auth
+                roles={Component?.Auth?.roles}
+                groups={Component?.Auth?.groups}
+              >
+                <Component {...pageProps} />
+              </Auth>
+            ) : (
               <Component {...pageProps} />
-            </Auth>
-          ) : (
-            <Component {...pageProps} />
-          )}
-        </Hydrate>
+            )}
+          </Hydrate>
+        </ConfigProvider>
       </QueryClientProvider>
     </SessionProvider>
   );
