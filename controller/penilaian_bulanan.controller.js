@@ -12,25 +12,18 @@ const create = async (req, res) => {
     const { body } = req;
 
     try {
-        const result = await prisma.kinerja_bulanan.findFirst({
+        const result = await prisma.penilaian.findFirst({
             where: {
-                id_ptt: userId,
-                penilaian: {
-                    aktif: true,
-                    id_ptt: userId
-                }
+                aktif: true,
+                id_ptt: userId
             },
             select: {
-                penilaian: {
-                    select: {
-                        aktif: true,
-                        id: true
-                    }
-                }
+                id: true,
+                aktif: true
             }
         });
 
-        if (!result || !result.penilaian.aktif) {
+        if (!result || !result.aktif) {
             res.json({ code: 404, message: "Penilaian Belum aktif" });
         } else {
             const hasil = await prisma.kinerja_bulanan.create({
@@ -49,7 +42,7 @@ const create = async (req, res) => {
                     },
                     penilaian: {
                         connect: {
-                            id: result?.penilaian?.id
+                            id: result?.id
                         }
                     }
                 }
@@ -77,6 +70,9 @@ const index = async (req, res) => {
                     id_ptt: userId
                 }
             },
+            orderBy: {
+                created_at: "desc"
+            },
             select: {
                 id: true,
                 bulan: true,
@@ -86,6 +82,7 @@ const index = async (req, res) => {
                 start: true,
                 end: true,
                 created_at: true,
+                id_penilaian: true,
                 id_target_penilaian: true,
                 target_penilaian: {
                     select: {
