@@ -21,19 +21,21 @@ model acc_kinerja_bulanan {
 }
 
 model kinerja_bulanan {
-  id                    Int        @id @default(autoincrement())
-  id_penilaian          Int?
-  deskripsi_pekerjaan   String?
-  bulan                 Int?       @db.SmallInt
-  tahun                 Int?       @db.SmallInt
-  id_ptt                Int?
-  kuantitas             Int?
-  kualitas              Int?
-  tgl_mulai_pekerjaan   DateTime?  @db.Timestamp(6)
-  tgl_selesai_pekerjaan DateTime?  @db.Timestamp(6)
-  created_at            DateTime?  @default(now()) @db.Timestamp(6)
-  updated_at            DateTime?  @db.Timestamp(6)
-  penilaian             penilaian? @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
+  id                  Int               @id @default(autoincrement())
+  id_penilaian        Int?
+  id_target_penilaian Int?
+  title               String?
+  bulan               Int?              @db.SmallInt
+  tahun               Int?              @db.SmallInt
+  id_ptt              Int?
+  kuantitas           Int?
+  kualitas            Int?
+  start               DateTime?         @db.Timestamp(6)
+  end                 DateTime?         @db.Timestamp(6)
+  created_at          DateTime?         @default(now()) @db.Timestamp(6)
+  updated_at          DateTime?         @db.Timestamp(6)
+  penilaian           penilaian?        @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
+  target_penilaian    target_penilaian? @relation(fields: [id_target_penilaian], references: [id], onDelete: Cascade)
 }
 
 model penilaian {
@@ -75,4 +77,5 @@ model target_penilaian {
   id_ptt                Int?
   penilaian             penilaian?          @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
   ref_satuan_kinerja    ref_satuan_kinerja? @relation(fields: [ref_satuan_kinerja_id], references: [id], onDelete: Cascade)
+  kinerja_bulanan       kinerja_bulanan[]
 }
