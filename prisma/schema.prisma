@@ -79,3 +79,35 @@ model target_penilaian {
   ref_satuan_kinerja    ref_satuan_kinerja? @relation(fields: [ref_satuan_kinerja_id], references: [id], onDelete: Cascade)
   kinerja_bulanan       kinerja_bulanan[]
 }
+
+model comments {
+  id             Int             @id @default(autoincrement())
+  nama           String?
+  department     String?
+  status         String?
+  usia           String?
+  comment        String?
+  user_custom_id String?
+  comments_tags  comments_tags[]
+  likes          Int             @default(0)
+  parent_id      Int
+  created_at    DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?       @db.Timestamp(6)
+}
+
+model tags {
+  id            Int             @id @default(autoincrement())
+  name          String?
+  created_at    DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?       @db.Timestamp(6)
+  comments_tags comments_tags[]
+}
+
+model comments_tags {
+  comment_id Int
+  tag_id     Int
+  comments   comments? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+  tags       tags?     @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@id([comment_id, tag_id])
+}
