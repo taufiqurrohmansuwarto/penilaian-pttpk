@@ -21,6 +21,22 @@ const kirimAtasan = async (req, res) => {
 
 const batalKirimAtasan = async (req, res) => {
     const { userId } = req.user;
+    const { accId } = req.query;
+
     try {
-    } catch (error) {}
+        await prisma.acc_kinerja_bulanan.deleteMany({
+            where: {
+                id_ptt: userId,
+                id: accId,
+                penilaian: {
+                    id_ptt: userId,
+                    aktif: true
+                }
+            }
+        });
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.json({ code: 400, message: "Internal Server Error" });
+    }
 };

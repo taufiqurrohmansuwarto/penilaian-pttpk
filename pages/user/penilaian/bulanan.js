@@ -384,6 +384,10 @@ const Bulanan = () => {
         setUpdateEvent(event);
     };
 
+    const handleKirimAtasan = () => {};
+    const handleLihatNilai = () => {};
+    const handleBatalKirim = () => {};
+
     return (
         <div style={{ width: "70%" }}>
             <Alert
@@ -393,7 +397,12 @@ const Bulanan = () => {
                 description={
                     <div>
                         <p>Setelah dirasa sudah silahkan klik tombol submit</p>
-                        <Button type="primary">Kirim Atasan</Button>
+                        {/* todo buat confirmation ketika kirim atasan dengan klik  */}
+                        <Space>
+                            <Button type="primary">Kirim Atasan</Button>
+                            <Button type="primary">Lihat Nilai</Button>
+                            <Button type="primary">Batal Kirim</Button>
+                        </Space>
                     </div>
                 }
             />
@@ -443,3 +452,5 @@ Bulanan.Auth = {
 };
 
 export default Bulanan;
+
+// todo update dan tata kembali form
