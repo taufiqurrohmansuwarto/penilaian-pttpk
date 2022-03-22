@@ -56,8 +56,9 @@ const create = async (req, res) => {
 
 const index = async (req, res) => {
     const { userId } = req.user;
-    const bulan = req.query?.bulan || moment(new Date()).format("MM");
-    const tahun = req.query?.bulan || moment(new Date()).format("YYYY");
+    const bulan = req.query?.bulan || moment(new Date()).format("M");
+    const tahun = req.query?.tahun || moment(new Date()).format("YYYY");
+    console.log(tahun, bulan);
 
     try {
         const result = await prisma.kinerja_bulanan.findMany({
@@ -111,9 +112,52 @@ const index = async (req, res) => {
     }
 };
 
-const update = async (req, res) => {};
+const update = async (req, res) => {
+    const { userId } = req.user;
+    const { bulananId } = req.query;
+    const {
+        body: { id, title, start, end, targetId }
+    } = req;
 
-const remove = async (req, res) => {};
+    try {
+        await prisma.kinerja_bulanan.updateMany({
+            data: {
+                title,
+                start,
+                end,
+                id_target_penilaian: parseInt(targetId)
+            },
+            where: {
+                id: parseInt(id),
+                id_ptt: userId,
+                penilaian: {
+                    aktif: true,
+                    id_ptt: userId
+                }
+            }
+        });
+        res.status(200).json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
+const remove = async (req, res) => {
+    const { userId } = req.user;
+    const { bulananId } = req.query;
+    try {
+        await prisma.kinerja_bulanan.deleteMany({
+            where: {
+                id: parseInt(bulananId),
+                id_ptt: userId
+            }
+        });
+        res.json({ code: 200, message: "Success" });
+    } catch (error) {
+        res.json({ code: 400, message: "Internal Server Error" });
+    }
+};
 
 export default {
     detail,

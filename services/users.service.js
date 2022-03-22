@@ -60,8 +60,10 @@ export const removeTargetPenilaian = ({ id, targetId }) =>
         .then((res) => res?.data);
 
 // crate penilaain bulanan
-export const getPenilaianBulanan = () => {
-    return fetcher.get("/user/penilaian/bulanan").then((res) => res?.data);
+export const getPenilaianBulanan = (bulan, tahun) => {
+    return fetcher
+        .get(`/user/penilaian/bulanan?bulan=${bulan}&tahun=${tahun}`)
+        .then((res) => res?.data);
 };
 
 export const createPenilaianBulanan = (data) => {
@@ -71,7 +73,12 @@ export const createPenilaianBulanan = (data) => {
 };
 
 export const updatePenilaianBulanan = () => {};
-export const hapusPenilaianBulanan = () => {};
+
+export const hapusPenilaianBulanan = (id) => {
+    return fetcher
+        .delete(`/user/penilaian/bulanan/${id}`)
+        .then((res) => res?.data);
+};
 
 // target tahunan
 export const getTargetTahunan = () => {};

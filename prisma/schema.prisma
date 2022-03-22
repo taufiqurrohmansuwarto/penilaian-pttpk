@@ -29,7 +29,7 @@ model kinerja_bulanan {
   tahun               Int?              @db.SmallInt
   id_ptt              Int?
   kuantitas           Int?
-  kualitas            Int?
+  kualitas            Int?              @default(0)
   start               DateTime?         @db.Timestamp(6)
   end                 DateTime?         @db.Timestamp(6)
   created_at          DateTime?         @default(now()) @db.Timestamp(6)
