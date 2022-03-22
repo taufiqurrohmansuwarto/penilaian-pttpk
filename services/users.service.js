@@ -14,7 +14,6 @@ export const getUnor = () => {
 };
 
 //  penilaian
-
 export const getPenilaian = () => {
     return fetcher.get("/user/penilaian").then((res) => res?.data);
 };
@@ -72,7 +71,11 @@ export const createPenilaianBulanan = (data) => {
         .then((res) => res?.data);
 };
 
-export const updatePenilaianBulanan = () => {};
+export const updatePenilaianBulanan = ({ id, data }) => {
+    return fetcher
+        .patch(`/user/penilaian/bulanan/${id}`, data)
+        .then((res) => res?.data);
+};
 
 export const hapusPenilaianBulanan = (id) => {
     return fetcher

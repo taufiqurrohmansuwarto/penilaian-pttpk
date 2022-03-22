@@ -58,7 +58,6 @@ const index = async (req, res) => {
     const { userId } = req.user;
     const bulan = req.query?.bulan || moment(new Date()).format("M");
     const tahun = req.query?.tahun || moment(new Date()).format("YYYY");
-    console.log(tahun, bulan);
 
     try {
         const result = await prisma.kinerja_bulanan.findMany({
@@ -114,21 +113,38 @@ const index = async (req, res) => {
 
 const update = async (req, res) => {
     const { userId } = req.user;
-    const { bulananId } = req.query;
+    const { id: bulananId } = req.query;
     const {
-        body: { id, title, start, end, targetId }
+        body: { id, title, start, end, kuantitas, targetId }
     } = req;
 
     try {
-        await prisma.kinerja_bulanan.updateMany({
+        const result = await prisma.kinerja_bulanan.update({
             data: {
                 title,
                 start,
                 end,
-                id_target_penilaian: parseInt(targetId)
+                kuantitas,
+                target_penilaian: {
+                    connect: {
+                        id: 19
+                    }
+                },
+                penilaian: {
+                    update: {
+                        aktif: true,
+                        id_ptt: userId
+                    }
+                }
             },
             where: {
-                id: parseInt(id),
+                id: parseInt(bulananId)
+            }
+        });
+        // must be search first
+        const hasil = await prisma.kinerja_bulanan.findFirst({
+            where: {
+                id: parseInt(bulananId),
                 id_ptt: userId,
                 penilaian: {
                     aktif: true,
@@ -136,7 +152,7 @@ const update = async (req, res) => {
                 }
             }
         });
-        res.status(200).json({ code: 200, message: "success" });
+        res.status(200).json(hasil);
     } catch (error) {
         console.log(error);
         res.status(404).json({ code: 400, message: "Internal Server Error" });

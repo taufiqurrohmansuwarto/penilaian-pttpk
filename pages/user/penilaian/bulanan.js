@@ -7,13 +7,17 @@ import id from "@fullcalendar/core/locales/id";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useEffect, useRef, useState } from "react";
 import {
+    Alert,
     Button,
+    Col,
     DatePicker,
     Drawer,
     Form,
     Input,
     InputNumber,
     message,
+    Row,
+    Select,
     Skeleton,
     Space,
     Table
@@ -25,8 +29,15 @@ import {
     hapusPenilaianBulanan,
     updatePenilaianBulanan
 } from "../../../services/users.service";
+import { getRefSatuanKinerja } from "../../../services/ref.service";
 
-const DrawerCreate = ({ visibleCreate, onCloseCreate, date, calendarRef }) => {
+const DrawerCreate = ({
+    visibleCreate,
+    onCloseCreate,
+    date,
+    calendarRef,
+    dataTargetPenilaian
+}) => {
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -34,7 +45,8 @@ const DrawerCreate = ({ visibleCreate, onCloseCreate, date, calendarRef }) => {
             kuantitas: null,
             title: null,
             start: moment(date?.start),
-            end: moment(date?.end).subtract(1, "days")
+            end: moment(date?.end).subtract(1, "days"),
+            targetId: null
         });
     }, [date]);
 
@@ -55,17 +67,20 @@ const DrawerCreate = ({ visibleCreate, onCloseCreate, date, calendarRef }) => {
     );
 
     const handleCreate = async () => {
-        const { kuantitas, title, start, end } = await form.getFieldsValue();
-        const data = {
-            bulan: parseInt(moment(start).format("M")),
-            tahun: parseInt(moment(end).format("YYYY")),
-            kuantitas,
-            title,
-            id_target_penilaian: 19,
-            start: moment(start),
-            end: moment(end).add(1, "days")
-        };
-        createPenilaianBulananMutation.mutate(data);
+        try {
+            const { kuantitas, title, start, end } =
+                await form.validateFields();
+            const data = {
+                bulan: parseInt(moment(start).format("M")),
+                tahun: parseInt(moment(end).format("YYYY")),
+                kuantitas,
+                title,
+                id_target_penilaian: 19,
+                start: moment(start),
+                end: moment(end).add(1, "days")
+            };
+            createPenilaianBulananMutation.mutate(data);
+        } catch (error) {}
     };
 
     return (
@@ -87,23 +102,93 @@ const DrawerCreate = ({ visibleCreate, onCloseCreate, date, calendarRef }) => {
             ]}
         >
             <div>
-                <Form form={form} initialValues={{}} name="form-create-bulanan">
+                <Form
+                    form={form}
+                    requiredMark={false}
+                    initialValues={{}}
+                    layout="vertical"
+                    name="form-create-bulanan"
+                >
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                label="Induk Kegiatan"
+                                name="targetId"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Tidak boleh kosong"
+                                    }
+                                ]}
+                            >
+                                <Select showSearch optionFilterProp="nama">
+                                    {dataTargetPenilaian?.map((d) => (
+                                        <Select.Option
+                                            nama={`${d?.pekerjaan}-${d?.ref_satuan_kinerja?.nama}`}
+                                            key={d?.id}
+                                            value={d?.id}
+                                        >
+                                            {d?.pekerjaan} - (
+                                            {d?.ref_satuan_kinerja?.nama})
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                label="Deskripsi"
+                                name="title"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Tidak boleh kosong"
+                                    }
+                                ]}
+                            >
+                                <Input.TextArea />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Mulai Pekerjaan"
+                                name="start"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Tidak boleh kosong"
+                                    }
+                                ]}
+                            >
+                                <DatePicker format="YYYY-MM-DD" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Akhir Pekerjaan"
+                                name="end"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Tidak boleh kosong"
+                                    }
+                                ]}
+                            >
+                                <DatePicker format="YYYY-MM-DD" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
                     <Form.Item
-                        label="Deskripsi Pekerjaan"
-                        name="title"
+                        label="Kuantitas"
+                        name="kuantitas"
                         rules={[
                             { required: true, message: "Tidak boleh kosong" }
                         ]}
                     >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="Tanggal Mulai Pekerjaan" name="start">
-                        <DatePicker format="YYYY-MM-DD" />
-                    </Form.Item>
-                    <Form.Item label="Tanggal Akhir Pekerjaan" name="end">
-                        <DatePicker format="YYYY-MM-DD" />
-                    </Form.Item>
-                    <Form.Item label="Kuantitas" name="kuantitas">
                         <InputNumber />
                     </Form.Item>
                 </Form>
@@ -118,9 +203,12 @@ const DrawerUpdate = ({ visibleUpdate, onCloseUpdate, event, calenderRef }) => {
 
     useEffect(() => {
         form.setFieldsValue({
-            title: event?.title
+            title: event?.title,
+            start: moment(event?.start),
+            end: moment(event?.end).subtract(1, "days"),
+            kuantitas: parseInt(event?.extendedProps?.kuantitas)
         });
-    }, []);
+    }, [event]);
 
     const removePenilaianMutation = useMutation(
         (id) => hapusPenilaianBulanan(id),
@@ -128,17 +216,51 @@ const DrawerUpdate = ({ visibleUpdate, onCloseUpdate, event, calenderRef }) => {
             onSuccess: () => {
                 message.success("Berhasil dihapus");
                 queryClient.invalidateQueries("penilaian");
+                onCloseUpdate();
             }
         }
     );
-    const updatePenilaianMutation = useMutation((data) =>
-        updatePenilaianBulanan(data)
+    const updatePenilaianMutation = useMutation(
+        (data) => updatePenilaianBulanan(data),
+        {
+            onSuccess: (data) => {
+                const { end, start, title } = data;
+                message.success("Berhasil diupdate");
+                onCloseUpdate();
+                console.log(data);
+                // propnya hanya 4 selain itu di taruh di extendedProps
+
+                event.setProp("title", title);
+                event.setDates(start, end);
+                // e
+                event.setExtendedProp("kuantitas", data?.kuantitas);
+                queryClient.invalidateQueries("penilaian");
+            },
+            onError: (error) => console.log(error)
+        }
     );
 
     const handleRemove = () => {
         removePenilaianMutation.mutate(event?.id);
         event.remove();
         onCloseUpdate();
+    };
+
+    const handleUpdate = async () => {
+        try {
+            const { title, kuantitas, start, end } = await form.getFieldValue();
+            const data = {
+                id: event?.id,
+                data: {
+                    targetId: event?.extendedProps?.ref_satuan_kinerja_id,
+                    title,
+                    start: moment(start),
+                    end: moment(end).add(1, "days"),
+                    kuantitas
+                }
+            };
+            updatePenilaianMutation.mutate(data);
+        } catch (error) {}
     };
 
     return (
@@ -152,15 +274,25 @@ const DrawerUpdate = ({ visibleUpdate, onCloseUpdate, event, calenderRef }) => {
                     <Button type="danger" onClick={handleRemove}>
                         Hapus
                     </Button>
-                    <Button>Ubah</Button>
+                    <Button type="primary" onClick={handleUpdate}>
+                        Ubah
+                    </Button>
                 </Space>
             ]}
             title="Edit Pekerjaan"
         >
-            {JSON.stringify(event?.title)}
             <Form form={form} initialValues={{}}>
                 <Form.Item name="title" label="Pekerjaan">
                     <Input />
+                </Form.Item>
+                <Form.Item name="start" label="Mulai Pekerjaan">
+                    <DatePicker />
+                </Form.Item>
+                <Form.Item name="end" label="Akhir Pekerjaan">
+                    <DatePicker />
+                </Form.Item>
+                <Form.Item name="kuantitas" label="Kuantitas">
+                    <InputNumber />
                 </Form.Item>
             </Form>
         </Drawer>
@@ -197,6 +329,9 @@ const Bulanan = () => {
         ["penilaian_bulanan", bulan, tahun],
         () => getPenilaianBulanan(bulan, tahun)
     );
+
+    const { data: dataTargetPenilaian, loading: loadingTargetPenilaian } =
+        useQuery("target_penilaian", () => getRefSatuanKinerja("target"));
 
     const handleDateSelect = (info) => {
         console.log(info);
@@ -251,7 +386,17 @@ const Bulanan = () => {
 
     return (
         <div style={{ width: "70%" }}>
-            {JSON.stringify(dataPenilaian?.length)}
+            <Alert
+                type="warning"
+                message="Perhatian"
+                showIcon
+                description={
+                    <div>
+                        <p>Setelah dirasa sudah silahkan klik tombol submit</p>
+                        <Button type="primary">Kirim Atasan</Button>
+                    </div>
+                }
+            />
             <FullCalendar
                 initialView="dayGridMonth"
                 eventMaxStack={3}
@@ -275,6 +420,7 @@ const Bulanan = () => {
                 eventRemove={function () {}}
             />
             <DrawerCreate
+                dataTargetPenilaian={dataTargetPenilaian}
                 calendarRef={calendarRef}
                 visibleCreate={visibleCreate}
                 onCloseCreate={onCloseCreate}
@@ -282,6 +428,7 @@ const Bulanan = () => {
             />
             <DrawerUpdate
                 calenderRef={calendarRef}
+                dataTargetPenilaian={dataTargetPenilaian}
                 visibleUpdate={visibleUpdate}
                 onCloseUpdate={onCloseUpdate}
                 event={updateEvent}
