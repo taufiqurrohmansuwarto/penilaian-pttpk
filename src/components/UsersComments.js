@@ -1,4 +1,5 @@
 import {
+    Tooltip,
     Button,
     Comment,
     Form,
@@ -11,7 +12,7 @@ import {
 import moment from "moment";
 import "moment/locale/id";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import React, { useState, createElement } from "react";
 import {
     useInfiniteQuery,
     useMutation,
@@ -24,7 +25,15 @@ moment.locale("id");
 
 const { TextArea } = Input;
 
-const Editor = ({ main, onChange, onSubmit, submitting, value, onCancel }) => (
+const Editor = ({
+    main,
+    onChange,
+    onSubmit,
+    submitting,
+    value,
+    onCancel,
+    buttonText = "Ayo Diskusikan"
+}) => (
     <div>
         <Form.Item>
             <TextArea rows={4} onChange={onChange} value={value} />
@@ -37,7 +46,7 @@ const Editor = ({ main, onChange, onSubmit, submitting, value, onCancel }) => (
                     onClick={onSubmit}
                     type="primary"
                 >
-                    Ayo diskusikan
+                    {buttonText}
                 </Button>
                 {!main && <Button onClick={onCancel}>Cancel</Button>}
             </Space>
@@ -45,7 +54,68 @@ const Editor = ({ main, onChange, onSubmit, submitting, value, onCancel }) => (
     </div>
 );
 
-const ListComments = ({ data, isLoading }) => {
+const ChildrenComment = ({ data }) => {
+    return (
+        <div>
+            {data?.length > 0 ? (
+                <List
+                    itemLayout="horizontal"
+                    header={`${data?.length} balasan`}
+                    dataSource={data}
+                    renderItem={(item) => {
+                        return (
+                            <li>
+                                <Comment
+                                    avatar={item?.avatar}
+                                    author={item?.nama}
+                                    content={item?.comment}
+                                    datetime={moment(
+                                        item?.created_at
+                                    ).fromNow()}
+                                />
+                            </li>
+                        );
+                    }}
+                />
+            ) : null}
+        </div>
+    );
+};
+
+const ListComments = ({ data, isLoading, user, mutation, show = true }) => {
+    const [id, setId] = useState(null);
+    const handleShowEditor = (currentId) => {
+        setId(currentId);
+        setComment("");
+    };
+
+    const [comment, setComment] = useState("");
+
+    const handleSubmit = async (id) => {
+        const data = { parent_id: id, comment };
+        console.log(data);
+        if (!comment) {
+            return;
+        } else {
+            await mutation.mutateAsync(data);
+            setComment("");
+            setId(null);
+            setVisibleChildrenComment(id);
+        }
+    };
+
+    const handleCancel = () => setId(null);
+
+    const [visibleChildrenComment, setVisibleChildrenComment] = useState(null);
+
+    const toggleChildrenComment = (id) => {
+        if (visibleChildrenComment === id) {
+            setVisibleChildrenComment(null);
+        } else {
+            setVisibleChildrenComment(id);
+        }
+    };
+
     return (
         <div>
             {data?.length ? (
@@ -57,15 +127,60 @@ const ListComments = ({ data, isLoading }) => {
                         <li>
                             <Comment
                                 actions={[
-                                    <span>Balas</span>,
-                                    <span>test</span>
+                                    <span
+                                        onClick={() =>
+                                            handleShowEditor(item?.id)
+                                        }
+                                    >
+                                        Balas
+                                    </span>,
+                                    <>
+                                        {item?.children?.length ? (
+                                            <span
+                                                onClick={() =>
+                                                    toggleChildrenComment(
+                                                        item?.id
+                                                    )
+                                                }
+                                            >
+                                                {visibleChildrenComment ===
+                                                item?.id
+                                                    ? "Tutup"
+                                                    : "Buka"}{" "}
+                                                {item?.children?.length} balasan
+                                            </span>
+                                        ) : null}
+                                    </>
                                 ]}
                                 content={item?.comment}
                                 datetime={moment(item?.created_at).fromNow()}
                                 author={item?.nama}
                                 avatar={item?.avatar}
                             >
-                                <Comment content={"test"} />
+                                {id === item?.id && (
+                                    <Comment
+                                        author={user?.user?.name}
+                                        avatar={user?.user?.image}
+                                    >
+                                        <Editor
+                                            buttonText="Balas"
+                                            value={comment}
+                                            onSubmit={() =>
+                                                handleSubmit(item?.id)
+                                            }
+                                            onCancel={handleCancel}
+                                            onChange={(e) =>
+                                                setComment(e?.target.value)
+                                            }
+                                        />
+                                    </Comment>
+                                )}
+                                {visibleChildrenComment === item?.id ? (
+                                    <ChildrenComment
+                                        show={show}
+                                        data={item?.children}
+                                    />
+                                ) : null}
                             </Comment>
                         </li>
                     )}
@@ -92,11 +207,9 @@ const UserComments = () => {
     } = useInfiniteQuery(
         ["comments"],
         ({ pageParam }) => {
-            console.log(pageParam);
             return getComments({ cursor: pageParam });
         },
         {
-            //     getPreviousPageParam: (e) => console.log("previous", e),
             getNextPageParam: (pageParams) =>
                 pageParams?.nextCursor ?? undefined
         }
@@ -120,7 +233,6 @@ const UserComments = () => {
         if (!comment) {
             return;
         } else {
-            console.log(data);
             createCommentMutation.mutate(data);
         }
     };
@@ -143,7 +255,9 @@ const UserComments = () => {
             {dataComments?.pages?.map((page) => (
                 <React.Fragment key={page?.nextCursor}>
                     <ListComments
+                        user={userData}
                         data={page?.data}
+                        mutation={createCommentMutation}
                         isLoading={isLoadingComments || isFetchingNextPage}
                     />
                 </React.Fragment>

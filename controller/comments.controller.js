@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma";
+const arrayToTree = require("array-to-tree");
 
 const index = async (req, res) => {
     const { customId } = req?.user;
@@ -7,11 +8,26 @@ const index = async (req, res) => {
     const take = 10;
     let query = {
         take,
-        orderBy: {
-            created_at: "desc"
-        }
+        include: {
+            children: {
+                orderBy: {
+                    created_at: "asc"
+                }
+            }
+        },
+        orderBy: [
+            {
+                created_at: "desc"
+            },
+            {
+                children: {
+                    _count: "desc"
+                }
+            }
+        ]
     };
 
+    // pretty wrong btw
     if (cursor && cursor !== 0 && cursor !== "0") {
         query = {
             ...query,
@@ -26,7 +42,15 @@ const index = async (req, res) => {
     try {
         // todo paging or infinte scroll
         const result = await prisma.comments.findMany({
-            ...query
+            ...query,
+            where: {
+                parent_id: null
+            }
+        });
+
+        const newResult = arrayToTree(result, {
+            customID: "id",
+            parentProperty: "parent_id"
         });
 
         const nextCursor = result[result?.length - 1]?.id || null;
