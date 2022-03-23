@@ -190,7 +190,12 @@ const ListComments = ({ data, isLoading, user, mutation, show = true }) => {
     );
 };
 
+// todo implement likes, filter
 const UserComments = () => {
+    const filter = ["Terbaru", "Terpopuler"];
+
+    const [selectedFilter, setSelectedFilter] = useState(["Terbaru"]);
+
     const [comment, setComment] = useState("");
 
     const handleChange = (e) => {
