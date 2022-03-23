@@ -1,5 +1,6 @@
 import { Button } from "antd";
 import { useRouter } from "next/router";
+import UserComments from "../../src/components/UsersComments";
 
 const Dashboard = () => {
     const router = useRouter();
@@ -13,12 +14,18 @@ const Dashboard = () => {
     };
 
     return (
-        <div>
+        <div style={{ padding: 100 }}>
             Dashboard fasilitator
             <Button onClick={gotoPenilaian}>hello world</Button>
             <Button onClick={gotoBulanan}>Bulanan</Button>
+            <UserComments />
         </div>
     );
+};
+
+Dashboard.Auth = {
+    roles: ["USER"],
+    groups: ["PTTPK"]
 };
 
 export default Dashboard;
