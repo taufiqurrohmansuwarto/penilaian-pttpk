@@ -21,19 +21,21 @@ model acc_kinerja_bulanan {
 }
 
 model kinerja_bulanan {
-  id                  Int        @id @default(autoincrement())
+  id                  Int               @id @default(autoincrement())
   id_penilaian        Int?
-  deskripsi_pekerjaan String?
-  bulan               Int?       @db.SmallInt
-  tahun               Int?       @db.SmallInt
+  id_target_penilaian Int?
+  title               String?
+  bulan               Int?              @db.SmallInt
+  tahun               Int?              @db.SmallInt
   id_ptt              Int?
   kuantitas           Int?
-  kualitas            Int?
-  start               DateTime?  @db.Timestamp(6)
-  end                 DateTime?  @db.Timestamp(6)
-  created_at          DateTime?  @default(now()) @db.Timestamp(6)
-  updated_at          DateTime?  @db.Timestamp(6)
-  penilaian           penilaian? @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
+  kualitas            Int?              @default(0)
+  start               DateTime?         @db.Timestamp(6)
+  end                 DateTime?         @db.Timestamp(6)
+  created_at          DateTime?         @default(now()) @db.Timestamp(6)
+  updated_at          DateTime?         @db.Timestamp(6)
+  penilaian           penilaian?        @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
+  target_penilaian    target_penilaian? @relation(fields: [id_target_penilaian], references: [id], onDelete: Cascade)
 }
 
 model penilaian {
@@ -50,10 +52,10 @@ model penilaian {
   nip_eselon_ii       String?               @db.VarChar(200)
   created_at          DateTime?             @default(now()) @db.Timestamp(6)
   updated_at          DateTime?             @db.Timestamp(6)
+  pekerjaan_tambahan  String[]
   acc_kinerja_bulanan acc_kinerja_bulanan[]
   kinerja_bulanan     kinerja_bulanan[]
   target_penilaian    target_penilaian[]
-  pekerjaan_tambahan  String[]
 }
 
 model ref_satuan_kinerja {
@@ -72,6 +74,78 @@ model target_penilaian {
   id_penilaian          Int?
   created_at            DateTime?           @default(now()) @db.Timestamp(6)
   updated_at            DateTime?           @db.Timestamp(6)
+  id_ptt                Int?
   penilaian             penilaian?          @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
   ref_satuan_kinerja    ref_satuan_kinerja? @relation(fields: [ref_satuan_kinerja_id], references: [id], onDelete: Cascade)
+  kinerja_bulanan       kinerja_bulanan[]
+}
+
+model comments {
+  id                     String                   @id @default(cuid())
+  nama                   String?
+  department             String?
+  status                 String?
+  usia                   String?
+  avatar                 String?
+  comment                String?
+  user_custom_id         String?
+  user_type              String?
+  comments_tags          comments_tags[]
+  likes                  Int                      @default(0)
+  parent_id              String?
+  parent                 comments?                @relation("SubComments", fields: [parent_id], references: [id], onDelete: Cascade)
+  children               comments[]               @relation("SubComments")
+  created_at             DateTime?                @default(now()) @db.Timestamp(6)
+  updated_at             DateTime?                @db.Timestamp(6)
+  comments_mentioned     comments_mentioned[]
+  comments_notifications comments_notifications[]
+  comments_likes         comments_likes[]
+}
+
+model comments_likes {
+  comment_id     String
+  user_custom_id String
+  user_name      String?
+  comments       comments? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+
+  @@id([comment_id, user_custom_id])
+}
+
+model comments_mentioned {
+  comment_id     String
+  user_custom_id String
+  comments       comments  @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+  created_at     DateTime? @default(now()) @db.Timestamp(6)
+  updated_at     DateTime? @db.Timestamp(6)
+
+  @@id([comment_id, user_custom_id])
+}
+
+model comments_notifications {
+  id            String    @id @default(cuid())
+  comment_id    String?
+  sender        String?
+  receiver      String?
+  sender_name   String?
+  receiver_name String?
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  updated_at    DateTime? @db.Timestamp(6)
+  comments      comments? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+}
+
+model tags {
+  id            Int             @id @default(autoincrement())
+  name          String?
+  created_at    DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?       @db.Timestamp(6)
+  comments_tags comments_tags[]
+}
+
+model comments_tags {
+  comment_id String
+  tag_id     Int
+  comments   comments? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+  tags       tags?     @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@id([comment_id, tag_id])
 }

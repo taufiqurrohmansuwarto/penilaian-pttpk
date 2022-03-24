@@ -1,28 +1,32 @@
-import * as React from "react";
-import { Button } from "semantic-ui-react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function Home() {
-  const handleBar = () => {
-    alert("etst");
-  };
+  const router = useRouter();
+  const { status, data } = useSession({
+    required: true,
+    onUnauthenticated: () => signIn(),
+  });
 
-  const handleClick = () => {
-    alert("etst");
-  };
+  if (
+    status === "authenticated" &&
+    data?.user?.role === "USER" &&
+    data?.user?.group === "PTTPK"
+  ) {
+    router.push("/user/dashboard");
+  } else if (
+    status === "authenticated" &&
+    data?.user?.role === "FASILITATOR" &&
+    data?.user?.group === "PTTPK"
+  ) {
+    router.push("/fasilitator/dashboard");
+  } else if (
+    status === "authenticated" &&
+    data?.user?.role === "USER" &&
+    data?.user?.group === "MASTER"
+  ) {
+    router.push("/approval/dashboard");
+  }
 
-  const test = (arr) => {
-    return arr.map((t) => !!t?.x);
-  };
-
-  return (
-    <div>
-      <p>lorem</p>
-      <Button active animated onClick={handleClick}>
-        something
-      </Button>
-      <h1>hello world</h1>
-    </div>
-  );
+  return null;
 }
-
-// karena kita akan

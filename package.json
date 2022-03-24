@@ -1,23 +1,42 @@
 {
-  "private": true,
-  "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "@prisma/client": "^3.10.0",
-    "axios": "^0.26.1",
-    "moment": "^2.29.1",
-    "next": "^12.1.0",
-    "next-auth": "^4.2.1",
-    "next-connect": "^0.12.2",
-    "prisma": "^3.10.0",
-    "react": "^17.0.2",
-    "react-big-calendar": "^0.39.3",
-    "react-dom": "^17.0.2",
-    "react-query": "^3.34.16",
-    "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^2.1.2"
-  }
+    "private": true,
+    "scripts": {
+        "dev": "next -p 3001",
+        "build": "next build",
+        "start": "next start -p 3005"
+    },
+    "dependencies": {
+        "@ant-design/pro-layout": "^6.34.6",
+        "@babel/preset-react": "^7.16.7",
+        "@babel/runtime": "^7.17.8",
+        "@fullcalendar/common": "^5.10.1",
+        "@fullcalendar/core": "^5.10.1",
+        "@fullcalendar/daygrid": "^5.10.1",
+        "@fullcalendar/interaction": "^5.10.1",
+        "@fullcalendar/react": "^5.10.1",
+        "@fullcalendar/timegrid": "^5.10.1",
+        "@mantine/core": "^4.0.7",
+        "@mantine/hooks": "^4.0.7",
+        "@mantine/rte": "^4.0.7",
+        "@prisma/client": "^3.11.0",
+        "antd": "^4.19.2",
+        "array-to-tree": "^3.3.2",
+        "axios": "^0.26.1",
+        "jsonwebtoken": "^8.5.1",
+        "minio": "^7.0.26",
+        "multer": "^1.4.4",
+        "next": "^12.1.0",
+        "next-auth": "^4.3.1",
+        "next-connect": "^0.12.2",
+        "next-plugin-antd-less": "^1.8.0",
+        "next-transpile-modules": "^9.0.0",
+        "prisma": "^3.11.0",
+        "react": "^17.0.2",
+        "react-big-calendar": "^0.39.4",
+        "react-dom": "^17.0.2",
+        "react-query": "^3.34.16"
+    },
+    "devDependencies": {
+        "babel-plugin-import": "^1.13.3"
+    }
 }

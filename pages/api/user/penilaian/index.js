@@ -1,7 +1,10 @@
-import penilaianController from "../../../../controller/penilaian.controller";
 import nc from "next-connect";
-import handler from "../../../../lib/handler";
+import penilaianController from "../../../../controller/penilaian.controller";
+import auth from "../../../../middleware/auth";
+const handler = nc();
 
 export default handler
-  //   .create(penilaianController.create)
-  .get(penilaianController.index);
+  .use(auth)
+  .get(penilaianController.index)
+  .post(penilaianController.create)
+  .delete(penilaianController.remove);
