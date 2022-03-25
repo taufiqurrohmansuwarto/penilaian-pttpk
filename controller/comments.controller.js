@@ -88,8 +88,37 @@ const create = async (req, res) => {
     }
 };
 
-const update = async (req, res) => {};
-const remove = async (req, res) => {};
+// const for likes
+const update = async (req, res) => {
+    const { userId, name } = req.user;
+    const data = {
+        user_custom_id: userId,
+        user_name: name,
+        comment_id: req?.query?.commentId
+    };
+
+    try {
+        await prisma.comments_likes.upsert({
+            where: {
+                comment_id: data?.comment_id,
+                user_custom_id: data?.user_custom_id
+            },
+            create: {
+                comment_id: data?.comment_id,
+                user_custom_id: data?.user_custom_id,
+                user_name: data?.user_name
+            },
+            update: {}
+        });
+    } catch (error) {}
+};
+
+// cont for disklike
+const remove = async (req, res) => {
+    const { userId } = req.user;
+    try {
+    } catch (error) {}
+};
 
 export default {
     index,

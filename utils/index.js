@@ -1,9 +1,12 @@
 import axios from "axios";
 
 const dataFetcher = axios.create({
-  baseURL: process.env.PROTECTED_URL,
+    baseURL: process.env.PROTECTED_URL
 });
 
-export default {
-  dataFetcher,
+const getUserId = (req) => req?.user?.userId;
+
+module.exports = {
+    getUserId,
+    dataFetcher
 };

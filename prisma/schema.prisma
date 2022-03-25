@@ -161,10 +161,13 @@ model votes {
 }
 
 model subvotes {
-  id             String           @id @default(cuid())
-  subvote_title  String
-  vote_id        String
-  votes          votes            @relation(fields: [vote_id], references: [id], onDelete: Cascade)
+  id            String    @id @default(cuid())
+  subvote_title String
+  vote_id       String
+  votes         votes     @relation(fields: [vote_id], references: [id], onDelete: Cascade)
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  updated_at    DateTime? @db.Timestamp(6)
+
   subvotes_count subvotes_count[]
 }
 
@@ -173,6 +176,16 @@ model subvotes_count {
   user_custom_id String
 
   subvotes subvotes @relation(fields: [subvote_id], references: [id], onDelete: Cascade)
-  
+
   @@id([subvote_id, user_custom_id])
+}
+
+model feedbacks {
+  user_custom_id String
+  date           DateTime  @db.Date
+  descriptiom    String?
+  created_at     DateTime? @default(now()) @db.Timestamp(6)
+  updated_at     DateTime? @db.Timestamp(6)
+
+  @@id([user_custom_id, date])
 }

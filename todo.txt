@@ -1,9 +1,16 @@
+
+
 social media features
 - filtering (by date) and (popular)
 - likes 
 - upload file
 
 what kind of features
+- feedback otomatis
+	kegunaan : untuk mencari tambahan fiture dari user sehingga aplikasi dapat selalu update
+	deskripsi : user akan diberikan pertanyaan setiap hari ketika SETELAH masuk login dan LOGOUT
+
+	
 - random votes yang berhubungan dengan diskusi
 - post and answer as anon user (claim user kalau developer tahu kamu)
 - rekam video 
