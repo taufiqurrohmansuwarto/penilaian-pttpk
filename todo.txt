@@ -1,6 +1,9 @@
-api penilaian
+social media features
+- likes 
+- upload file
 
-/api/penilaian create
+what kind of features
+- post and answer as anon user (claim user kalau developer tahu kamu)
+- 
 
-api/penilaian/:id/bulanan
-
+main application kekurangan
