@@ -149,3 +149,30 @@ model comments_tags {
 
   @@id([comment_id, tag_id])
 }
+
+model votes {
+  id         String     @id @default(cuid())
+  title      String?
+  is_end     Boolean    @default(false)
+  end_date   DateTime?  @db.Timestamp(6)
+  created_at DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at DateTime?  @db.Timestamp(6)
+  subvotes   subvotes[]
+}
+
+model subvotes {
+  id             String           @id @default(cuid())
+  subvote_title  String
+  vote_id        String
+  votes          votes            @relation(fields: [vote_id], references: [id], onDelete: Cascade)
+  subvotes_count subvotes_count[]
+}
+
+model subvotes_count {
+  subvote_id     String
+  user_custom_id String
+
+  subvotes subvotes @relation(fields: [subvote_id], references: [id], onDelete: Cascade)
+  
+  @@id([subvote_id, user_custom_id])
+}

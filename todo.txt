@@ -1,9 +1,14 @@
 social media features
+- filtering (by date) and (popular)
 - likes 
 - upload file
 
 what kind of features
+- random votes yang berhubungan dengan diskusi
 - post and answer as anon user (claim user kalau developer tahu kamu)
-- 
+- rekam video 
+
+add package
+- react video recorder
 
 main application kekurangan
