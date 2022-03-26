@@ -23,16 +23,13 @@ const Dashboard = () => {
     };
 
     return (
-        <>
-            <RichTextEditor value={message} onChange={setMessage} />
-            <Button onClick={handleShowMessage} type="primary">
-                Submit
-            </Button>
-            <Divider />
-            <Button onClick={gotoPenilaian}>hello world</Button>
-            <Button onClick={gotoBulanan}>Bulanan</Button>
-            <UserComments />
-        </>
+        <UserLayout>
+            <Card style={{ paddingLeft: 200, paddingRight: 200 }}>
+                {/* <Button onClick={gotoPenilaian}>hello world</Button> */}
+                {/* <Button onClick={gotoBulanan}>Bulanan</Button> */}
+                <UserComments />
+            </Card>
+        </UserLayout>
     );
 };
 

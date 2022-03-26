@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import userRoute from "../routes/user.route";
 
 const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
     ssr: false
@@ -15,11 +16,14 @@ const UserLayout = ({ children }) => {
     return (
         <ProLayout
             collapsed
+            route={userRoute}
             collapsedButtonRender={false}
+            navTheme="dark"
             style={{ minHeight: "100vh" }}
             fixSiderbar
+            disableContentMargin
         >
-            <PageContainer content="test">{children}</PageContainer>
+            <PageContainer>{children}</PageContainer>
         </ProLayout>
     );
 };

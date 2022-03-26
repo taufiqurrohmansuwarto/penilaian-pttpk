@@ -189,3 +189,4 @@ model feedbacks {
 
   @@id([user_custom_id, date])
 }
+

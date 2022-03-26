@@ -6,7 +6,8 @@
         "start": "next start -p 3005"
     },
     "dependencies": {
-        "@ant-design/pro-layout": "^6.34.6",
+        "@ant-design/icons": "^4.7.0",
+        "@ant-design/pro-layout": "^6.34.7",
         "@babel/preset-react": "^7.16.7",
         "@babel/runtime": "^7.17.8",
         "@fullcalendar/common": "^5.10.1",

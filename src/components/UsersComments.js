@@ -32,7 +32,7 @@ const Editor = ({
     submitting,
     value,
     onCancel,
-    buttonText = "Ayo Diskusikan"
+    buttonText = "Apa yang kamu kerjakan hari ini?"
 }) => (
     <div>
         <Form.Item>
