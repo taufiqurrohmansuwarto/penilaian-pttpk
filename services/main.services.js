@@ -11,3 +11,13 @@ export const createComments = (data) => {
 export const getComments = ({ cursor = 0 }) => {
     return fetcher.get(`/comments?cursor=${cursor}`).then((res) => res?.data);
 };
+
+export const likes = ({ commentId, value }) =>
+    fetcher
+        .put(`/comments/${commentId}/votes`, { value })
+        .then((res) => res?.data);
+
+export const dislikes = ({ commentId, value }) =>
+    fetcher
+        .delete(`/comments/${commentId}/votes`, { data: { value } })
+        .then((res) => res?.data);

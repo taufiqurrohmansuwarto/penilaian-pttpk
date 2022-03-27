@@ -1,4 +1,12 @@
 import {
+    ArrowDownOutlined,
+    ArrowUpOutlined,
+    DislikeFilled,
+    DislikeOutlined,
+    LikeFilled,
+    LikeOutlined
+} from "@ant-design/icons";
+import {
     Tooltip,
     Button,
     Comment,
@@ -19,11 +27,42 @@ import {
     useQuery,
     useQueryClient
 } from "react-query";
-import { createComments, getComments } from "../../services/main.services";
+import {
+    createComments,
+    dislikes,
+    getComments,
+    likes
+} from "../../services/main.services";
+import RichTextEditor from "./RichTextEditor";
 
 moment.locale("id");
 
 const { TextArea } = Input;
+
+const filterValue = (commentId, userId, items) => {
+    return items?.find(
+        (item) =>
+            item?.comment_id === commentId && item?.user_custom_id === userId
+    )?.value;
+};
+
+const hasLike = (commentId, userId, items) => {
+    const likeValue = items?.find(
+        (item) =>
+            item?.comment_id === commentId && item?.user_custom_id === userId
+    )?.value;
+
+    return likeValue === 1 ? true : false;
+};
+
+const hasDislike = (commentId, userId, items) => {
+    const dislikeValue = items?.find(
+        (item) =>
+            item?.comment_id === commentId && item?.user_custom_id === userId
+    )?.value;
+
+    return dislikeValue === -1 ? true : false;
+};
 
 const Editor = ({
     main,
@@ -36,7 +75,22 @@ const Editor = ({
 }) => (
     <div>
         <Form.Item>
-            <TextArea rows={4} onChange={onChange} value={value} />
+            <RichTextEditor
+                style={{ minHeight: 200 }}
+                onChange={onChange}
+                controls={[
+                    [
+                        "bold",
+                        "italic",
+                        "underline",
+                        "link",
+                        "orderedList",
+                        "unorderedList"
+                    ],
+                    ["alignCenter", "alignLeft", "alignRight"]
+                ]}
+                value={value}
+            />
         </Form.Item>
         <Form.Item>
             <Space>
@@ -68,7 +122,13 @@ const ChildrenComment = ({ data }) => {
                                 <Comment
                                     avatar={item?.avatar}
                                     author={item?.nama}
-                                    content={item?.comment}
+                                    content={
+                                        <div
+                                            dangerouslySetInnerHTML={{
+                                                __html: item?.comment
+                                            }}
+                                        />
+                                    }
                                     datetime={moment(
                                         item?.created_at
                                     ).fromNow()}
@@ -82,7 +142,15 @@ const ChildrenComment = ({ data }) => {
     );
 };
 
-const ListComments = ({ data, isLoading, user, mutation, show = true }) => {
+const ListComments = ({
+    data,
+    isLoading,
+    user,
+    mutation,
+    show = true,
+    handleLike,
+    handleDislike
+}) => {
     const [id, setId] = useState(null);
     const handleShowEditor = (currentId) => {
         setId(currentId);
@@ -128,6 +196,66 @@ const ListComments = ({ data, isLoading, user, mutation, show = true }) => {
                             <Comment
                                 actions={[
                                     <span
+                                        onClick={() => {
+                                            const value = filterValue(
+                                                item?.id,
+                                                user?.user?.id,
+                                                item?.comments_likes
+                                            );
+                                            handleLike({
+                                                commentId: item?.id,
+                                                value
+                                            });
+                                        }}
+                                    >
+                                        {hasLike(
+                                            item?.id,
+                                            user?.user?.id,
+                                            item?.comments_likes
+                                        ) ? (
+                                            <>
+                                                <LikeFilled />
+                                                <span>{item?.likes}</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <LikeOutlined />
+                                                <span>{item?.likes}</span>
+                                            </>
+                                        )}
+                                    </span>,
+
+                                    <span
+                                        onClick={() => {
+                                            const value = filterValue(
+                                                item?.id,
+                                                user?.user?.id,
+                                                item?.comments_likes
+                                            );
+                                            handleDislike({
+                                                commentId: item?.id,
+                                                value
+                                            });
+                                        }}
+                                    >
+                                        {hasDislike(
+                                            item?.id,
+                                            user?.user?.id,
+                                            item?.comments_likes
+                                        ) ? (
+                                            <>
+                                                <DislikeFilled />
+                                                <span>{item?.dislikes}</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <DislikeOutlined />
+                                                <span>{item?.dislikes}</span>
+                                            </>
+                                        )}
+                                    </span>,
+
+                                    <span
                                         onClick={() =>
                                             handleShowEditor(item?.id)
                                         }
@@ -152,7 +280,13 @@ const ListComments = ({ data, isLoading, user, mutation, show = true }) => {
                                         ) : null}
                                     </>
                                 ]}
-                                content={item?.comment}
+                                content={
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: item?.comment
+                                        }}
+                                    />
+                                }
                                 datetime={moment(item?.created_at).fromNow()}
                                 author={item?.nama}
                                 avatar={item?.avatar}
@@ -169,9 +303,7 @@ const ListComments = ({ data, isLoading, user, mutation, show = true }) => {
                                                 handleSubmit(item?.id)
                                             }
                                             onCancel={handleCancel}
-                                            onChange={(e) =>
-                                                setComment(e?.target.value)
-                                            }
+                                            onChange={setComment}
                                         />
                                     </Comment>
                                 )}
@@ -197,10 +329,6 @@ const UserComments = () => {
     const [selectedFilter, setSelectedFilter] = useState(["Terbaru"]);
 
     const [comment, setComment] = useState("");
-
-    const handleChange = (e) => {
-        setComment(e?.target?.value);
-    };
 
     const { data: userData } = useSession();
     const {
@@ -242,6 +370,16 @@ const UserComments = () => {
         }
     };
 
+    const likeMutation = useMutation((data) => likes(data), {
+        onSuccess: () => queryClient.invalidateQueries("comments")
+    });
+    const dislikeMutation = useMutation((data) => dislikes(data), {
+        onSuccess: () => queryClient.invalidateQueries("comments")
+    });
+
+    const handleLike = (data) => likeMutation.mutate(data);
+    const handleDislike = (data) => dislikeMutation.mutate(data);
+
     return (
         <Skeleton loading={isLoadingComments}>
             <Comment
@@ -251,7 +389,7 @@ const UserComments = () => {
                         main={true}
                         value={comment}
                         submitting={createCommentMutation.isLoading}
-                        onChange={handleChange}
+                        onChange={setComment}
                         onSubmit={handleSubmit}
                     />
                 }
@@ -263,6 +401,8 @@ const UserComments = () => {
                         user={userData}
                         data={page?.data}
                         mutation={createCommentMutation}
+                        handleLike={handleLike}
+                        handleDislike={handleDislike}
                         isLoading={isLoadingComments || isFetchingNextPage}
                     />
                 </React.Fragment>

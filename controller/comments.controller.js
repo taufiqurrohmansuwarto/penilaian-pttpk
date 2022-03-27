@@ -8,7 +8,9 @@ const index = async (req, res) => {
     const take = 10;
     let query = {
         take,
+
         include: {
+            comments_likes: true,
             children: {
                 orderBy: {
                     created_at: "asc"
@@ -77,7 +79,6 @@ const create = async (req, res) => {
             avatar: image,
             user_type: userType
         };
-        console.log(data);
         const result = await prisma.comments.create({
             data
         });
@@ -113,11 +114,125 @@ const update = async (req, res) => {
     } catch (error) {}
 };
 
-// cont for disklike
 const remove = async (req, res) => {
     const { userId } = req.user;
     try {
     } catch (error) {}
+};
+
+const likes = async (req, res) => {
+    const { userId, customId, name, image } = req.user;
+    const { commentId } = req.query;
+    const { value } = req.body;
+
+    try {
+        const upsert = await prisma.comments_likes.upsert({
+            create: {
+                user_custom_id: customId,
+                comment_id: commentId,
+                user_name: name,
+                avatar: image,
+                value: 1
+            },
+            update: {
+                value: value === 1 ? 0 : 1
+            },
+            where: {
+                comment_id_user_custom_id: {
+                    comment_id: commentId,
+                    user_custom_id: customId
+                }
+            }
+        });
+
+        const hasil = await prisma.comments.findUnique({
+            where: {
+                id: commentId
+            },
+            select: {
+                dislikes: true
+            }
+        });
+
+        const flag = upsert?.value === 1 ? "increment" : "decrement";
+
+        await prisma.comments.update({
+            where: {
+                id: commentId
+            },
+            data: {
+                likes: {
+                    [flag]: 1
+                },
+                dislikes: {
+                    decrement:
+                        upsert?.value === 1 && hasil?.dislikes > 0 ? 1 : 0
+                }
+            }
+        });
+
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
+const dislikes = async (req, res) => {
+    const { userId, customId, name, avatar } = req.user;
+    const { commentId } = req.query;
+    const { value } = req.body;
+
+    try {
+        const upsert = await prisma.comments_likes.upsert({
+            create: {
+                user_custom_id: customId,
+                comment_id: commentId,
+                user_name: name,
+                avatar,
+                value: -1
+            },
+            update: {
+                value: value === -1 ? 0 : -1
+            },
+            where: {
+                comment_id_user_custom_id: {
+                    comment_id: commentId,
+                    user_custom_id: customId
+                }
+            }
+        });
+
+        const hasil = await prisma.comments.findUnique({
+            where: {
+                id: commentId
+            },
+            select: {
+                likes: true
+            }
+        });
+
+        const flag = upsert?.value === -1 ? "increment" : "decrement";
+
+        await prisma.comments.update({
+            where: {
+                id: commentId
+            },
+            data: {
+                dislikes: {
+                    [flag]: 1
+                },
+                likes: {
+                    decrement: upsert?.value === -1 && hasil?.likes > 0 ? 1 : 0
+                }
+            }
+        });
+
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.json({ code: 400, message: "Internal Server Error" });
+    }
 };
 
 export default {
@@ -125,5 +240,7 @@ export default {
     get,
     create,
     update,
-    remove
+    remove,
+    likes,
+    dislikes
 };

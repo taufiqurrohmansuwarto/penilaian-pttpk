@@ -92,6 +92,7 @@ model comments {
   user_type              String?
   comments_tags          comments_tags[]
   likes                  Int                      @default(0)
+  dislikes               Int                      @default(0)
   parent_id              String?
   parent                 comments?                @relation("SubComments", fields: [parent_id], references: [id], onDelete: Cascade)
   children               comments[]               @relation("SubComments")
@@ -106,6 +107,8 @@ model comments_likes {
   comment_id     String
   user_custom_id String
   user_name      String?
+  avatar         String?
+  value          Int?
   comments       comments? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
 
   @@id([comment_id, user_custom_id])
@@ -189,4 +192,3 @@ model feedbacks {
 
   @@id([user_custom_id, date])
 }
-
