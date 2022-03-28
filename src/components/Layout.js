@@ -1,38 +1,49 @@
-import { Header, Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
+import { signIn, useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import userRoute from "../routes/routes";
+
+const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
+    ssr: false
+});
+
+const menuItemRender = (options, element) => {
+    return (
+        <Link href={`${options.path}`}>
+            <a>{element}</a>
+        </Link>
+    );
+};
+
+const PageContainer = dynamic(
+    () => import("@ant-design/pro-layout").then((m) => m?.PageContainer),
+    {
+        ssr: false
+    }
+);
+
+const routes = (route, user) => {};
 
 const Layout = ({ children }) => {
-    return (
-        <Sidebar.Pushable as={Segment}>
-            <Sidebar
-                as={Menu}
-                animation="overlay"
-                icon="labeled"
-                inverted
-                vertical
-                visible
-                width="thin"
-            >
-                <Menu.Item as="a">
-                    <Icon name="home" />
-                    Home
-                </Menu.Item>
-                <Menu.Item as="a">
-                    <Icon name="gamepad" />
-                    Games
-                </Menu.Item>
-                <Menu.Item as="a">
-                    <Icon name="camera" />
-                    Channels
-                </Menu.Item>
-            </Sidebar>
+    const { data, status } = useSession({
+        required: true,
+        onUnauthenticated: () => signIn()
+    });
 
-            <Sidebar.Pusher>
-                <Segment basic>
-                    <Header as="h3">Application Content</Header>
-                    <Image src="/images/wireframe/paragraph.png" />
-                </Segment>
-            </Sidebar.Pusher>
-        </Sidebar.Pushable>
+    return (
+        <ProLayout
+            loading={status === "loading"}
+            menuItemRender={menuItemRender}
+            collapsed
+            route={userRoute}
+            collapsedButtonRender={false}
+            navTheme="dark"
+            style={{ minHeight: "100vh" }}
+            fixSiderbar
+            disableContentMargin
+        >
+            <PageContainer title="Feeds">{children}</PageContainer>
+        </ProLayout>
     );
 };
 

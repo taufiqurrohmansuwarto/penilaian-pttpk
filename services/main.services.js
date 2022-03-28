@@ -4,6 +4,7 @@ const fetcher = axios.create({
     baseURL: "/pttpk-penilaian/api"
 });
 
+// create social media
 export const createComments = (data) => {
     return fetcher.post("/comments", data).then((res) => res?.data);
 };
@@ -21,3 +22,12 @@ export const dislikes = ({ commentId, value }) =>
     fetcher
         .delete(`/comments/${commentId}/votes`, { data: { value } })
         .then((res) => res?.data);
+
+export const uploads = (data) =>
+    fetcher
+        .post("/uploads", data, {
+            headers: {
+                "Content-Type": "multipart/formData"
+            }
+        })
+        .then((r) => r?.data);

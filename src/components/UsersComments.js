@@ -31,7 +31,8 @@ import {
     createComments,
     dislikes,
     getComments,
-    likes
+    likes,
+    uploads
 } from "../../services/main.services";
 import RichTextEditor from "./RichTextEditor";
 
@@ -71,12 +72,14 @@ const Editor = ({
     submitting,
     value,
     onCancel,
+    handleUpload,
     buttonText = "Apa yang kamu kerjakan hari ini?"
 }) => (
     <div>
         <Form.Item>
             <RichTextEditor
-                style={{ minHeight: 200 }}
+                onImageUpload={handleUpload}
+                style={{ minHeight: 250 }}
                 onChange={onChange}
                 controls={[
                     [
@@ -361,6 +364,18 @@ const UserComments = () => {
         }
     });
 
+    // for rte
+    const handleUpload = async (file) => {
+        try {
+            const formData = new FormData();
+            formData.append("image", file);
+            const result = await uploads(formData);
+            return result;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const handleSubmit = () => {
         const data = { comment, parent_id: null };
         if (!comment) {
@@ -390,6 +405,7 @@ const UserComments = () => {
                         value={comment}
                         submitting={createCommentMutation.isLoading}
                         onChange={setComment}
+                        handleUpload={handleUpload}
                         onSubmit={handleSubmit}
                     />
                 }

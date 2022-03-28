@@ -5,6 +5,7 @@ import {
     EllipsisOutlined,
     SettingOutlined
 } from "@ant-design/icons";
+import Layout from "../../src/components/Layout";
 const { Meta } = Card;
 
 const data = [
@@ -21,7 +22,7 @@ const data = [
 
 const Discussion = () => {
     return (
-        <UserLayout>
+        <Layout>
             <Card
                 style={{ width: 300 }}
                 cover={
@@ -42,7 +43,7 @@ const Discussion = () => {
                     description="This is the description"
                 />
             </Card>
-        </UserLayout>
+        </Layout>
     );
 };
 
