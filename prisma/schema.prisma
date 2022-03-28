@@ -192,3 +192,55 @@ model feedbacks {
 
   @@id([user_custom_id, date])
 }
+
+// reddits
+model discussions_posts {
+  id                 String               @id @default(cuid())
+  parent_id          String?
+  title              String?
+  content            String?
+  link               String?
+  user_custom_id     String?
+  pic                String?
+  status             String?
+  type               String?
+  votes              Int?
+  created_at         DateTime?            @default(now()) @db.Timestamp(6)
+  discussions_votes  discussions_votes[]
+  discussions_ranks  discussions_ranks[]
+  discussions_rights discussions_rights[]
+}
+
+model discussions_votes {
+  discussion_post_id String
+  user_custom_id     String
+  username           String?
+  avatar             String?
+  vlag               Int?
+
+  discussions_posts discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade)
+
+  @@id([discussion_post_id, user_custom_id])
+}
+
+model discussions_ranks {
+  discussion_post_id String
+  hot                Int?   @default(0)
+  new                Int?   @default(0)
+  raising            Int?   @default(0)
+  controversial      Int?   @default(0)
+  top                Int?   @default(0)
+
+  discussions_posts discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade)
+  @@id([discussion_post_id])
+}
+
+model discussions_rights {
+  id                      String  @id @default(cuid())
+  discussion_post_id      String
+  property                String?
+  user_custom_id          String?
+  assigned_user_custom_id String
+
+  discussions_posts discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade)
+}
