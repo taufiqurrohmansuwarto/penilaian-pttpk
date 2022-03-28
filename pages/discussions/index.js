@@ -6,6 +6,7 @@ import {
     SettingOutlined
 } from "@ant-design/icons";
 import Layout from "../../src/components/Layout";
+import DiscussionsFeeds from "../../src/components/DiscussionsFeeds";
 const { Meta } = Card;
 
 const data = [
@@ -20,31 +21,12 @@ const data = [
     }
 ];
 
-const Discussion = () => {
+const Discussions = () => {
     return (
         <Layout>
-            <Card
-                style={{ width: 300 }}
-                cover={
-                    <img
-                        alt="example"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                }
-                actions={[
-                    <SettingOutlined key="setting" />,
-                    <EditOutlined key="edit" />,
-                    <EllipsisOutlined key="ellipsis" />
-                ]}
-            >
-                <Meta
-                    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                    title="Card title"
-                    description="This is the description"
-                />
-            </Card>
+            <DiscussionsFeeds />
         </Layout>
     );
 };
 
-export default Discussion;
+export default Discussions;

@@ -31,3 +31,24 @@ export const uploads = (data) =>
             }
         })
         .then((r) => r?.data);
+
+// feedbacks
+export const getFeedbacks = () =>
+    fetcher.get("/feedbacks").then((res) => res?.data);
+
+export const createFeedback = (data) =>
+    fetcher.post("/feedbacks", data).then((res) => res?.data);
+
+// discussions
+export const getCategories = () =>
+    fetcher.get("/discussions/categories").then((res) => res?.data);
+
+export const createCategories = (data) =>
+    fetcher.post("/discussions/categories", data).then((res) => res?.data);
+
+// posts
+export const getPosts = () =>
+    fetcher.get("/discussions/posts").then((res) => res?.data);
+
+export const createPost = (data) =>
+    fetcher.post("/discussions/posts", data).then((res) => res?.data);

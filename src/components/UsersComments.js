@@ -15,7 +15,8 @@ import {
     List,
     message,
     Skeleton,
-    Space
+    Space,
+    Divider
 } from "antd";
 import moment from "moment";
 import "moment/locale/id";
@@ -400,14 +401,17 @@ const UserComments = () => {
             <Comment
                 avatar={userData?.user?.image}
                 content={
-                    <Editor
-                        main={true}
-                        value={comment}
-                        submitting={createCommentMutation.isLoading}
-                        onChange={setComment}
-                        handleUpload={handleUpload}
-                        onSubmit={handleSubmit}
-                    />
+                    <>
+                        <Editor
+                            main={true}
+                            value={comment}
+                            submitting={createCommentMutation.isLoading}
+                            onChange={setComment}
+                            handleUpload={handleUpload}
+                            onSubmit={handleSubmit}
+                        />
+                        <Divider />
+                    </>
                 }
             />
 

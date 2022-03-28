@@ -24,6 +24,19 @@ const upload = async (req, res) => {
     }
 };
 
+// it should be multiple
+const uploadImageCategories = async (req, res) => {
+    try {
+        // this fucking multiple files you must loop
+        const files = req.files;
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
 module.exports = {
-    upload
+    upload,
+    uploadImageCategories
 };
