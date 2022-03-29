@@ -20,8 +20,24 @@ const index = async (req, res) => {
 };
 
 const create = async (req, res) => {
+    const { customId, image, name } = req.user;
+    const data = { user_custom_id: customId, avatar: image, username: name };
+    const { parentId } = req.body;
+
     try {
-    } catch (error) {}
+        await prisma.discussions_posts.create({
+            data: {
+                ...data,
+                type: "post",
+                active: true,
+                parent_id: parentId
+            }
+        });
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.json({ code: 400, message: "Internal Server Error" });
+    }
 };
 
 const detail = async (req, res) => {
