@@ -6,13 +6,13 @@ const Feeds = () => {
     return (
         <Layout>
             <Row gutter={16}>
-                <Col span={5}></Col>
-                <Col span={14}>
+                <Col span={6}></Col>
+                <Col span={12}>
                     <Card>
                         <UserComments />
                     </Card>
                 </Col>
-                <Col span={5}></Col>
+                <Col span={6}></Col>
             </Row>
         </Layout>
     );

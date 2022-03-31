@@ -7,7 +7,6 @@ const index = async (req, res) => {
         const result = await prisma.discussions_posts.findMany({
             where: { parent_id: null, type: "subreddit" }
         });
-        console.log(result);
         res.json(result);
     } catch (error) {
         console.log(error);
@@ -36,7 +35,6 @@ const create = async (req, res) => {
         await prisma.discussions_posts.create({
             data
         });
-        console.log("sukses");
 
         res.json({ code: 200, message: "success" });
     } catch (error) {

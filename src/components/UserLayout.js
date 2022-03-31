@@ -17,6 +17,7 @@ const UserLayout = ({ children }) => {
         <ProLayout
             collapsed
             route={userRoute}
+            location="/"
             collapsedButtonRender={false}
             navTheme="dark"
             style={{ minHeight: "100vh" }}

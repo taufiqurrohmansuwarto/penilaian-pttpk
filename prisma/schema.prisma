@@ -44,7 +44,9 @@ model penilaian {
   id_ptt              Int?
   tahun               Int?                  @db.SmallInt
   id_skpd             String?               @db.VarChar(200)
+  skpd                Json?
   id_jabatan          String?               @db.VarChar(200)
+  jabatan             Json?
   aktif               Boolean?              @default(false)
   sudah_verif         Boolean?              @default(false)
   diverif_oleh        String?               @db.VarChar(200)

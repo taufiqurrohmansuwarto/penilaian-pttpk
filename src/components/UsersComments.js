@@ -165,7 +165,6 @@ const ListComments = ({
 
     const handleSubmit = async (id) => {
         const data = { parent_id: id, comment };
-        console.log(data);
         if (!comment) {
             return;
         } else {

@@ -7,7 +7,7 @@ const uploadFileMinio = (mc, fileBuffer, filename, size, mimetype) => {
             fileBuffer,
             size,
             // cant be metadata add some username and department?
-            { "Content-Type": mimetype, user: { custom_id: "tes" } },
+            { "Content-Type": mimetype },
             function (err, info) {
                 if (err) {
                     reject(err);

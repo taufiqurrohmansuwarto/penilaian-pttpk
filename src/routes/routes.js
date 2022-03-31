@@ -1,8 +1,4 @@
-import {
-    CommentOutlined,
-    DashboardOutlined,
-    MessageOutlined
-} from "@ant-design/icons";
+import { CommentOutlined, MessageOutlined } from "@ant-design/icons";
 
 export default {
     routes: [

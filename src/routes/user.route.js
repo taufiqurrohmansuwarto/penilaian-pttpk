@@ -1,12 +1,16 @@
+import { CiOutlined, DashboardOutlined } from "@ant-design/icons";
+
 export default {
     routes: [
         {
             path: "/dashboard",
-            name: " Dashboard"
+            name: " Dashboard",
+            icon: <DashboardOutlined />
         },
         {
             path: "/resume",
-            name: " Resume"
+            name: " Resume",
+            icon: <CiOutlined />
         }
     ]
 };
