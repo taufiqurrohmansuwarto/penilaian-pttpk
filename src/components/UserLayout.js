@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import userRoute from "../routes/user.route";
+import Link from "next/link";
 
 const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
     ssr: false
@@ -12,9 +13,18 @@ const PageContainer = dynamic(
     }
 );
 
-const UserLayout = ({ children }) => {
+const menuItemRender = (options, element) => {
+    return (
+        <Link href={`${options.path}`}>
+            <a>{element}</a>
+        </Link>
+    );
+};
+
+const UserLayout = ({ children, title = "" }) => {
     return (
         <ProLayout
+            menuItemRender={menuItemRender}
             collapsed
             route={userRoute}
             location="/"
@@ -24,7 +34,7 @@ const UserLayout = ({ children }) => {
             fixSiderbar
             disableContentMargin
         >
-            <PageContainer>{children}</PageContainer>
+            <PageContainer title={title}>{children}</PageContainer>
         </ProLayout>
     );
 };
