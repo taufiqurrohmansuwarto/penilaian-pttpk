@@ -1,4 +1,8 @@
-import { CiOutlined, DashboardOutlined } from "@ant-design/icons";
+import {
+    DashboardOutlined,
+    FundOutlined,
+    RadarChartOutlined
+} from "@ant-design/icons";
 
 export default {
     routes: [
@@ -6,6 +10,16 @@ export default {
             path: "/user/dashboard",
             name: " Dashboard",
             icon: <DashboardOutlined />
+        },
+        {
+            path: "/user/penilaian",
+            name: " Penilaian",
+            icon: <RadarChartOutlined />
+        },
+        {
+            path: "/user/penilaian/bulanan",
+            name: " Penilaian Bulanan",
+            icon: <FundOutlined />
         }
     ]
 };

@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import {
     Alert,
     Button,
+    Card,
     Col,
     DatePicker,
     Drawer,
@@ -30,6 +31,7 @@ import {
     updatePenilaianBulanan
 } from "../../../services/users.service";
 import { getRefSatuanKinerja } from "../../../services/ref.service";
+import UserLayout from "../../../src/components/UserLayout";
 
 const DrawerCreate = ({
     visibleCreate,
@@ -389,60 +391,64 @@ const Bulanan = () => {
     const handleBatalKirim = () => {};
 
     return (
-        <div style={{ width: "70%" }}>
-            <Alert
-                type="warning"
-                message="Perhatian"
-                showIcon
-                description={
-                    <div>
-                        <p>Setelah dirasa sudah silahkan klik tombol submit</p>
-                        {/* todo buat confirmation ketika kirim atasan dengan klik  */}
-                        <Space>
-                            <Button type="primary">Kirim Atasan</Button>
-                            <Button type="primary">Lihat Nilai</Button>
-                            <Button type="primary">Batal Kirim</Button>
-                        </Space>
-                    </div>
-                }
-            />
-            <FullCalendar
-                initialView="dayGridMonth"
-                eventMaxStack={3}
-                themeSystem="bootstrap5"
-                datesSet={handleDateSet}
-                dayMaxEventRows={2}
-                ref={calendarRef}
-                nowIndicator
-                showNonCurrentDates={false}
-                fixedWeekCount={false}
-                events={dataPenilaian}
-                plugins={[timeGridPlugin, interactionPlugin, dayGridPlugin]}
-                select={handleDateSelect}
-                locale={id}
-                nextDayThreshold={"00:00:00"}
-                aspectRatio={2}
-                selectable
-                eventClick={handleEventClick}
-                eventAdd={function (a) {}}
-                eventChange={function () {}}
-                eventRemove={function () {}}
-            />
-            <DrawerCreate
-                dataTargetPenilaian={dataTargetPenilaian}
-                calendarRef={calendarRef}
-                visibleCreate={visibleCreate}
-                onCloseCreate={onCloseCreate}
-                date={date}
-            />
-            <DrawerUpdate
-                calenderRef={calendarRef}
-                dataTargetPenilaian={dataTargetPenilaian}
-                visibleUpdate={visibleUpdate}
-                onCloseUpdate={onCloseUpdate}
-                event={updateEvent}
-            />
-        </div>
+        <UserLayout title="Penilaian Bulanan">
+            <Card>
+                <Alert
+                    type="warning"
+                    message="Perhatian"
+                    showIcon
+                    description={
+                        <div>
+                            <p>
+                                Setelah dirasa sudah silahkan klik tombol submit
+                            </p>
+                            {/* todo buat confirmation ketika kirim atasan dengan klik  */}
+                            <Space>
+                                <Button type="primary">Kirim Atasan</Button>
+                                <Button type="primary">Lihat Nilai</Button>
+                                <Button type="primary">Batal Kirim</Button>
+                            </Space>
+                        </div>
+                    }
+                />
+                <FullCalendar
+                    initialView="dayGridMonth"
+                    eventMaxStack={3}
+                    themeSystem="bootstrap5"
+                    datesSet={handleDateSet}
+                    dayMaxEventRows={2}
+                    ref={calendarRef}
+                    nowIndicator
+                    showNonCurrentDates={false}
+                    fixedWeekCount={false}
+                    events={dataPenilaian}
+                    plugins={[timeGridPlugin, interactionPlugin, dayGridPlugin]}
+                    select={handleDateSelect}
+                    locale={id}
+                    nextDayThreshold={"00:00:00"}
+                    aspectRatio={2}
+                    selectable
+                    eventClick={handleEventClick}
+                    eventAdd={function (a) {}}
+                    eventChange={function () {}}
+                    eventRemove={function () {}}
+                />
+                <DrawerCreate
+                    dataTargetPenilaian={dataTargetPenilaian}
+                    calendarRef={calendarRef}
+                    visibleCreate={visibleCreate}
+                    onCloseCreate={onCloseCreate}
+                    date={date}
+                />
+                <DrawerUpdate
+                    calenderRef={calendarRef}
+                    dataTargetPenilaian={dataTargetPenilaian}
+                    visibleUpdate={visibleUpdate}
+                    onCloseUpdate={onCloseUpdate}
+                    event={updateEvent}
+                />
+            </Card>
+        </UserLayout>
     );
 };
 
