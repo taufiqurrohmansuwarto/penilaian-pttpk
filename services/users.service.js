@@ -83,6 +83,11 @@ export const hapusPenilaianBulanan = (id) => {
         .then((res) => res?.data);
 };
 
+export const cariPegawaiPNS = (nip) => {
+    console.log("from", nip);
+    return fetcher.get(`/user/pns?nip=${nip}`).then((res) => res?.data);
+};
+
 // target tahunan
 export const getTargetTahunan = () => {};
 export const updateTargeTahunan = () => {};
