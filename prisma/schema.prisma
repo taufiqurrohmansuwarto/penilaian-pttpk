@@ -8,6 +8,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model users {
+  custom_id String @id 
+  username String?
+  image String?
+  id String?
+  role String?
+  group String?
+}
+
 model acc_kinerja_bulanan {
   id           Int        @id @default(autoincrement())
   id_penilaian Int?
