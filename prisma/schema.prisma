@@ -13,6 +13,7 @@ model users {
   username String?
   image String?
   id String?
+  from String?
   role String?
   group String?
 }

@@ -102,30 +102,52 @@ export default NextAuth({
             idToken: true,
             checks: ["pkce", "state"],
             async profile(profile, token) {
-                const currentToken = token.id_token;
-                const { role, group, employee_number } =
-                    jsonwebtoken.decode(currentToken);
+                try {
+                    const currentToken = token.id_token;
+                    const { role, group, employee_number } =
+                        jsonwebtoken.decode(currentToken);
 
-                const currentUser = {
-                    id: profile.sub,
-                    name: profile.name,
-                    email: profile.email,
-                    image: profile.picture,
-                    employee_number: employee_number || "",
-                    role,
-                    group
-                };
+                    const currentUser = {
+                        id: profile.sub,
+                        name: profile.name,
+                        email: profile.email,
+                        image: profile.picture,
+                        employee_number: employee_number || "",
+                        role,
+                        group
+                    };
 
-                // upsert the user
+                    const id = profile?.sub?.split("|")?.[1];
+                    const from = profile?.sub?.split("|")?.[0];
 
-                await prisma.users.upsert({
-                    where: {
-                        custom_id: profile?.sub
-                    },
-                    create: {},
-                    update: {}
-                });
-                return currentUser;
+                    // upsert the user
+                    await prisma.users.upsert({
+                        where: {
+                            custom_id: profile?.sub
+                        },
+                        create: {
+                            group,
+                            role,
+                            from,
+                            id,
+                            custom_id: profile?.sub,
+                            image: profile?.picture,
+                            username: profile?.name
+                        },
+                        update: {
+                            group,
+                            from,
+                            role,
+                            id,
+                            image: profile?.picture,
+                            username: profile?.name
+                        }
+                    });
+
+                    return currentUser;
+                } catch (error) {
+                    console.log(error);
+                }
             }
         }
     ],
