@@ -18,6 +18,38 @@ const pttpkFasilitatorClientSecret = process.env.PTTPKFASILITATOR_SECRET;
 const pttpkFasilitatorWellKnown = process.env.PTTPKFASILITATOR_WELLKNOWN;
 const pttpkFasilitatorScope = process.env.PTTPKFASILITATOR_SCOPE;
 
+const upsert = async (currentUser) => {
+    try {
+        const [from, currentId] = currentUser?.id?.split("|");
+
+        await prisma.users.upsert({
+            where: {
+                custom_id: currentUser?.id
+            },
+            create: {
+                from,
+                custom_id: currentUser?.id,
+                group: currentUser?.group,
+                role: currentUser?.role,
+                image: currentUser?.image,
+                id: currentId,
+                username: currentUser?.name
+            },
+            update: {
+                from,
+                custom_id: currentUser?.id,
+                group: currentUser?.group,
+                role: currentUser?.role,
+                image: currentUser?.image,
+                id: currentId,
+                username: currentUser?.name
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export default NextAuth({
     providers: [
         {
@@ -35,7 +67,7 @@ export default NextAuth({
             },
             idToken: true,
             checks: ["pkce", "state"],
-            profile(profile, token) {
+            profile: async (profile, token) => {
                 const currentToken = token.id_token;
                 const { role, group, employee_number } =
                     jsonwebtoken.decode(currentToken);
@@ -49,6 +81,8 @@ export default NextAuth({
                     role,
                     group
                 };
+
+                await upsert(currentUser);
 
                 return currentUser;
             }
@@ -68,7 +102,7 @@ export default NextAuth({
             },
             idToken: true,
             checks: ["pkce", "state"],
-            profile(profile, token) {
+            profile: async (profile, token) => {
                 const currentToken = token.id_token;
                 const { role, group, employee_number } =
                     jsonwebtoken.decode(currentToken);
@@ -82,6 +116,8 @@ export default NextAuth({
                     role,
                     group
                 };
+
+                await upsert(currentUser);
 
                 return currentUser;
             }
@@ -101,7 +137,7 @@ export default NextAuth({
             },
             idToken: true,
             checks: ["pkce", "state"],
-            async profile(profile, token) {
+            profile: async (profile, token) => {
                 try {
                     const currentToken = token.id_token;
                     const { role, group, employee_number } =
@@ -117,32 +153,7 @@ export default NextAuth({
                         group
                     };
 
-                    const id = profile?.sub?.split("|")?.[1];
-                    const from = profile?.sub?.split("|")?.[0];
-
-                    // upsert the user
-                    await prisma.users.upsert({
-                        where: {
-                            custom_id: profile?.sub
-                        },
-                        create: {
-                            group,
-                            role,
-                            from,
-                            id,
-                            custom_id: profile?.sub,
-                            image: profile?.picture,
-                            username: profile?.name
-                        },
-                        update: {
-                            group,
-                            from,
-                            role,
-                            id,
-                            image: profile?.picture,
-                            username: profile?.name
-                        }
-                    });
+                    await upsert(currentUser);
 
                     return currentUser;
                 } catch (error) {

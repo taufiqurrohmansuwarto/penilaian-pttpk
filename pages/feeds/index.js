@@ -1,4 +1,5 @@
-import { Row, Col, Card } from "antd";
+import { Button, Card, Col, Row } from "antd";
+import { signOut } from "next-auth/react";
 import Layout from "../../src/components/Layout";
 import UserComments from "../../src/components/UsersComments";
 
@@ -9,6 +10,7 @@ const Feeds = () => {
                 <Col span={6}></Col>
                 <Col span={12}>
                     <Card>
+                        <Button onClick={signOut}>signout</Button>
                         <UserComments />
                     </Card>
                 </Col>
