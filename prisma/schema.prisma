@@ -50,6 +50,8 @@ model penilaian {
   aktif               Boolean?              @default(false)
   sudah_verif         Boolean?              @default(false)
   diverif_oleh        String?               @db.VarChar(200)
+  awal_periode        DateTime              @db.Date
+  akhir_periode       DateTime              @db.Date
   nip_atasan_langsung String?               @db.VarChar(200)
   atasan_langsung     Json?
   nip_atasan_banding  String?               @db.VarChar(200)
