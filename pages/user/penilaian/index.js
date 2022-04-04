@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Button, message, Space, Table } from "antd";
 import { useRouter } from "next/router";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -37,11 +38,50 @@ const Penilaian = () => {
     const columns = [
         { dataIndex: "tahun", title: "Tahun" },
         {
+            key: "atasan_langsung",
+            title: "Atasan Langsung",
+            render: (_, row) => (
+                <div>{row?.atasan_langsung?.label?.join("")}</div>
+            )
+        },
+        {
+            key: "atasan_banding",
+            title: "Atasan Banding",
+            render: (_, row) => (
+                <div>{row?.atasan_banding?.label?.join("")}</div>
+            )
+        },
+        {
+            key: "eselon_ii",
+            title: "Eselon II",
+            render: (_, row) => <div>{row?.eselon_ii?.label?.join("")}</div>
+        },
+        {
+            key: "awal_periode",
+            title: "Awal Periode",
+            render: (_, row) => (
+                <div>{moment(row?.awal_periode).format("DD-MM-YYYY")}</div>
+            )
+        },
+        {
+            key: "akhir_periode",
+            title: "Akhir Periode",
+            render: (_, row) => (
+                <div>{moment(row?.akhir_periode).format("DD-MM-YYYY")}</div>
+            )
+        },
+        {
+            key: "jabatan",
+            title: "Jabatan",
+            render: (_, row) => <div>{row?.jabatan?.nama}</div>
+        },
+        { dataIndex: "aktif", title: "Aktif" },
+        {
             key: "action",
             title: "Aksi",
             render: (_, row) => (
                 <Space>
-                    <Button onClick={() => gotoDetail(row?.id)}>Detial</Button>
+                    <Button onClick={() => gotoDetail(row?.id)}>Detail</Button>
                     <Button
                         loading={aktifMutation.isLoading}
                         onClick={async () => await handleUpdate(row?.id)}
@@ -59,15 +99,12 @@ const Penilaian = () => {
         }
     ];
 
-    if (isLoading) {
-        return <div>loading..</div>;
-    }
-
     return (
         <UserLayout title="Penilaian">
             <Button onClick={createPenilaian}>Buat</Button>
-            {JSON.stringify(data)}
             <Table
+                size="small"
+                loading={isLoading}
                 columns={columns}
                 rowKey={(row) => row?.id}
                 dataSource={data}

@@ -1,3 +1,4 @@
+import moment from "moment";
 import {
     Button,
     Card,
@@ -53,7 +54,8 @@ const FormPegawaiPNS = ({ name, label }) => {
                         value={dataPns?.pegawai_id}
                         key={dataPns?.pegawai_id}
                     >
-                        {dataPns?.nama} - {dataPns?.nip}
+                        {dataPns?.nama}({dataPns?.nip}) - {dataPns?.golongan}(
+                        {dataPns?.pangkat})
                     </Select.Option>
                 )}
             </Select>
@@ -92,8 +94,43 @@ const CreatePenilaian = () => {
     });
 
     const onFinish = (values) => {
-        console.log(values);
-        // createPenilaianMutation.mutate(values);
+        // console.log(values);
+        const {
+            id_jabatan,
+            id_skpd,
+            nip_atasan_langsung,
+            nip_atasan_banding,
+            nip_eselon_ii,
+            periode,
+            tahun
+        } = values;
+        const [awal, akhir] = periode;
+        const awal_periode = moment(awal).toISOString();
+        const akhir_periode = moment(akhir).toISOString();
+        const jabatan = dataJabatan?.find(
+            (jabatan) => parseInt(jabatan?.id) === parseInt(id_jabatan)
+        );
+
+        const id_atasan_langsung = nip_atasan_langsung?.value;
+        const id_atasan_banding = nip_atasan_banding?.value;
+        const id_eselon_ii = nip_eselon_ii?.value;
+
+        const data = {
+            nip_atasan_banding: id_atasan_banding?.toString(),
+            nip_atasan_langsung: id_atasan_langsung?.toString(),
+            nip_eselon_ii: id_eselon_ii?.toString(),
+            awal_periode,
+            akhir_periode,
+            id_jabatan,
+            atasan_langsung: nip_atasan_langsung,
+            atasan_banding: nip_atasan_banding,
+            eselon_ii: nip_eselon_ii,
+            jabatan,
+            tahun,
+            id_skpd
+        };
+
+        createPenilaianMutation.mutate(data);
     };
 
     return (
@@ -106,7 +143,7 @@ const CreatePenilaian = () => {
                         </Form.Item>
                         <FormPegawaiPNS
                             label="Atasan Langsung"
-                            name="nip_atasan"
+                            name="nip_atasan_langsung"
                         />
                         <FormPegawaiPNS
                             label="Atasan Banding"
@@ -138,7 +175,7 @@ const CreatePenilaian = () => {
                         </Form.Item>
                         <Form.Item name="id_skpd" label="Unit Kerja">
                             <TreeSelect
-                                labelInValue
+                                // labelInValue
                                 showSearch
                                 treeNodeFilterProp="title"
                                 treeData={dataUnor}

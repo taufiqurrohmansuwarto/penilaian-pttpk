@@ -84,7 +84,6 @@ export const hapusPenilaianBulanan = (id) => {
 };
 
 export const cariPegawaiPNS = (nip) => {
-    console.log("from", nip);
     return fetcher.get(`/user/pns?nip=${nip}`).then((res) => res?.data);
 };
 
