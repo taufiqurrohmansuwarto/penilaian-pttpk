@@ -155,7 +155,7 @@ const DetailPenilaian = () => {
     ];
 
     return (
-        <UserLayout>
+        <UserLayout title="Target Penilaian">
             <Card>
                 {dataRefSatuanKinerja && (
                     <>

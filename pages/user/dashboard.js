@@ -1,12 +1,14 @@
-import { Button, Card, Divider } from "antd";
+import { Button, Card, Divider, Space } from "antd";
 import { useRouter } from "next/router";
 import RichTextEditor from "../../src/components/RichTextEditor";
 import UserLayout from "../../src/components/UserLayout";
 import UserComments from "../../src/components/UsersComments";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 const Dashboard = () => {
     const router = useRouter();
+    const { data, status } = useSession();
 
     const gotoPenilaian = () => {
         router.push("/user/penilaian");
@@ -23,10 +25,13 @@ const Dashboard = () => {
     };
 
     return (
-        <UserLayout>
-            <Card style={{ paddingLeft: 200, paddingRight: 200 }}>
-                <Button onClick={gotoPenilaian}>hello world</Button>
-                <Button onClick={gotoBulanan}>Bulanan</Button>
+        <UserLayout title="Dashboard Penilaian">
+            <Card loading={!data}>
+                <p>Selamat Datang, {data?.user?.name}</p>
+                <Space>
+                    <Button onClick={gotoPenilaian}>Buat Penilaian</Button>
+                    <Button onClick={gotoBulanan}>Bulanan</Button>
+                </Space>
             </Card>
         </UserLayout>
     );

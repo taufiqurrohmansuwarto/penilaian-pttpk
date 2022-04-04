@@ -99,8 +99,16 @@ export const hapusTargetTahunan = () => {};
 export const createTargetTahunan = () => {};
 
 // kirim atasan
-export const kirimAtasan = ({ id, data }) => {
-    return fetcher.put(`/user/penilaian/${id}/request`, data);
+export const kirimAtasan = ({ bulan, tahun }) => {
+    return fetcher.put(`/user/request-penilaian?bulan=${bulan}&tahun=${tahun}`);
 };
 
-// batal kirim atasan
+export const batalKirimAtasan = (data) => {
+    return fetcher.delete(`/user/request-penilaian`);
+};
+
+export const getRequestPenilaian = (bulan, tahun) => {
+    return fetcher
+        .get(`/user/acc-kinerja-bulanan?bulan=${bulan}&tahun=${tahun}`)
+        .then((res) => res?.data);
+};

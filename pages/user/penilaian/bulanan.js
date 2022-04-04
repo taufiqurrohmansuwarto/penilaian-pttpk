@@ -17,6 +17,7 @@ import {
     Input,
     InputNumber,
     message,
+    Modal,
     Result,
     Row,
     Select,
@@ -32,10 +33,14 @@ import {
     createPenilaianBulanan,
     getPenilaianAktif,
     getPenilaianBulanan,
+    getRequestPenilaian,
     hapusPenilaianBulanan,
+    kirimAtasan,
     updatePenilaianBulanan
 } from "../../../services/users.service";
 import UserLayout from "../../../src/components/UserLayout";
+import { useRouter } from "next/router";
+import { isEmpty } from "lodash";
 
 const HIDDEN_DAYS = [0];
 
@@ -399,16 +404,17 @@ const Bulanan = () => {
 
     const [visibleCreate, setVisibleCreate] = useState(false);
     const [date, setDate] = useState({ start: null, end: null });
-    const [bulan, setBulan] = useState(moment(new Date()).format("M"));
-    const [tahun, setTahun] = useState(moment(new Date()).format("YYYY"));
+    const [bulan, setBulan] = useState();
+    const [tahun, setTahun] = useState();
 
     const [updateEvent, setUpdateEvent] = useState([]);
+    const router = useRouter();
 
     useEffect(() => {
-        const calendarApi = calendarRef?.current?.getApi();
-        calendarApi?.unselect();
-        calendarApi?.calendar?.rerenderEvents();
-    }, [bulan, tahun]);
+        // const calendarApi = calendarRef?.current?.getApi();
+        // calendarApi?.unselect();
+        // calendarApi?.calendar?.rerenderEvents();
+    }, [bulan, tahun, router.query.bulan, router.query.tahun]);
 
     const onCloseCreate = () => {
         setVisibleCreate(false);
@@ -427,6 +433,15 @@ const Bulanan = () => {
             enabled: !!bulan && !!tahun
         }
     );
+
+    const { data: dataRequestBulanan, isLoading: loadingDataRequestBulanan } =
+        useQuery(
+            ["request_penilaian_bulanan", bulan, tahun],
+            () => getRequestPenilaian(bulan, tahun),
+            {
+                enabled: !!bulan && !!tahun
+            }
+        );
 
     const { data: dataTargetPenilaian, loading: loadingTargetPenilaian } =
         useQuery("target_penilaian", () => getRefSatuanKinerja("target"), {});
@@ -452,6 +467,18 @@ const Bulanan = () => {
     // handle the change query
     const handleDateSet = (dateInfo) => {
         const { start } = dateInfo;
+        router.push(
+            {
+                query: {
+                    bulan: moment(start).format("MM"),
+                    tahun: moment(start).format("YYYY")
+                }
+            },
+            undefined,
+            {
+                scroll: false
+            }
+        );
         const bulan = moment(start).format("M");
         const tahun = moment(start).format("YYYY");
         setBulan(bulan);
@@ -464,8 +491,24 @@ const Bulanan = () => {
         setUpdateEvent(event);
     };
 
-    const handleKirimAtasan = () => {};
-    const handleLihatNilai = () => {};
+    const kirimAtasanMutation = useMutation((data) => kirimAtasan(data), {
+        onSuccess: () => alert("test")
+    });
+
+    const handleKirimAtasan = () => {
+        if (!dataPenilaian?.length) {
+            message.error(
+                "Tidak dapat mengirim penilaian bulanan ke atasan karena tidak ada pekerjaan yang dientri!"
+            );
+        } else {
+            Modal.confirm({
+                title: "Perhatian",
+                content:
+                    "Data pekerjaan anda akan dikirimkan ke atasan anda. Apakah anda yakin?",
+                onOk: () => kirimAtasanMutation.mutate({ bulan, tahun })
+            });
+        }
+    };
     const handleBatalKirim = () => {};
 
     const AktifkanPenilaian = () => {
@@ -488,41 +531,35 @@ const Bulanan = () => {
                 loading={
                     loadingPenilaian ||
                     loadingPenilaianAktif ||
-                    loadingTargetPenilaian
+                    loadingTargetPenilaian ||
+                    loadingDataRequestBulanan
                 }
+                extra={[
+                    <Space>
+                        <Button type="danger">Batal Kirim</Button>
+                        <Button
+                            type="primary"
+                            loading={kirimAtasanMutation.isLoading}
+                            onClick={handleKirimAtasan}
+                        >
+                            Kirim ke{" "}
+                            {dataPenilaianAktif?.atasan_langsung?.label?.[0]}
+                        </Button>
+                    </Space>
+                ]}
             >
                 {dataPenilaianAktif ? (
                     <>
-                        <Alert
-                            type="warning"
-                            message="Perhatian"
-                            showIcon
-                            description={
-                                <div>
-                                    <p>
-                                        Setelah dirasa sudah silahkan klik
-                                        tombol submit
-                                    </p>
-                                    <Space>
-                                        <Button type="primary">
-                                            Kirim Atasan
-                                        </Button>
-                                        <Button type="primary">
-                                            Lihat Nilai
-                                        </Button>
-                                        <Button type="primary">
-                                            Batal Kirim
-                                        </Button>
-                                    </Space>
-                                </div>
-                            }
-                        />
-                        <Divider />
                         <FullCalendar
                             initialView="dayGridMonth"
                             eventMaxStack={3}
                             themeSystem="bootstrap5"
                             datesSet={handleDateSet}
+                            initialDate={
+                                isEmpty(router?.query)
+                                    ? moment(new Date()).format("YYYY-MM-DD")
+                                    : `${router?.query?.tahun}-${router?.query?.bulan}-01`
+                            }
                             hiddenDays={HIDDEN_DAYS}
                             dayMaxEventRows={2}
                             ref={calendarRef}
@@ -541,9 +578,6 @@ const Bulanan = () => {
                             aspectRatio={2}
                             selectable
                             eventClick={handleEventClick}
-                            // eventAdd={function (a) {}}
-                            // eventChange={function () {}}
-                            // eventRemove={function () {}}
                         />
                         <DrawerCreate
                             dataTargetPenilaian={dataTargetPenilaian}
@@ -574,5 +608,3 @@ Bulanan.Auth = {
 };
 
 export default Bulanan;
-
-// todo update dan tata kembali form

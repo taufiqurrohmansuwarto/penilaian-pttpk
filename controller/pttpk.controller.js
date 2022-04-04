@@ -44,7 +44,6 @@ const getEmployee = async (req, res) => {
 
     try {
         const result = await fetcher.get(`/master/pegawai/${nip}`);
-        console.log(result);
         res.json(result?.data);
     } catch (error) {
         console.log(error);

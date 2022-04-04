@@ -1,14 +1,21 @@
-import { Button } from "antd";
+import { Button, Card } from "antd";
 import { signOut } from "next-auth/react";
+import ApprovalLayout from "../../src/components/ApprovalLayout";
 import ApprovalPenilaian from "../../src/components/ApprovalPenilaian";
 
 const Dashboard = () => {
     return (
-        <div style={{ padding: 20 }}>
-            <Button onClick={signOut}>Hello world</Button>
-            <ApprovalPenilaian />
-        </div>
+        <ApprovalLayout title="Dashboard Layout">
+            <Card>
+                <Button onClick={signOut}>Hello world</Button>
+            </Card>
+        </ApprovalLayout>
     );
+};
+
+Dashboard.Auth = {
+    roles: ["USER"],
+    groups: ["MASTER"]
 };
 
 export default Dashboard;

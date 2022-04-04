@@ -4,10 +4,11 @@ import prisma from "../lib/prisma";
 const dataPenilaian = async (req, res) => {
     const bulan = moment(new Date()).format("M");
     const tahun = moment(new Date()).format("YYYY");
-    const { userId } = req?.user;
+    const { userId, customId } = req?.user;
 
     const queryBulan = req?.query?.bulan || bulan;
     const queryTahun = req?.query?.tahun || tahun;
+
     const limit = req.query?.limit || 10;
     const offset = req.query?.offset || 0;
 
@@ -19,6 +20,7 @@ const dataPenilaian = async (req, res) => {
                     nip_atasan_langsung: userId?.toString()
                 },
                 bulan: parseInt(queryBulan),
+                diverif_oleh: customId,
                 tahun: parseInt(queryTahun)
             },
             take: limit,

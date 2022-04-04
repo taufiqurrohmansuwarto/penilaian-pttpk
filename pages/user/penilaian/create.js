@@ -182,7 +182,9 @@ const CreatePenilaian = () => {
                             />
                         </Form.Item>
                         <Form.Item>
-                            <Button htmlType="submit">Submit</Button>
+                            <Button htmlType="submit" type="primary">
+                                Submit
+                            </Button>
                         </Form.Item>
                     </Form>
                 )}

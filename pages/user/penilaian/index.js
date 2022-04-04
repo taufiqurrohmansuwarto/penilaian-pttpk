@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Button, message, Space, Table } from "antd";
+import { Button, Card, message, Space, Table } from "antd";
 import { useRouter } from "next/router";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
@@ -8,6 +8,7 @@ import {
     hapusPenilaian
 } from "../../../services/users.service";
 import UserLayout from "../../../src/components/UserLayout";
+import { FileAddOutlined } from "@ant-design/icons";
 
 const Penilaian = () => {
     const createPenilaian = () => router.push("/user/penilaian/create");
@@ -75,7 +76,11 @@ const Penilaian = () => {
             title: "Jabatan",
             render: (_, row) => <div>{row?.jabatan?.nama}</div>
         },
-        { dataIndex: "aktif", title: "Aktif" },
+        {
+            key: "aktif",
+            title: "Aktif",
+            render: (_, row) => <div>{JSON.stringify(row?.aktif)}</div>
+        },
         {
             key: "action",
             title: "Aksi",
@@ -101,15 +106,23 @@ const Penilaian = () => {
 
     return (
         <UserLayout title="Penilaian">
-            <Button onClick={createPenilaian}>Buat</Button>
-            <Table
-                size="small"
-                loading={isLoading}
-                columns={columns}
-                rowKey={(row) => row?.id}
-                dataSource={data}
-                pagination={false}
-            />
+            <Card>
+                <Button
+                    icon={<FileAddOutlined />}
+                    type="primary"
+                    onClick={createPenilaian}
+                >
+                    Penilaian
+                </Button>
+                <Table
+                    size="small"
+                    loading={isLoading}
+                    columns={columns}
+                    rowKey={(row) => row?.id}
+                    dataSource={data}
+                    pagination={false}
+                />
+            </Card>
         </UserLayout>
     );
 };

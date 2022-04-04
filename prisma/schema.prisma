@@ -19,16 +19,16 @@ model users {
 }
 
 model acc_kinerja_bulanan {
-  id           Int        @id @default(autoincrement())
-  id_penilaian Int?
-  bulan        Int?       @db.SmallInt
-  tahun        Int?       @db.SmallInt
+  id_penilaian Int
+  bulan        Int       @db.SmallInt
+  tahun        Int       @db.SmallInt
   sudah_verif  Boolean?   @default(false)
-  diverif_oleh Int?
-  id_ptt       Int?
+  diverif_oleh String?
+  id_ptt       Int
   created_at   DateTime?  @default(now()) @db.Timestamp(6)
   updated_at   DateTime?  @db.Timestamp(6)
   penilaian    penilaian? @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
+  @@id([id_penilaian, bulan, tahun, id_ptt])
 }
 
 model kinerja_bulanan {
