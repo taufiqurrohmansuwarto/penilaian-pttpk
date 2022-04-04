@@ -2,7 +2,7 @@ const { default: prisma } = require("../lib/prisma");
 import moment from "moment";
 
 const kirimAtasan = async (req, res) => {
-    const { userId } = req.user;
+    const { customId } = req.user;
     const bulan = req.query?.bulan || moment(new Date()).format("M");
     const tahun = req.query?.tahun || moment(new Date().format("YYYY"));
 
@@ -16,11 +16,11 @@ const kirimAtasan = async (req, res) => {
         // ke atasan langsung
         await prisma.acc_kinerja_bulanan.upsert({
             where: {
-                id_penilaian_bulan_tahun_id_ptt: {
+                id_penilaian_bulan_tahun_custom_id_ptt: {
+                    custom_id_ptt: customId,
                     bulan: parseInt(bulan),
                     tahun: parseInt(tahun),
-                    id_penilaian: currentPenilaian?.id,
-                    id_ptt: userId
+                    id_penilaian: currentPenilaian?.id
                 }
             },
             create: {
@@ -28,7 +28,7 @@ const kirimAtasan = async (req, res) => {
                 tahun: parseInt(tahun),
                 diverif_oleh: `master|${currentPenilaian?.nip_atasan_langsung}`,
                 id_penilaian: currentPenilaian?.id,
-                id_ptt: userId
+                custom_id_ptt: customId
             },
             update: {
                 diverif_oleh: `master|${currentPenilaian?.nip_atasan_langsung}`
@@ -45,19 +45,18 @@ const kirimAtasan = async (req, res) => {
 
 const batalKirimAtasan = async (req, res) => {
     const { id } = req.query;
-    const { userId } = req.user;
+    const { customId } = req.user;
     const { bulan, tahun } = req.query;
 
     try {
         await prisma.acc_kinerja_bulanan.deleteMany({
             where: {
-                id_ptt: userId,
+                custom_id_ptt: customId,
                 id_penilaian: id,
-                bulan,
-                tahun
+                bulan: parseInt(bulan),
+                tahun: parseInt(tahun)
             }
         });
-        //
         res.json({ code: 200, message: "sukses" });
     } catch (error) {
         res.json({ code: 400, message: "Internal Server Error" });

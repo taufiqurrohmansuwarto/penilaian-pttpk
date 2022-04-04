@@ -28,7 +28,7 @@ const kirimAtasan = async (req, res) => {
 };
 
 const requestPenilaianUser = async (req, res) => {
-    const { userId } = req.user;
+    const { customId } = req.user;
     const bulan = req.query?.bulan || parseInt(moment(new Date()).format("M"));
     const tahun =
         req.query?.tahun || parseInt(moment(new Date()).format("YYYY"));
@@ -43,9 +43,9 @@ const requestPenilaianUser = async (req, res) => {
         const result = await prisma.acc_kinerja_bulanan.findFirst({
             where: {
                 id_penilaian: penilaian?.id,
-                id_ptt: userId,
                 tahun: parseInt(tahun),
-                bulan: parseInt(bulan)
+                bulan: parseInt(bulan),
+                custom_id_ptt: customId
             }
         });
 

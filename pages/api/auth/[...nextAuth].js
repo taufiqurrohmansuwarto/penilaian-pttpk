@@ -33,7 +33,8 @@ const upsert = async (currentUser) => {
                 role: currentUser?.role,
                 image: currentUser?.image,
                 id: currentId,
-                username: currentUser?.name
+                username: currentUser?.name,
+                employee_number: currentUser?.employee_number
             },
             update: {
                 from,
@@ -42,7 +43,8 @@ const upsert = async (currentUser) => {
                 role: currentUser?.role,
                 image: currentUser?.image,
                 id: currentId,
-                username: currentUser?.name
+                username: currentUser?.name,
+                employee_number: currentUser?.employee_number
             }
         });
     } catch (error) {

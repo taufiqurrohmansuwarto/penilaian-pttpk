@@ -28,6 +28,7 @@ const Dashboard = () => {
         <UserLayout title="Dashboard Penilaian">
             <Card loading={!data}>
                 <p>Selamat Datang, {data?.user?.name}</p>
+                <div>{JSON.stringify(data)}</div>
                 <Space>
                     <Button onClick={gotoPenilaian}>Buat Penilaian</Button>
                     <Button onClick={gotoBulanan}>Bulanan</Button>

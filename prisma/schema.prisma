@@ -9,26 +9,30 @@ datasource db {
 }
 
 model users {
-  custom_id String @id 
-  username String?
-  image String?
-  id String?
-  from String?
-  role String?
-  group String?
+  custom_id           String                @id
+  username            String?
+  image               String?
+  id                  String?
+  from                String?
+  role                String?
+  group               String?
+  employee_number     String?
+  acc_kinerja_bulanan acc_kinerja_bulanan[]
 }
 
 model acc_kinerja_bulanan {
-  id_penilaian Int
-  bulan        Int       @db.SmallInt
-  tahun        Int       @db.SmallInt
-  sudah_verif  Boolean?   @default(false)
-  diverif_oleh String?
-  id_ptt       Int
-  created_at   DateTime?  @default(now()) @db.Timestamp(6)
-  updated_at   DateTime?  @db.Timestamp(6)
-  penilaian    penilaian? @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
-  @@id([id_penilaian, bulan, tahun, id_ptt])
+  id_penilaian  Int
+  bulan         Int        @db.SmallInt
+  tahun         Int        @db.SmallInt
+  sudah_verif   Boolean?   @default(false)
+  diverif_oleh  String?
+  custom_id_ptt String
+  created_at    DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?  @db.Timestamp(6)
+  penilaian     penilaian? @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
+  user_ptt      users      @relation(fields: [custom_id_ptt], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([id_penilaian, bulan, tahun, custom_id_ptt])
 }
 
 model kinerja_bulanan {
