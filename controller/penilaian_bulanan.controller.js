@@ -119,7 +119,7 @@ const update = async (req, res) => {
     } = req;
 
     try {
-        const result = await prisma.kinerja_bulanan.update({
+        await prisma.kinerja_bulanan.update({
             data: {
                 title,
                 start,
@@ -127,7 +127,7 @@ const update = async (req, res) => {
                 kuantitas,
                 target_penilaian: {
                     connect: {
-                        id: 19
+                        id: targetId
                     }
                 },
                 penilaian: {
@@ -161,16 +161,17 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
     const { userId } = req.user;
-    const { bulananId } = req.query;
+    const { id } = req.query;
     try {
         await prisma.kinerja_bulanan.deleteMany({
             where: {
-                id: parseInt(bulananId),
+                id: parseInt(id),
                 id_ptt: userId
             }
         });
         res.json({ code: 200, message: "Success" });
     } catch (error) {
+        console.log(error);
         res.json({ code: 400, message: "Internal Server Error" });
     }
 };

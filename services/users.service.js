@@ -18,6 +18,11 @@ export const getPenilaian = () => {
     return fetcher.get("/user/penilaian").then((res) => res?.data);
 };
 
+export const getPenilaianAktif = () => {
+    return fetcher.get("/user/penilaian?aktif=true").then((res) => res?.data);
+};
+
+// todo get this shit out
 export const updatePenilaian = () => {};
 
 export const hapusPenilaian = (id) => {

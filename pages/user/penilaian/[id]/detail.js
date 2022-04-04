@@ -1,4 +1,5 @@
 import {
+    Card,
     Button,
     Col,
     Drawer,
@@ -22,8 +23,7 @@ import {
     removeTargetPenilaian,
     updateTargetPenilaian
 } from "../../../../services/users.service";
-
-const CreateTarget = () => {};
+import UserLayout from "../../../../src/components/UserLayout";
 
 const DetailPenilaian = () => {
     const {
@@ -116,6 +116,7 @@ const DetailPenilaian = () => {
         try {
             const { id: targetId } = initialValues;
             const values = await editForm.validateFields();
+            console.log(values);
 
             const data = { id, data: values, targetId };
             updateTargetPenilaianMutation.mutate(data);
@@ -154,192 +155,201 @@ const DetailPenilaian = () => {
     ];
 
     return (
-        <div>
-            {dataRefSatuanKinerja && (
-                <>
-                    <Drawer
-                        key="create_target"
-                        onClose={onClose}
-                        visible={visible}
-                        title="Buat Target Penilaian"
-                        width={720}
-                        extra={[
-                            <Button
-                                loading={
-                                    createTargetPenilaianMutation.isLoading
-                                }
-                                onClick={handleSubmitCreate}
-                                type="primary"
+        <UserLayout>
+            <Card>
+                {dataRefSatuanKinerja && (
+                    <>
+                        <Drawer
+                            key="create_target"
+                            onClose={onClose}
+                            visible={visible}
+                            title="Buat Target Penilaian"
+                            width={720}
+                            extra={[
+                                <Button
+                                    loading={
+                                        createTargetPenilaianMutation.isLoading
+                                    }
+                                    onClick={handleSubmitCreate}
+                                    type="primary"
+                                >
+                                    Submit
+                                </Button>
+                            ]}
+                        >
+                            <Form
+                                form={form}
+                                layout="vertical"
+                                hideRequiredMark
                             >
-                                Submit
-                            </Button>
-                        ]}
-                    >
-                        <Form form={form} layout="vertical" hideRequiredMark>
-                            <Row gutter={16}>
-                                <Col span={24}>
-                                    <Form.Item
-                                        name="pekerjaan"
-                                        label="Pekerjaan"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Pekerjaan Tidak boleh kosong"
-                                            }
-                                        ]}
-                                    >
-                                        <Input placeholder="Masukkan target pekerjaan" />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                            <Row gutter={16}>
-                                <Col span={12}>
-                                    <Form.Item
-                                        name="kuantitas"
-                                        label="Kuantitas"
-                                        help="Jumlah Satuan"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please select an owner"
-                                            }
-                                        ]}
-                                    >
-                                        <InputNumber
-                                            style={{ width: "100%" }}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                    <Form.Item
-                                        name="ref_satuan_kinerja_id"
-                                        label="Satuan"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Satuan Tidak boleh kosong"
-                                            }
-                                        ]}
-                                    >
-                                        <Select
-                                            placeholder="Pilih Satuan"
-                                            showSearch
-                                            optionFilterProp="nama"
-                                            allowClear
+                                <Row gutter={16}>
+                                    <Col span={24}>
+                                        <Form.Item
+                                            name="pekerjaan"
+                                            label="Pekerjaan"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Pekerjaan Tidak boleh kosong"
+                                                }
+                                            ]}
                                         >
-                                            {dataRefSatuanKinerja?.map((d) => (
-                                                <Select.Option
-                                                    nama={d?.nama}
-                                                    key={d?.id}
-                                                >
-                                                    {d?.nama}
-                                                </Select.Option>
-                                            ))}
-                                        </Select>
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Drawer>
-
-                    <Drawer
-                        key="edit_target"
-                        onClose={onCloseEdit}
-                        visible={visibleEdit}
-                        title="Edit Target Penilaian"
-                        width={720}
-                        destroyOnClose
-                        forceRender
-                        extra={[
-                            <Button onClick={handleUpdate} type="primary">
-                                Edit
-                            </Button>
-                        ]}
-                    >
-                        <Form form={editForm} initialValues={initialValues}>
-                            {JSON.stringify(initialValues)}
-                            <Row gutter={16}>
-                                <Col span={24}>
-                                    <Form.Item
-                                        name="pekerjaan"
-                                        label="Pekerjaan"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Pekerjaan Tidak boleh kosong"
-                                            }
-                                        ]}
-                                    >
-                                        <Input placeholder="Masukkan target pekerjaan" />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                            <Row gutter={16}>
-                                <Col span={12}>
-                                    <Form.Item
-                                        name="kuantitas"
-                                        label="Kuantitas"
-                                        help="Jumlah Satuan"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Please select an owner"
-                                            }
-                                        ]}
-                                    >
-                                        <InputNumber
-                                            style={{ width: "100%" }}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                    <Form.Item
-                                        name="ref_satuan_kinerja_id"
-                                        label="Satuan"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    "Satuan Tidak boleh kosong"
-                                            }
-                                        ]}
-                                    >
-                                        <Select
-                                            placeholder="Pilih Satuan"
-                                            showSearch
-                                            optionFilterProp="nama"
-                                            allowClear
+                                            <Input placeholder="Masukkan target pekerjaan" />
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="kuantitas"
+                                            label="Kuantitas"
+                                            help="Jumlah Satuan"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Please select an owner"
+                                                }
+                                            ]}
                                         >
-                                            {dataRefSatuanKinerja?.map((d) => (
-                                                <Select.Option
-                                                    nama={d?.nama}
-                                                    key={d?.id}
-                                                    value={d.id}
-                                                >
-                                                    {d?.nama}
-                                                </Select.Option>
-                                            ))}
-                                        </Select>
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Drawer>
+                                            <InputNumber
+                                                style={{ width: "100%" }}
+                                            />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="ref_satuan_kinerja_id"
+                                            label="Satuan"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Satuan Tidak boleh kosong"
+                                                }
+                                            ]}
+                                        >
+                                            <Select
+                                                placeholder="Pilih Satuan"
+                                                showSearch
+                                                optionFilterProp="nama"
+                                                allowClear
+                                            >
+                                                {dataRefSatuanKinerja?.map(
+                                                    (d) => (
+                                                        <Select.Option
+                                                            nama={d?.nama}
+                                                            key={d?.id}
+                                                        >
+                                                            {d?.nama}
+                                                        </Select.Option>
+                                                    )
+                                                )}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Drawer>
 
-                    <Button onClick={showDrawer}>Create</Button>
-                    <Table
-                        dataSource={dataTargetPenilaian}
-                        columns={columns}
-                        pagination={false}
-                    />
-                </>
-            )}
-        </div>
+                        <Drawer
+                            key="edit_target"
+                            onClose={onCloseEdit}
+                            visible={visibleEdit}
+                            title="Edit Target Penilaian"
+                            width={720}
+                            destroyOnClose
+                            forceRender
+                            extra={[
+                                <Button onClick={handleUpdate} type="primary">
+                                    Edit
+                                </Button>
+                            ]}
+                        >
+                            <Form form={editForm} initialValues={initialValues}>
+                                <Row gutter={16}>
+                                    <Col span={24}>
+                                        <Form.Item
+                                            name="pekerjaan"
+                                            label="Pekerjaan"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Pekerjaan Tidak boleh kosong"
+                                                }
+                                            ]}
+                                        >
+                                            <Input placeholder="Masukkan target pekerjaan" />
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="kuantitas"
+                                            label="Kuantitas"
+                                            help="Jumlah Satuan"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Please select an owner"
+                                                }
+                                            ]}
+                                        >
+                                            <InputNumber
+                                                style={{ width: "100%" }}
+                                            />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="ref_satuan_kinerja_id"
+                                            label="Satuan"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Satuan Tidak boleh kosong"
+                                                }
+                                            ]}
+                                        >
+                                            <Select
+                                                placeholder="Pilih Satuan"
+                                                showSearch
+                                                optionFilterProp="nama"
+                                                allowClear
+                                            >
+                                                {dataRefSatuanKinerja?.map(
+                                                    (d) => (
+                                                        <Select.Option
+                                                            nama={d?.nama}
+                                                            key={d?.id}
+                                                            value={d.id}
+                                                        >
+                                                            {d?.nama}
+                                                        </Select.Option>
+                                                    )
+                                                )}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Drawer>
+
+                        <Button onClick={showDrawer}>Create</Button>
+                        <Table
+                            dataSource={dataTargetPenilaian}
+                            columns={columns}
+                            pagination={false}
+                        />
+                    </>
+                )}
+            </Card>
+        </UserLayout>
     );
 };
 
