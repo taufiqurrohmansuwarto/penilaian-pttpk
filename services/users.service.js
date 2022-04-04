@@ -97,3 +97,10 @@ export const getTargetTahunan = () => {};
 export const updateTargeTahunan = () => {};
 export const hapusTargetTahunan = () => {};
 export const createTargetTahunan = () => {};
+
+// kirim atasan
+export const kirimAtasan = ({ id, data }) => {
+    return fetcher.put(`/user/penilaian/${id}/request`, data);
+};
+
+// batal kirim atasan
