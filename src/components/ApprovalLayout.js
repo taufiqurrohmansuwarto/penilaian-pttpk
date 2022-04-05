@@ -26,8 +26,12 @@ const ApprovalLayout = ({ children, title = "" }) => {
         <ProLayout
             menuItemRender={menuItemRender}
             collapsed
+            title="PTTPK"
+            logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
+            menuHeaderRender={(logo, title) => {
+                return <Link href="/">{logo}</Link>;
+            }}
             route={approvalRoute}
-            location="/"
             collapsedButtonRender={false}
             navTheme="dark"
             style={{ minHeight: "100vh" }}

@@ -1,12 +1,15 @@
 import { Button, Card } from "antd";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import ApprovalLayout from "../../src/components/ApprovalLayout";
 import ApprovalPenilaian from "../../src/components/ApprovalPenilaian";
 
 const Dashboard = () => {
+    const { data } = useSession();
+
     return (
-        <ApprovalLayout title="Dashboard Layout">
+        <ApprovalLayout title="Dashboard Approval Penilaian">
             <Card>
+                <p>Halo,{data?.user?.name}</p>
                 <Button onClick={signOut}>Hello world</Button>
             </Card>
         </ApprovalLayout>

@@ -31,11 +31,43 @@ const dataPenilaian = async (req, res) => {
         });
         res.json(result);
     } catch (error) {
+        res.json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
+const getListPenilaianBulanan = async (req, res) => {
+    try {
+        const { id, bulan, tahun } = req.query;
+
+        const result = await prisma.penilaian.findFirst({
+            where: {
+                id: parseInt(id),
+                aktif: true
+            },
+            include: {
+                kinerja_bulanan: {
+                    where: {
+                        bulan: parseInt(bulan),
+                        tahun: parseInt(tahun)
+                    },
+                    include: {
+                        target_penilaian: {
+                            include: {
+                                ref_satuan_kinerja: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        res.json(result);
+    } catch (error) {
         console.log(error);
         res.json({ code: 400, message: "Internal Server Error" });
     }
 };
 
 module.exports = {
-    dataPenilaian
+    dataPenilaian,
+    getListPenilaianBulanan
 };

@@ -9,3 +9,10 @@ export const getPenilaianApproval = ({ bulan, tahun }) => {
         .get(`/penilaian?bulan=${bulan}&tahun=${tahun}`)
         .then((res) => res?.data);
 };
+
+export const getPenilaianBulananApproval = ({ id, bulan, tahun }) => {
+    console.log(id, bulan, tahun);
+    return fetcher
+        .get(`/penilaian/${id}?bulan=${bulan}&tahun=${tahun}`)
+        .then((res) => res?.data);
+};
