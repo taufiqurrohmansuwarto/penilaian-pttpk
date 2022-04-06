@@ -70,8 +70,22 @@ const getListPenilaianBulanan = async (req, res) => {
 const approvePenilaianBulanan = async (req, res) => {
     try {
         const { body } = req;
+        const verifApproval = body?.map((d) => {
+            const { id, ...data } = d;
+            return prisma.kinerja_bulanan.update({
+                data,
+                where: {
+                    id: d?.id
+                }
+            });
+        });
+
+        await prisma.$transaction(verifApproval);
+        // ini harus diupdate
+
         res.json({ code: 200, message: "ok" });
     } catch (error) {
+        console.log(error);
         res.json({ code: 400, message: "Internal Server Error" });
     }
 };

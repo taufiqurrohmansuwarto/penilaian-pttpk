@@ -11,10 +11,11 @@ export const getPenilaianApproval = ({ bulan, tahun }) => {
 };
 
 export const getPenilaianBulananApproval = ({ id, bulan, tahun }) => {
-    console.log(id, bulan, tahun);
     return fetcher
         .get(`/penilaian/${id}?bulan=${bulan}&tahun=${tahun}`)
         .then((res) => res?.data);
 };
 
-export const approvaPenilaianBulananApproval = ({ id }) => {};
+export const approvaPenilaianBulananApproval = ({ id, data }) => {
+    return fetcher.get(`/penilaian/${id}`, data).then((res) => res?.data);
+};
