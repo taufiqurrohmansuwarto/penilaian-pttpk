@@ -4,6 +4,7 @@ import {
     DatePicker,
     Divider,
     InputNumber,
+    message,
     Modal,
     Skeleton,
     Table
@@ -12,17 +13,20 @@ import moment from "moment";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import {
     getPenilaianApproval,
     getPenilaianBulananApproval
 } from "../../services/approval.service";
 import ApprovalLayout from "../../src/components/ApprovalLayout";
 
-const FormApprovalModal = ({ id, bulan, tahun }) => {
+const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible }) => {
     const { data, isLoading, status } = useQuery(
         ["approval_penilaian_bulanan", `${id}${bulan}${tahun}`],
-        () => getPenilaianBulananApproval({ id, bulan, tahun })
+        () => getPenilaianBulananApproval({ id, bulan, tahun }),
+        {
+            enabled: !!id && !!bulan && !!tahun
+        }
     );
 
     const [kualitasValue, setKualitasValue] = useState([]);
@@ -44,13 +48,29 @@ const FormApprovalModal = ({ id, bulan, tahun }) => {
     const columns = [
         { dataIndex: "title", title: "Deskripsi Pekerjaan" },
         { dataIndex: "kuantitas", title: "Kuantitas" },
-        { dataIndex: "start", title: "Tanggal Mulai Pekerjaan" },
-        { dataIndex: "end", title: "Tanggal Akhir Pekerjaan" },
+        {
+            dataIndex: "start",
+            title: "Tanggal Mulai Pekerjaan",
+            render: (_, row) => (
+                <div>{moment(row?.start).format("DD-MM-YYYY")}</div>
+            )
+        },
+        {
+            dataIndex: "end",
+            title: "Tanggal Akhir Pekerjaan",
+            render: (_, row) => (
+                <div>
+                    {moment(row?.end).subtract(1, "days").format("DD-MM-YYYY")}
+                </div>
+            )
+        },
         {
             key: "penilaian",
             title: "Penilaian",
             render: (_, row) => (
                 <InputNumber
+                    min={0}
+                    max={100}
                     value={
                         kualitasValue?.find((k) => k?.id === row?.id)?.kualitas
                     }
@@ -67,8 +87,24 @@ const FormApprovalModal = ({ id, bulan, tahun }) => {
         }
     ];
 
+    const verifMutationApproval = useMutation();
+    const handleSubmit = () => {
+        const hasZero = kualitasValue?.some((x) => x?.kualitas === 0);
+        if (hasZero) {
+            message.error(
+                "Masih ada yang belum dinilai. Sepertinya ada kualitas yang masih 0"
+            );
+        }
+    };
+
     return (
-        <div>
+        <Modal
+            centered
+            onCancel={onCancel}
+            visible={visible}
+            width={800}
+            onOk={handleSubmit}
+        >
             <Table
                 pagination={false}
                 columns={columns}
@@ -77,11 +113,12 @@ const FormApprovalModal = ({ id, bulan, tahun }) => {
                 rowKey={(row) => row?.id}
             />
             <div>{JSON.stringify(kualitasValue)}</div>
-        </div>
+        </Modal>
     );
 };
 
 // hehe patut di contoh
+/** @param {import('next').InferGetServerSidePropsType<typeof getServerSideProps> } props */
 function Penilaian({ data: query }) {
     const [date, setDate] = useState(
         moment(`${query?.tahun}-${query?.bulan}-01`)
@@ -101,8 +138,6 @@ function Penilaian({ data: query }) {
             enabled: !!date
         }
     );
-
-    const { data } = useSession();
 
     const router = useRouter();
 
@@ -137,8 +172,6 @@ function Penilaian({ data: query }) {
         if (router?.isReady) return null;
     }, [date, router?.isReady]);
 
-    const Nama = (_, row) => <div>{row?.user_ptt?.nama}</div>;
-
     const columns = [
         {
             key: "nama",
@@ -160,19 +193,13 @@ function Penilaian({ data: query }) {
 
     return (
         <ApprovalLayout title="Daftar Penilaian">
-            <Modal
-                destroyOnClose
+            <FormApprovalModal
                 visible={showModal}
                 onCancel={closeModal}
-                centered
-                width={800}
-            >
-                <FormApprovalModal
-                    id={id}
-                    bulan={moment(date).format("M")}
-                    tahun={moment(date).format("YYYY")}
-                />
-            </Modal>
+                id={id}
+                bulan={moment(date).format("M")}
+                tahun={moment(date).format("YYYY")}
+            />
             <Skeleton loading={!router?.isReady}>
                 <Card>
                     <DatePicker.MonthPicker

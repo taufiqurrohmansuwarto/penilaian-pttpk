@@ -16,3 +16,5 @@ export const getPenilaianBulananApproval = ({ id, bulan, tahun }) => {
         .get(`/penilaian/${id}?bulan=${bulan}&tahun=${tahun}`)
         .then((res) => res?.data);
 };
+
+export const approvaPenilaianBulananApproval = ({ id }) => {};

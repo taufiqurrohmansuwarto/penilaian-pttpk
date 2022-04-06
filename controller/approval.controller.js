@@ -67,7 +67,17 @@ const getListPenilaianBulanan = async (req, res) => {
     }
 };
 
+const approvePenilaianBulanan = async (req, res) => {
+    try {
+        const { body } = req;
+        res.json({ code: 200, message: "ok" });
+    } catch (error) {
+        res.json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
 module.exports = {
     dataPenilaian,
-    getListPenilaianBulanan
+    getListPenilaianBulanan,
+    approvePenilaianBulanan
 };
