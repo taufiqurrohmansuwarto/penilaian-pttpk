@@ -16,6 +16,8 @@ export const getPenilaianBulananApproval = ({ id, bulan, tahun }) => {
         .then((res) => res?.data);
 };
 
-export const approvaPenilaianBulananApproval = ({ id, data }) => {
-    return fetcher.get(`/penilaian/${id}`, data).then((res) => res?.data);
+export const approvaPenilaianBulananApproval = ({ id, data, bulan, tahun }) => {
+    return fetcher
+        .put(`/penilaian/${id}?bulan=${bulan}&tahun=${tahun}`, data)
+        .then((res) => res?.data);
 };

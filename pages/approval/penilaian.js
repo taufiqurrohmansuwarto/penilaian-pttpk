@@ -1,4 +1,5 @@
 import {
+    Avatar,
     Button,
     Card,
     DatePicker,
@@ -14,8 +15,9 @@ import { random } from "lodash";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
+    approvaPenilaianBulananApproval,
     getPenilaianApproval,
     getPenilaianBulananApproval
 } from "../../services/approval.service";
@@ -26,25 +28,26 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible }) => {
         ["approval_penilaian_bulanan", `${id}${bulan}${tahun}`],
         () => getPenilaianBulananApproval({ id, bulan, tahun }),
         {
-            enabled: !!id && !!bulan && !!tahun
+            enabled: !!id
         }
     );
 
     const [kualitasValue, setKualitasValue] = useState([]);
+    const [lowValue, setLowValue] = useState(0);
+    const [highValue, setHightValue] = useState(0);
 
     useEffect(() => {
         if (status === "success") {
             setKualitasValue(
                 data?.kinerja_bulanan?.map((k) => ({
                     id: k?.id,
-                    // id_penilaian: k?.id_penilaian,
                     tahun: k?.tahun,
                     bulan: k?.bulan,
                     kualitas: k?.kualitas
                 }))
             );
         }
-    }, [status, data]);
+    }, [status, data, visible]);
 
     const columns = [
         { dataIndex: "title", title: "Deskripsi Pekerjaan" },
@@ -66,8 +69,8 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible }) => {
             )
         },
         {
-            key: "penilaian",
-            title: "Penilaian",
+            key: "kualitas",
+            title: "Kualitas/Nilai",
             render: (_, row) => (
                 <InputNumber
                     min={0}
@@ -88,7 +91,21 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible }) => {
         }
     ];
 
-    const verifMutationApproval = useMutation();
+    const querClient = useQueryClient();
+
+    const verifMutationApproval = useMutation(
+        (data) => approvaPenilaianBulananApproval(data),
+        {
+            onSuccess: () => {
+                querClient.invalidateQueries([
+                    "approval_penilaian_bulanan",
+                    `${id}${bulan}${tahun}`
+                ]);
+                message.success("berhasil");
+                onCancel();
+            }
+        }
+    );
     const handleSubmit = () => {
         const hasZero = kualitasValue?.some((x) => x?.kualitas === 0);
         if (hasZero) {
@@ -96,13 +113,10 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible }) => {
                 "Masih ada yang belum dinilai. Sepertinya ada kualitas yang masih 0"
             );
         } else {
-            const value = { id, data: kualitasValue };
-            console.log(value);
+            const value = { id, data: kualitasValue, bulan, tahun };
+            verifMutationApproval.mutate(value);
         }
     };
-
-    const [lowValue, setLowValue] = useState();
-    const [highValue, setHightValue] = useState();
 
     const handleChangeLowValue = (e) => setLowValue(e);
     const handleChangeHighValue = (e) => setHightValue(e);
@@ -122,6 +136,7 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible }) => {
             title="Pekerjaan Bulanan"
             okText="Update Kualitas"
             destroyOnClose
+            confirmLoading={verifMutationApproval.isLoading}
             centered
             onCancel={onCancel}
             visible={visible}
@@ -153,13 +168,11 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible }) => {
                 dataSource={data?.kinerja_bulanan}
                 rowKey={(row) => row?.id}
             />
-            {/* <div>{JSON.stringify(kualitasValue)}</div> */}
         </Modal>
     );
 };
 
 // hehe patut di contoh
-/** @param {import('next').InferGetServerSidePropsType<typeof getServerSideProps> } props */
 function Penilaian({ data: query }) {
     const [date, setDate] = useState(
         moment(`${query?.tahun}-${query?.bulan}-01`)
@@ -211,21 +224,31 @@ function Penilaian({ data: query }) {
 
     useEffect(() => {
         if (router?.isReady) return null;
-    }, [date, router?.isReady]);
+    }, [date, router?.isReady, query]);
 
     const columns = [
+        {
+            key: "foto",
+            title: "Foto",
+            render: (_, row) => <Avatar src={row?.user_ptt?.image} />
+        },
         {
             key: "nama",
             title: "Nama",
             render: (_, row) => <div>{row?.user_ptt?.username}</div>
         },
         {
+            key: "niptt",
+            title: "NIPTT",
+            render: (_, row) => <div>{row?.user_ptt?.employee_number}</div>
+        },
+        {
             key: "detail",
-            title: "Detail",
+            title: "Nilai dan ACC",
             render: (_, row) => (
                 <div>
                     <Button onClick={() => openModal(row?.id_penilaian)}>
-                        Detail
+                        Nilai dan ACC
                     </Button>
                 </div>
             )
@@ -250,10 +273,14 @@ function Penilaian({ data: query }) {
                     />
                     <Divider />
                     <Table
+                        rowKey={(row) =>
+                            `${row?.id_penilaian}-${row?.bulan}-${row?.tahun}-${row?.custom_id_ptt}`
+                        }
                         columns={columns}
                         dataSource={dataPenilaianApproval}
                         loading={loadingDataPenilaianApproval}
                     />
+                    {JSON.stringify(dataPenilaianApproval)}
                 </Card>
             </Skeleton>
         </ApprovalLayout>

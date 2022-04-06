@@ -73,14 +73,43 @@ const approvePenilaianBulanan = async (req, res) => {
         const verifApproval = body?.map((d) => {
             const { id, ...data } = d;
             return prisma.kinerja_bulanan.update({
-                data,
+                data: {
+                    ...data
+                },
                 where: {
                     id: d?.id
                 }
             });
         });
 
-        await prisma.$transaction(verifApproval);
+        prisma.acc_kinerja_bulanan.update({
+            where: {
+                id_penilaian_bulan_tahun_custom_id_ptt: {
+                    bulan: parseInt(req.query?.bulan),
+                    tahun: parseInt(req.query?.tahun),
+                    id_penilaian: req.query?.id,
+                    custom_id_ptt: req.user?.customId
+                }
+            },
+            data: {
+                sudah_verif: true
+            }
+        });
+
+        await prisma.$transaction([
+            ...verifApproval,
+            prisma.acc_kinerja_bulanan.update({
+                where: {
+                    id_penilaian_bulan_tahun_custom_id_ptt: {
+                        bulan: parseInt(req.query?.bulan),
+                        tahun: parseInt(req.query?.tahun),
+                        id_penilaian: req.query?.id,
+                        custom_id_ptt: req.user?.customId
+                    }
+                }
+            })
+        ]);
+
         // ini harus diupdate
 
         res.json({ code: 200, message: "ok" });

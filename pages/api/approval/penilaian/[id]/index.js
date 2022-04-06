@@ -10,4 +10,4 @@ import {
 export default handler
     .use(auth)
     .get(getListPenilaianBulanan)
-    .patch(approvePenilaianBulanan);
+    .put(approvePenilaianBulanan);
