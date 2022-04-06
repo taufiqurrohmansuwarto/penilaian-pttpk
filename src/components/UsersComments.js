@@ -106,7 +106,7 @@ const Editor = ({
                 >
                     {buttonText}
                 </Button>
-                {!main && <Button onClick={onCancel}>Cancel</Button>}
+                {!main && <Button onClick={onCancel}>Batal</Button>}
             </Space>
         </Form.Item>
     </div>
@@ -218,12 +218,20 @@ const ListComments = ({
                                         ) ? (
                                             <>
                                                 <LikeFilled />
-                                                <span>{item?.likes}</span>
+                                                <span
+                                                    style={{ paddingLeft: 8 }}
+                                                >
+                                                    {item?.likes}
+                                                </span>
                                             </>
                                         ) : (
                                             <>
                                                 <LikeOutlined />
-                                                <span>{item?.likes}</span>
+                                                <span
+                                                    style={{ paddingLeft: 8 }}
+                                                >
+                                                    {item?.likes}
+                                                </span>
                                             </>
                                         )}
                                     </span>,
@@ -248,12 +256,20 @@ const ListComments = ({
                                         ) ? (
                                             <>
                                                 <DislikeFilled />
-                                                <span>{item?.dislikes}</span>
+                                                <span
+                                                    style={{ paddingLeft: 8 }}
+                                                >
+                                                    {item?.dislikes}
+                                                </span>
                                             </>
                                         ) : (
                                             <>
                                                 <DislikeOutlined />
-                                                <span>{item?.dislikes}</span>
+                                                <span
+                                                    style={{ paddingLeft: 8 }}
+                                                >
+                                                    {item?.dislikes}
+                                                </span>
                                             </>
                                         )}
                                     </span>,
@@ -427,8 +443,14 @@ const UserComments = () => {
                 </React.Fragment>
             ))}
             {hasNextPage && (
-                <div>
-                    <Button onClick={() => fetchNextPage()}>next</Button>
+                <div
+                    style={{
+                        textAlign: "center"
+                    }}
+                >
+                    <Button block onClick={() => fetchNextPage()}>
+                        Selanjutnya
+                    </Button>
                 </div>
             )}
         </Skeleton>

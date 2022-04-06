@@ -32,7 +32,7 @@ model acc_kinerja_bulanan {
   penilaian     penilaian? @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
   user_ptt      users      @relation(fields: [custom_id_ptt], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([id_penilaian, bulan, tahun, custom_id_ptt])
+  @@id([id_penilaian, bulan, tahun ])
 }
 
 model kinerja_bulanan {
