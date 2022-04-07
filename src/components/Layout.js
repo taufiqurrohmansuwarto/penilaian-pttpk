@@ -55,7 +55,7 @@ const changeRoutes = (user, status) => {
     });
 };
 
-const Layout = ({ children }) => {
+const Layout = ({ children, title = "Feeds" }) => {
     const { data, status } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
@@ -63,7 +63,6 @@ const Layout = ({ children }) => {
 
     return (
         <ProLayout
-            // loading={status === "loading"}
             menu={{
                 request: async () => {
                     const user = await changeRoutes(data?.user);
@@ -79,7 +78,7 @@ const Layout = ({ children }) => {
             fixSiderbar
             disableContentMargin
         >
-            <PageContainer title="Feeds">{children}</PageContainer>
+            <PageContainer title={title}>{children}</PageContainer>
         </ProLayout>
     );
 };
