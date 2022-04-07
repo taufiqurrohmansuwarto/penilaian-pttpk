@@ -1,6 +1,6 @@
 import { Button, Card, Form, Input, Select, Skeleton } from "antd";
 import { useRouter } from "next/router";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { getTopics } from "../../../services/main.services";
 import Layout from "../../../src/components/Layout";
 
@@ -11,15 +11,16 @@ const CreateKomunitas = () => {
         ["topics"],
         () => getTopics()
     );
-    // fetch some topics eg : hobbies, dsb
 
-    // ada name (ndak boleh pakai spasi), topics, description
+    const createKomunitasMutation = useMutation(
+        (data) => createCommunity(data),
+        {}
+    );
+
     const [form] = Form.useForm();
 
     const handleSubmit = async (values) => {
-        try {
-            alert(JSON.stringify(values));
-        } catch (error) {}
+        createKomunitasMutation.mutate(values);
     };
 
     return (
