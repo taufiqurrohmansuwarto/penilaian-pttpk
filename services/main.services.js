@@ -46,6 +46,11 @@ export const getCategories = () =>
 export const createCategories = (data) =>
     fetcher.post("/discussions/categories", data).then((res) => res?.data);
 
+// topics
+export const getTopics = () => {
+    return fetcher.get("/discussions/topics").then((res) => res?.data);
+};
+
 // posts
 export const getPosts = () =>
     fetcher.get("/discussions/posts").then((res) => res?.data);
