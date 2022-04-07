@@ -1,5 +1,6 @@
 import Layout from "../../../src/components/Layout";
-import { Card, Form } from "antd";
+import { Button, Select, Card, Form, Input } from "antd";
+import { toUpper } from "lodash";
 
 const CreateKomunitas = () => {
     // fetch some topics eg : hobbies, dsb
@@ -7,10 +8,32 @@ const CreateKomunitas = () => {
     // ada name (ndak boleh pakai spasi), topics, description
     const [form] = Form.useForm();
 
+    const handleSubmit = async () => {
+        try {
+        } catch (error) {}
+    };
+
     return (
         <Layout title="Buat Komunitas">
             <Card>
-                <Form></Form>
+                <Form form={form} layout="vertical" onFinish={handleSubmit}>
+                    <Form.Item
+                        label="Judul"
+                        name="title"
+                        normalize={(e) => e?.replace(/\s/g, "")}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="Topik" name="topics">
+                        <Select showSearch mode="multiple"></Select>
+                    </Form.Item>
+                    <Form.Item label="Deskripsi" name="description">
+                        <Input.TextArea />
+                    </Form.Item>
+                    <Form.Item>
+                        <Button htmlType="submit">Submit</Button>
+                    </Form.Item>
+                </Form>
             </Card>
         </Layout>
     );

@@ -32,7 +32,7 @@ model acc_kinerja_bulanan {
   penilaian     penilaian? @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
   user_ptt      users      @relation(fields: [custom_id_ptt], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([id_penilaian, bulan, tahun ])
+  @@id([id_penilaian, bulan, tahun])
 }
 
 model kinerja_bulanan {
@@ -234,6 +234,17 @@ model discussions_posts {
   discussions_votes  discussions_votes[]
   discussions_ranks  discussions_ranks[]
   discussions_rights discussions_rights[]
+}
+
+model topics {
+  topic String @id
+}
+
+model discussions_posts_topics {
+  discussion_id String
+  topic         String
+
+  @@id([discussion_id, topic])
 }
 
 model discussions_votes {
