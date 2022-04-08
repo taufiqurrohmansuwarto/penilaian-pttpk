@@ -435,10 +435,12 @@ const UserComments = () => {
 
             <>
                 <Divider />
-                <span style={{ marginRight: 8 }}>Kategori : </span>
-                {filter?.map((f) => (
-                    <CheckableTag>{f}</CheckableTag>
-                ))}
+                <Card>
+                    <span style={{ marginRight: 8 }}>Kategori : </span>
+                    {filter?.map((f) => (
+                        <CheckableTag>{f}</CheckableTag>
+                    ))}
+                </Card>
                 <Divider />
             </>
 
