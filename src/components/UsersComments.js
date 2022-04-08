@@ -16,8 +16,10 @@ import {
     message,
     Skeleton,
     Space,
-    Divider
+    Divider,
+    Card
 } from "antd";
+import CheckableTag from "antd/lib/tag/CheckableTag";
 import moment from "moment";
 import "moment/locale/id";
 import { useSession } from "next-auth/react";
@@ -343,7 +345,7 @@ const ListComments = ({
 
 // todo implement likes, filter
 const UserComments = () => {
-    const filter = ["Terbaru", "Terpopuler"];
+    const filter = ["Hot", "New", "Top", "Rising"];
 
     const [selectedFilter, setSelectedFilter] = useState(["Terbaru"]);
 
@@ -413,44 +415,56 @@ const UserComments = () => {
 
     return (
         <Skeleton loading={isLoadingComments}>
-            <Comment
-                avatar={userData?.user?.image}
-                content={
-                    <>
-                        <Editor
-                            main={true}
-                            value={comment}
-                            submitting={createCommentMutation.isLoading}
-                            onChange={setComment}
-                            handleUpload={handleUpload}
-                            onSubmit={handleSubmit}
-                        />
-                        <Divider />
-                    </>
-                }
-            />
+            <Card>
+                <Comment
+                    avatar={userData?.user?.image}
+                    content={
+                        <>
+                            <Editor
+                                main={true}
+                                value={comment}
+                                submitting={createCommentMutation.isLoading}
+                                onChange={setComment}
+                                handleUpload={handleUpload}
+                                onSubmit={handleSubmit}
+                            />
+                        </>
+                    }
+                />
+            </Card>
+
+            <>
+                <Divider />
+                <span style={{ marginRight: 8 }}>Kategori : </span>
+                {filter?.map((f) => (
+                    <CheckableTag>{f}</CheckableTag>
+                ))}
+                <Divider />
+            </>
 
             {dataComments?.pages?.map((page) => (
                 <React.Fragment key={page?.nextCursor}>
-                    <ListComments
-                        user={userData}
-                        data={page?.data}
-                        mutation={createCommentMutation}
-                        handleLike={handleLike}
-                        handleDislike={handleDislike}
-                        isLoading={isLoadingComments || isFetchingNextPage}
-                    />
+                    <Card>
+                        <ListComments
+                            user={userData}
+                            data={page?.data}
+                            mutation={createCommentMutation}
+                            handleLike={handleLike}
+                            handleDislike={handleDislike}
+                            isLoading={isLoadingComments || isFetchingNextPage}
+                        />
+                    </Card>
                 </React.Fragment>
             ))}
             {hasNextPage && (
                 <div
                     style={{
-                        textAlign: "center"
+                        textAlign: "center",
+                        marginTop: 4,
+                        marginBottom: 4
                     }}
                 >
-                    <Button block onClick={() => fetchNextPage()}>
-                        Selanjutnya
-                    </Button>
+                    <Button onClick={() => fetchNextPage()}>Selanjutnya</Button>
                 </div>
             )}
         </Skeleton>

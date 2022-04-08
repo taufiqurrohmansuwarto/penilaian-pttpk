@@ -75,3 +75,5 @@ INSERT INTO reddit_votes(post_id, user_id, vflag) VALUES(LAST_INSERT_ID(),'srini
 
 
 
+1. buat rightheader
+2. buat ui untuk feeds

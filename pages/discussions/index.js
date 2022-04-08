@@ -8,6 +8,7 @@ import {
 import Layout from "../../src/components/Layout";
 import DiscussionsFeeds from "../../src/components/DiscussionsFeeds";
 import { useRouter } from "next/router";
+import CreatePost from "../../src/components/reddits/CreatePost";
 const { Meta } = Card;
 
 const data = [
@@ -35,6 +36,7 @@ const Discussions = () => {
 
     return (
         <Layout>
+            <CreatePost />
             <Button onClick={gotoCreatePost}>Create Posts</Button>
             <Button onClick={gotoCreateKomunitas}>Create Komunitas</Button>
         </Layout>
