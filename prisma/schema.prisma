@@ -9,15 +9,16 @@ datasource db {
 }
 
 model users {
-  custom_id           String                @id
-  username            String?
-  image               String?
-  id                  String?
-  from                String?
-  role                String?
-  group               String?
-  employee_number     String?
-  acc_kinerja_bulanan acc_kinerja_bulanan[]
+  custom_id                String                     @id
+  username                 String?
+  image                    String?
+  id                       String?
+  from                     String?
+  role                     String?
+  group                    String?
+  employee_number          String?
+  acc_kinerja_bulanan      acc_kinerja_bulanan[]
+  discussions_posts_joined discussions_posts_joined[]
 }
 
 model acc_kinerja_bulanan {
@@ -217,23 +218,24 @@ model feedbacks {
 
 // reddits
 model discussions_posts {
-  id                 String               @id @default(cuid())
-  parent_id          String?
-  title              String?
-  content            String?
-  link               String?
-  user_custom_id     String?
-  username           String?
-  avatar             String?
-  pic                String?
-  status             String?
-  image_list         Json?
-  type               String?
-  votes              Int?                 @default(0)
-  created_at         DateTime?            @default(now()) @db.Timestamp(6)
-  discussions_votes  discussions_votes[]
-  discussions_ranks  discussions_ranks[]
-  discussions_rights discussions_rights[]
+  id                       String                     @id @default(cuid())
+  parent_id                String?
+  title                    String?
+  content                  String?
+  link                     String?
+  user_custom_id           String?
+  username                 String?
+  avatar                   String?
+  pic                      String?
+  status                   String?
+  image_list               Json?
+  type                     String?
+  votes                    Int?                       @default(0)
+  created_at               DateTime?                  @default(now()) @db.Timestamp(6)
+  discussions_votes        discussions_votes[]
+  discussions_ranks        discussions_ranks[]
+  discussions_rights       discussions_rights[]
+  discussions_posts_joined discussions_posts_joined[]
 }
 
 model topics {
@@ -281,4 +283,15 @@ model discussions_rights {
   assigned_user_custom_id String
 
   discussions_posts discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade)
+}
+
+model discussions_posts_joined {
+  user_custom_id     String
+  discussion_post_id String
+
+  user       users             @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  discussion discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+
+  @@id([user_custom_id, discussion_post_id])
 }
