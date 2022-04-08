@@ -126,8 +126,8 @@ const ChildrenComment = ({ data }) => {
                         return (
                             <li>
                                 <Comment
-                                    avatar={item?.avatar}
-                                    author={item?.nama}
+                                    avatar={item?.user?.image}
+                                    author={item?.user?.username}
                                     content={
                                         <div
                                             dangerouslySetInnerHTML={{
@@ -291,6 +291,7 @@ const ListComments = ({
                                                         item?.id
                                                     )
                                                 }
+                                                style={{ color: "blue" }}
                                             >
                                                 {visibleChildrenComment ===
                                                 item?.id
@@ -309,8 +310,8 @@ const ListComments = ({
                                     />
                                 }
                                 datetime={moment(item?.created_at).fromNow()}
-                                author={item?.nama}
-                                avatar={item?.avatar}
+                                author={item?.user?.username}
+                                avatar={item?.user?.image}
                             >
                                 {id === item?.id && (
                                     <Comment
@@ -434,14 +435,12 @@ const UserComments = () => {
             </Card>
 
             <>
-                <Divider />
-                <Card>
+                <Card style={{ marginTop: 8, marginBottom: 8 }}>
                     <span style={{ marginRight: 8 }}>Kategori : </span>
                     {filter?.map((f) => (
                         <CheckableTag>{f}</CheckableTag>
                     ))}
                 </Card>
-                <Divider />
             </>
 
             {dataComments?.pages?.map((page) => (

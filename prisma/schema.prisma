@@ -28,6 +28,7 @@ model users {
   penilaian                           penilaian[]
   comments_notifications_sender       comments_notifications[]   @relation("user_sender")
   comments_notifications_receiver     comments_notifications[]   @relation("user_receiver")
+  comments                            comments[]
 }
 
 model acc_kinerja_bulanan {
@@ -116,23 +117,20 @@ model target_penilaian {
 }
 
 model comments {
-  id                     String                   @id @default(cuid())
-  nama                   String?
-  department             String?
-  status                 String?
-  usia                   String?
-  avatar                 String?
-  comment                String?
-  user_custom_id         String?
-  user_type              String?
-  comments_tags          comments_tags[]
-  likes                  Int                      @default(0)
-  dislikes               Int                      @default(0)
-  parent_id              String?
-  parent                 comments?                @relation("SubComments", fields: [parent_id], references: [id], onDelete: Cascade)
-  children               comments[]               @relation("SubComments")
-  created_at             DateTime?                @default(now()) @db.Timestamp(6)
-  updated_at             DateTime?                @db.Timestamp(6)
+  id             String          @id @default(cuid())
+  comment        String?
+  user_custom_id String
+  comments_tags  comments_tags[]
+  likes          Int             @default(0)
+  dislikes       Int             @default(0)
+  parent_id      String?
+  parent         comments?       @relation("SubComments", fields: [parent_id], references: [id], onDelete: Cascade)
+  children       comments[]      @relation("SubComments")
+  created_at     DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?       @db.Timestamp(6)
+
+  user users @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+
   comments_mentioned     comments_mentioned[]
   comments_notifications comments_notifications[]
   comments_likes         comments_likes[]
@@ -224,40 +222,51 @@ model feedbacks {
   descriptiom    String?
   created_at     DateTime? @default(now()) @db.Timestamp(6)
   updated_at     DateTime? @db.Timestamp(6)
-  user           users     @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+
+  user users @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([user_custom_id, date])
 }
 
 // reddits
 model discussions_posts {
-  id                       String                     @id @default(cuid())
-  parent_id                String?
-  title                    String?
-  content                  String?
-  link                     String?
-  user_custom_id           String
-  status                   String?
-  image_list               Json?
-  type                     String?
-  votes                    Int?                       @default(0)
-  created_at               DateTime?                  @default(now()) @db.Timestamp(6)
-  discussions_votes        discussions_votes[]
-  discussions_ranks        discussions_ranks[]
-  discussions_rights       discussions_rights[]
+  id                 String               @id @default(cuid())
+  parent_id          String?
+  title              String?
+  content            String?
+  link               String?
+  user_custom_id     String
+  status             String?
+  parent             discussions_posts?   @relation("SubDiscussionsPosts", fields: [parent_id], references: [id], onDelete: Cascade)
+  children           discussions_posts[]  @relation("SubDiscussionsPosts")
+  image_list         Json?
+  type               String?
+  votes              Int?                 @default(0)
+  created_at         DateTime?            @default(now()) @db.Timestamp(6)
+  rules              Json?
+  discussions_votes  discussions_votes[]
+  discussions_ranks  discussions_ranks[]
+  discussions_rights discussions_rights[]
+
   user                     users                      @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
   discussions_posts_joined discussions_posts_joined[]
+  discussions_posts_topics discussions_posts_topics[]
 }
 
 model topics {
-  topic String @id
+  topic                    String                     @id
+  discussions_posts_topics discussions_posts_topics[]
 }
 
 model discussions_posts_topics {
   discussion_id String
-  topic         String
+  id_topic      String
 
-  @@id([discussion_id, topic])
+  discussions_posts discussions_posts @relation(fields: [discussion_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topic             topics            @relation(fields: [id_topic], references: [topic], onDelete: Cascade, onUpdate: Cascade)
+
+
+  @@id([discussion_id, id_topic])
 }
 
 model discussions_votes {
@@ -298,6 +307,7 @@ model discussions_rights {
 model discussions_posts_joined {
   user_custom_id     String
   discussion_post_id String
+  type               String @default("user")
 
   user       users             @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
   discussion discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)

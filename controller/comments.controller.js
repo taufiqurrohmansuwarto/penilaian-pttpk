@@ -11,9 +11,13 @@ const index = async (req, res) => {
 
         include: {
             comments_likes: true,
+            user: true,
             children: {
                 orderBy: {
                     created_at: "asc"
+                },
+                include: {
+                    user: true
                 }
             }
         },
@@ -55,15 +59,19 @@ const index = async (req, res) => {
             parentProperty: "parent_id"
         });
 
-        const nextCursor = result[result?.length - 1]?.id || null;
+        const nextCursor =
+            result?.length < take
+                ? null
+                : result[result?.length - 1]?.id || null;
 
         res.json({ data: result, nextCursor });
     } catch (error) {
         console.log(error);
-        res.json({ code: 400, message: "Internal Server Error" });
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 
+// detail comments
 const get = async (req, res) => {};
 
 const create = async (req, res) => {
@@ -75,10 +83,9 @@ const create = async (req, res) => {
             nama,
             user_custom_id: customId,
             comment: body?.comment,
-            parent_id: body?.parent_id,
-            avatar: image,
-            user_type: userType
+            parent_id: body?.parent_id
         };
+
         const result = await prisma.comments.create({
             data
         });
@@ -130,8 +137,6 @@ const likes = async (req, res) => {
             create: {
                 user_custom_id: customId,
                 comment_id: commentId,
-                user_name: name,
-                avatar: image,
                 value: 1
             },
             update: {
@@ -179,7 +184,7 @@ const likes = async (req, res) => {
 };
 
 const dislikes = async (req, res) => {
-    const { userId, customId, name, avatar } = req.user;
+    const { customId } = req.user;
     const { commentId } = req.query;
     const { value } = req.body;
 
@@ -188,8 +193,6 @@ const dislikes = async (req, res) => {
             create: {
                 user_custom_id: customId,
                 comment_id: commentId,
-                user_name: name,
-                avatar,
                 value: -1
             },
             update: {

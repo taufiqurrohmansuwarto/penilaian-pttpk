@@ -1,8 +1,82 @@
-import { Button, Card, Form, Input, message, Select, Skeleton } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+    Button,
+    Card,
+    Form,
+    Input,
+    message,
+    Select,
+    Skeleton,
+    Space
+} from "antd";
 import { useRouter } from "next/router";
 import { useMutation, useQuery } from "react-query";
 import { createCommunities, getTopics } from "../../../services/main.services";
 import Layout from "../../../src/components/Layout";
+
+const CreateRules = () => {
+    return (
+        <Form.List name="rules">
+            {(fields, { add, remove }) => (
+                <>
+                    {fields.map(({ key, name, ...restFields }) => (
+                        <Space
+                            key={key}
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignSelf: "stretch",
+                                flexWrap: "wrap",
+                                alignItems: "center",
+                                marginBottom: 8
+                            }}
+                            align="baseline"
+                        >
+                            <Form.Item
+                                label="Peraturan"
+                                {...restFields}
+                                name={[name, "title"]}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Peraturan harus di isi"
+                                    }
+                                ]}
+                            >
+                                <Input.TextArea />
+                            </Form.Item>
+                            <Form.Item
+                                label="Deskripsi"
+                                {...restFields}
+                                name={[name, "description"]}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Deskripsi harus di isi"
+                                    }
+                                ]}
+                            >
+                                <Input.TextArea />
+                            </Form.Item>
+
+                            <MinusCircleOutlined onClick={() => remove(name)} />
+                        </Space>
+                    ))}
+                    <Form.Item>
+                        <Button
+                            type="dashed"
+                            onClick={() => add()}
+                            block
+                            icon={<PlusOutlined />}
+                        >
+                            Tambah Peraturan
+                        </Button>
+                    </Form.Item>
+                </>
+            )}
+        </Form.List>
+    );
+};
 
 const CreateCommunities = () => {
     const router = useRouter();
@@ -14,8 +88,8 @@ const CreateCommunities = () => {
 
     const [form] = Form.useForm();
     const createMutation = useMutation((data) => createCommunities(data), {
-        onSuccess: () => {
-            message.success("test");
+        onSuccess: (data) => {
+            router?.push(`/discussions/r/${data?.title}`);
             form.resetFields();
         },
         onError: (e) => {
@@ -24,8 +98,8 @@ const CreateCommunities = () => {
     });
 
     const handleSubmit = async (values) => {
-        const { topics, ...data } = values;
-        createMutation.mutate(data);
+        // console.log(values);
+        createMutation.mutate(values);
     };
 
     return (
@@ -52,6 +126,7 @@ const CreateCommunities = () => {
                         <Form.Item label="Deskripsi" name="content">
                             <Input.TextArea />
                         </Form.Item>
+                        <CreateRules />
                         <Form.Item>
                             <Button
                                 loading={createMutation.isLoading}

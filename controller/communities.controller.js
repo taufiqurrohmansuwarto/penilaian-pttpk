@@ -29,13 +29,7 @@ const detail = async (req, res) => {
                 title: id
             },
             include: {
-                user: {
-                    select: {
-                        custom_id: true,
-                        image: true,
-                        username: true
-                    }
-                }
+                user: true
             }
         });
         res.json(result);
@@ -61,7 +55,7 @@ const create = async (req, res) => {
         if (check) {
             res.status(403).json({ code: 404, message: "already exists" });
         } else {
-            await prisma.discussions_posts.create({
+            const result = await prisma.discussions_posts.create({
                 data: {
                     parent_id: null,
                     title: body?.title,
@@ -69,10 +63,24 @@ const create = async (req, res) => {
                     content: body?.content,
                     status: "active",
                     user_custom_id: customId,
-                    type: "subreddit"
+                    type: "subreddit",
+                    rules: body?.rules,
+                    discussions_posts_topics: {
+                        createMany: {
+                            data: body?.topics?.map((topic) => ({
+                                id_topic: topic
+                            }))
+                        }
+                    },
+                    discussions_posts_joined: {
+                        create: {
+                            user_custom_id: customId
+                        }
+                    }
                 }
             });
-            res.json({ code: 200, message: "success" });
+
+            res.json(result);
         }
     } catch (e) {
         console.log(e);
