@@ -1,10 +1,10 @@
-import { Button, Card, Form, Input, Select, Skeleton } from "antd";
+import { Button, Card, Form, Input, message, Select, Skeleton } from "antd";
 import { useRouter } from "next/router";
 import { useMutation, useQuery } from "react-query";
-import { getTopics } from "../../../services/main.services";
+import { createCommunities, getTopics } from "../../../services/main.services";
 import Layout from "../../../src/components/Layout";
 
-const CreateKomunitas = () => {
+const CreateCommunities = () => {
     const router = useRouter();
 
     const { data: dataTopics, isLoading: loadingTopics } = useQuery(
@@ -12,20 +12,25 @@ const CreateKomunitas = () => {
         () => getTopics()
     );
 
-    const createKomunitasMutation = useMutation(
-        (data) => createCommunity(data),
-        {}
-    );
-
     const [form] = Form.useForm();
+    const createMutation = useMutation((data) => createCommunities(data), {
+        onSuccess: () => {
+            message.success("test");
+            form.resetFields();
+        },
+        onError: (e) => {
+            message.error(e);
+        }
+    });
 
     const handleSubmit = async (values) => {
-        createKomunitasMutation.mutate(values);
+        const { topics, ...data } = values;
+        createMutation.mutate(data);
     };
 
     return (
         <Layout title="Buat Komunitas">
-            <Card>
+            <Card title="Buat komunitas">
                 <Skeleton loading={loadingTopics}>
                     <Form form={form} layout="vertical" onFinish={handleSubmit}>
                         <Form.Item
@@ -44,11 +49,17 @@ const CreateKomunitas = () => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label="Deskripsi" name="description">
+                        <Form.Item label="Deskripsi" name="content">
                             <Input.TextArea />
                         </Form.Item>
                         <Form.Item>
-                            <Button htmlType="submit">Submit</Button>
+                            <Button
+                                loading={createMutation.isLoading}
+                                htmlType="submit"
+                                type="primary"
+                            >
+                                Submit
+                            </Button>
                         </Form.Item>
                     </Form>
                 </Skeleton>
@@ -57,9 +68,9 @@ const CreateKomunitas = () => {
     );
 };
 
-CreateKomunitas.auth = {
+CreateCommunities.auth = {
     roles: ["USER", "FASILITATOR"],
     groups: ["MASTER", "PTTPK"]
 };
 
-export default CreateKomunitas;
+export default CreateCommunities;

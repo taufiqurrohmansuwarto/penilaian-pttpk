@@ -4,8 +4,11 @@ import {
     FileImageOutlined,
     LinkOutlined
 } from "@ant-design/icons";
-import { Card, Select, Tabs } from "antd";
+import { Card, Select, Spin, Tabs } from "antd";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import { useQuery } from "react-query";
+import { findCommunities } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
 import Post from "../../src/components/reddits/Post";
 
@@ -13,6 +16,7 @@ const { TabPane } = Tabs;
 
 const RedditSubmit = ({ data }) => {
     const router = useRouter();
+
     const handleChange = (e) => {
         router.push({
             query: {
@@ -21,13 +25,43 @@ const RedditSubmit = ({ data }) => {
         });
     };
 
+    const [search, setSearch] = useState("");
+
+    const { data: dataCommunities, isLoading: loadingDataCommunities } =
+        useQuery(["communities", search], () => findCommunities(search), {
+            enabled: !!search
+        });
+
+    const handleSearch = (e) => {
+        setSearch(e);
+    };
+
+    const handleSelect = (e) => {
+        router.push(`/discussions${e}/submit`);
+    };
+
     return (
         <Layout title="Buat Diskusi">
             <Select
+                value={search}
+                onChange={(e) => setSearch(e)}
+                onSearch={handleSearch}
                 placeholder="Cari Komunitas"
                 style={{ width: "20%", marginBottom: 10 }}
                 showSearch
-            ></Select>
+                onSelect={handleSelect}
+                loading={loadingDataCommunities}
+                notFoundContent={
+                    loadingDataCommunities ? <Spin size="small" /> : null
+                }
+            >
+                {dataCommunities?.map((community) => (
+                    <Select.Option key={community?.id} value={community?.link}>
+                        {community?.link}
+                    </Select.Option>
+                ))}
+            </Select>
+            {JSON.stringify(dataCommunities)}
             <Card>
                 <Tabs activeKey={data?.query} onChange={handleChange}>
                     <TabPane

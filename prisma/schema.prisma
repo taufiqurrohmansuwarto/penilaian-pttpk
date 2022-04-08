@@ -9,15 +9,20 @@ datasource db {
 }
 
 model users {
-  custom_id           String                @id
-  username            String?
-  image               String?
-  id                  String?
-  from                String?
-  role                String?
-  group               String?
-  employee_number     String?
-  acc_kinerja_bulanan acc_kinerja_bulanan[]
+  custom_id                        String                @id
+  username                         String?
+  image                            String?
+  id                               String?
+  from                             String?
+  role                             String?
+  group                            String?
+  employee_number                  String?
+  acc_kinerja_bulanan              acc_kinerja_bulanan[]
+  discussions_posts                discussions_posts[]
+  discussions_votes                discussions_votes[]
+  discussions_rights_user          discussions_rights[]  @relation("user")
+  discussions_rights_user_assigned discussions_rights[]  @relation("assigned_user")
+  feedbacks                        feedbacks[]
 }
 
 model acc_kinerja_bulanan {
@@ -211,6 +216,7 @@ model feedbacks {
   descriptiom    String?
   created_at     DateTime? @default(now()) @db.Timestamp(6)
   updated_at     DateTime? @db.Timestamp(6)
+  user           users     @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([user_custom_id, date])
 }
@@ -222,10 +228,7 @@ model discussions_posts {
   title              String?
   content            String?
   link               String?
-  user_custom_id     String?
-  username           String?
-  avatar             String?
-  pic                String?
+  user_custom_id     String
   status             String?
   image_list         Json?
   type               String?
@@ -234,6 +237,7 @@ model discussions_posts {
   discussions_votes  discussions_votes[]
   discussions_ranks  discussions_ranks[]
   discussions_rights discussions_rights[]
+  user               users                @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model topics {
@@ -250,11 +254,10 @@ model discussions_posts_topics {
 model discussions_votes {
   discussion_post_id String
   user_custom_id     String
-  username           String?
-  avatar             String?
   vlag               Int?
 
   discussions_posts discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade)
+  user              users             @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([discussion_post_id, user_custom_id])
 }
@@ -275,10 +278,10 @@ model discussions_rights {
   id                      String  @id @default(cuid())
   discussion_post_id      String
   property                String?
-  user_custom_id          String?
-  username                String?
-  avatar                  String?
+  user_custom_id          String
   assigned_user_custom_id String
+  user                    users   @relation("user", fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  assigned_user           users   @relation("assigned_user", fields: [assigned_user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
   discussions_posts discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade)
 }
