@@ -1,26 +1,9 @@
-import { Button, Card, Avatar } from "antd";
-import UserLayout from "../../src/components/UserLayout";
-import {
-    EditOutlined,
-    EllipsisOutlined,
-    SettingOutlined
-} from "@ant-design/icons";
-import Layout from "../../src/components/Layout";
-import DiscussionsFeeds from "../../src/components/DiscussionsFeeds";
+import { Button, Divider } from "antd";
 import { useRouter } from "next/router";
-const { Meta } = Card;
-
-const data = [
-    {
-        id: 1,
-        title: "test",
-        subreddit: "/whitepeople",
-        created_at: new Date(),
-        image: "test",
-        likes: 30,
-        total_comments: 30
-    }
-];
+import Layout from "../../src/components/Layout";
+import CreatePostAndCommunities from "../../src/components/reddits/Cards/CreatePostAndCommunities";
+import RecentPost from "../../src/components/reddits/Cards/RecentPost";
+import TopCommunities from "../../src/components/reddits/Cards/TopCommunities";
 
 const Discussions = () => {
     const router = useRouter();
@@ -37,6 +20,12 @@ const Discussions = () => {
         <Layout>
             <Button onClick={gotoCreatePost}>Create Posts</Button>
             <Button onClick={gotoCreateKomunitas}>Create Komunitas</Button>
+            <Divider />
+            <CreatePostAndCommunities />
+            <Divider />
+            <RecentPost />
+            <Divider />
+            <TopCommunities />
         </Layout>
     );
 };

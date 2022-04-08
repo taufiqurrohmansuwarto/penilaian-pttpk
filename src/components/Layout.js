@@ -1,6 +1,7 @@
-import { ReadOutlined } from "@ant-design/icons";
+import { LogoutOutlined, ReadOutlined } from "@ant-design/icons";
+import { Avatar, Dropdown, Menu, Space, Typography } from "antd";
 import { xorBy } from "lodash";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import routes from "../routes/routes";
@@ -14,6 +15,24 @@ const menuItemRender = (options, element) => {
         <Link href={`${options.path}`}>
             <a>{element}</a>
         </Link>
+    );
+};
+
+const menuUser = () => (
+    <Menu>
+        <Menu.Item key="logout" onClick={signOut} icon={<LogoutOutlined />}>
+            Logout
+        </Menu.Item>
+    </Menu>
+);
+const rightContentRender = (user) => {
+    return (
+        <Dropdown overlay={menuUser()}>
+            <Space align="center">
+                <Avatar style={{ cursor: "pointer" }} src={user?.image} />
+                <Typography.Text strong>{user?.name}</Typography.Text>
+            </Space>
+        </Dropdown>
     );
 };
 
@@ -71,7 +90,7 @@ const Layout = ({ children, title = "Feeds" }) => {
             }}
             menuItemRender={menuItemRender}
             collapsed
-            // route={changeRoutes(data?.user)}
+            rightContentRender={() => rightContentRender(data?.user)}
             collapsedButtonRender={false}
             navTheme="dark"
             style={{ minHeight: "100vh" }}

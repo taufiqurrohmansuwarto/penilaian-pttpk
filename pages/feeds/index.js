@@ -1,20 +1,16 @@
-import { Button, Card, Col, Row } from "antd";
-import { signOut } from "next-auth/react";
+import { Card, Col, List, Row } from "antd";
 import Layout from "../../src/components/Layout";
 import UserComments from "../../src/components/UsersComments";
 
 const Feeds = () => {
     return (
         <Layout>
-            <Row gutter={16}>
-                <Col span={6}></Col>
-                <Col span={12}>
-                    <Card>
-                        <Button onClick={signOut}>signout</Button>
-                        <UserComments />
-                    </Card>
+            <Row gutter={32}>
+                <Col span={7}></Col>
+                <Col span={10}>
+                    <UserComments />
                 </Col>
-                <Col span={6}></Col>
+                <Col span={7}></Col>
             </Row>
         </Layout>
     );
