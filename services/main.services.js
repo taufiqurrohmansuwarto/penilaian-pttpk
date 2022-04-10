@@ -71,8 +71,20 @@ export const findCommunities = (title) => {
         .then((res) => res?.data);
 };
 
+export const findCommunitiesByTitle = (title) => {
+    return fetcher
+        .get(`/discussions/communities?title=${title}`)
+        .then((res) => res?.data);
+};
+
 export const getPostsByCommunities = (title) => {
     return fetcher
         .get(`/discussions/communities/${title}/posts`)
+        .then((res) => res?.data);
+};
+
+export const createPostByCommunities = ({ title, data }) => {
+    return fetcher
+        .post(`/discussions/communities/${title}/post`)
         .then((res) => res?.data);
 };

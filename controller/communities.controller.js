@@ -6,7 +6,13 @@ const index = async (req, res) => {
         let query = { type: "subreddit" };
 
         if (req.query?.title) {
-            query = { ...query, title: req.query?.title };
+            query = {
+                ...query,
+                title: {
+                    contains: req.query?.title,
+                    mode: "insensitive"
+                }
+            };
         }
 
         const result = await prisma.discussions_posts.findMany({

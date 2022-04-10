@@ -8,7 +8,10 @@ import { Card, Select, Spin, Tabs } from "antd";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { findCommunities } from "../../services/main.services";
+import {
+    findCommunities,
+    findCommunitiesByTitle
+} from "../../services/main.services";
 import Layout from "../../src/components/Layout";
 import Post from "../../src/components/reddits/Post";
 
@@ -28,9 +31,13 @@ const RedditSubmit = ({ data }) => {
     const [search, setSearch] = useState("");
 
     const { data: dataCommunities, isLoading: loadingDataCommunities } =
-        useQuery(["communities", search], () => findCommunities(search), {
-            enabled: !!search
-        });
+        useQuery(
+            ["communities", search],
+            () => findCommunitiesByTitle(search),
+            {
+                enabled: !!search
+            }
+        );
 
     const handleSearch = (e) => {
         setSearch(e);

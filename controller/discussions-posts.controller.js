@@ -14,15 +14,32 @@ const index = async (req, res) => {
                 parent_id: community?.id,
                 status: "active",
                 type: "posts"
+            },
+            include: {
+                _count: {
+                    select: {
+                        children: true
+                    }
+                }
+            },
+            orderBy: {
+                created_at: "asc"
             }
         });
+
         res.json(result);
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
-const create = async (req, res) => {};
+const create = async (req, res) => {
+    const { customId } = req.user;
+    const { id } = req.query;
+    try {
+    } catch (error) {}
+};
+
 const update = async (req, res) => {};
 const remove = async (req, res) => {};
 
