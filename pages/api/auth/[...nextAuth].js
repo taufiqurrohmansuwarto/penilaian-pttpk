@@ -144,10 +144,12 @@ export default NextAuth({
                     const currentToken = token.id_token;
                     const { role, group, employee_number } =
                         jsonwebtoken.decode(currentToken);
+                    const from = profile?.sub?.split("|")?.[0];
+                    const username = profile?.sub?.split("|")?.[1];
 
                     const currentUser = {
                         id: profile.sub,
-                        name: profile.name,
+                        name: profile.name || username,
                         email: profile.email,
                         image: profile.picture,
                         employee_number: employee_number || "",
