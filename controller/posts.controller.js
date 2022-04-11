@@ -1,21 +1,29 @@
 const { default: prisma } = require("../lib/prisma");
 
 const index = async (req, res) => {
-    // its cursor based pagination
+    // should be
     try {
         const result = await prisma.discussions_posts.findMany({
             where: {
-                parent_id: {
-                    not: null
+                type: "post",
+                status: "active"
+            },
+            include: {
+                parent: true,
+                user: true,
+                _count: {
+                    select: {
+                        children: true
+                    }
                 }
             },
             orderBy: {
-                created_at: "desc"
+                votes: "desc"
             }
         });
         res.json(result);
     } catch (error) {
-        res.json({ code: 400, message: "Internal Server Error" });
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 

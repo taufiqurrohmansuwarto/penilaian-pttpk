@@ -6,7 +6,8 @@ const Post = ({
     onChangeTitle,
     description,
     onChangeDescription,
-    handleSubmit
+    handleSubmit,
+    loading
 }) => {
     return (
         <>
@@ -21,7 +22,7 @@ const Post = ({
                 placeholder="Deskripsi"
                 style={{ minHeight: 240, marginTop: 8, marginBottom: 8 }}
             />
-            <Button type="primary" onClick={handleSubmit}>
+            <Button type="primary" loading={loading} onClick={handleSubmit}>
                 Submit
             </Button>
         </>

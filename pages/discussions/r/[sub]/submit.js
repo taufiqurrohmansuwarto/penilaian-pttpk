@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
@@ -9,7 +10,8 @@ import Layout from "../../../../src/components/Layout";
 import Post from "../../../../src/components/reddits/Post";
 
 function SubRedditSubmit() {
-    const { query } = useRouter();
+    const router = useRouter();
+    const { query } = router;
     const { data: dataCommunities } = useQuery(
         ["communities", query?.sub],
         () => findCommunities(query?.sub),
@@ -27,7 +29,8 @@ function SubRedditSubmit() {
         (data) => createPostByCommunities(data),
         {
             onSuccess: () => {
-                console.log("sukses");
+                router.push(`/discussions/r/${query?.sub}`);
+                message.success("Sukses Membuat postingan");
             }
         }
     );
@@ -43,6 +46,7 @@ function SubRedditSubmit() {
         <Layout title={query?.sub}>
             {JSON.stringify(dataCommunities)}
             <Post
+                loading={createMutation?.isLoading}
                 title={title}
                 onChangeTitle={onChangeTitle}
                 description={description}
