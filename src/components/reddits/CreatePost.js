@@ -1,50 +1,34 @@
 import { Comment, Input } from "antd";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
 
 const { TextArea } = Input;
 
-const Editor = ({ onChange, value, router }) => {
+const Editor = ({ router, route }) => {
     const handleFocus = () => {
-        router.push("test");
+        router.push(route);
     };
 
     return (
         <>
             <TextArea
+                placeholder="Buat Postingan"
                 onFocus={handleFocus}
                 rows={4}
-                onChange={onChange}
-                value={value}
             />
         </>
     );
 };
 
-function CreatePost() {
+function CreatePost({ route }) {
     const { data } = useSession();
     const router = useRouter();
-
-    const [message, setMessage] = useState();
-
-    const handleChange = (e) => {
-        setMessage(e?.target.value);
-    };
-
-    const handleSubmit = () => {};
 
     return (
         <Comment
             avatar={data?.user?.image}
-            content={
-                <Editor
-                    router={router}
-                    value={message}
-                    onChange={handleChange}
-                    onSubmit={handleSubmit}
-                />
-            }
+            content={<Editor route={route} router={router} />}
         />
     );
 }

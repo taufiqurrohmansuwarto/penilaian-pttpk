@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import {
-    createPost,
+    createPostByCommunities,
     findCommunities
 } from "../../../../services/main.services";
 import Layout from "../../../../src/components/Layout";
@@ -23,16 +23,24 @@ function SubRedditSubmit() {
 
     const onChangeTitle = (e) => setTitle(e?.target?.value);
 
-    const createMutation = useMutation((data) => createPost(data), {});
+    const createMutation = useMutation(
+        (data) => createPostByCommunities(data),
+        {
+            onSuccess: () => {
+                console.log("sukses");
+            }
+        }
+    );
 
     const handleSubmit = () => {
         const data = { title, description };
         const id = query?.sub;
-        console.log(data, id);
+        const values = { data, title: id };
+        createMutation.mutate(values);
     };
 
     return (
-        <Layout>
+        <Layout title={query?.sub}>
             {JSON.stringify(dataCommunities)}
             <Post
                 title={title}

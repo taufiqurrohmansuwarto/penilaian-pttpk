@@ -35,6 +35,11 @@ const detail = async (req, res) => {
                 title: id
             },
             include: {
+                _count: {
+                    select: {
+                        discussions_posts_joined: true
+                    }
+                },
                 user: true
             }
         });

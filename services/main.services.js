@@ -85,6 +85,6 @@ export const getPostsByCommunities = (title) => {
 
 export const createPostByCommunities = ({ title, data }) => {
     return fetcher
-        .post(`/discussions/communities/${title}/post`)
+        .post(`/discussions/communities/${title}/posts`, data)
         .then((res) => res?.data);
 };

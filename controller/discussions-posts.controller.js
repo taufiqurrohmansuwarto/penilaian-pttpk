@@ -13,17 +13,18 @@ const index = async (req, res) => {
             where: {
                 parent_id: community?.id,
                 status: "active",
-                type: "posts"
+                type: "post"
             },
             include: {
                 _count: {
                     select: {
                         children: true
                     }
-                }
+                },
+                user: true
             },
             orderBy: {
-                created_at: "asc"
+                created_at: "desc"
             }
         });
 
@@ -33,12 +34,41 @@ const index = async (req, res) => {
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
+
 const create = async (req, res) => {
     const { customId } = req.user;
     const { id } = req.query;
+    const { body } = req;
     try {
-        res.json({ code: 200, message: "success" });
+        const result = await prisma.discussions_posts.findFirst({
+            where: {
+                title: id,
+                type: "subreddit",
+                status: "active"
+            }
+        });
+
+        if (!result) {
+            res.status(404).json({ code: 404, message: "not found" });
+        } else {
+            const id = result?.id;
+            const currentData = {
+                parent_id: id,
+                title: body?.title,
+                content: body?.description,
+                type: "post",
+                status: "active",
+                user_custom_id: customId
+            };
+
+            await prisma.discussions_posts.create({
+                data: currentData
+            });
+
+            res.json({ code: 200, message: "sukses" });
+        }
     } catch (error) {
+        console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
