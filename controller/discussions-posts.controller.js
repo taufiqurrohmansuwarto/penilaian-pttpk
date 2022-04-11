@@ -76,9 +76,19 @@ const create = async (req, res) => {
 const update = async (req, res) => {};
 const remove = async (req, res) => {};
 
+const detail = async (req, res) => {
+    const { id } = req.query;
+    try {
+        res.json();
+    } catch (error) {
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
 module.exports = {
     index,
     create,
     update,
-    remove
+    remove,
+    detail
 };

@@ -1,3 +1,4 @@
+import moment from "moment";
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
@@ -9,6 +10,7 @@ import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getPosts } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
+import ReactShowMoreText from "react-show-more-text";
 
 const PostLists = ({ data, loading }) => {
     const router = useRouter();
@@ -34,11 +36,21 @@ const PostLists = ({ data, loading }) => {
     };
 
     const CustomCard = ({ data }) => {
+        const gotoLink = () => {
+            router?.push(`/discussions${data?.parent?.link}`);
+        };
+
+        const gotoComments = (id) => {
+            router?.push(`/discussions/${id}/comments`);
+        };
+
         return (
             <Card
                 extra={[
                     <>
-                        <Typography.Link>{data?.parent?.link}</Typography.Link>
+                        <Typography.Link onClick={gotoLink}>
+                            {data?.parent?.link}
+                        </Typography.Link>
                     </>
                 ]}
                 title={
@@ -49,15 +61,15 @@ const PostLists = ({ data, loading }) => {
                                 {data?.user?.username}
                             </Typography.Text>
                             <Typography.Text type="secondary">
-                                {data?.created_at}
+                                {moment(data?.created_at).fromNow()}
                             </Typography.Text>
                         </Space>
                     </div>
                 }
                 actions={[
                     <>
-                        <Space>
-                            <span>0 komentar</span>
+                        <Space onClick={() => gotoComments(data?.id)}>
+                            <span>{data?.votes} komentar</span>
                             <CommentOutlined />
                         </Space>
                     </>
@@ -75,13 +87,13 @@ const PostLists = ({ data, loading }) => {
                     }
                     title={<Title title={data?.title} />}
                     description={
-                        <div>
+                        <ReactShowMoreText lines={14}>
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: data?.content
                                 }}
                             />
-                        </div>
+                        </ReactShowMoreText>
                     }
                 />
             </Card>
@@ -118,38 +130,24 @@ const Discussions = () => {
         () => getPosts()
     );
 
-    const UpvoteDownvote = () => {
-        return (
-            <div>
-                <Space align="center" direction="vertical">
-                    <ArrowUpOutlined style={{ cursor: "pointer" }} />
-                    10
-                    <ArrowDownOutlined style={{ cursor: "pointer" }} />
-                </Space>
-            </div>
-        );
-    };
-
-    const Title = () => {
-        return (
-            <>
-                <Typography.Paragraph>
-                    Kenapa orang orang tidak melawan
-                </Typography.Paragraph>
-            </>
-        );
-    };
-
     return (
         <Layout>
             <Button onClick={gotoCreatePost}>Create Posts</Button>
             <Button onClick={gotoCreateKomunitas}>Create Komunitas</Button>
-            <PostLists data={dataPosts} loading={loadingDataPosts} />
             <Row>
-                <Col span={14}></Col>
+                <Col span={6}></Col>
+                <Col span={12}>
+                    <PostLists data={dataPosts} loading={loadingDataPosts} />
+                </Col>
+                <Col span={6}></Col>
             </Row>
         </Layout>
     );
+};
+
+Discussions.auth = {
+    roles: ["USER", "FASILITATOR"],
+    groups: ["MASTER", "PTTPK"]
 };
 
 export default Discussions;

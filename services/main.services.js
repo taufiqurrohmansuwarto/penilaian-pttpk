@@ -88,3 +88,15 @@ export const createPostByCommunities = ({ title, data }) => {
         .post(`/discussions/communities/${title}/posts`, data)
         .then((res) => res?.data);
 };
+
+export const getCommentsByPost = (id) => {
+    return fetcher
+        .get(`/discussions/post/${id}/commments`)
+        .then((res) => res?.data);
+};
+
+export const createCommentByPost = ({ id, data }) => {
+    return fetcher
+        .get(`/discussions/post/${id}/comments`, data)
+        .then((res) => res?.data);
+};

@@ -232,6 +232,7 @@ model feedbacks {
 model discussions_posts {
   id                 String               @id @default(cuid())
   parent_id          String?
+  post_id            String?
   title              String?
   content            String?
   link               String?

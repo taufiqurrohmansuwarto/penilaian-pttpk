@@ -10,15 +10,15 @@ const SubCategories = () => {
     return (
         <Layout title={`Komunitas ${query?.sub}`}>
             <Row gutter={[10, 10]}>
-                <Col span={7}></Col>
-                <Col span={10}>
+                <Col span={6}></Col>
+                <Col span={12}>
                     <Card style={{ marginBottom: 8 }}>
                         <CreatePost
                             route={`/discussions/r/${query?.sub}/submit`}
                         />
                     </Card>
                 </Col>
-                <Col span={7}></Col>
+                <Col span={6}></Col>
             </Row>
             <Communities />
         </Layout>

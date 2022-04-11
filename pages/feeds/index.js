@@ -6,11 +6,11 @@ const Feeds = () => {
     return (
         <Layout>
             <Row gutter={32}>
-                <Col span={7}></Col>
-                <Col span={10}>
+                <Col span={6}></Col>
+                <Col span={12}>
                     <UserComments />
                 </Col>
-                <Col span={7}></Col>
+                <Col span={6}></Col>
             </Row>
         </Layout>
     );
