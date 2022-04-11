@@ -6,4 +6,4 @@ import {
 import auth from "../../../../../middleware/auth";
 const handler = nc();
 
-export default handler.use(auth).get(index).create(create);
+export default handler.use(auth).get(index).post(create);

@@ -5,6 +5,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import routes from "../routes/routes";
+import { useRouter } from "next/router";
 
 const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
     ssr: false
@@ -80,6 +81,9 @@ const Layout = ({ children, title = "Feeds" }) => {
         onUnauthenticated: () => signIn()
     });
 
+    const router = useRouter();
+    const active = `/${router?.asPath?.split("/")?.[1]}`;
+
     return (
         <ProLayout
             menu={{
@@ -88,6 +92,7 @@ const Layout = ({ children, title = "Feeds" }) => {
                     return user;
                 }
             }}
+            selectedKeys={[active]}
             menuItemRender={menuItemRender}
             collapsed
             rightContentRender={() => rightContentRender(data?.user)}

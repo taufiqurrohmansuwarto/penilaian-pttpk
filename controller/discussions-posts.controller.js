@@ -37,7 +37,10 @@ const create = async (req, res) => {
     const { customId } = req.user;
     const { id } = req.query;
     try {
-    } catch (error) {}
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
 };
 
 const update = async (req, res) => {};

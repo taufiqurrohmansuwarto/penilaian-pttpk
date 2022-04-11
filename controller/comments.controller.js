@@ -80,7 +80,6 @@ const create = async (req, res) => {
 
     try {
         const data = {
-            nama,
             user_custom_id: customId,
             comment: body?.comment,
             parent_id: body?.parent_id
