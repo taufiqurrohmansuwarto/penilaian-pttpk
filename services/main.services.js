@@ -91,12 +91,12 @@ export const createPostByCommunities = ({ title, data }) => {
 
 export const getCommentsByPost = (id) => {
     return fetcher
-        .get(`/discussions/post/${id}/commments`)
+        .get(`/discussions/posts/${id}/comments`)
         .then((res) => res?.data);
 };
 
 export const createCommentByPost = ({ id, data }) => {
     return fetcher
-        .get(`/discussions/post/${id}/comments`, data)
+        .get(`/discussions/posts/${id}/comments`, data)
         .then((res) => res?.data);
 };

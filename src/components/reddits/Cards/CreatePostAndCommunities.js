@@ -16,7 +16,7 @@ function CreatePostAndCommunities() {
         <Card>
             <Card.Meta
                 title="Ayo buat postingan / komunitas baru"
-                description="www.instagram.com"
+                description="Heheheheh"
             />
             <div style={{ marginTop: 8 }}>
                 <Button
