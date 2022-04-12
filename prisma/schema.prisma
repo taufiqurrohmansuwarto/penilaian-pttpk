@@ -230,16 +230,21 @@ model feedbacks {
 
 // reddits
 model discussions_posts {
-  id                 String               @id @default(cuid())
-  parent_id          String?
-  post_id            String?
-  title              String?
-  content            String?
-  link               String?
-  user_custom_id     String
-  status             String?
-  parent             discussions_posts?   @relation("SubDiscussionsPosts", fields: [parent_id], references: [id], onDelete: Cascade)
-  children           discussions_posts[]  @relation("SubDiscussionsPosts")
+  id             String              @id @default(cuid())
+  parent_id      String?
+  title          String?
+  content        String?
+  link           String?
+  user_custom_id String
+  status         String?
+  parent         discussions_posts?  @relation("SubDiscussionsPosts", fields: [parent_id], references: [id], onDelete: Cascade)
+  children       discussions_posts[] @relation("SubDiscussionsPosts")
+
+
+  post_id           String?
+  parent_comments   discussions_posts?  @relation("SubDiscussionsComments", fields: [post_id], references: [id], onDelete: Cascade)
+  children_comments discussions_posts[] @relation("SubDiscussionsComments")
+
   image_list         Json?
   type               String?
   votes              Int?                 @default(0)

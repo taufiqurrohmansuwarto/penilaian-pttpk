@@ -3,6 +3,7 @@ import React from "react";
 import { useQuery } from "react-query";
 import { getCommentsByPost } from "../../../services/main.services";
 import Layout from "../../../src/components/Layout";
+import CreateComments from "../../../src/components/reddits/CreateComments";
 
 function Comments() {
     const router = useRouter();
@@ -17,7 +18,7 @@ function Comments() {
 
     return (
         <Layout>
-            <div>{JSON.stringify(dataComments)}</div>
+            <CreateComments data={dataComments} id={router?.query?.id} />
         </Layout>
     );
 }

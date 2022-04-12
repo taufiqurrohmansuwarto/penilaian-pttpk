@@ -2,7 +2,6 @@ const { default: prisma } = require("../lib/prisma");
 const arrayToTree = require("array-to-tree");
 
 const index = async (req, res) => {
-    const { customId } = req.user;
     const { id } = req.query;
     try {
         const result = await prisma.discussions_posts.findMany({
@@ -13,9 +12,8 @@ const index = async (req, res) => {
             }
         });
 
-        res.json(
-            arrayToTree(result, { customID: "id", parentProperty: "parent_id" })
-        );
+        const hasil = arrayToTree(result);
+        res.json(hasil);
     } catch (error) {
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
@@ -38,6 +36,7 @@ const create = async (req, res) => {
         await prisma.discussions_posts.create({
             data: {
                 parent_id: body?.parent_id,
+                content: body?.comment,
                 post_id: id,
                 status: "active",
                 type: "comment",
