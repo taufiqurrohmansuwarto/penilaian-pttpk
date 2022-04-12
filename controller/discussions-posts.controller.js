@@ -78,8 +78,14 @@ const remove = async (req, res) => {};
 
 const detail = async (req, res) => {
     const { id } = req.query;
+
     try {
-        res.json();
+        const result = await prisma.discussions_posts.findUnique({
+            where: {
+                id
+            }
+        });
+        res.json(result);
     } catch (error) {
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
