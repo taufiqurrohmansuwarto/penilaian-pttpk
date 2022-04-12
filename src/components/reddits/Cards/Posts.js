@@ -68,7 +68,9 @@ function Posts({ data, loading }) {
                 actions={[
                     <>
                         <Space onClick={() => gotoComments(data?.id)}>
-                            <span>{data?.votes} komentar</span>
+                            <span>
+                                {data?._count?.children_comments} komentar
+                            </span>
                             <CommentOutlined />
                         </Space>
                     </>,

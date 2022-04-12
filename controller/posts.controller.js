@@ -13,7 +13,7 @@ const index = async (req, res) => {
                 user: true,
                 _count: {
                     select: {
-                        children: true
+                        children_comments: true
                     }
                 }
             },

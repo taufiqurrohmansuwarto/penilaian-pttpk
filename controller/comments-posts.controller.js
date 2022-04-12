@@ -9,6 +9,12 @@ const index = async (req, res) => {
                 post_id: id,
                 type: "comment",
                 status: "active"
+            },
+            include: {
+                user: true
+            },
+            orderBy: {
+                created_at: "asc"
             }
         });
 
