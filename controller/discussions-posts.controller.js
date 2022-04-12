@@ -83,6 +83,10 @@ const detail = async (req, res) => {
         const result = await prisma.discussions_posts.findUnique({
             where: {
                 id
+            },
+            include: {
+                user: true,
+                parent: true
             }
         });
         res.json(result);
