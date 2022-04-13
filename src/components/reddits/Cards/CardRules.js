@@ -4,12 +4,14 @@ const data = [
     "Biasakan sopan ketika berkomunikasi dengan orang lain",
     "Jangan membicarakan yang berhubungan dengan politik atau apapun itu",
     "No roasting",
-    "No Flamming"
+    "No Flamming",
+    "Jangan menggunakan akun orang lain untuk berkomunikasi",
+    "Jangan menangkap layar (screenshot) untuk balas dendam"
 ];
 
 function CardRules() {
     return (
-        <Card>
+        <Card size="small">
             <Card.Meta
                 title="Aturan dalam berdiskusi"
                 description={

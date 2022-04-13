@@ -2,9 +2,14 @@ import { Card, Col, Divider, Row, Skeleton, Button } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useInfiniteQuery } from "react-query";
-import { getPostsByCommunities } from "../../../../services/main.services";
+import { useInfiniteQuery, useQuery } from "react-query";
+import {
+    findCommunities,
+    getPostsByCommunities
+} from "../../../../services/main.services";
 import Layout from "../../../../src/components/Layout";
+import CardSubscribePosts from "../../../../src/components/reddits/Cards/CardSubscribePosts";
+import ListSubscribes from "../../../../src/components/reddits/Cards/ListSubscribes";
 import Posts from "../../../../src/components/reddits/Cards/Posts";
 import CreatePost from "../../../../src/components/reddits/CreatePost";
 
@@ -43,6 +48,15 @@ const SubCategories = ({ data }) => {
         }
     );
 
+    const { data: dataCommunities, isLoading: isLoadingDataCommunities } =
+        useQuery(
+            ["communities", router?.query?.sub],
+            () => findCommunities(router?.query?.sub),
+            {
+                enabled: !!router?.query?.sub
+            }
+        );
+
     useEffect(() => {
         if (!router?.isReady) null;
     }, [router?.query]);
@@ -50,7 +64,9 @@ const SubCategories = ({ data }) => {
     return (
         <Layout title={`Komunitas ${query?.sub}`}>
             <Row gutter={[10, 10]}>
-                <Col span={7}></Col>
+                <Col span={7}>
+                    <ListSubscribes />
+                </Col>
                 <Col span={10}>
                     <Card style={{ marginBottom: 8 }}>
                         <CreatePost
@@ -101,7 +117,14 @@ const SubCategories = ({ data }) => {
                         )}
                     </Skeleton>
                 </Col>
-                <Col span={7}></Col>
+                <Col span={7}>
+                    <Skeleton loading={isLoadingDataCommunities}>
+                        <CardSubscribePosts
+                            id={dataCommunities?.id}
+                            title={router?.query?.sub}
+                        />
+                    </Skeleton>
+                </Col>
             </Row>
         </Layout>
     );

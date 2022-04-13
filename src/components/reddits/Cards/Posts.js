@@ -46,7 +46,7 @@ function Posts({ data, loading, isFetchingNextPage }) {
                 extra={[
                     <>
                         <Typography.Link onClick={gotoLink}>
-                            {data?.parent?.link}
+                            #{data?.parent?.title}
                         </Typography.Link>
                     </>
                 ]}

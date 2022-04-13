@@ -13,7 +13,7 @@ function CreatePostAndCommunities() {
     };
 
     return (
-        <Card>
+        <Card size="small">
             <Card.Meta
                 title="Ayo buat postingan / komunitas baru"
                 description="Heheheheh"

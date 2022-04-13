@@ -51,10 +51,10 @@ const Discussions = ({ data }) => {
     return (
         <Layout>
             <Row gutter={32}>
-                <Col span={7}>
+                <Col span={6}>
                     <ListSubscribes />
                 </Col>
-                <Col span={10}>
+                <Col span={12}>
                     <Card>
                         <span style={{ marginRight: 8 }}>
                             Urutkan berdasarkan :{" "}
@@ -99,7 +99,7 @@ const Discussions = ({ data }) => {
                         )}
                     </Skeleton>
                 </Col>
-                <Col span={7}>
+                <Col span={6}>
                     <Row gutter={[8, 8]}>
                         <Col>
                             <CreatePostAndCommunities />

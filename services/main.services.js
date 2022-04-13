@@ -111,14 +111,21 @@ export const getListSubscribers = () => {
     return fetcher.get(`/discussions/user-subscribe`).then((res) => res?.data);
 };
 
-export const subscribeKomunitas = (title) => {
+// subscribe
+export const subscribePost = (id) => {
     return fetcher
-        .put(`/discussions/user-subscribe?title=${title}`)
+        .put(`/discussions/posts/${id}/request-vote`)
         .then((res) => res?.data);
 };
 
-export const unsubscribeKomunitas = (title) => {
+export const unsubscribePost = (id) => {
     return fetcher
-        .delete(`discussions/user-subscribe?title${title}`)
+        .delete(`/discussions/posts/${id}/request-vote`)
+        .then((res) => res?.data);
+};
+
+export const getSubscribe = (id) => {
+    return fetcher
+        .get(`/discussions/posts/${id}/request-vote`)
         .then((res) => res?.data);
 };

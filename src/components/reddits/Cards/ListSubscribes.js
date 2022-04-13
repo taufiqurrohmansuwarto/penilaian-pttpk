@@ -22,8 +22,9 @@ function ListSubscribes() {
     };
 
     return (
-        <Card title="Komunitas ku">
+        <Card title="Komunitas ku" size="small">
             <List
+                size="small"
                 dataSource={dataSubscribes}
                 loading={isLoading}
                 renderItem={(item) => (
@@ -38,7 +39,7 @@ function ListSubscribes() {
                                             gotoSub(item?.discussion?.title)
                                         }
                                     >
-                                        {item?.discussion?.title}
+                                        #{item?.discussion?.title}
                                     </div>
                                 </>
                             }
