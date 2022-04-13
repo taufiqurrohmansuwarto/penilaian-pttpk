@@ -6,6 +6,7 @@ import { useInfiniteQuery } from "react-query";
 import { getPosts } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
 import CardRules from "../../src/components/reddits/Cards/CardRules";
+import CardTop10 from "../../src/components/reddits/Cards/CardTop10";
 import CreatePostAndCommunities from "../../src/components/reddits/Cards/CreatePostAndCommunities";
 import ListSubscribes from "../../src/components/reddits/Cards/ListSubscribes";
 import Posts from "../../src/components/reddits/Cards/Posts";
@@ -101,11 +102,14 @@ const Discussions = ({ data }) => {
                 </Col>
                 <Col span={6}>
                     <Row gutter={[8, 8]}>
-                        <Col>
+                        <Col span={24}>
                             <CreatePostAndCommunities />
                         </Col>
-                        <Col>
+                        <Col span={24}>
                             <CardRules />
+                        </Col>
+                        <Col span={24}>
+                            <CardTop10 />
                         </Col>
                     </Row>
                 </Col>

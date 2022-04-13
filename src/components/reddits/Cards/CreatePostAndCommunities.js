@@ -13,11 +13,8 @@ function CreatePostAndCommunities() {
     };
 
     return (
-        <Card size="small">
-            <Card.Meta
-                title="Ayo buat postingan / komunitas baru"
-                description="Heheheheh"
-            />
+        <Card size="small" title="Ayo buat postingan / komunitas baru">
+            <Card.Meta description="Heheheheh" />
             <div style={{ marginTop: 8 }}>
                 <Button
                     type="primary"

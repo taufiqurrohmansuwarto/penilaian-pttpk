@@ -11,9 +11,8 @@ const data = [
 
 function CardRules() {
     return (
-        <Card size="small">
+        <Card size="small" title="Aturan dalam berdiskusi">
             <Card.Meta
-                title="Aturan dalam berdiskusi"
                 description={
                     <List
                         size="small"
