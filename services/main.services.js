@@ -110,3 +110,15 @@ export const createCommentByPost = ({ id, data }) => {
 export const getListSubscribers = () => {
     return fetcher.get(`/discussions/user-subscribe`).then((res) => res?.data);
 };
+
+export const subscribeKomunitas = (title) => {
+    return fetcher
+        .put(`/discussions/user-subscribe?title=${title}`)
+        .then((res) => res?.data);
+};
+
+export const unsubscribeKomunitas = (title) => {
+    return fetcher
+        .delete(`discussions/user-subscribe?title${title}`)
+        .then((res) => res?.data);
+};
