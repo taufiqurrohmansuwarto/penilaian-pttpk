@@ -80,9 +80,11 @@ export const findCommunitiesByTitle = (title) => {
         .then((res) => res?.data);
 };
 
-export const getPostsByCommunities = (title) => {
+export const getPostsByCommunities = (title, sort = "terbaru", cursor = 0) => {
     return fetcher
-        .get(`/discussions/communities/${title}/posts`)
+        .get(
+            `/discussions/communities/${title}/posts?sort=${sort}&cursor=${cursor}`
+        )
         .then((res) => res?.data);
 };
 

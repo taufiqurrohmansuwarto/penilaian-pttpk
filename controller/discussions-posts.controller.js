@@ -1,6 +1,9 @@
 const { default: prisma } = require("../lib/prisma");
 const index = async (req, res) => {
     const { id } = req.query;
+    const sort = req?.query?.sort || "terbaru";
+    const cursor = req?.query?.cursor;
+    const take = 50;
 
     try {
         const community = await prisma.discussions_posts.findFirst({
@@ -9,7 +12,7 @@ const index = async (req, res) => {
             }
         });
 
-        const result = await prisma.discussions_posts.findMany({
+        let query = {
             where: {
                 parent_id: community?.id,
                 status: "active",
@@ -23,13 +26,46 @@ const index = async (req, res) => {
                 },
                 user: true,
                 parent: true
-            },
-            orderBy: {
-                created_at: "desc"
             }
-        });
+        };
 
-        res.json(result);
+        if (sort === "terbaru") {
+            query = { ...query, orderBy: { created_at: "desc" } };
+        }
+
+        if (sort === "vote") {
+            query = { ...query, orderBy: { votes: "desc" } };
+        }
+
+        if (sort === "populer") {
+            query = {
+                ...query,
+                orderBy: {
+                    children_comments: {
+                        _count: "desc"
+                    }
+                }
+            };
+        }
+
+        if (cursor && cursor !== 0 && cursor !== "0") {
+            query = {
+                ...query,
+                take,
+                skip: 1,
+                cursor: {
+                    id: cursor
+                }
+            };
+        }
+
+        const result = await prisma.discussions_posts.findMany(query);
+        const nextCursor =
+            result?.length < take
+                ? null
+                : result[result?.length - 1]?.id || null;
+
+        res.json({ data: result, nextCursor });
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
