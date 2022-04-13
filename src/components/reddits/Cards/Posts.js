@@ -1,6 +1,7 @@
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
+    BellOutlined,
     CommentOutlined
 } from "@ant-design/icons";
 import { Button, Avatar, Card, List, Space, Typography } from "antd";
@@ -69,6 +70,12 @@ function Posts({ data, loading, isFetchingNextPage }) {
                                 {data?._count?.children_comments} komentar
                             </span>
                             <CommentOutlined />
+                        </Space>
+                    </>,
+                    <>
+                        <Space>
+                            <span>Beritahu</span>
+                            <BellOutlined />
                         </Space>
                     </>
                 ]}

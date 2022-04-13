@@ -25,7 +25,7 @@ function CreatePostAndCommunities() {
                     block
                     style={{ marginBottom: 8 }}
                 >
-                    Buat Post
+                    Buat Postingan
                 </Button>
                 <Button block onClick={createCommunities}>
                     Buat Komunitas

@@ -79,3 +79,6 @@ INSERT INTO reddit_votes(post_id, user_id, vflag) VALUES(LAST_INSERT_ID(),'srini
 2. buat ui untuk feeds
 3. buat subscribe 
 4. search harus ada list susbcribe 
+
+
+features :

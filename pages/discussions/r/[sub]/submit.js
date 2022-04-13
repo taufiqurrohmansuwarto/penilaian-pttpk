@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { Card, message } from "antd";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
@@ -36,23 +36,28 @@ function SubRedditSubmit() {
     );
 
     const handleSubmit = () => {
-        const data = { title, description };
-        const id = query?.sub;
-        const values = { data, title: id };
-        createMutation.mutate(values);
+        if (!title || !description) {
+            return;
+        } else {
+            const data = { title, description };
+            const id = query?.sub;
+            const values = { data, title: id };
+            createMutation.mutate(values);
+        }
     };
 
     return (
-        <Layout title={query?.sub}>
-            {JSON.stringify(dataCommunities)}
-            <Post
-                loading={createMutation?.isLoading}
-                title={title}
-                onChangeTitle={onChangeTitle}
-                description={description}
-                onChangeDescription={onChange}
-                handleSubmit={handleSubmit}
-            />
+        <Layout title={`Buat Postingan di Komunitasi ${query?.sub}`}>
+            <Card>
+                <Post
+                    loading={createMutation?.isLoading}
+                    title={title}
+                    onChangeTitle={onChangeTitle}
+                    description={description}
+                    onChangeDescription={onChange}
+                    handleSubmit={handleSubmit}
+                />
+            </Card>
         </Layout>
     );
 }

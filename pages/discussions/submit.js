@@ -45,7 +45,7 @@ const RedditSubmit = ({ data }) => {
     };
 
     return (
-        <Layout title="Buat Diskusi">
+        <Layout title="Buat Postingan Baru">
             <Select
                 value={search}
                 onChange={(e) => setSearch(e)}
@@ -65,7 +65,6 @@ const RedditSubmit = ({ data }) => {
                     </Select.Option>
                 ))}
             </Select>
-            {JSON.stringify(dataCommunities)}
             <Card>
                 <Tabs activeKey={data?.query} onChange={handleChange}>
                     <TabPane

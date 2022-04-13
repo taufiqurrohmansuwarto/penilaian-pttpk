@@ -106,3 +106,7 @@ export const createCommentByPost = ({ id, data }) => {
         .post(`/discussions/posts/${id}/comments`, data)
         .then((res) => res?.data);
 };
+
+export const getListSubscribers = () => {
+    return fetcher.get(`/discussions/user-subscribe`).then((res) => res?.data);
+};

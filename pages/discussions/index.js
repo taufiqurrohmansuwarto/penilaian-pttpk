@@ -7,6 +7,7 @@ import { getPosts } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
 import CardRules from "../../src/components/reddits/Cards/CardRules";
 import CreatePostAndCommunities from "../../src/components/reddits/Cards/CreatePostAndCommunities";
+import ListSubscribes from "../../src/components/reddits/Cards/ListSubscribes";
 import Posts from "../../src/components/reddits/Cards/Posts";
 
 const Discussions = ({ data }) => {
@@ -50,7 +51,9 @@ const Discussions = ({ data }) => {
     return (
         <Layout>
             <Row gutter={32}>
-                <Col span={7}></Col>
+                <Col span={7}>
+                    <ListSubscribes />
+                </Col>
                 <Col span={10}>
                     <Card>
                         <span style={{ marginRight: 8 }}>

@@ -22,7 +22,12 @@ const Post = ({
                 placeholder="Deskripsi"
                 style={{ minHeight: 240, marginTop: 8, marginBottom: 8 }}
             />
-            <Button type="primary" loading={loading} onClick={handleSubmit}>
+            <Button
+                type="primary"
+                disabled={!title || !description}
+                loading={loading}
+                onClick={handleSubmit}
+            >
                 Submit
             </Button>
         </>
