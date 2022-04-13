@@ -52,8 +52,11 @@ export const getTopics = () => {
 };
 
 // posts
-export const getPosts = () =>
-    fetcher.get("/discussions/posts").then((res) => res?.data);
+export const getPosts = (sort = "terbaru", cursor = 0) => {
+    return fetcher
+        .get(`/discussions/posts?sort=${sort}&cursor=${cursor}`)
+        .then((res) => res?.data);
+};
 
 export const createPost = (data) =>
     fetcher.post("/discussions/posts", data).then((res) => res?.data);

@@ -1,4 +1,4 @@
-import { Card, Col, List, Row } from "antd";
+import { Col, Row } from "antd";
 import Layout from "../../src/components/Layout";
 import UserComments from "../../src/components/UsersComments";
 

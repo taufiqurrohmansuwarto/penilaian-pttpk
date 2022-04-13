@@ -1,9 +1,9 @@
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
-    CommentOutlined
+    SendOutlined
 } from "@ant-design/icons";
-import { Button, Card, Comment, Form, message, Space } from "antd";
+import { Button, Card, Comment, Form, message, Space, Tag } from "antd";
 import moment from "moment";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -69,7 +69,17 @@ const MyComment = ({ comment, user, id }) => {
     return (
         <Comment
             avatar={comment?.user?.image}
-            author={comment?.user?.username}
+            author={
+                <div>
+                    <Space>
+                        <span>{user?.user?.name}</span>
+                        {comment?.user_custom_id ===
+                            comment?.parent_comments?.user_custom_id && (
+                            <Tag color="green">Pembuat Postingan</Tag>
+                        )}
+                    </Space>
+                </div>
+            }
             datetime={moment(comment?.created_at).fromNow()}
             actions={[
                 <div style={{ cursor: "pointer", marginRight: 14 }}>
@@ -84,8 +94,7 @@ const MyComment = ({ comment, user, id }) => {
                     onClick={() => handleShowEditor(comment?.id)}
                 >
                     <Space>
-                        <span>Balas</span>
-                        <CommentOutlined />
+                        <span>BALAS</span>
                     </Space>
                 </div>
             ]}
@@ -94,7 +103,21 @@ const MyComment = ({ comment, user, id }) => {
             }
         >
             {nestedId === comment?.id && (
-                <Comment avatar={user?.user?.image} author={user?.user?.name}>
+                <Comment
+                    avatar={user?.user?.image}
+                    author={
+                        <div>
+                            <Space>
+                                <span>{user?.user?.name}</span>
+                                {comment?.user_custom_id ===
+                                    comment?.parent_comments
+                                        ?.user_custom_id && (
+                                    <Tag color="green">Pembuat Postingan</Tag>
+                                )}
+                            </Space>
+                        </div>
+                    }
+                >
                     <Editor
                         onCancel={handleCancel}
                         handleUpload={handleUpload}

@@ -1,4 +1,5 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { useId } from "@mantine/hooks";
 import {
     Button,
     Card,
@@ -58,7 +59,6 @@ const CreateRules = () => {
                             >
                                 <Input.TextArea />
                             </Form.Item>
-
                             <MinusCircleOutlined onClick={() => remove(name)} />
                         </Space>
                     ))}
@@ -98,7 +98,6 @@ const CreateCommunities = () => {
     });
 
     const handleSubmit = async (values) => {
-        // console.log(values);
         createMutation.mutate(values);
     };
 

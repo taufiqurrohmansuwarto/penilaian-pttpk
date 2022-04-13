@@ -1,30 +1,27 @@
-import moment from "moment";
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
-    CommentOutlined,
-    NotificationOutlined
+    CommentOutlined
 } from "@ant-design/icons";
-import { Avatar, Card, List, Space, Typography } from "antd";
+import { Button, Avatar, Card, List, Space, Typography } from "antd";
+import moment from "moment";
 import { useRouter } from "next/router";
 import ReactShowMoreText from "react-show-more-text";
 
-function Posts({ data, loading }) {
-    const router = useRouter();
+const UpvoteDownvote = ({ votes, id }) => {
+    return (
+        <div>
+            <Space align="center" direction="vertical">
+                <ArrowUpOutlined style={{ cursor: "pointer" }} />
+                {votes}
+                <ArrowDownOutlined style={{ cursor: "pointer" }} />
+            </Space>
+        </div>
+    );
+};
 
-    const UpvoteDownvote = ({ votes }) => {
-        return (
-            <div>
-                <Space align="center" direction="vertical">
-                    <ArrowUpOutlined
-                        style={{ cursor: "pointer", color: "#eb2f96" }}
-                    />
-                    {votes}
-                    <ArrowDownOutlined style={{ cursor: "pointer" }} />
-                </Space>
-            </div>
-        );
-    };
+function Posts({ data, loading, isFetchingNextPage }) {
+    const router = useRouter();
 
     const Title = ({ title }) => {
         return (
@@ -73,12 +70,6 @@ function Posts({ data, loading }) {
                             </span>
                             <CommentOutlined />
                         </Space>
-                    </>,
-                    <>
-                        <Space>
-                            <span>Notif</span>
-                            <NotificationOutlined />
-                        </Space>
                     </>
                 ]}
             >
@@ -87,7 +78,10 @@ function Posts({ data, loading }) {
                         <>
                             <Space align="start">
                                 <div style={{ marginRight: 8 }}>
-                                    <UpvoteDownvote votes={data?.votes} />
+                                    <UpvoteDownvote
+                                        id={data?.id}
+                                        votes={data?.votes}
+                                    />
                                 </div>
                             </Space>
                         </>
@@ -108,16 +102,20 @@ function Posts({ data, loading }) {
     };
 
     return (
-        <List
-            grid={{
-                column: 1,
-                gutter: [10, 10]
-            }}
-            loading={loading}
-            dataSource={data}
-            rowKey={(row) => row?.id}
-            renderItem={(item) => <CustomCard data={item} />}
-        />
+        <div style={{ marginTop: 10 }}>
+            <List
+                grid={{
+                    column: 1,
+                    gutter: [10, 10]
+                }}
+                loading={loading || isFetchingNextPage}
+                dataSource={data}
+                rowKey={(row) => row?.id}
+                renderItem={(item) => {
+                    return <CustomCard data={item} />;
+                }}
+            />
+        </div>
     );
 }
 

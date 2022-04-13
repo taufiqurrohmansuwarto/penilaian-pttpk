@@ -8,10 +8,7 @@ import { Card, Select, Spin, Tabs } from "antd";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import {
-    findCommunities,
-    findCommunitiesByTitle
-} from "../../services/main.services";
+import { findCommunitiesByTitle } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
 import Post from "../../src/components/reddits/Post";
 

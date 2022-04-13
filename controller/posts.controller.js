@@ -1,28 +1,69 @@
 const { default: prisma } = require("../lib/prisma");
 
 const index = async (req, res) => {
-    // should be
-    try {
-        const result = await prisma.discussions_posts.findMany({
-            where: {
-                type: "post",
-                status: "active"
-            },
-            include: {
-                parent: true,
-                user: true,
-                _count: {
-                    select: {
-                        children_comments: true
-                    }
+    // should be there sort
+    const sort = req.query?.sort || "terbaru";
+    const cursor = req.query?.cursor;
+    const take = 50;
+
+    let query = {
+        take,
+        where: {
+            type: "post",
+            status: "active"
+        },
+        include: {
+            parent: true,
+            user: true,
+            _count: {
+                select: {
+                    children_comments: true
                 }
-            },
-            orderBy: {
-                votes: "desc"
             }
-        });
-        res.json(result);
+        }
+    };
+
+    if (sort === "terbaru") {
+        query = { ...query, orderBy: { created_at: "desc" } };
+    }
+
+    if (sort === "vote") {
+        query = { ...query, orderBy: { votes: "desc" } };
+    }
+
+    if (sort === "populer") {
+        query = {
+            ...query,
+            orderBy: {
+                children_comments: {
+                    _count: "desc"
+                }
+            }
+        };
+    }
+
+    // if therewas an cursor
+    if (cursor && cursor !== 0 && cursor !== "0") {
+        query = {
+            ...query,
+            take,
+            skip: 1,
+            cursor: {
+                id: cursor
+            }
+        };
+    }
+
+    try {
+        const result = await prisma.discussions_posts.findMany(query);
+        const nextCursor =
+            result?.length < take
+                ? null
+                : result[result?.length - 1]?.id || null;
+
+        res.json({ data: result, nextCursor });
     } catch (error) {
+        console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };

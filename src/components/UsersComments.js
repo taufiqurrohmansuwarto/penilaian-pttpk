@@ -1,35 +1,26 @@
 import {
-    ArrowDownOutlined,
-    ArrowUpOutlined,
     DislikeFilled,
     DislikeOutlined,
     LikeFilled,
     LikeOutlined
 } from "@ant-design/icons";
 import {
-    Tooltip,
     Button,
+    Card,
     Comment,
     Form,
     Input,
     List,
     message,
     Skeleton,
-    Space,
-    Divider,
-    Card
+    Space
 } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 import moment from "moment";
 import "moment/locale/id";
 import { useSession } from "next-auth/react";
-import React, { useState, createElement } from "react";
-import {
-    useInfiniteQuery,
-    useMutation,
-    useQuery,
-    useQueryClient
-} from "react-query";
+import React, { useState } from "react";
+import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import {
     createComments,
     dislikes,

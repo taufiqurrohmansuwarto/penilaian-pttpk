@@ -40,7 +40,11 @@ const detail = async (req, res) => {
                         discussions_posts_joined: true
                     }
                 },
-                user: true
+                user: true,
+                parent: true
+            },
+            orderBy: {
+                created_at: "desc"
             }
         });
         res.json(result);

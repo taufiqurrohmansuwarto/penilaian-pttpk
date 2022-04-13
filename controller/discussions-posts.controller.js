@@ -18,10 +18,11 @@ const index = async (req, res) => {
             include: {
                 _count: {
                     select: {
-                        children: true
+                        children_comments: true
                     }
                 },
-                user: true
+                user: true,
+                parent: true
             },
             orderBy: {
                 created_at: "desc"

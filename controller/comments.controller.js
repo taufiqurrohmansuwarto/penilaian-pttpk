@@ -1,11 +1,9 @@
 import prisma from "../lib/prisma";
-const arrayToTree = require("array-to-tree");
 
 const index = async (req, res) => {
-    const { customId } = req?.user;
     const cursor = req?.query?.cursor;
 
-    const take = 10;
+    const take = 50;
     let query = {
         take,
 
@@ -52,11 +50,6 @@ const index = async (req, res) => {
             where: {
                 parent_id: null
             }
-        });
-
-        const newResult = arrayToTree(result, {
-            customID: "id",
-            parentProperty: "parent_id"
         });
 
         const nextCursor =

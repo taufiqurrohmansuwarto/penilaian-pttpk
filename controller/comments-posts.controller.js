@@ -11,7 +11,12 @@ const index = async (req, res) => {
                 status: "active"
             },
             include: {
-                user: true
+                user: true,
+                parent_comments: {
+                    select: {
+                        user_custom_id: true
+                    }
+                }
             },
             orderBy: {
                 created_at: "asc"
