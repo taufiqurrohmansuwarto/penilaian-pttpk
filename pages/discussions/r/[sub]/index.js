@@ -1,5 +1,6 @@
 import { Card, Col, Divider, Row, Skeleton, Button } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useInfiniteQuery, useQuery } from "react-query";
@@ -18,6 +19,8 @@ const SubCategories = ({ data }) => {
     const [selectedFilter, setSelectedFilter] = useState(data?.sort);
     const router = useRouter();
     const { query } = router;
+
+    const { data: userData } = useSession();
 
     const handleChangeFilter = (checked, tag) => {
         if (checked) {
@@ -99,6 +102,7 @@ const SubCategories = ({ data }) => {
                                     hasNextPage={hasNextPage}
                                     fetchNextPage={fetchNextPage}
                                     loading={isLoading}
+                                    user={userData}
                                 />
                             </React.Fragment>
                         ))}

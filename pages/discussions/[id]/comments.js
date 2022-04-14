@@ -1,10 +1,14 @@
-import { Row, Col, Card } from "antd";
+import { Col, Row, Skeleton } from "antd";
 import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "react-query";
-import { getCommentsByPost } from "../../../services/main.services";
+import {
+    getCommentsByPost,
+    getPostById
+} from "../../../services/main.services";
 import Layout from "../../../src/components/Layout";
 import CardCommunitiesDescription from "../../../src/components/reddits/Cards/CardCommunitiesDescription";
+import CardPost from "../../../src/components/reddits/Cards/CardPost";
 import CardRules from "../../../src/components/reddits/Cards/CardRules";
 import CreateComments from "../../../src/components/reddits/CreateComments";
 
@@ -19,11 +23,22 @@ function Comments() {
         }
     );
 
+    const { data: dataPost, isLoading: isLoadingPost } = useQuery(
+        ["post", router?.query?.id],
+        () => getPostById(router?.query?.id),
+        {
+            enabled: !!router?.query?.id
+        }
+    );
+
     return (
         <Layout>
             <Row gutter={[16, 16]}>
                 <Col span={4}></Col>
                 <Col span={15}>
+                    <Skeleton avatar loading={isLoadingPost}>
+                        <CardPost data={dataPost} />
+                    </Skeleton>
                     <CreateComments
                         data={dataComments}
                         id={router?.query?.id}

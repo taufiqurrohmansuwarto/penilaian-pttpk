@@ -41,7 +41,8 @@ const detail = async (req, res) => {
                     }
                 },
                 user: true,
-                parent: true
+                parent: true,
+                discussions_votes: true
             },
             orderBy: {
                 created_at: "desc"

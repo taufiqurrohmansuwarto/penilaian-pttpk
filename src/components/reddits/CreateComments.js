@@ -8,7 +8,12 @@ import moment from "moment";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { createCommentByPost, uploads } from "../../../services/main.services";
+import {
+    createCommentByPost,
+    downvotePost,
+    uploads,
+    upvotePost
+} from "../../../services/main.services";
 import RichTextEditor from "../RichTextEditor";
 
 const MyComment = ({ comment, user, id }) => {
@@ -65,6 +70,12 @@ const MyComment = ({ comment, user, id }) => {
             createCommentNestedComment.mutate(values);
         }
     };
+
+    const upvoteMutation = useMutation((data) => upvotePost(data));
+    const downvoteMutation = useMutation((data) => downvotePost(data));
+
+    const handleUpvote = () => {};
+    const handleDownvote = () => {};
 
     return (
         <Comment
@@ -188,6 +199,7 @@ function CreateComments({ data, id }) {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["comments", id]);
+                queryClient.invalidateQueries(["post", id]);
                 setComment("");
             },
             onError: (e) => message.error("Error")

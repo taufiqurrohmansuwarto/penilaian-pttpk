@@ -58,6 +58,10 @@ export const getPosts = (sort = "terbaru", cursor = 0) => {
         .then((res) => res?.data);
 };
 
+export const getPostById = (id) => {
+    return fetcher.get(`/discussions/posts/${id}`).then((res) => res?.data);
+};
+
 export const createPost = (data) =>
     fetcher.post("/discussions/posts", data).then((res) => res?.data);
 

@@ -1,7 +1,6 @@
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
-    BellOutlined,
     CommentOutlined
 } from "@ant-design/icons";
 import { Avatar, Card, List, Space, Typography } from "antd";
@@ -16,7 +15,9 @@ const UpvoteDownvote = ({ id, votes, data, user }) => {
 
     const upvoteColor = () => {
         const result = data?.discussions_votes?.find(
-            (d) => d?.discussion_post_id === id && d?.user_custom_id
+            (d) =>
+                d?.discussion_post_id === id &&
+                d?.user_custom_id === user?.user?.id
         );
         if (!result) {
             return "gray";
@@ -32,7 +33,9 @@ const UpvoteDownvote = ({ id, votes, data, user }) => {
 
     const downvoteColor = () => {
         const result = data?.discussions_votes?.find(
-            (d) => d?.discussion_post_id === id && d?.user_custom_id
+            (d) =>
+                d?.discussion_post_id === id &&
+                d?.user_custom_id === user?.user?.id
         );
         if (!result) {
             return "gray";
@@ -49,12 +52,14 @@ const UpvoteDownvote = ({ id, votes, data, user }) => {
     const upvoteMutation = useMutation((data) => upvotePost(data), {
         onError: (e) => console.log(e),
         onSuccess: () => {
+            queryClient.invalidateQueries("post-communities");
             queryClient.invalidateQueries("posts");
         }
     });
     const downvoteMutation = useMutation((data) => downvotePost(data), {
         onError: (e) => console.log(e),
         onSuccess: () => {
+            queryClient.invalidateQueries("post-communities");
             queryClient.invalidateQueries("posts");
         }
     });
@@ -135,12 +140,6 @@ function Posts({ data, loading, isFetchingNextPage, user }) {
                             </span>
                             <CommentOutlined />
                         </Space>
-                    </>,
-                    <>
-                        <Space>
-                            <span>Beritahu</span>
-                            <BellOutlined />
-                        </Space>
                     </>
                 ]}
             >
@@ -164,7 +163,7 @@ function Posts({ data, loading, isFetchingNextPage, user }) {
                     }
                     title={<Title title={data?.title} />}
                     description={
-                        <ReactShowMoreText lines={14}>
+                        <ReactShowMoreText lines={10}>
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: data?.content

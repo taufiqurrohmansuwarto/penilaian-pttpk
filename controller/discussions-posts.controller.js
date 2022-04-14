@@ -25,7 +25,8 @@ const index = async (req, res) => {
                     }
                 },
                 user: true,
-                parent: true
+                parent: true,
+                discussions_votes: true
             }
         };
 
@@ -123,11 +124,18 @@ const detail = async (req, res) => {
             },
             include: {
                 user: true,
-                parent: true
+                parent: true,
+                discussions_votes: true,
+                _count: {
+                    select: {
+                        children_comments: true
+                    }
+                }
             }
         });
         res.json(result);
     } catch (error) {
+        console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
