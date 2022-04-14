@@ -11,7 +11,7 @@ import { useMutation } from "react-query";
 import ReactShowMoreText from "react-show-more-text";
 import { downvotePost, upvotePost } from "../../../../services/main.services";
 
-const UpvoteDownvote = ({ id, totalVotes }) => {
+const UpvoteDownvote = ({ id, totalVotes, votes }) => {
     const upvoteMutation = useMutation((data) => upvotePost(data), {
         onError: (e) => console.log(e)
     });
@@ -35,7 +35,7 @@ const UpvoteDownvote = ({ id, totalVotes }) => {
                 onClick={handleUpvote}
                 style={{ cursor: "pointer" }}
             />
-            {totalVotes}
+            {votes}
             <ArrowDownOutlined
                 onClick={handleDownvote}
                 style={{ cursor: "pointer" }}
@@ -113,7 +113,7 @@ function Posts({ data, loading, isFetchingNextPage }) {
                                         id={data?.id}
                                         votes={data?.votes}
                                         totalVotes={
-                                            data?.votes + data?.downvotes
+                                            data?.votes - data?.downvotes
                                         }
                                     />
                                 </div>

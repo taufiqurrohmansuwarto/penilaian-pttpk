@@ -14,7 +14,7 @@ const requestDownvote = async (id, userCustomid) => {
         let myVlag;
         if (vlag === null) {
             myVlag = -1;
-        } else if (vlag?.vlag === -1) {
+        } else if (vlag?.vlag === 1 || vlag?.vlag === -1) {
             myVlag = 0;
         } else if (vlag?.vlag === 0) {
             myVlag = -1;
@@ -46,23 +46,35 @@ const requestDownvote = async (id, userCustomid) => {
             }
         });
 
-        const flag = upsert?.vlag === -1 ? "increment" : "decrement";
-
-        const result = prisma.discussions_posts.update({
-            where: {
-                id
-            },
-            data: {
-                downvotes: {
-                    [flag]: 1
+        const currentFlag = upsert?.vlag;
+        if (currentFlag === 0 && hasil?.votes <= 0) {
+            await prisma.discussions_posts.update({
+                data: {
+                    votes: {
+                        increment: 1
+                    }
                 },
-                votes: {
-                    decrement: upsert?.vlag === -1 && hasil?.votes > 0 ? 1 : 0
-                }
-            }
-        });
-
-        return result;
+                where: { id }
+            });
+        } else if (currentFlag === 0 && hasil?.votes >= 0) {
+            await prisma.discussions_posts.update({
+                data: {
+                    votes: {
+                        decrement: 1
+                    }
+                },
+                where: { id }
+            });
+        } else if (currentFlag === -1) {
+            await prisma.discussions_posts.update({
+                data: {
+                    votes: {
+                        decrement: 1
+                    }
+                },
+                where: { id }
+            });
+        }
     });
 };
 
@@ -83,7 +95,7 @@ const requestUpvote = async (id, userCustomid) => {
             myVlag = 1;
         } else if (vlag?.vlag === 0) {
             myVlag = 1;
-        } else if (vlag?.vlag === 1) {
+        } else if (vlag?.vlag === 1 || vlag?.vlag === -1) {
             myVlag = 0;
         }
 
@@ -109,28 +121,39 @@ const requestUpvote = async (id, userCustomid) => {
                 id
             },
             select: {
-                downvotes: true
+                votes: true
             }
         });
 
-        const flag = upsert?.vlag === 1 ? "increment" : "decrement";
-
-        const result = prisma.discussions_posts.update({
-            where: {
-                id
-            },
-            data: {
-                votes: {
-                    [flag]: 1
+        const currentFlag = upsert?.vlag;
+        if (currentFlag === 0 && hasil?.votes <= 0) {
+            await prisma.discussions_posts.update({
+                data: {
+                    votes: {
+                        increment: 1
+                    }
                 },
-                downvotes: {
-                    decrement:
-                        upsert?.vlag === 1 && hasil?.downvotes > 0 ? 1 : 0
-                }
-            }
-        });
-
-        return result;
+                where: { id }
+            });
+        } else if (currentFlag === 0 && hasil?.votes >= 0) {
+            await prisma.discussions_posts.update({
+                data: {
+                    votes: {
+                        decrement: 1
+                    }
+                },
+                where: { id }
+            });
+        } else if (currentFlag === 1) {
+            await prisma.discussions_posts.update({
+                data: {
+                    votes: {
+                        increment: 1
+                    }
+                },
+                where: { id }
+            });
+        }
     });
 };
 
