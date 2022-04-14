@@ -15,6 +15,7 @@ const index = async (req, res) => {
         include: {
             parent: true,
             user: true,
+            discussions_votes: true,
             _count: {
                 select: {
                     children_comments: true

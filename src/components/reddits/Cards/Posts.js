@@ -4,20 +4,43 @@ import {
     BellOutlined,
     CommentOutlined
 } from "@ant-design/icons";
-import { Button, Avatar, Card, List, Space, Typography } from "antd";
+import { Avatar, Card, List, Space, Typography } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
+import { useMutation } from "react-query";
 import ReactShowMoreText from "react-show-more-text";
+import { downvotePost, upvotePost } from "../../../../services/main.services";
 
-const UpvoteDownvote = ({ votes, id }) => {
+const UpvoteDownvote = ({ id, totalVotes }) => {
+    const upvoteMutation = useMutation((data) => upvotePost(data), {
+        onError: (e) => console.log(e)
+    });
+    const downvoteMutation = useMutation((data) => downvotePost(data), {
+        onError: (e) => console.log(e)
+    });
+
+    const handleUpvote = () => {
+        const data = { id, vlag: 1 };
+        upvoteMutation.mutate(data);
+    };
+
+    const handleDownvote = () => {
+        const data = { id, vlag: -1 };
+        downvoteMutation.mutate(data);
+    };
+
     return (
-        <div>
-            <Space align="center" direction="vertical">
-                <ArrowUpOutlined style={{ cursor: "pointer" }} />
-                {votes}
-                <ArrowDownOutlined style={{ cursor: "pointer" }} />
-            </Space>
-        </div>
+        <Space align="center" direction="vertical">
+            <ArrowUpOutlined
+                onClick={handleUpvote}
+                style={{ cursor: "pointer" }}
+            />
+            {totalVotes}
+            <ArrowDownOutlined
+                onClick={handleDownvote}
+                style={{ cursor: "pointer" }}
+            />
+        </Space>
     );
 };
 
@@ -43,6 +66,7 @@ function Posts({ data, loading, isFetchingNextPage }) {
 
         return (
             <Card
+                size="small"
                 extra={[
                     <>
                         <Typography.Link onClick={gotoLink}>
@@ -88,6 +112,9 @@ function Posts({ data, loading, isFetchingNextPage }) {
                                     <UpvoteDownvote
                                         id={data?.id}
                                         votes={data?.votes}
+                                        totalVotes={
+                                            data?.votes + data?.downvotes
+                                        }
                                     />
                                 </div>
                             </Space>

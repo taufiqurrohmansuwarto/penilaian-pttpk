@@ -129,3 +129,16 @@ export const getSubscribe = (id) => {
         .get(`/discussions/posts/${id}/request-vote`)
         .then((res) => res?.data);
 };
+
+// upvote
+export const upvotePost = ({ id, vlag }) => {
+    return fetcher
+        .put(`/discussions/posts/${id}/action-vote`, { vlag })
+        .then((res) => res?.data);
+};
+
+// downvote
+export const downvotePost = ({ id, vlag }) =>
+    fetcher
+        .delete(`/discussions/posts/${id}/action-vote`, { vlag })
+        .then((res) => res?.data);
