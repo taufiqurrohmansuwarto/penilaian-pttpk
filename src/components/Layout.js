@@ -102,7 +102,7 @@ const Layout = ({ children, title = "Feeds" }) => {
             fixSiderbar
             disableContentMargin
         >
-            <PageContainer title={title}>{children}</PageContainer>
+            {children}
         </ProLayout>
     );
 };

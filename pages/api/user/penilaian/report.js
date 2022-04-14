@@ -1,4 +1,6 @@
 import penilaianController from "../../../../controller/penilaian.controller";
-import handler from "../../../../lib/handler";
+import auth from "../../../../middleware/auth";
+import nc from "next-connect";
+const handler = nc();
 
-export default handler.get(penilaianController.index);
+export default handler.use(auth).get(penilaianController.index);
