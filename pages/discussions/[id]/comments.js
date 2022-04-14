@@ -47,10 +47,17 @@ function Comments() {
                 <Col span={5}>
                     <Row gutter={[8, 8]}>
                         <Col span={24}>
-                            <CardCommunitiesDescription />
+                            <Skeleton loading={isLoadingPost}>
+                                <CardCommunitiesDescription
+                                    title={dataPost?.parent?.title}
+                                    description={dataPost?.parent?.content}
+                                />
+                            </Skeleton>
                         </Col>
                         <Col span={24}>
-                            <CardRules />
+                            <Skeleton loading={isLoadingPost}>
+                                <CardRules rules={dataPost?.parent?.rules} />
+                            </Skeleton>
                         </Col>
                     </Row>
                 </Col>

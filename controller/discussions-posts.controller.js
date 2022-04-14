@@ -124,7 +124,15 @@ const detail = async (req, res) => {
             },
             include: {
                 user: true,
-                parent: true,
+                parent: {
+                    include: {
+                        _count: {
+                            select: {
+                                discussions_posts_joined: true
+                            }
+                        }
+                    }
+                },
                 discussions_votes: true,
                 _count: {
                     select: {

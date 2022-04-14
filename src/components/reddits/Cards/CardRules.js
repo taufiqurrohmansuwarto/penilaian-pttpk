@@ -9,18 +9,21 @@ const data = [
     "Jangan menangkap layar (screenshot) untuk balas dendam"
 ];
 
-function CardRules() {
+function CardRules({ rules }) {
     return (
         <Card size="small" title="Aturan dalam berdiskusi">
-            <Card.Meta
+            {JSON.stringify(rules)}
+            {/* <Card.Meta
                 description={
                     <List
                         size="small"
-                        dataSource={data}
-                        renderItem={(item) => <List.Item>{item}</List.Item>}
+                        dataSource={rules}
+                        renderItem={(item) => (
+                            <List.Item>{JSON.stringify(item)}</List.Item>
+                        )}
                     />
                 }
-            />
+            /> */}
         </Card>
     );
 }

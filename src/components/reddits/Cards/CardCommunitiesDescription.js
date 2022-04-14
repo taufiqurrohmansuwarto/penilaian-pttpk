@@ -1,16 +1,26 @@
-import { Avatar, Card, Space } from "antd";
+import { Avatar, Card, Divider, Space } from "antd";
 
-function CardCommunitiesDescription() {
+function CardCommunitiesDescription({
+    title,
+    description,
+    avatar,
+    totalUserJoined
+}) {
     const Title = () => (
         <Space>
             <Avatar size="large" />
-            <span>Hello world</span>
+            <span>{title}</span>
         </Space>
     );
 
     return (
         <Card>
-            <Card.Meta title={<Title />} description="merupakan deskripsi" />
+            <Card.Meta
+                title={title}
+                description={description}
+                avatar={<Avatar />}
+            />
+            <Divider />
         </Card>
     );
 }
