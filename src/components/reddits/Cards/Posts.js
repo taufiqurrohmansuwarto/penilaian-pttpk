@@ -7,25 +7,65 @@ import {
 import { Avatar, Card, List, Space, Typography } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import ReactShowMoreText from "react-show-more-text";
 import { downvotePost, upvotePost } from "../../../../services/main.services";
 
-const UpvoteDownvote = ({ id, totalVotes, votes }) => {
+const UpvoteDownvote = ({ id, votes, data, user }) => {
+    const queryClient = useQueryClient();
+
+    const upvoteColor = () => {
+        const result = data?.discussions_votes?.find(
+            (d) => d?.discussion_post_id === id && d?.user_custom_id
+        );
+        if (!result) {
+            return "gray";
+        } else {
+            if (result?.vlag === 1) {
+                return "blue";
+            }
+            if (result?.vlag === 0) {
+                return "gray";
+            }
+        }
+    };
+
+    const downvoteColor = () => {
+        const result = data?.discussions_votes?.find(
+            (d) => d?.discussion_post_id === id && d?.user_custom_id
+        );
+        if (!result) {
+            return "gray";
+        } else {
+            if (result?.vlag === -1) {
+                return "blue";
+            }
+            if (result?.vlag === 0) {
+                return "gray";
+            }
+        }
+    };
+
     const upvoteMutation = useMutation((data) => upvotePost(data), {
-        onError: (e) => console.log(e)
+        onError: (e) => console.log(e),
+        onSuccess: () => {
+            queryClient.invalidateQueries("posts");
+        }
     });
     const downvoteMutation = useMutation((data) => downvotePost(data), {
-        onError: (e) => console.log(e)
+        onError: (e) => console.log(e),
+        onSuccess: () => {
+            queryClient.invalidateQueries("posts");
+        }
     });
 
     const handleUpvote = () => {
-        const data = { id, vlag: 1 };
+        const data = { id };
         upvoteMutation.mutate(data);
     };
 
     const handleDownvote = () => {
-        const data = { id, vlag: -1 };
+        const data = { id };
         downvoteMutation.mutate(data);
     };
 
@@ -33,18 +73,18 @@ const UpvoteDownvote = ({ id, totalVotes, votes }) => {
         <Space align="center" direction="vertical">
             <ArrowUpOutlined
                 onClick={handleUpvote}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "pointer", color: upvoteColor() }}
             />
             {votes}
             <ArrowDownOutlined
                 onClick={handleDownvote}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "pointer", color: downvoteColor() }}
             />
         </Space>
     );
 };
 
-function Posts({ data, loading, isFetchingNextPage }) {
+function Posts({ data, loading, isFetchingNextPage, user }) {
     const router = useRouter();
 
     const Title = ({ title }) => {
@@ -112,6 +152,8 @@ function Posts({ data, loading, isFetchingNextPage }) {
                                     <UpvoteDownvote
                                         id={data?.id}
                                         votes={data?.votes}
+                                        data={data}
+                                        user={user}
                                         totalVotes={
                                             data?.votes - data?.downvotes
                                         }
@@ -146,7 +188,7 @@ function Posts({ data, loading, isFetchingNextPage }) {
                 dataSource={data}
                 rowKey={(row) => row?.id}
                 renderItem={(item) => {
-                    return <CustomCard data={item} />;
+                    return <CustomCard data={item} user={user} />;
                 }}
             />
         </div>

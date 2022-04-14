@@ -1,5 +1,6 @@
 import { Button, Card, Col, Divider, Row, Skeleton } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useInfiniteQuery } from "react-query";
@@ -13,6 +14,8 @@ import Posts from "../../src/components/reddits/Cards/Posts";
 
 const Discussions = ({ data }) => {
     const filter = ["terbaru", "vote", "populer"];
+    const { data: userData } = useSession();
+
     const router = useRouter();
 
     const [selectedFilter, setSelectedFilter] = useState(data?.sort);
@@ -82,6 +85,7 @@ const Discussions = ({ data }) => {
                                     loading={loadingDataPosts}
                                     hasNextPage={hasNextPage}
                                     fetchNextPage={fetchNextPage}
+                                    user={userData}
                                 />
                             </React.Fragment>
                         ))}
