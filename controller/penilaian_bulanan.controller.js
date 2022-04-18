@@ -12,6 +12,13 @@ const detail = async (req, res) => {
                     user_custom_id: customId,
                     aktif: true
                 }
+            },
+            include: {
+                target_penilaian: {
+                    include: {
+                        ref_satuan_kinerja: true
+                    }
+                }
             }
         });
         res.json(result);
@@ -125,46 +132,35 @@ const index = async (req, res) => {
 };
 
 const update = async (req, res) => {
-    const { userId } = req.user;
-    const { id: bulananId } = req.query;
-    const {
-        body: { id, title, start, end, kuantitas, targetId }
-    } = req;
+    const { customId } = req.user;
+    const { id } = req.query;
+    const { body } = req;
 
     try {
-        await prisma.kinerja_bulanan.update({
+        await prisma.kinerja_bulanan.updateMany({
             data: {
-                title,
-                start,
-                end,
-                kuantitas,
-                target_penilaian: {
-                    connect: {
-                        id: targetId
-                    }
-                },
-                penilaian: {
-                    update: {
-                        aktif: true,
-                        id_ptt: userId
-                    }
-                }
+                title: body?.title,
+                start: body?.start,
+                end: body?.end,
+                kuantitas: body?.kuantitas,
+                id_target_penilaian: body?.id_target_penilaian
             },
             where: {
-                id: parseInt(bulananId)
+                id
             }
         });
+
         // must be search first
         const hasil = await prisma.kinerja_bulanan.findFirst({
             where: {
-                id: parseInt(bulananId),
-                id_ptt: userId,
+                id,
                 penilaian: {
                     aktif: true,
-                    id_ptt: userId
+                    user_custom_id: customId
                 }
             }
         });
+
         res.status(200).json(hasil);
     } catch (error) {
         console.log(error);

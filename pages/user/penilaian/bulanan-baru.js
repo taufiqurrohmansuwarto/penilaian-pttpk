@@ -70,18 +70,56 @@ const CreateFormBulanan = ({ targets, form }) => {
         </Form>
     );
 };
-const UpdateFormBulanan = ({ form, id }) => {
-    useEffect(() => {}, [id]);
 
+const UpdateFormBulanan = ({ form, id, targets }) => {
     const { data, isLoading } = useQuery(
         ["penilaian-bulanan", id],
-        () => getPenilaianBulananById(id),
+        () => {
+            return getPenilaianBulananById(id);
+        },
         {
             enabled: !!id
         }
     );
 
-    return <Skeleton loading={isLoading}>{JSON.stringify(data)}</Skeleton>;
+    useEffect(() => {
+        if (!isLoading) {
+            form.setFieldsValue({
+                id_target_penilaian: data?.target_penilaian?.id,
+                title: data?.title,
+                waktu_pekerjaan: [moment(data?.start), moment(data?.end)],
+                kuantitas: data?.kuantitas
+            });
+        }
+    }, [id, isLoading, data]);
+
+    return (
+        <Skeleton loading={isLoading}>
+            <Form form={form} name="create-form-bulanan">
+                <Form.Item name="id_target_penilaian">
+                    <Select showSearch optionFilterProp="name">
+                        {targets?.map((target) => (
+                            <Select.Option
+                                value={target?.id}
+                                name={target?.pekerjaan}
+                            >
+                                {target?.pekerjaan}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+                <Form.Item name="title">
+                    <Input.TextArea />
+                </Form.Item>
+                <Form.Item name="waktu_pekerjaan">
+                    <DatePicker.RangePicker />
+                </Form.Item>
+                <Form.Item name="kuantitas">
+                    <InputNumber />
+                </Form.Item>
+            </Form>
+        </Skeleton>
+    );
 };
 
 const Penilaian = ({ tahun, bulan }) => {
@@ -134,8 +172,15 @@ const Penilaian = ({ tahun, bulan }) => {
         }
     );
 
-    const updatePenilaianBulannanMutation = useMutation((data) =>
-        updatePenilaianBulanan(data)
+    const updatePenilaianBulannanMutation = useMutation(
+        (data) => updatePenilaianBulanan(data),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(["data-penilaian"]);
+                message.success("Berhasil diupdate");
+                setVisibleUpdate(false);
+            }
+        }
     );
     const removePenilaianBulananMutation = useMutation(
         (id) => hapusPenilaianBulanan(id),
@@ -220,12 +265,36 @@ const Penilaian = ({ tahun, bulan }) => {
         }
     };
 
+    const handleSubmitUpdate = async () => {
+        try {
+            const values = await updateForm.validateFields();
+            const { waktu_pekerjaan, id_target_penilaian, kuantitas, title } =
+                values;
+            const [mulai, akhir] = waktu_pekerjaan;
+            const start = moment(mulai);
+            const end = moment(akhir);
+
+            const data = {
+                start,
+                end,
+                id_target_penilaian,
+                kuantitas,
+                title,
+                bulan: parseInt(bulan),
+                tahun: parseInt(tahun)
+            };
+
+            const currentData = { id, data };
+            updatePenilaianBulannanMutation.mutate(currentData);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <Skeleton
             loading={isLoadingDataPenilaian || isLoadingDataTargetPenilaian}
         >
-            {/* {JSON.stringify(dataTargetPenilaian)} */}
-            {JSON.stringify(dataPenilaian)}
             <Table
                 title={() => (
                     <Space>
@@ -263,6 +332,14 @@ const Penilaian = ({ tahun, bulan }) => {
                 visible={visibleUpdate}
                 onClose={closeVisibleUpdate}
                 destroyOnClose
+                extra={
+                    <Button
+                        loading={updatePenilaianBulannanMutation.isLoading}
+                        onClick={handleSubmitUpdate}
+                    >
+                        Update
+                    </Button>
+                }
             >
                 <UpdateFormBulanan
                     form={updateForm}
@@ -328,7 +405,7 @@ export const getServerSideProps = async (ctx) => {
     };
 };
 
-BulananBaru.auth = {
+BulananBaru.Auth = {
     groups: ["PTTPK"],
     roles: ["USER"]
 };
