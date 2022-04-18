@@ -1,6 +1,6 @@
 import {
-    Card,
     Button,
+    Card,
     Col,
     Drawer,
     Form,
@@ -65,10 +65,10 @@ const DetailPenilaian = () => {
         {
             onError: (error) => message.error(error),
             onSuccess: () => {
-                message.success("Berhasil dibuat");
                 queryClient.invalidateQueries(["target_penilaian", id]);
                 form.resetFields();
                 setVisible(false);
+                message.success("test");
             }
         }
     );
@@ -195,7 +195,7 @@ const DetailPenilaian = () => {
                                                 }
                                             ]}
                                         >
-                                            <Input placeholder="Masukkan target pekerjaan" />
+                                            <Input.TextArea placeholder="Masukkan target pekerjaan" />
                                         </Form.Item>
                                     </Col>
                                 </Row>
@@ -342,6 +342,7 @@ const DetailPenilaian = () => {
 
                         <Button onClick={showDrawer}>Create</Button>
                         <Table
+                            rowKey={(row) => row?.id}
                             dataSource={dataTargetPenilaian}
                             columns={columns}
                             pagination={false}

@@ -153,11 +153,15 @@ const CreatePenilaian = () => {
                             label="Kepala Badan/Dinas"
                             name={"nip_eselon_ii"}
                         />
-                        <Form.Item name="periode" label="Periode">
+                        <Form.Item
+                            name="periode"
+                            label="Periode"
+                            help="Periode awal Penilaian dan akhir penilaian"
+                        >
                             <DatePicker.RangePicker format="DD-MM-YYYY" />
                         </Form.Item>
                         <Form.Item
-                            help="Data diambil dari aplikasi pttpk dengan jabatan yang tidak kosong"
+                            help="Pilih Jabatan yang akan dilakukan penilaian"
                             name="id_jabatan"
                             label="Jabatan"
                         >
