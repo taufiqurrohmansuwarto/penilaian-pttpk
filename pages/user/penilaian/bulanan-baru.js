@@ -22,6 +22,7 @@ import {
     createPenilaianBulanan,
     getPenilaianAktif,
     getPenilaianBulanan,
+    getPenilaianBulananById,
     hapusPenilaianBulanan,
     updatePenilaianBulanan
 } from "../../../services/users.service";
@@ -69,7 +70,19 @@ const CreateFormBulanan = ({ targets, form }) => {
         </Form>
     );
 };
-const UpdateFormBulanan = () => {};
+const UpdateFormBulanan = ({ form, id }) => {
+    useEffect(() => {}, [id]);
+
+    const { data, isLoading } = useQuery(
+        ["penilaian-bulanan", id],
+        () => getPenilaianBulananById(id),
+        {
+            enabled: !!id
+        }
+    );
+
+    return <Skeleton loading={isLoading}>{JSON.stringify(data)}</Skeleton>;
+};
 
 const Penilaian = ({ tahun, bulan }) => {
     useEffect(() => {}, [bulan, tahun]);
@@ -77,11 +90,16 @@ const Penilaian = ({ tahun, bulan }) => {
     const [visibleCreate, setVisibleCreate] = useState(false);
     const [visibleUpdate, setVisibleUpdate] = useState(false);
 
+    const [id, setId] = useState(null);
+
     const closeVisibleCreate = () => setVisibleCreate(false);
     const closeVisibleUpdate = () => setVisibleUpdate(false);
 
     const showCreate = () => setVisibleCreate(true);
-    const showUpdate = () => setVisibleUpdate(true);
+    const showUpdate = (id) => {
+        setVisibleUpdate(true);
+        setId(id);
+    };
 
     const { data: dataPenilaian, isLoading: isLoadingDataPenilaian } = useQuery(
         ["data-penilaian", bulan, tahun],
@@ -166,7 +184,9 @@ const Penilaian = ({ tahun, bulan }) => {
             render: (_, row) => {
                 return (
                     <Space>
-                        <Button>Edit</Button>
+                        <Button onClick={() => showUpdate(row?.id)}>
+                            Edit
+                        </Button>
                         <Button onClick={() => handleRemoveBulanan(row?.id)}>
                             Hapus
                         </Button>
@@ -238,7 +258,18 @@ const Penilaian = ({ tahun, bulan }) => {
                     targets={dataTargetPenilaian}
                 />
             </Drawer>
-            <Drawer key="update" visible={visibleUpdate}></Drawer>
+            <Drawer
+                key="update"
+                visible={visibleUpdate}
+                onClose={closeVisibleUpdate}
+                destroyOnClose
+            >
+                <UpdateFormBulanan
+                    form={updateForm}
+                    id={id}
+                    targets={dataTargetPenilaian}
+                />
+            </Drawer>
         </Skeleton>
     );
 };

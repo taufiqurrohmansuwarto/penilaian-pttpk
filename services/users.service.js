@@ -76,6 +76,12 @@ export const createPenilaianBulanan = (data) => {
         .then((res) => res?.data);
 };
 
+export const getPenilaianBulananById = (id) => {
+    return fetcher
+        .get(`/user/penilaian/bulanan/${id}`)
+        .then((res) => res?.data);
+};
+
 export const updatePenilaianBulanan = ({ id, data }) => {
     return fetcher
         .patch(`/user/penilaian/bulanan/${id}`, data)
