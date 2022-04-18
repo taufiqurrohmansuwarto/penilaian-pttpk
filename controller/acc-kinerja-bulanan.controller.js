@@ -15,7 +15,7 @@ const kirimAtasan = async (req, res) => {
         await prisma.acc_kinerja_bulanan.create({
             data: {
                 tahun,
-                id_ptt: userId,
+                user: userId,
                 id_penilaian: result.id,
                 bulan
             }
