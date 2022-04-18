@@ -48,7 +48,7 @@ model acc_kinerja_bulanan {
 }
 
 model kinerja_bulanan {
-  id                  String            @default(cuid())
+  id                  String            @id @default(cuid())
   id_penilaian        String
   tahun               Int               @db.SmallInt
   bulan               Int               @db.SmallInt
@@ -63,7 +63,6 @@ model kinerja_bulanan {
   penilaian           penilaian?        @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
   target_penilaian    target_penilaian? @relation(fields: [id_target_penilaian], references: [id], onDelete: Cascade)
 
-  @@id([id])
 }
 
 model penilaian {

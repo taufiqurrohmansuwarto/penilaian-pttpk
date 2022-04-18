@@ -2,9 +2,22 @@ import moment from "moment";
 import prisma from "../lib/prisma";
 
 const detail = async (req, res) => {
-    const { userId } = req.user;
+    const { customId } = req.user;
+    const { id } = req.query;
     try {
-    } catch (error) {}
+        const result = await prisma.kinerja_bulanan.findFirst({
+            where: {
+                id,
+                penilaian: {
+                    user_custom_id: customId,
+                    aktif: true
+                }
+            }
+        });
+        res.json(result);
+    } catch (error) {
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
 };
 
 const create = async (req, res) => {
@@ -73,6 +86,8 @@ const index = async (req, res) => {
                 created_at: "desc"
             },
             select: {
+                id: true,
+                kualitas: true,
                 bulan: true,
                 tahun: true,
                 title: true,
@@ -158,19 +173,22 @@ const update = async (req, res) => {
 };
 
 const remove = async (req, res) => {
-    const { userId } = req.user;
+    const { customId } = req.user;
     const { id } = req.query;
     try {
         await prisma.kinerja_bulanan.deleteMany({
             where: {
-                id: parseInt(id),
-                id_ptt: userId
+                id,
+                penilaian: {
+                    user_custom_id: customId,
+                    aktif: true
+                }
             }
         });
         res.json({ code: 200, message: "Success" });
     } catch (error) {
         console.log(error);
-        res.json({ code: 400, message: "Internal Server Error" });
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 

@@ -1,10 +1,13 @@
 import {
     Button,
+    Card,
     DatePicker,
+    Divider,
     Drawer,
     Form,
     Input,
     InputNumber,
+    message,
     Select,
     Skeleton,
     Space,
@@ -29,6 +32,14 @@ const DataPenilaianAktif = () => {
         getPenilaianAktif()
     );
     return <div>{JSON.stringify(dataPenilaianAktif)}</div>;
+};
+
+const Footer = () => {
+    return (
+        <Space>
+            <Button type="primary">Kirim Atasan</Button>
+        </Space>
+    );
 };
 
 const CreateFormBulanan = ({ targets, form }) => {
@@ -80,9 +91,6 @@ const Penilaian = ({ tahun, bulan }) => {
         }
     );
 
-    // todo create column and custom keys
-    const columns = [];
-
     const {
         data: dataTargetPenilaian,
         isLoading: isLoadingDataTargetPenilaian
@@ -97,8 +105,10 @@ const Penilaian = ({ tahun, bulan }) => {
         (data) => createPenilaianBulanan(data),
         {
             onSuccess: () => {
-                queryClient.invalidateQueries("data_penilaian");
+                queryClient.invalidateQueries(["data-penilaian"]);
                 createForm.resetFields();
+                setVisibleCreate(false);
+                message.success("Berhasil ditambahkan");
             },
             onError: (e) => {
                 console.log(e);
@@ -109,9 +119,62 @@ const Penilaian = ({ tahun, bulan }) => {
     const updatePenilaianBulannanMutation = useMutation((data) =>
         updatePenilaianBulanan(data)
     );
-    const removePenilaianBulananMutation = useMutation((data) =>
-        hapusPenilaianBulanan(data)
+    const removePenilaianBulananMutation = useMutation(
+        (id) => hapusPenilaianBulanan(id),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(["data-penilaian"]);
+                message.success("Berhasil dihapus");
+            }
+        }
     );
+
+    const handleRemoveBulanan = (id) => {
+        removePenilaianBulananMutation.mutate(id);
+    };
+
+    // todo create column and custom keys
+    const columns = [
+        { dataIndex: "title", title: "Detail Pekerjaan" },
+        {
+            key: "induk_pekerjaan",
+            title: "Induk Pekerjaan",
+            render: (_, row) => <div>{row?.target_penilaian?.pekerjaan}</div>
+        },
+        {
+            key: "satuan",
+            title: "Satuan",
+            render: (_, row) => (
+                <div>{row?.target_penilaian?.ref_satuan_kinerja?.nama}</div>
+            )
+        },
+        { dataIndex: "kuantitas", title: "Kuantitas" },
+        { dataIndex: "kualitas", title: "Kualitas" },
+        {
+            dataIndex: "waktu_pekerjaan",
+            title: "Waktu Pekerjaan",
+            render: (_, row) => (
+                <div>
+                    {moment(row?.start).format("DD-MM-YYYY")} s/d{" "}
+                    {moment(row?.end).format("DD-MM-YYYY")}
+                </div>
+            )
+        },
+        {
+            key: "aksi",
+            title: "Aksi",
+            render: (_, row) => {
+                return (
+                    <Space>
+                        <Button>Edit</Button>
+                        <Button onClick={() => handleRemoveBulanan(row?.id)}>
+                            Hapus
+                        </Button>
+                    </Space>
+                );
+            }
+        }
+    ];
 
     const handleSubmitCreate = async () => {
         try {
@@ -141,15 +204,17 @@ const Penilaian = ({ tahun, bulan }) => {
         <Skeleton
             loading={isLoadingDataPenilaian || isLoadingDataTargetPenilaian}
         >
-            {JSON.stringify(dataTargetPenilaian)}
+            {/* {JSON.stringify(dataTargetPenilaian)} */}
             {JSON.stringify(dataPenilaian)}
             <Table
                 title={() => (
                     <Space>
-                        <Button onClick={showCreate}>Create</Button>
+                        <Button onClick={showCreate}>Tambah Pekerjaan</Button>
                     </Space>
                 )}
-                footer={() => "Footer"}
+                columns={columns}
+                pagination={false}
+                footer={() => <Footer />}
                 dataSource={dataPenilaian}
                 key="id"
                 rowKey={(row) => row?.id}
@@ -159,7 +224,14 @@ const Penilaian = ({ tahun, bulan }) => {
                 onClose={closeVisibleCreate}
                 visible={visibleCreate}
                 destroyOnClose
-                extra={<Button onClick={handleSubmitCreate}>Submit</Button>}
+                extra={
+                    <Button
+                        loading={createPenilaianBulananMutation.isLoading}
+                        onClick={handleSubmitCreate}
+                    >
+                        Submit
+                    </Button>
+                }
             >
                 <CreateFormBulanan
                     form={createForm}
@@ -196,13 +268,15 @@ const BulananBaru = ({ data }) => {
     };
 
     return (
-        <UserLayout title="Hello world">
-            <DatePicker.MonthPicker
-                defaultValue={moment(`${tahun}-${bulan}`)}
-                onChange={handleChange}
-            />
-            {/* <DataPenilaianAktif /> */}
-            <Penilaian tahun={tahun} bulan={bulan} />
+        <UserLayout title="Penilaian Bulanan">
+            <Card>
+                <DatePicker.MonthPicker
+                    defaultValue={moment(`${tahun}-${bulan}`)}
+                    onChange={handleChange}
+                />
+                <Divider />
+                <Penilaian tahun={tahun} bulan={bulan} />
+            </Card>
         </UserLayout>
     );
 };
