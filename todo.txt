@@ -82,3 +82,13 @@ INSERT INTO reddit_votes(post_id, user_id, vflag) VALUES(LAST_INSERT_ID(),'srini
 
 
 features :
+
+penilaian user
+1. kirim atasan
+2. batal kirimatasan
+
+penilaian approval
+1. lihat 50 user data saja
+2. nilai dan terima
+
+
