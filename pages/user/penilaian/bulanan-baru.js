@@ -1,4 +1,4 @@
-import { DatePicker, Skeleton, Table } from "antd";
+import { Space, Button, DatePicker, Drawer, Skeleton, Table } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -22,6 +22,15 @@ const DataPenilaianAktif = () => {
 
 const Penilaian = ({ tahun, bulan }) => {
     useEffect(() => {}, [bulan, tahun]);
+
+    const [visibleCreate, setVisibleCreate] = useState(false);
+    const [visibleUpdate, setVisibleUpdate] = useState(false);
+
+    const closeVisibleCreate = () => setVisibleCreate(false);
+    const closeVisibleUpdate = () => setVisibleUpdate(false);
+
+    const showCreate = () => setVisibleCreate(true);
+    const showUpdate = () => setVisibleUpdate(true);
 
     const { data: dataPenilaian, isLoading: isLoadingDataPenilaian } = useQuery(
         ["data-penilaian", bulan, tahun],
@@ -56,11 +65,23 @@ const Penilaian = ({ tahun, bulan }) => {
             {JSON.stringify(dataTargetPenilaian)}
             {JSON.stringify(dataPenilaian)}
             <Table
-                title={() => "Header"}
+                title={() => (
+                    <Space>
+                        <Button onClick={showCreate}>Create</Button>
+                    </Space>
+                )}
                 footer={() => "Footer"}
                 dataSource={dataPenilaian}
                 rowKey={(row) => row?.id}
             />
+            <Drawer
+                key="create"
+                onClose={closeVisibleCreate}
+                visible={visibleCreate}
+            >
+                Test
+            </Drawer>
+            <Drawer key="update" visible={visibleUpdate}></Drawer>
         </Skeleton>
     );
 };
