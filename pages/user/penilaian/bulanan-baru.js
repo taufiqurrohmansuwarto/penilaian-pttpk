@@ -1,8 +1,19 @@
-import { Space, Button, DatePicker, Drawer, Skeleton, Table } from "antd";
+import {
+    Button,
+    DatePicker,
+    Drawer,
+    Form,
+    Input,
+    InputNumber,
+    Select,
+    Skeleton,
+    Space,
+    Table
+} from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getRefSatuanKinerja } from "../../../services/ref.service";
 import {
     createPenilaianBulanan,
@@ -19,6 +30,35 @@ const DataPenilaianAktif = () => {
     );
     return <div>{JSON.stringify(dataPenilaianAktif)}</div>;
 };
+
+const CreateFormBulanan = ({ targets, form }) => {
+    return (
+        <Form form={form} name="create-form-bulanan">
+            <Form.Item name="id_target_penilaian">
+                <Select showSearch optionFilterProp="name">
+                    {targets?.map((target) => (
+                        <Select.Option
+                            value={target?.id}
+                            name={target?.pekerjaan}
+                        >
+                            {target?.pekerjaan}
+                        </Select.Option>
+                    ))}
+                </Select>
+            </Form.Item>
+            <Form.Item name="title">
+                <Input.TextArea />
+            </Form.Item>
+            <Form.Item name="waktu_pekerjaan">
+                <DatePicker.RangePicker />
+            </Form.Item>
+            <Form.Item name="kuantitas">
+                <InputNumber />
+            </Form.Item>
+        </Form>
+    );
+};
+const UpdateFormBulanan = () => {};
 
 const Penilaian = ({ tahun, bulan }) => {
     useEffect(() => {}, [bulan, tahun]);
@@ -40,16 +80,6 @@ const Penilaian = ({ tahun, bulan }) => {
         }
     );
 
-    const createPenilaianBulananMutation = useMutation((data) =>
-        createPenilaianBulanan(data)
-    );
-    const updatePenilaianBulannanMutation = useMutation((data) =>
-        updatePenilaianBulanan(data)
-    );
-    const removePenilaianBulananMutation = useMutation((data) =>
-        hapusPenilaianBulanan(data)
-    );
-
     // todo create column and custom keys
     const columns = [];
 
@@ -57,6 +87,55 @@ const Penilaian = ({ tahun, bulan }) => {
         data: dataTargetPenilaian,
         isLoading: isLoadingDataTargetPenilaian
     } = useQuery(["target_penilaian"], () => getRefSatuanKinerja("target"));
+
+    const [createForm] = Form.useForm();
+    const [updateForm] = Form.useForm();
+
+    const queryClient = useQueryClient();
+
+    const createPenilaianBulananMutation = useMutation(
+        (data) => createPenilaianBulanan(data),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries("data_penilaian");
+                createForm.resetFields();
+            },
+            onError: (e) => {
+                console.log(e);
+            }
+        }
+    );
+
+    const updatePenilaianBulannanMutation = useMutation((data) =>
+        updatePenilaianBulanan(data)
+    );
+    const removePenilaianBulananMutation = useMutation((data) =>
+        hapusPenilaianBulanan(data)
+    );
+
+    const handleSubmitCreate = async () => {
+        try {
+            const values = await createForm.validateFields();
+            const { waktu_pekerjaan, id_target_penilaian, kuantitas, title } =
+                values;
+            const [mulai, akhir] = waktu_pekerjaan;
+            const start = moment(mulai);
+            const end = moment(akhir);
+            const data = {
+                start,
+                end,
+                id_target_penilaian,
+                kuantitas,
+                title,
+                bulan: parseInt(bulan),
+                tahun: parseInt(tahun)
+            };
+
+            createPenilaianBulananMutation.mutate(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <Skeleton
@@ -72,14 +151,20 @@ const Penilaian = ({ tahun, bulan }) => {
                 )}
                 footer={() => "Footer"}
                 dataSource={dataPenilaian}
+                key="id"
                 rowKey={(row) => row?.id}
             />
             <Drawer
                 key="create"
                 onClose={closeVisibleCreate}
                 visible={visibleCreate}
+                destroyOnClose
+                extra={<Button onClick={handleSubmitCreate}>Submit</Button>}
             >
-                Test
+                <CreateFormBulanan
+                    form={createForm}
+                    targets={dataTargetPenilaian}
+                />
             </Drawer>
             <Drawer key="update" visible={visibleUpdate}></Drawer>
         </Skeleton>

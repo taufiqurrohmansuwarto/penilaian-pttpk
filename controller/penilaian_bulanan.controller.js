@@ -8,14 +8,14 @@ const detail = async (req, res) => {
 };
 
 const create = async (req, res) => {
-    const { userId } = req.user;
+    const { customId } = req.user;
     const { body } = req;
 
     try {
         const result = await prisma.penilaian.findFirst({
             where: {
                 aktif: true,
-                id_ptt: userId
+                user_custom_id: customId
             },
             select: {
                 id: true,
@@ -34,7 +34,6 @@ const create = async (req, res) => {
                     start: body?.start,
                     kuantitas: body?.kuantitas,
                     end: body?.end,
-                    id_ptt: userId,
                     target_penilaian: {
                         connect: {
                             id: body?.id_target_penilaian
@@ -51,6 +50,7 @@ const create = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 
