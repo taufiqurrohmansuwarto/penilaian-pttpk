@@ -109,8 +109,8 @@ export const kirimAtasan = ({ bulan, tahun }) => {
     return fetcher.put(`/user/request-penilaian?bulan=${bulan}&tahun=${tahun}`);
 };
 
-export const batalKirimAtasan = (data) => {
-    return fetcher.delete(`/user/request-penilaian`);
+export const batalKirimAtasan = ({ bulan, tahun }) => {
+    return fetcher.delete(`/user/request-penilaian?${bulan}&tahun=${tahun}`);
 };
 
 export const getRequestPenilaian = (bulan, tahun) => {

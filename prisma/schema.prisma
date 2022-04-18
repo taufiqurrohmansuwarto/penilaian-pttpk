@@ -9,26 +9,25 @@ datasource db {
 }
 
 model users {
-  custom_id                           String                     @id
-  username                            String?
-  image                               String?
-  id                                  String?
-  from                                String?
-  role                                String?
-  group                               String?
-  employee_number                     String?
-  discussions_posts                   discussions_posts[]
-  discussions_votes                   discussions_votes[]
-  discussions_rights_user             discussions_rights[]       @relation("user")
-  discussions_rights_user_assigned    discussions_rights[]       @relation("assigned_user")
-  feedbacks                           feedbacks[]
-  discussions_posts_joined            discussions_posts_joined[]
-  acc_kinerja_bulanan_pegawai         acc_kinerja_bulanan[]      @relation("acc_pegawai")
-  acc_kinerja_bulanan_atasan_langsung acc_kinerja_bulanan[]      @relation("acc_atasan_langsung")
-  penilaian                           penilaian[]
-  comments_notifications_sender       comments_notifications[]   @relation("user_sender")
-  comments_notifications_receiver     comments_notifications[]   @relation("user_receiver")
-  comments                            comments[]
+  custom_id                        String                     @id
+  username                         String?
+  image                            String?
+  id                               String?
+  from                             String?
+  role                             String?
+  group                            String?
+  employee_number                  String?
+  discussions_posts                discussions_posts[]
+  discussions_votes                discussions_votes[]
+  discussions_rights_user          discussions_rights[]       @relation("user")
+  discussions_rights_user_assigned discussions_rights[]       @relation("assigned_user")
+  feedbacks                        feedbacks[]
+  discussions_posts_joined         discussions_posts_joined[]
+  acc_kinerja_bulanan_pegawai      acc_kinerja_bulanan[]      @relation("acc_pegawai")
+  penilaian                        penilaian[]
+  comments_notifications_sender    comments_notifications[]   @relation("user_sender")
+  comments_notifications_receiver  comments_notifications[]   @relation("user_receiver")
+  comments                         comments[]
 }
 
 model acc_kinerja_bulanan {
@@ -41,7 +40,6 @@ model acc_kinerja_bulanan {
   penilaian          penilaian? @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
   id_atasan_langsung String?
   pegawai_id         String?
-  atasan_langsung    users?     @relation("acc_atasan_langsung", fields: [id_atasan_langsung], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
   pegawai            users?     @relation("acc_pegawai", fields: [pegawai_id], references: [custom_id])
 
   @@id([id_penilaian, bulan, tahun])

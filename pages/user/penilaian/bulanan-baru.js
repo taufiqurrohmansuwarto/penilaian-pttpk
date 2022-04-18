@@ -1,6 +1,7 @@
 import {
     Button,
     Card,
+    Col,
     DatePicker,
     Divider,
     Drawer,
@@ -8,6 +9,7 @@ import {
     Input,
     InputNumber,
     message,
+    Row,
     Select,
     Skeleton,
     Space,
@@ -19,11 +21,14 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getRefSatuanKinerja } from "../../../services/ref.service";
 import {
+    batalKirimAtasan,
     createPenilaianBulanan,
     getPenilaianAktif,
     getPenilaianBulanan,
     getPenilaianBulananById,
+    getRequestPenilaian,
     hapusPenilaianBulanan,
+    kirimAtasan,
     updatePenilaianBulanan
 } from "../../../services/users.service";
 import UserLayout from "../../../src/components/UserLayout";
@@ -35,11 +40,66 @@ const DataPenilaianAktif = () => {
     return <div>{JSON.stringify(dataPenilaianAktif)}</div>;
 };
 
-const Footer = () => {
+const Footer = ({ data, bulan, tahun, dataBulanan }) => {
+    const queryClient = useQueryClient();
+
+    const kirimAtasanMutation = useMutation((data) => kirimAtasan(data), {
+        onSuccess: () => {
+            queryClient.invalidateQueries(["data-request-penilaian"]);
+            message.success("success");
+        }
+    });
+
+    const batalKirimAtasaMutation = useMutation(
+        (data) => batalKirimAtasan(data),
+        {
+            onSuccess: () => {
+                message.success("sukses");
+                queryClient.invalidateQueries(["data-request-penilaian"]);
+            }
+        }
+    );
+
+    const handleKirimAtasan = () => {
+        if (!dataBulanan?.length) {
+            message.error("Kinerja bulanan anda masih kosong!");
+        } else {
+            kirimAtasanMutation.mutate({ bulan, tahun });
+        }
+    };
+
+    const handleCetak = () => {};
+
+    const handleBatalKirimAtasan = () => {
+        batalKirimAtasaMutation.mutate({ bulan, tahun });
+    };
+
     return (
-        <Space>
-            <Button type="primary">Kirim Atasan</Button>
-        </Space>
+        <>
+            <Skeleton
+                loading={
+                    kirimAtasanMutation.isLoading ||
+                    batalKirimAtasaMutation.isLoading
+                }
+            >
+                {!data ? (
+                    <Space>
+                        <Button type="primary" onClick={handleKirimAtasan}>
+                            Kirim Atasan
+                        </Button>
+                    </Space>
+                ) : (
+                    <Space>
+                        <Button type="primary" onClick={handleBatalKirimAtasan}>
+                            Batal Kirim Atasan
+                        </Button>
+                        <Button type="primary" onClick={handleCetak}>
+                            Cetak
+                        </Button>
+                    </Space>
+                )}
+            </Skeleton>
+        </>
     );
 };
 
@@ -151,6 +211,13 @@ const Penilaian = ({ tahun, bulan }) => {
         data: dataTargetPenilaian,
         isLoading: isLoadingDataTargetPenilaian
     } = useQuery(["target_penilaian"], () => getRefSatuanKinerja("target"));
+
+    const {
+        data: dataRequestPenilaian,
+        isLoading: isLoadingDataRequestPenilaian
+    } = useQuery(["data-request-penilaian"], () =>
+        getRequestPenilaian(bulan, tahun)
+    );
 
     const [createForm] = Form.useForm();
     const [updateForm] = Form.useForm();
@@ -293,7 +360,11 @@ const Penilaian = ({ tahun, bulan }) => {
 
     return (
         <Skeleton
-            loading={isLoadingDataPenilaian || isLoadingDataTargetPenilaian}
+            loading={
+                isLoadingDataPenilaian ||
+                isLoadingDataTargetPenilaian ||
+                isLoadingDataRequestPenilaian
+            }
         >
             <Table
                 title={() => (
@@ -303,7 +374,14 @@ const Penilaian = ({ tahun, bulan }) => {
                 )}
                 columns={columns}
                 pagination={false}
-                footer={() => <Footer />}
+                footer={() => (
+                    <Footer
+                        bulan={bulan}
+                        tahun={tahun}
+                        dataBulanan={dataPenilaian}
+                        data={dataRequestPenilaian}
+                    />
+                )}
                 dataSource={dataPenilaian}
                 key="id"
                 rowKey={(row) => row?.id}
@@ -355,6 +433,9 @@ const BulananBaru = ({ data }) => {
     const [bulan, setBulan] = useState(data?.query?.bulan);
     const [tahun, setTahun] = useState(data?.query?.tahun);
 
+    const { data: dataPenilaianAktif, isLoading: isLoadingPenilaianAktif } =
+        useQuery(["data-penilaian-aktif"], () => getPenilaianAktif());
+
     const router = useRouter();
 
     useEffect(() => {
@@ -377,14 +458,23 @@ const BulananBaru = ({ data }) => {
 
     return (
         <UserLayout title="Penilaian Bulanan">
-            <Card>
-                <DatePicker.MonthPicker
-                    defaultValue={moment(`${tahun}-${bulan}`)}
-                    onChange={handleChange}
-                />
-                <Divider />
-                <Penilaian tahun={tahun} bulan={bulan} />
-            </Card>
+            <Row gutter={[16, 16]}>
+                <Col span={24}>
+                    <Card loading={isLoadingPenilaianAktif}>
+                        {JSON.stringify(dataPenilaianAktif)}
+                    </Card>
+                </Col>
+                <Col span={24}>
+                    <Card>
+                        <DatePicker.MonthPicker
+                            defaultValue={moment(`${tahun}-${bulan}`)}
+                            onChange={handleChange}
+                        />
+                        <Divider />
+                        <Penilaian tahun={tahun} bulan={bulan} />
+                    </Card>
+                </Col>
+            </Row>
         </UserLayout>
     );
 };

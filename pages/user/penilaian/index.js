@@ -105,16 +105,18 @@ const Penilaian = () => {
     ];
 
     return (
-        <UserLayout title="Penilaian">
+        <UserLayout title="Penilaian Tahunan">
             <Card>
-                <Button
-                    icon={<FileAddOutlined />}
-                    type="primary"
-                    onClick={createPenilaian}
-                >
-                    Penilaian
-                </Button>
                 <Table
+                    title={() => (
+                        <Button
+                            icon={<FileAddOutlined />}
+                            type="primary"
+                            onClick={createPenilaian}
+                        >
+                            Penilaian
+                        </Button>
+                    )}
                     size="small"
                     loading={isLoading}
                     columns={columns}

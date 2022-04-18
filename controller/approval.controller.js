@@ -9,29 +9,26 @@ const dataPenilaian = async (req, res) => {
     const queryBulan = req?.query?.bulan || bulan;
     const queryTahun = req?.query?.tahun || tahun;
 
-    const limit = req.query?.limit || 10;
+    const limit = req.query?.limit || 50;
     const offset = req.query?.offset || 0;
 
     try {
         const result = await prisma.acc_kinerja_bulanan.findMany({
             where: {
-                penilaian: {
-                    aktif: true,
-                    nip_atasan_langsung: userId?.toString()
-                },
                 bulan: parseInt(queryBulan),
-                diverif_oleh: customId,
-                tahun: parseInt(queryTahun)
+                tahun: parseInt(queryTahun),
+                id_atasan_langsung: customId
             },
             include: {
-                user_ptt: true
+                pegawai: true
             },
             take: limit,
             skip: offset
         });
         res.json(result);
     } catch (error) {
-        res.json({ code: 400, message: "Internal Server Error" });
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 
@@ -41,7 +38,7 @@ const getListPenilaianBulanan = async (req, res) => {
 
         const result = await prisma.penilaian.findFirst({
             where: {
-                id: parseInt(id),
+                id,
                 aktif: true
             },
             include: {
@@ -67,6 +64,7 @@ const getListPenilaianBulanan = async (req, res) => {
     }
 };
 
+// todo this should be wrapper to transaction
 const approvePenilaianBulanan = async (req, res) => {
     try {
         const { body } = req;

@@ -230,17 +230,17 @@ function Penilaian({ data: query }) {
         {
             key: "foto",
             title: "Foto",
-            render: (_, row) => <Avatar src={row?.user_ptt?.image} />
+            render: (_, row) => <Avatar src={row?.pegawai?.image} />
         },
         {
             key: "nama",
             title: "Nama",
-            render: (_, row) => <div>{row?.user_ptt?.username}</div>
+            render: (_, row) => <div>{row?.pegawai?.username}</div>
         },
         {
             key: "niptt",
             title: "NIPTT",
-            render: (_, row) => <div>{row?.user_ptt?.employee_number}</div>
+            render: (_, row) => <div>{row?.pegawai?.employee_number}</div>
         },
         {
             key: "detail",
