@@ -7,7 +7,7 @@ const index = async (req, res) => {
         if (req?.query?.aktif === "true") {
             const result = await prisma.penilaian.findFirst({
                 where: {
-                    id_ptt: userId,
+                    user_custom_id: customId,
                     aktif: true
                 }
             });

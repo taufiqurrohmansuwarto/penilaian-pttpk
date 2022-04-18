@@ -45,14 +45,14 @@ const requestPenilaianUser = async (req, res) => {
                 id_penilaian: penilaian?.id,
                 tahun: parseInt(tahun),
                 bulan: parseInt(bulan),
-                custom_id_ptt: customId
+                pegawai_id: customId
             }
         });
 
         res.json(result);
     } catch (error) {
         console.log(error);
-        res.json({ code: 400, message: "Internal Server Error" });
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 

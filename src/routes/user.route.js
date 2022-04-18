@@ -17,7 +17,7 @@ export default {
             icon: <RadarChartOutlined />
         },
         {
-            path: "/user/penilaian/bulanan",
+            path: "/user/penilaian/bulanan-baru",
             name: " Penilaian Bulanan",
             icon: <FundOutlined />
         }

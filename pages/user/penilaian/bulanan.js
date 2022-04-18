@@ -534,19 +534,6 @@ const Bulanan = () => {
                     loadingTargetPenilaian ||
                     loadingDataRequestBulanan
                 }
-                extra={[
-                    <Space>
-                        <Button type="danger">Batal Kirim</Button>
-                        <Button
-                            type="primary"
-                            loading={kirimAtasanMutation.isLoading}
-                            onClick={handleKirimAtasan}
-                        >
-                            Kirim ke{" "}
-                            {dataPenilaianAktif?.atasan_langsung?.label?.[0]}
-                        </Button>
-                    </Space>
-                ]}
             >
                 {dataPenilaianAktif ? (
                     <>
@@ -580,6 +567,7 @@ const Bulanan = () => {
                             eventClick={handleEventClick}
                         />
                         <DrawerCreate
+                            key="create-penilaian"
                             dataTargetPenilaian={dataTargetPenilaian}
                             calendarRef={calendarRef}
                             visibleCreate={visibleCreate}
@@ -587,6 +575,7 @@ const Bulanan = () => {
                             date={date}
                         />
                         <DrawerUpdate
+                            key="update-penilaian"
                             calenderRef={calendarRef}
                             dataTargetPenilaian={dataTargetPenilaian}
                             visibleUpdate={visibleUpdate}

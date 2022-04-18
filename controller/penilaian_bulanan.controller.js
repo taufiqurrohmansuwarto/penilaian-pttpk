@@ -55,26 +55,24 @@ const create = async (req, res) => {
 };
 
 const index = async (req, res) => {
-    const { userId } = req.user;
+    const { customId } = req.user;
     const bulan = req.query?.bulan || moment(new Date()).format("M");
     const tahun = req.query?.tahun || moment(new Date()).format("YYYY");
 
     try {
         const result = await prisma.kinerja_bulanan.findMany({
             where: {
-                id_ptt: userId,
                 bulan: parseInt(bulan),
                 tahun: parseInt(tahun),
                 penilaian: {
                     aktif: true,
-                    id_ptt: userId
+                    user_custom_id: customId
                 }
             },
             orderBy: {
                 created_at: "desc"
             },
             select: {
-                id: true,
                 bulan: true,
                 tahun: true,
                 title: true,
@@ -107,7 +105,7 @@ const index = async (req, res) => {
         res.json(result);
     } catch (error) {
         console.log(error);
-        res.json({ code: 400, message: "Internal Server Error" });
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 

@@ -2,7 +2,7 @@ import prisma from "../lib/prisma";
 
 const ref = async (req, res) => {
     const show = req.query?.show || "satuan";
-    const { userId } = req.user;
+    const { customId } = req.user;
 
     try {
         if (show === "satuan") {
@@ -13,10 +13,9 @@ const ref = async (req, res) => {
         if (show === "target") {
             const result = await prisma.target_penilaian.findMany({
                 where: {
-                    id_ptt: userId,
                     penilaian: {
                         aktif: true,
-                        id_ptt: userId
+                        user_custom_id: customId
                     }
                 },
                 include: {
