@@ -23,7 +23,7 @@ import {
 } from "../../services/approval.service";
 import ApprovalLayout from "../../src/components/ApprovalLayout";
 
-const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible }) => {
+const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible, idPtt }) => {
     const { data, isLoading, status } = useQuery(
         ["approval_penilaian_bulanan", `${id}${bulan}${tahun}`],
         () => getPenilaianBulananApproval({ id, bulan, tahun }),
@@ -97,10 +97,7 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible }) => {
         (data) => approvaPenilaianBulananApproval(data),
         {
             onSuccess: () => {
-                querClient.invalidateQueries([
-                    "approval_penilaian_bulanan",
-                    `${id}${bulan}${tahun}`
-                ]);
+                querClient.invalidateQueries(["approval_penilaian_bulanan"]);
                 message.success("berhasil");
                 onCancel();
             }
@@ -113,7 +110,13 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible }) => {
                 "Masih ada yang belum dinilai. Sepertinya ada kualitas yang masih 0"
             );
         } else {
-            const value = { id, data: kualitasValue, bulan, tahun };
+            const value = {
+                id,
+                data: kualitasValue,
+                bulan,
+                tahun,
+                id_ptt: idPtt
+            };
             verifMutationApproval.mutate(value);
         }
     };
@@ -215,16 +218,18 @@ function Penilaian({ data: query }) {
 
     const [showModal, setShowModal] = useState(false);
     const [id, setId] = useState();
+    const [idPtt, setIdPtt] = useState();
 
     const closeModal = () => setShowModal(false);
-    const openModal = (id) => {
+    const openModal = (row) => {
         setShowModal(true);
-        setId(id);
+        setId(row?.id_penilaian);
+        setIdPtt(row?.pegawai_id);
     };
 
     useEffect(() => {
         if (router?.isReady) return null;
-    }, [date, router?.isReady, query]);
+    }, [date, router?.isReady, query, idPtt]);
 
     const columns = [
         {
@@ -243,11 +248,16 @@ function Penilaian({ data: query }) {
             render: (_, row) => <div>{row?.pegawai?.employee_number}</div>
         },
         {
+            key: "sudah_verif",
+            title: "Sudah Verif?",
+            render: (_, row) => <div>{JSON.stringify(row?.sudah_verif)}</div>
+        },
+        {
             key: "detail",
             title: "Nilai dan ACC",
             render: (_, row) => (
                 <div>
-                    <Button onClick={() => openModal(row?.id_penilaian)}>
+                    <Button onClick={() => openModal(row)}>
                         Nilai dan ACC
                     </Button>
                 </div>
@@ -260,6 +270,7 @@ function Penilaian({ data: query }) {
             <FormApprovalModal
                 visible={showModal}
                 onCancel={closeModal}
+                idPtt={idPtt}
                 id={id}
                 bulan={moment(date).format("M")}
                 tahun={moment(date).format("YYYY")}
@@ -280,7 +291,6 @@ function Penilaian({ data: query }) {
                         dataSource={dataPenilaianApproval}
                         loading={loadingDataPenilaianApproval}
                     />
-                    {JSON.stringify(dataPenilaianApproval)}
                 </Card>
             </Skeleton>
         </ApprovalLayout>

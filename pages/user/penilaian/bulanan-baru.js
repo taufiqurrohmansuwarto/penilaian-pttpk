@@ -295,14 +295,24 @@ const Penilaian = ({ tahun, bulan }) => {
             title: "Aksi",
             render: (_, row) => {
                 return (
-                    <Space>
-                        <Button onClick={() => showUpdate(row?.id)}>
-                            Edit
-                        </Button>
-                        <Button onClick={() => handleRemoveBulanan(row?.id)}>
-                            Hapus
-                        </Button>
-                    </Space>
+                    <>
+                        {!dataRequestPenilaian ? (
+                            <Space>
+                                <Button
+                                    disabled={dataRequestPenilaian}
+                                    onClick={() => showUpdate(row?.id)}
+                                >
+                                    Edit
+                                </Button>
+                                <Button
+                                    disabled={dataRequestPenilaian}
+                                    onClick={() => handleRemoveBulanan(row?.id)}
+                                >
+                                    Hapus
+                                </Button>
+                            </Space>
+                        ) : null}
+                    </>
                 );
             }
         }
@@ -368,9 +378,15 @@ const Penilaian = ({ tahun, bulan }) => {
         >
             <Table
                 title={() => (
-                    <Space>
-                        <Button onClick={showCreate}>Tambah Pekerjaan</Button>
-                    </Space>
+                    <>
+                        {!dataRequestPenilaian && (
+                            <Space>
+                                <Button onClick={showCreate}>
+                                    Tambah Pekerjaan
+                                </Button>
+                            </Space>
+                        )}
+                    </>
                 )}
                 columns={columns}
                 pagination={false}

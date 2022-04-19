@@ -1,6 +1,39 @@
 const { default: prisma } = require("../lib/prisma");
 import moment from "moment";
 
+// jadi ketika batal kirim maka nilai nya direset kembali menjadi 0 dan di acc kinerja bulanan dihapus
+const batalKirimTransaction = async (
+    penilaianId,
+    userCustomId,
+    nipAtasanLangsung,
+    listIdPenilaian,
+    bulan,
+    tahun
+) => {
+    return await prisma.$transaction(async (prisma) => {
+        await prisma.acc_kinerja_bulanan.deleteMany({
+            where: {
+                id_penilaian: penilaianId,
+                bulan,
+                tahun,
+                pegawai_id: userCustomId,
+                id_atasan_langsung: nipAtasanLangsung
+            }
+        });
+        await prisma.kinerja_bulanan.updateMany({
+            where: {
+                id: {
+                    in: listIdPenilaian
+                }
+            },
+            data: {
+                kualitas: 0
+            }
+        });
+        return true;
+    });
+};
+
 const kirimAtasan = async (req, res) => {
     const { customId } = req.user;
     const queryBulan = req.query?.bulan || moment(new Date()).format("M");
@@ -77,18 +110,30 @@ const batalKirimAtasan = async (req, res) => {
         if (!currentPenilaian) {
             res.status(404).json({ code: 404, message: "Not Found" });
         } else {
-            await prisma.acc_kinerja_bulanan.deleteMany({
+            const listIdPenilaian = await prisma.kinerja_bulanan.findMany({
                 where: {
-                    id_penilaian: currentPenilaian?.id,
                     bulan,
                     tahun,
-                    pegawai_id: customId,
-                    id_atasan_langsung: `master|${currentPenilaian?.nip_atasan_langsung}`
+                    id_penilaian: currentPenilaian?.id
+                },
+                select: {
+                    id: true
                 }
             });
+
+            // custom transaction
+            await batalKirimTransaction(
+                currentPenilaian?.id,
+                customId,
+                `master|${currentPenilaian?.nip_atasan_langsung}`,
+                listIdPenilaian?.map((l) => l?.id),
+                bulan,
+                tahun
+            );
             res.json({ code: 200, message: "sukses" });
         }
     } catch (error) {
+        console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };

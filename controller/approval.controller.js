@@ -68,6 +68,12 @@ const getListPenilaianBulanan = async (req, res) => {
 const approvePenilaianBulanan = async (req, res) => {
     try {
         const { body } = req;
+        const bulan = parseInt(req?.query?.bulan);
+        const tahun = parseInt(req?.query?.tahun);
+        const id_penilaian = req.query?.id;
+        const id_ptt = req.query?.id_ptt;
+        const id_atasan_langsung = req.user?.customId;
+
         const verifApproval = body?.map((d) => {
             const { id, ...data } = d;
             return prisma.kinerja_bulanan.update({
@@ -80,30 +86,21 @@ const approvePenilaianBulanan = async (req, res) => {
             });
         });
 
-        prisma.acc_kinerja_bulanan.update({
-            where: {
-                id_penilaian_bulan_tahun_custom_id_ptt: {
-                    bulan: parseInt(req.query?.bulan),
-                    tahun: parseInt(req.query?.tahun),
-                    id_penilaian: req.query?.id,
-                    custom_id_ptt: req.user?.customId
-                }
-            },
-            data: {
-                sudah_verif: true
-            }
-        });
-
         await prisma.$transaction([
             ...verifApproval,
-            prisma.acc_kinerja_bulanan.update({
+            prisma.acc_kinerja_bulanan.updateMany({
                 where: {
-                    id_penilaian_bulan_tahun_custom_id_ptt: {
-                        bulan: parseInt(req.query?.bulan),
-                        tahun: parseInt(req.query?.tahun),
-                        id_penilaian: req.query?.id,
-                        custom_id_ptt: req.user?.customId
+                    id_penilaian,
+                    tahun,
+                    bulan,
+                    id_atasan_langsung,
+                    penilaian: {
+                        aktif: true,
+                        user_custom_id: id_ptt
                     }
+                },
+                data: {
+                    sudah_verif: true
                 }
             })
         ]);
@@ -113,7 +110,7 @@ const approvePenilaianBulanan = async (req, res) => {
         res.json({ code: 200, message: "ok" });
     } catch (error) {
         console.log(error);
-        res.json({ code: 400, message: "Internal Server Error" });
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 
