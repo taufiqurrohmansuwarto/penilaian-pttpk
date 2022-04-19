@@ -4,8 +4,8 @@ import { xorBy } from "lodash";
 import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import routes from "../routes/routes";
 import { useRouter } from "next/router";
+import routes from "../routes/routes";
 
 const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
     ssr: false
@@ -26,6 +26,7 @@ const menuUser = () => (
         </Menu.Item>
     </Menu>
 );
+
 const rightContentRender = (user) => {
     return (
         <Dropdown overlay={menuUser()}>
@@ -83,7 +84,7 @@ const changeRoutes = (user, status) => {
 };
 
 const Layout = ({ children, title = "Feeds" }) => {
-    const { data, status } = useSession({
+    const { data } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
     });
