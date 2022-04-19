@@ -1,5 +1,5 @@
 import { FileAddOutlined } from "@ant-design/icons";
-import { Button, Card, message, Space, Table } from "antd";
+import { Alert, Button, Card, Divider, message, Space, Table } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -9,6 +9,17 @@ import {
     hapusPenilaian
 } from "../../../services/users.service";
 import UserLayout from "../../../src/components/UserLayout";
+
+const PeringatanPenilaian = () => {
+    return (
+        <Alert
+            message="Perhatian"
+            type="warning"
+            description="Untuk membuat penilaian, pastikan anda membuat penilaian tahunan terlebih dahulu kemudian pastikan penilaian yang dipilih aktif. Setelah itu pastikan anda sudah mengentri target penilaian terlebih dahulu"
+            showIcon
+        />
+    );
+};
 
 const Penilaian = () => {
     const createPenilaian = () => router.push("/user/penilaian/create");
@@ -105,8 +116,10 @@ const Penilaian = () => {
     ];
 
     return (
-        <UserLayout title="Penilaian Tahunan">
+        <UserLayout title="Penilaian">
             <Card>
+                <PeringatanPenilaian />
+                <Divider />
                 <Table
                     title={() => (
                         <Button

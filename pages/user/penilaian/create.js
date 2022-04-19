@@ -94,7 +94,6 @@ const CreatePenilaian = () => {
     });
 
     const onFinish = (values) => {
-        // console.log(values);
         const {
             id_jabatan,
             id_skpd,
@@ -142,15 +141,15 @@ const CreatePenilaian = () => {
                             <InputNumber />
                         </Form.Item>
                         <FormPegawaiPNS
-                            label="Atasan Langsung"
+                            label="Atasan Langsung (Subordinator)"
                             name="nip_atasan_langsung"
                         />
                         <FormPegawaiPNS
-                            label="Atasan Banding"
+                            label="Atasan Banding (Eselon III)"
                             name="nip_atasan_banding"
                         />
                         <FormPegawaiPNS
-                            label="Kepala Badan/Dinas"
+                            label="Kepala Badan/Dinas (Eselon II)"
                             name={"nip_eselon_ii"}
                         />
                         <Form.Item
