@@ -4,11 +4,17 @@ import FasilitatorLayout from "../../src/components/FasilitatorLayout";
 
 const Dashboard = () => {
     const { data } = useSession();
+
     return (
         <FasilitatorLayout title="Dashboard">
             <Card>{JSON.stringify(data)}</Card>
         </FasilitatorLayout>
     );
+};
+
+Dashboard.Auth = {
+    roles: ["FASILITATOR"],
+    groups: ["PTTPK"]
 };
 
 export default Dashboard;

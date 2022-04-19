@@ -62,6 +62,11 @@ function PenilaianBulanan({ data }) {
     );
 }
 
+PenilaianBulanan.Auth = {
+    roles: ["FASILITATOR"],
+    groups: ["PTTPK"]
+};
+
 export const getServerSideProps = async (ctx) => {
     const bulan = ctx?.query?.bulan || moment(new Date()).format("M");
     const tahun = ctx?.query?.tahun || moment(new Date()).format("YYYY");

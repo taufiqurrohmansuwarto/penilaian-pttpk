@@ -77,7 +77,7 @@ const changeRoutes = (user, status) => {
         } else if (userPtt) {
             resolve(xorBy(routes?.routes, userPttpkRoutes, "name"));
         } else if (userPttFasilitator) {
-            resolve(xorBy(routes?.route, fasilitatorRoutes, "name"));
+            resolve(xorBy(routes?.routes, fasilitatorRoutes, "name"));
         }
     });
 };
