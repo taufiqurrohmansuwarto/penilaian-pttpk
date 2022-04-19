@@ -64,13 +64,20 @@ const changeRoutes = (user, status) => {
             { path: "/user/dashboard", name: " User", icon: <ReadOutlined /> }
         ];
 
+        const fasilitatorRoutes = [
+            {
+                path: "/fasilitator/dashboard",
+                name: " Fasilitator",
+                icon: <ReadOutlined />
+            }
+        ];
+
         if (userMaster) {
-            // reading twice like shit
             resolve(xorBy(routes?.routes, userMasterRoutes, "name"));
         } else if (userPtt) {
             resolve(xorBy(routes?.routes, userPttpkRoutes, "name"));
         } else if (userPttFasilitator) {
-            console.log("fasilitator");
+            resolve(xorBy(routes?.route, fasilitatorRoutes, "name"));
         }
     });
 };
