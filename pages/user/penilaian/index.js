@@ -1,5 +1,15 @@
 import { FileAddOutlined } from "@ant-design/icons";
-import { Alert, Button, Card, Divider, message, Space, Table } from "antd";
+import {
+    Alert,
+    Button,
+    Card,
+    Divider,
+    message,
+    Popconfirm,
+    Space,
+    Table,
+    Typography
+} from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -46,28 +56,10 @@ const Penilaian = () => {
     const handleRemove = (id) => hapusMutation.mutate(id);
     const handleUpdate = (id) => aktifMutation.mutate(id);
     const gotoDetail = (id) => router.push(`/user/penilaian/${id}/detail`);
+    const gotoEdit = (id) => router.push(`/user/penilaian/${id}/edit`);
 
     const columns = [
         { dataIndex: "tahun", title: "Tahun" },
-        {
-            key: "atasan_langsung",
-            title: "Atasan Langsung",
-            render: (_, row) => (
-                <div>{row?.atasan_langsung?.label?.join("")}</div>
-            )
-        },
-        {
-            key: "atasan_banding",
-            title: "Atasan Banding",
-            render: (_, row) => (
-                <div>{row?.atasan_banding?.label?.join("")}</div>
-            )
-        },
-        {
-            key: "eselon_ii",
-            title: "Eselon II",
-            render: (_, row) => <div>{row?.eselon_ii?.label?.join("")}</div>
-        },
         {
             key: "awal_periode",
             title: "Awal Periode",
@@ -79,13 +71,18 @@ const Penilaian = () => {
             key: "akhir_periode",
             title: "Akhir Periode",
             render: (_, row) => (
-                <div>{moment(row?.akhir_periode).format("DD-MM-YYYY")}</div>
+                <div>{moment(row?.akhir_periode).format("DD-M-YYYY")}</div>
             )
         },
         {
             key: "jabatan",
             title: "Jabatan",
             render: (_, row) => <div>{row?.jabatan?.nama}</div>
+        },
+        {
+            key: "satuan_kerja",
+            title: "Satuan Kerja",
+            render: (_, row) => <div>{row?.id_skpd}</div>
         },
         {
             key: "aktif",
@@ -97,19 +94,26 @@ const Penilaian = () => {
             title: "Aksi",
             render: (_, row) => (
                 <Space>
-                    <Button onClick={() => gotoDetail(row?.id)}>Detail</Button>
-                    <Button
-                        loading={aktifMutation.isLoading}
+                    <Typography.Link onClick={() => gotoEdit(row?.id)}>
+                        Edit
+                    </Typography.Link>
+                    <Divider type="vertical" />
+                    <Typography.Link onClick={() => gotoDetail(row?.id)}>
+                        Detail
+                    </Typography.Link>
+                    <Divider type="vertical" />
+                    <Typography.Link
                         onClick={async () => await handleUpdate(row?.id)}
                     >
                         Aktif
-                    </Button>
-                    <Button
-                        loading={hapusMutation.isLoading}
-                        onClick={async () => await handleRemove(row?.id)}
+                    </Typography.Link>
+                    <Divider type="vertical" />
+                    <Popconfirm
+                        title="Apakah anda yakin menghapus penilaian ini?"
+                        onConfirm={async () => await handleRemove(row?.id)}
                     >
-                        Hapus
-                    </Button>
+                        <Typography.Link>Hapus</Typography.Link>
+                    </Popconfirm>
                 </Space>
             )
         }

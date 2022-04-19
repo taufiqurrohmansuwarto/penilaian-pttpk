@@ -37,7 +37,12 @@ const FormPegawaiPNS = ({ name, label }) => {
     );
 
     return (
-        <Form.Item label={label} name={name}>
+        <Form.Item
+            label={label}
+            name={name}
+            help="Ketikkan NIP PNS yang dicari"
+            rules={[{ required: true, message: "tidak boleh kosong" }]}
+        >
             <Select
                 showSearch
                 labelInValue
@@ -136,8 +141,22 @@ const CreatePenilaian = () => {
         <UserLayout title="Buat Penilaian">
             <Card loading={isLoadingJabatan || isloadingUnor}>
                 {dataJabatan && dataUnor && (
-                    <Form form={form} onFinish={onFinish} layout="vertical">
-                        <Form.Item name="tahun" label="Tahun">
+                    <Form
+                        form={form}
+                        onFinish={onFinish}
+                        layout="vertical"
+                        requiredMark={false}
+                    >
+                        <Form.Item
+                            name="tahun"
+                            label="Tahun"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Tidak boleh kosong"
+                                }
+                            ]}
+                        >
                             <InputNumber />
                         </Form.Item>
                         <FormPegawaiPNS
@@ -156,6 +175,12 @@ const CreatePenilaian = () => {
                             name="periode"
                             label="Periode"
                             help="Periode awal Penilaian dan akhir penilaian"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Tidak boleh kosong"
+                                }
+                            ]}
                         >
                             <DatePicker.RangePicker format="DD-MM-YYYY" />
                         </Form.Item>
@@ -163,6 +188,12 @@ const CreatePenilaian = () => {
                             help="Pilih Jabatan yang akan dilakukan penilaian"
                             name="id_jabatan"
                             label="Jabatan"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Tidak boleh kosong"
+                                }
+                            ]}
                         >
                             <Select showSearch optionFilterProp="name">
                                 {dataJabatan?.map((d) => (
@@ -176,7 +207,16 @@ const CreatePenilaian = () => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item name="id_skpd" label="Unit Kerja">
+                        <Form.Item
+                            name="id_skpd"
+                            label="Unit Kerja"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Tidak boleh kosong"
+                                }
+                            ]}
+                        >
                             <TreeSelect
                                 // labelInValue
                                 showSearch

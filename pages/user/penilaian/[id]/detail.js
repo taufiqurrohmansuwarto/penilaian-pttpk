@@ -1,16 +1,20 @@
+import { FileAddOutlined } from "@ant-design/icons";
 import {
     Button,
     Card,
     Col,
+    Divider,
     Drawer,
     Form,
     Input,
     InputNumber,
     message,
+    Popconfirm,
     Row,
     Select,
     Space,
-    Table
+    Table,
+    Typography
 } from "antd";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -23,6 +27,7 @@ import {
     removeTargetPenilaian,
     updateTargetPenilaian
 } from "../../../../services/users.service";
+import EditPenilaian from "../../../../src/components/EditPenilaian";
 import UserLayout from "../../../../src/components/UserLayout";
 
 const DetailPenilaian = () => {
@@ -68,7 +73,7 @@ const DetailPenilaian = () => {
                 queryClient.invalidateQueries(["target_penilaian", id]);
                 form.resetFields();
                 setVisible(false);
-                message.success("test");
+                message.success("Berhasil ditambahkan");
             }
         }
     );
@@ -136,27 +141,34 @@ const DetailPenilaian = () => {
             title: "Action",
             render: (_, row) => (
                 <div>
-                    <Space>
-                        <Button onClick={() => handleRemove(row?.id)}>
-                            Hapus
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                setVisibleEdit(true);
-                                setInitialValues(row);
-                            }}
-                        >
-                            Update
-                        </Button>
-                    </Space>
+                    <Typography.Link
+                        onClick={() => {
+                            setVisibleEdit(true);
+                            setInitialValues(row);
+                        }}
+                    >
+                        Edit
+                    </Typography.Link>
+                    <Divider type="vertical" />
+                    <Popconfirm
+                        title="Apakah anda yakin menghapus target penilaian?"
+                        onConfirm={() => handleRemove(row?.id)}
+                    >
+                        <Typography.Link>Hapus</Typography.Link>
+                    </Popconfirm>
                 </div>
             )
         }
     ];
 
     return (
-        <UserLayout title="Target Penilaian">
+        <UserLayout title="Detail Penilaian">
+            <Divider />
             <Card>
+                <Card.Meta
+                    title="Target Penilaian"
+                    description="Target penilaian yang akan lakukan selama periode tertentu"
+                />
                 {dataRefSatuanKinerja && (
                     <>
                         <Drawer
@@ -164,7 +176,7 @@ const DetailPenilaian = () => {
                             onClose={onClose}
                             visible={visible}
                             title="Buat Target Penilaian"
-                            width={720}
+                            width={400}
                             extra={[
                                 <Button
                                     loading={
@@ -258,7 +270,7 @@ const DetailPenilaian = () => {
                             onClose={onCloseEdit}
                             visible={visibleEdit}
                             title="Edit Target Penilaian"
-                            width={720}
+                            width={500}
                             destroyOnClose
                             forceRender
                             extra={[
@@ -339,9 +351,17 @@ const DetailPenilaian = () => {
                                 </Row>
                             </Form>
                         </Drawer>
-
-                        <Button onClick={showDrawer}>Create</Button>
+                        <Divider />
                         <Table
+                            title={() => (
+                                <Button
+                                    onClick={showDrawer}
+                                    icon={<FileAddOutlined />}
+                                    type="primary"
+                                >
+                                    Target Penilaian
+                                </Button>
+                            )}
                             rowKey={(row) => row?.id}
                             dataSource={dataTargetPenilaian}
                             columns={columns}
