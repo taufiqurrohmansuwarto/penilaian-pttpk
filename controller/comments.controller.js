@@ -2,8 +2,10 @@ import prisma from "../lib/prisma";
 
 const index = async (req, res) => {
     const cursor = req?.query?.cursor;
+    const sort = req?.query?.sort || "terbaru";
 
     const take = 50;
+
     let query = {
         take,
 
@@ -18,17 +20,17 @@ const index = async (req, res) => {
                     user: true
                 }
             }
-        },
-        orderBy: [
-            {
-                created_at: "desc"
-            },
-            {
-                children: {
-                    _count: "desc"
-                }
-            }
-        ]
+        }
+        // orderBy: [
+        //     {
+        //         created_at: "desc"
+        //     },
+        //     {
+        //         children: {
+        //             _count: "desc"
+        //         }
+        //     }
+        // ]
     };
 
     // pretty wrong btw
@@ -39,6 +41,35 @@ const index = async (req, res) => {
             skip: 1,
             cursor: {
                 id: cursor
+            }
+        };
+    }
+
+    if (sort === "terbaru") {
+        query = {
+            ...query,
+            orderBy: {
+                created_at: "desc"
+            }
+        };
+    }
+
+    if (sort === "like") {
+        query = {
+            ...query,
+            orderBy: {
+                likes: "desc"
+            }
+        };
+    }
+
+    if (sort === "popular") {
+        query = {
+            ...query,
+            orderBy: {
+                children: {
+                    _count: "desc"
+                }
             }
         };
     }
@@ -120,7 +151,7 @@ const remove = async (req, res) => {
 };
 
 const likes = async (req, res) => {
-    const { userId, customId, name, image } = req.user;
+    const { customId } = req.user;
     const { commentId } = req.query;
     const { value } = req.body;
 

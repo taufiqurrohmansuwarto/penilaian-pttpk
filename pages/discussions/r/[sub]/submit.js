@@ -7,6 +7,7 @@ import {
     findCommunities
 } from "../../../../services/main.services";
 import Layout from "../../../../src/components/Layout";
+import PageContainer from "../../../../src/components/PageContainer";
 import Post from "../../../../src/components/reddits/Post";
 
 function SubRedditSubmit() {
@@ -48,16 +49,18 @@ function SubRedditSubmit() {
 
     return (
         <Layout title={`Buat Postingan di Komunitasi ${query?.sub}`}>
-            <Card>
-                <Post
-                    loading={createMutation?.isLoading}
-                    title={title}
-                    onChangeTitle={onChangeTitle}
-                    description={description}
-                    onChangeDescription={onChange}
-                    handleSubmit={handleSubmit}
-                />
-            </Card>
+            <PageContainer title="Buat Postingan" content="Isikan postinganmu">
+                <Card>
+                    <Post
+                        loading={createMutation?.isLoading}
+                        title={title}
+                        onChangeTitle={onChangeTitle}
+                        description={description}
+                        onChangeDescription={onChange}
+                        handleSubmit={handleSubmit}
+                    />
+                </Card>
+            </PageContainer>
         </Layout>
     );
 }

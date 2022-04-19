@@ -4,12 +4,12 @@ export default {
     routes: [
         {
             path: "/feeds",
-            name: " Feeds",
+            name: " Curhat",
             icon: <MessageOutlined />
         },
         {
             path: "/discussions",
-            name: " Discussions",
+            name: " Diskusi",
             icon: <CommentOutlined />
         }
     ]

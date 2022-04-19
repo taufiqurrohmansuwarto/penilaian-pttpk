@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { findCommunitiesByTitle } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
+import PageContainer from "../../src/components/PageContainer";
 import Post from "../../src/components/reddits/Post";
 
 const { TabPane } = Tabs;
@@ -46,73 +47,82 @@ const RedditSubmit = ({ data }) => {
 
     return (
         <Layout title="Buat Postingan Baru">
-            <Select
-                value={search}
-                onChange={(e) => setSearch(e)}
-                onSearch={handleSearch}
-                placeholder="Cari Komunitas"
-                style={{ width: "20%", marginBottom: 10 }}
-                showSearch
-                onSelect={handleSelect}
-                loading={loadingDataCommunities}
-                notFoundContent={
-                    loadingDataCommunities ? <Spin size="small" /> : null
-                }
-            >
-                {dataCommunities?.map((community) => (
-                    <Select.Option key={community?.id} value={community?.link}>
-                        {community?.link}
-                    </Select.Option>
-                ))}
-            </Select>
-            <Card>
-                <Tabs activeKey={data?.query} onChange={handleChange}>
-                    <TabPane
-                        tab={
-                            <span>
-                                <AppleOutlined />
-                                Post
-                            </span>
+            <PageContainer title="Buat Postingan" content="Yuk Buat Postingan">
+                <Card>
+                    <Select
+                        value={search}
+                        onChange={(e) => setSearch(e)}
+                        onSearch={handleSearch}
+                        placeholder="Cari Komunitas"
+                        style={{ width: "20%", marginBottom: 10 }}
+                        showSearch
+                        onSelect={handleSelect}
+                        loading={loadingDataCommunities}
+                        notFoundContent={
+                            loadingDataCommunities ? (
+                                <Spin size="small" />
+                            ) : null
                         }
-                        key="post"
                     >
-                        <Post />
-                    </TabPane>
-                    <TabPane
-                        tab={
-                            <span>
-                                <LinkOutlined />
-                                Link
-                            </span>
-                        }
-                        key="link"
-                    >
-                        Tab 2
-                    </TabPane>
-                    <TabPane
-                        tab={
-                            <span>
-                                <FileImageOutlined />
-                                Gambar dan Video
-                            </span>
-                        }
-                        key="imagevideo"
-                    >
-                        Image dan Video
-                    </TabPane>
-                    <TabPane
-                        tab={
-                            <span>
-                                <CiOutlined />
-                                Pool
-                            </span>
-                        }
-                        key="poll"
-                    >
-                        Poll
-                    </TabPane>
-                </Tabs>
-            </Card>
+                        {dataCommunities?.map((community) => (
+                            <Select.Option
+                                key={community?.id}
+                                value={community?.link}
+                            >
+                                {community?.link}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                    <Card>
+                        <Tabs activeKey={data?.query} onChange={handleChange}>
+                            <TabPane
+                                tab={
+                                    <span>
+                                        <AppleOutlined />
+                                        Post
+                                    </span>
+                                }
+                                key="post"
+                            >
+                                <Post />
+                            </TabPane>
+                            <TabPane
+                                tab={
+                                    <span>
+                                        <LinkOutlined />
+                                        Link
+                                    </span>
+                                }
+                                key="link"
+                            >
+                                Tab 2
+                            </TabPane>
+                            <TabPane
+                                tab={
+                                    <span>
+                                        <FileImageOutlined />
+                                        Gambar dan Video
+                                    </span>
+                                }
+                                key="imagevideo"
+                            >
+                                Image dan Video
+                            </TabPane>
+                            <TabPane
+                                tab={
+                                    <span>
+                                        <CiOutlined />
+                                        Pool
+                                    </span>
+                                }
+                                key="poll"
+                            >
+                                Poll
+                            </TabPane>
+                        </Tabs>
+                    </Card>
+                </Card>
+            </PageContainer>
         </Layout>
     );
 };

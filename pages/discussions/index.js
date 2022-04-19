@@ -56,16 +56,9 @@ const Discussions = ({ data }) => {
     return (
         <Layout>
             <PageContainer
-                header={{
-                    title: "test",
-                    breadcrumb: {
-                        routes: [
-                            { path: "/", breadcrumbName: "test" },
-                            { path: "/discussions", breadcrumbName: "tess2" },
-                            { path: "/discussions", breadcrumbName: "tess2" }
-                        ]
-                    }
-                }}
+                title="Diskusi"
+                content="Untuk forum dan diskusi"
+                fixedHeader
             >
                 <Row gutter={32}>
                     <Col span={6}>

@@ -9,6 +9,7 @@ import {
     getPostsByCommunities
 } from "../../../../services/main.services";
 import Layout from "../../../../src/components/Layout";
+import PageContainer from "../../../../src/components/PageContainer";
 import CardSubscribePosts from "../../../../src/components/reddits/Cards/CardSubscribePosts";
 import ListSubscribes from "../../../../src/components/reddits/Cards/ListSubscribes";
 import Posts from "../../../../src/components/reddits/Cards/Posts";
@@ -66,70 +67,72 @@ const SubCategories = ({ data }) => {
 
     return (
         <Layout title={`Komunitas ${query?.sub}`}>
-            <Row gutter={[10, 10]}>
-                <Col span={7}>
-                    <ListSubscribes />
-                </Col>
-                <Col span={10}>
-                    <Card style={{ marginBottom: 8 }}>
-                        <CreatePost
-                            route={`/discussions/r/${query?.sub}/submit`}
-                        />
-                    </Card>
-                    <Card>
-                        <span style={{ marginRight: 8 }}>
-                            Urutkan berdasarkan :{" "}
-                        </span>
-                        {filter?.map((f) => (
-                            <CheckableTag
-                                key={f}
-                                checked={selectedFilter === f}
-                                onChange={(checked) =>
-                                    handleChangeFilter(checked, f)
-                                }
-                            >
-                                {f}
-                            </CheckableTag>
-                        ))}
-                    </Card>
-                    <Divider />
-                    <Skeleton loading={isLoading || isFetchingNextPage}>
-                        {dataPostCommunities?.pages?.map((page) => (
-                            <React.Fragment key={page?.nextCursor}>
-                                <Posts
-                                    data={page?.data}
-                                    isFetchingNextPage={isFetchingNextPage}
-                                    hasNextPage={hasNextPage}
-                                    fetchNextPage={fetchNextPage}
-                                    loading={isLoading}
-                                    user={userData}
-                                />
-                            </React.Fragment>
-                        ))}
-                        {hasNextPage && (
-                            <Button
-                                style={{
-                                    width: "100%",
-                                    marginTop: 10,
-                                    marginBottom: 10
-                                }}
-                                block
-                                onClick={() => fetchNextPage()}
-                            >
-                                Selanjutnya
-                            </Button>
-                        )}
-                    </Skeleton>
-                </Col>
-                <Col span={7}>
-                    <Skeleton loading={isLoadingDataCommunities}>
-                        <CardSubscribePosts
-                            id={dataCommunities?.id}
-                            title={router?.query?.sub}
-                        />
-                    </Skeleton>
-                </Col>
-            </Row>
+            <PageContainer title="Daftar Postingan Komunitas" fixedHeader>
+                <Row gutter={[10, 10]}>
+                    <Col span={7}>
+                        <ListSubscribes />
+                    </Col>
+                    <Col span={10}>
+                        <Card style={{ marginBottom: 8 }}>
+                            <CreatePost
+                                route={`/discussions/r/${query?.sub}/submit`}
+                            />
+                        </Card>
+                        <Card>
+                            <span style={{ marginRight: 8 }}>
+                                Urutkan berdasarkan :{" "}
+                            </span>
+                            {filter?.map((f) => (
+                                <CheckableTag
+                                    key={f}
+                                    checked={selectedFilter === f}
+                                    onChange={(checked) =>
+                                        handleChangeFilter(checked, f)
+                                    }
+                                >
+                                    {f}
+                                </CheckableTag>
+                            ))}
+                        </Card>
+                        <Divider />
+                        <Skeleton loading={isLoading || isFetchingNextPage}>
+                            {dataPostCommunities?.pages?.map((page) => (
+                                <React.Fragment key={page?.nextCursor}>
+                                    <Posts
+                                        data={page?.data}
+                                        isFetchingNextPage={isFetchingNextPage}
+                                        hasNextPage={hasNextPage}
+                                        fetchNextPage={fetchNextPage}
+                                        loading={isLoading}
+                                        user={userData}
+                                    />
+                                </React.Fragment>
+                            ))}
+                            {hasNextPage && (
+                                <Button
+                                    style={{
+                                        width: "100%",
+                                        marginTop: 10,
+                                        marginBottom: 10
+                                    }}
+                                    block
+                                    onClick={() => fetchNextPage()}
+                                >
+                                    Selanjutnya
+                                </Button>
+                            )}
+                        </Skeleton>
+                    </Col>
+                    <Col span={7}>
+                        <Skeleton loading={isLoadingDataCommunities}>
+                            <CardSubscribePosts
+                                id={dataCommunities?.id}
+                                title={router?.query?.sub}
+                            />
+                        </Skeleton>
+                    </Col>
+                </Row>
+            </PageContainer>
         </Layout>
     );
 };

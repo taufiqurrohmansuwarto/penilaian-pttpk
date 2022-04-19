@@ -9,8 +9,10 @@ export const createComments = (data) => {
     return fetcher.post("/comments", data).then((res) => res?.data);
 };
 
-export const getComments = ({ cursor = 0 }) => {
-    return fetcher.get(`/comments?cursor=${cursor}`).then((res) => res?.data);
+export const getComments = ({ cursor = 0, sort = "terbaru" }) => {
+    return fetcher
+        .get(`/comments?cursor=${cursor}&sort=${sort}`)
+        .then((res) => res?.data);
 };
 
 export const likes = ({ commentId, value }) =>

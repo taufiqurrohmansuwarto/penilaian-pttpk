@@ -90,7 +90,7 @@ const Layout = ({ children, title = "Feeds" }) => {
     });
 
     const router = useRouter();
-    const active = `/${router?.asPath?.split("/")?.[1]}`;
+    const active = router?.pathname;
 
     return (
         <ProLayout
@@ -100,6 +100,7 @@ const Layout = ({ children, title = "Feeds" }) => {
                     return user;
                 }
             }}
+            fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}
             collapsed

@@ -19,7 +19,8 @@ import CheckableTag from "antd/lib/tag/CheckableTag";
 import moment from "moment";
 import "moment/locale/id";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import {
     createComments,
@@ -336,10 +337,11 @@ const ListComments = ({
 };
 
 // todo implement likes, filter
-const UserComments = () => {
-    const filter = ["Hot", "New", "Top", "Rising"];
+const UserComments = ({ sort }) => {
+    const filter = ["terbaru", "like", "popular"];
+    const router = useRouter();
 
-    const [selectedFilter, setSelectedFilter] = useState(["Terbaru"]);
+    const [selectedFilter, setSelectedFilter] = useState(sort);
 
     const [comment, setComment] = useState("");
 
@@ -351,13 +353,14 @@ const UserComments = () => {
         fetchNextPage,
         hasNextPage
     } = useInfiniteQuery(
-        ["comments"],
+        ["comments", sort],
         ({ pageParam }) => {
-            return getComments({ cursor: pageParam });
+            return getComments({ cursor: pageParam, sort });
         },
         {
             getNextPageParam: (pageParams) =>
-                pageParams?.nextCursor ?? undefined
+                pageParams?.nextCursor ?? undefined,
+            enabled: !!sort
         }
     );
 
@@ -373,6 +376,8 @@ const UserComments = () => {
             console.log(e);
         }
     });
+
+    useEffect(() => {}, [sort]);
 
     // for rte
     const handleUpload = async (file) => {
@@ -405,6 +410,21 @@ const UserComments = () => {
     const handleLike = (data) => likeMutation.mutate(data);
     const handleDislike = (data) => dislikeMutation.mutate(data);
 
+    const handleChangeFilter = (a, b) => {
+        if (a) {
+            setSelectedFilter(b);
+            router.push(
+                {
+                    query: {
+                        sort: b
+                    }
+                },
+                undefined,
+                { scroll: false }
+            );
+        }
+    };
+
     return (
         <Skeleton loading={isLoadingComments}>
             <Card>
@@ -427,9 +447,19 @@ const UserComments = () => {
 
             <>
                 <Card style={{ marginTop: 8, marginBottom: 8 }}>
-                    <span style={{ marginRight: 8 }}>Kategori : </span>
+                    <span style={{ marginRight: 8 }}>
+                        Urutkan berdasarkan :{" "}
+                    </span>
                     {filter?.map((f) => (
-                        <CheckableTag>{f}</CheckableTag>
+                        <CheckableTag
+                            key={f}
+                            checked={selectedFilter === f}
+                            onChange={(checked) =>
+                                handleChangeFilter(checked, f)
+                            }
+                        >
+                            {f}
+                        </CheckableTag>
                     ))}
                 </Card>
             </>

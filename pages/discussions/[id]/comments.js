@@ -7,6 +7,7 @@ import {
     getPostById
 } from "../../../services/main.services";
 import Layout from "../../../src/components/Layout";
+import PageContainer from "../../../src/components/PageContainer";
 import CardCommunitiesDescription from "../../../src/components/reddits/Cards/CardCommunitiesDescription";
 import CardPost from "../../../src/components/reddits/Cards/CardPost";
 import CardRules from "../../../src/components/reddits/Cards/CardRules";
@@ -33,35 +34,43 @@ function Comments() {
 
     return (
         <Layout>
-            <Row gutter={[16, 16]}>
-                <Col span={4}></Col>
-                <Col span={15}>
-                    <Skeleton avatar loading={isLoadingPost}>
-                        <CardPost data={dataPost} />
-                    </Skeleton>
-                    <CreateComments
-                        data={dataComments}
-                        id={router?.query?.id}
-                    />
-                </Col>
-                <Col span={5}>
-                    <Row gutter={[8, 8]}>
-                        <Col span={24}>
-                            <Skeleton loading={isLoadingPost}>
-                                <CardCommunitiesDescription
-                                    title={dataPost?.parent?.title}
-                                    description={dataPost?.parent?.content}
-                                />
-                            </Skeleton>
-                        </Col>
-                        <Col span={24}>
-                            <Skeleton loading={isLoadingPost}>
-                                <CardRules rules={dataPost?.parent?.rules} />
-                            </Skeleton>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
+            <PageContainer
+                title="Komentar"
+                content="Isikan komentar anda"
+                fixedHeader
+            >
+                <Row gutter={[16, 16]}>
+                    <Col span={4}></Col>
+                    <Col span={15}>
+                        <Skeleton avatar loading={isLoadingPost}>
+                            <CardPost data={dataPost} />
+                        </Skeleton>
+                        <CreateComments
+                            data={dataComments}
+                            id={router?.query?.id}
+                        />
+                    </Col>
+                    <Col span={5}>
+                        <Row gutter={[8, 8]}>
+                            <Col span={24}>
+                                <Skeleton loading={isLoadingPost}>
+                                    <CardCommunitiesDescription
+                                        title={dataPost?.parent?.title}
+                                        description={dataPost?.parent?.content}
+                                    />
+                                </Skeleton>
+                            </Col>
+                            <Col span={24}>
+                                <Skeleton loading={isLoadingPost}>
+                                    <CardRules
+                                        rules={dataPost?.parent?.rules}
+                                    />
+                                </Skeleton>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+            </PageContainer>
         </Layout>
     );
 }
