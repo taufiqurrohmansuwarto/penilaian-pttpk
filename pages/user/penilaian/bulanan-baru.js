@@ -215,8 +215,12 @@ const Penilaian = ({ tahun, bulan }) => {
     const {
         data: dataRequestPenilaian,
         isLoading: isLoadingDataRequestPenilaian
-    } = useQuery(["data-request-penilaian"], () =>
-        getRequestPenilaian(bulan, tahun)
+    } = useQuery(
+        ["data-request-penilaian", bulan, tahun],
+        () => getRequestPenilaian(bulan, tahun),
+        {
+            enabled: !!tahun && !!bulan
+        }
     );
 
     const [createForm] = Form.useForm();

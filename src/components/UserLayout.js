@@ -1,6 +1,10 @@
+import { LogoutOutlined } from "@ant-design/icons";
+import { Avatar, Dropdown, Menu, Space, Typography } from "antd";
+import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
-import userRoute from "../routes/user.route";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import userRoute from "../routes/user.route";
 
 const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
     ssr: false
@@ -21,13 +25,46 @@ const menuItemRender = (options, element) => {
     );
 };
 
+const menuUser = () => (
+    <Menu>
+        <Menu.Item key="logout" onClick={signOut} icon={<LogoutOutlined />}>
+            Logout
+        </Menu.Item>
+    </Menu>
+);
+
+const rightContentRender = (user) => {
+    return (
+        <Dropdown overlay={menuUser()}>
+            <Space align="center">
+                <Avatar style={{ cursor: "pointer" }} src={user?.image} />
+                <Typography.Text strong>{user?.name}</Typography.Text>
+            </Space>
+        </Dropdown>
+    );
+};
+
 const UserLayout = ({ children, title = "" }) => {
+    const { data } = useSession({
+        required: true,
+        onUnauthenticated: () => signIn()
+    });
+
+    const router = useRouter();
+    const active = `${router?.pathname}`;
+
     return (
         <ProLayout
             menuItemRender={menuItemRender}
             collapsed
+            selectedKeys={[active]}
+            title="PTTPK"
+            logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
+            menuHeaderRender={(logo, title) => {
+                return <Link href="/">{logo}</Link>;
+            }}
+            rightContentRender={() => rightContentRender(data?.user)}
             route={userRoute}
-            location="/"
             collapsedButtonRender={false}
             navTheme="dark"
             style={{ minHeight: "100vh" }}

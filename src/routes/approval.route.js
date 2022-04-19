@@ -1,6 +1,6 @@
 import {
     DashboardOutlined,
-    FundOutlined,
+    DatabaseOutlined,
     RadarChartOutlined
 } from "@ant-design/icons";
 
@@ -12,9 +12,14 @@ export default {
             icon: <DashboardOutlined />
         },
         {
-            path: "/approval/penilaian",
-            name: " Penilaian",
+            path: "/approval/penilaian-bulanan",
+            name: " Penilaian Bulanan",
             icon: <RadarChartOutlined />
+        },
+        {
+            path: "/approval/penilaian-tahunan",
+            name: " Penilaian Tahunan",
+            icon: <DatabaseOutlined />
         }
     ]
 };

@@ -266,7 +266,7 @@ function Penilaian({ data: query }) {
     ];
 
     return (
-        <ApprovalLayout title="Daftar Penilaian">
+        <ApprovalLayout title="Daftar Pengajuan Penilaian Bulanan">
             <FormApprovalModal
                 visible={showModal}
                 onCancel={closeModal}
@@ -284,6 +284,7 @@ function Penilaian({ data: query }) {
                     />
                     <Divider />
                     <Table
+                        size="small"
                         rowKey={(row) =>
                             `${row?.id_penilaian}-${row?.bulan}-${row?.tahun}-${row?.custom_id_ptt}`
                         }

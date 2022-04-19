@@ -4,7 +4,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import fasilitatorRoute from "../routes/fasilitator.route";
+import approvalRoute from "../routes/approval.route";
 
 const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
     ssr: false
@@ -51,7 +51,7 @@ const ApprovalLayout = ({ children, title = "" }) => {
     });
 
     const router = useRouter();
-    const active = `/${router?.asPath?.split("/")?.[1]}`;
+    const active = `${router?.pathname}`;
 
     return (
         <ProLayout
@@ -64,7 +64,7 @@ const ApprovalLayout = ({ children, title = "" }) => {
                 return <Link href="/">{logo}</Link>;
             }}
             rightContentRender={() => rightContentRender(data?.user)}
-            route={fasilitatorRoute}
+            route={approvalRoute}
             collapsedButtonRender={false}
             navTheme="dark"
             style={{ minHeight: "100vh" }}
