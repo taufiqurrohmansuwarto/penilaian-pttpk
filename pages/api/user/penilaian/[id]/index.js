@@ -4,7 +4,8 @@ import auth from "../../../../../middleware/auth";
 const handler = nc();
 
 export default handler
-  .use(auth)
-  .get(penilaianController.get)
-  .delete(penilaianController.remove)
-  .put(penilaianController.active);
+    .use(auth)
+    .get(penilaianController.get)
+    .delete(penilaianController.remove)
+    .patch(penilaianController.update)
+    .put(penilaianController.active);

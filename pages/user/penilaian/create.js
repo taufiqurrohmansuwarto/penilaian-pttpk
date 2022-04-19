@@ -76,7 +76,9 @@ const CreatePenilaian = () => {
         ["jabatan"],
         () => getJabatan(),
         {
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            retryOnMount: false,
+            refetchOnMount: false
         }
     );
 
@@ -84,7 +86,9 @@ const CreatePenilaian = () => {
         ["unor"],
         () => getUnor(),
         {
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            retryOnMount: false,
+            refetchOnMount: false
         }
     );
 

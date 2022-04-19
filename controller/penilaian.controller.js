@@ -68,7 +68,32 @@ const create = async (req, res) => {
     }
 };
 
-const update = async (req, res) => {};
+const update = async (req, res) => {
+    const { customId } = req.user;
+    const { id } = req.query;
+    const { body, fetcher } = req;
+    // fetch to pemprov api
+
+    const perangkatDaerah = await fetcher.get(`/pttpk/unor/${body?.id_skpd}`);
+    const perangkatDaerahJson = perangkatDaerah?.data;
+
+    try {
+        await prisma.penilaian.updateMany({
+            where: {
+                id,
+                user_custom_id: customId
+            },
+            data: {
+                ...body
+            }
+        });
+
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
+};
 
 const remove = async (req, res) => {
     try {

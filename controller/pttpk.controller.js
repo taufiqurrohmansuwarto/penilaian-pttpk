@@ -24,6 +24,7 @@ const getJabatan = async (req, res) => {
         res.json(serializeJabatan(result?.data?.data));
     } catch (error) {
         console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 
@@ -34,7 +35,7 @@ const getUnor = async (req, res) => {
         res.json(result?.data?.perangkatDaerah);
     } catch (error) {
         console.log(error);
-        res.json({ code: 400, message: "Internal Server Error" });
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 
