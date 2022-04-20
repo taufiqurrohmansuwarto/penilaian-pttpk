@@ -1,6 +1,7 @@
 import { useDebouncedValue } from "@mantine/hooks";
 import { Checkbox, DatePicker, Form, Input, Modal, Select, Spin } from "antd";
 import FileSaver from "file-saver";
+import moment from "moment";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
@@ -8,6 +9,8 @@ import {
     cariPegawaiPNS,
     cetakPenilaianBulanan
 } from "../../services/users.service";
+import "moment/locale/id";
+moment.locale("id");
 
 function FormCetakModal({ visible, onCancel, form, bulan, tahun, onClose }) {
     useEffect(() => {
@@ -31,10 +34,36 @@ function FormCetakModal({ visible, onCancel, form, bulan, tahun, onClose }) {
         setLoading(true);
         try {
             const result = await form.validateFields();
+            const {
+                tempat,
+                tanggal,
+                is_having_atasnama,
+                pejabat_penandatangan,
+                jabatan_penandatangan
+            } = result;
+
+            const currentTanggal = moment(tanggal).format("DD MMMM YYYY");
+            const [nama, , nip, , , golongan, , pangkat] =
+                pejabat_penandatangan?.label;
+
+            const data = {
+                tanggal: currentTanggal,
+                tempat,
+                is_having_atasnama,
+                pejabat_penandatangan: {
+                    nama,
+                    nip,
+                    golongan,
+                    pangkat
+                },
+                jabatan_penandatangan
+            };
+
+            //     harus mengirim data
             const hasil = await cetakPenilaianBulanan({
                 bulan,
                 tahun,
-                data: {}
+                data
             });
             await FileSaver.saveAs(hasil, "bulanan.pdf");
             onClose();
@@ -54,11 +83,21 @@ function FormCetakModal({ visible, onCancel, form, bulan, tahun, onClose }) {
             centered
             destroyOnClose
         >
-            <Form form={form} layout="vertical" name="tempat">
-                <Form.Item label="Tempat" help="Contoh. di Surabaya">
+            <Form form={form} layout="vertical" requiredMark={false}>
+                <Form.Item
+                    label="Tempat"
+                    name="tempat"
+                    help="Contoh. di Surabaya"
+                    rules={[{ required: true, message: "Tidak boleh kosong" }]}
+                >
                     <Input />
                 </Form.Item>
-                <Form.Item label="Tanggal" name="tanggal" help="Tanggal Cetak">
+                <Form.Item
+                    label="Tanggal"
+                    name="tanggal"
+                    help="Tanggal Cetak"
+                    rules={[{ required: true, message: "Tidak boleh kosong" }]}
+                >
                     <DatePicker format="DD-MM-YYYY" />
                 </Form.Item>
                 <Form.Item
@@ -72,6 +111,7 @@ function FormCetakModal({ visible, onCancel, form, bulan, tahun, onClose }) {
                     label="Penandata tangan/PNS"
                     name="pejabat_penandatangan"
                     help="Ketik NIP untuk mencari nama PNS"
+                    rules={[{ required: true, message: "Tidak boleh kosong" }]}
                 >
                     <Select
                         showSearch
@@ -101,6 +141,7 @@ function FormCetakModal({ visible, onCancel, form, bulan, tahun, onClose }) {
                     label="Jabatan Penanda tangan"
                     name="jabatan_penandatangan"
                     help="Contoh. Kepala Badan Kepegawaian Daerah / Kepala Bidang P3DASI / Sekretaris BKD Provinsi Jawa Timur"
+                    rules={[{ required: true, message: "Tidak boleh kosong" }]}
                 >
                     <Input />
                 </Form.Item>

@@ -107,7 +107,6 @@ export const getCommentsByPost = (id) => {
 };
 
 export const createCommentByPost = ({ id, data }) => {
-    console.log({ id, data });
     return fetcher
         .post(`/discussions/posts/${id}/comments`, data)
         .then((res) => res?.data);

@@ -16,7 +16,8 @@ const fonts = {
     },
     OpenSans: {
         regular: "fonts/OpenSansRegular.ttf",
-        normal: "fonts/OpenSansRegular.ttf"
+        normal: "fonts/OpenSansRegular.ttf",
+        bold: "fonts/OpenSans-Bold.ttf"
     }
 };
 
@@ -27,6 +28,9 @@ const cetakPenilaianBulananUser = async (req, res) => {
     const { customId } = req.user;
     const queryBulan = req.query?.bulan || moment(new Date()).format("M");
     const queryTahun = req.query?.tahun || moment(new Date()).format("YYYY");
+    const { body } = req;
+
+    console.log(body);
 
     const bulan = parseInt(queryBulan);
     const tahun = parseInt(queryTahun);
@@ -92,7 +96,6 @@ const cetakPenilaianBulananUser = async (req, res) => {
         });
 
         const base64 = Buffer.from(currentFoto.data).toString("base64");
-        console.log(penilaian);
 
         const data = {
             id: penilaian?.id,
@@ -105,7 +108,21 @@ const cetakPenilaianBulananUser = async (req, res) => {
             catatan: accKinerjaBulanan?.catatan,
             bulan,
             tahun,
-            listKegiatanBulanan: listPenilaianBulanan
+            listKegiatanBulanan: listPenilaianBulanan,
+
+            // this motherfucker shit is data from client
+            ttd: {
+                tempat: body?.tempat,
+                tanggal: body?.tanggal,
+                is_having_atasnama: body?.is_having_atasnama,
+                pejabat: {
+                    nama: body?.pejabat_penandatangan?.nama,
+                    nip: body?.pejabat_penandatangan?.nip,
+                    golongan: body?.pejabat_penandatangan?.golongan,
+                    pangkat: body?.pejabat_penandatangan?.pangkat
+                },
+                jabatan_penandatangan: body?.jabatan_penandatangan
+            }
         };
 
         const dd = generatePdf(data);

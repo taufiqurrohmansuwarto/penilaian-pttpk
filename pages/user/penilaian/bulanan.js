@@ -246,7 +246,6 @@ const DrawerUpdate = ({
                 const { end, start, title } = data;
                 message.success("Berhasil diupdate");
                 onCloseUpdate();
-                console.log(data);
                 // propnya hanya 4 selain itu di taruh di extendedProps
 
                 event.setProp("title", title);

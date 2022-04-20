@@ -37,7 +37,6 @@ function DiscussionsFeeds() {
             link: "www.google.com",
             content: "<p>lorem</p>"
         };
-        console.log(data);
         createMutationCategories.mutate(data);
     };
 

@@ -6,7 +6,6 @@ const URL_FILE = process.env.URL_FILE;
 const { uploadFileMinio } = require("../utils/minio");
 
 const upload = async (req, res) => {
-    console.log(req.file);
     const { buffer, originalname, size, mimetype } = req?.file;
     // const { userId, customId } = req.user;
     const extFile = path.extname(originalname);
@@ -16,7 +15,6 @@ const upload = async (req, res) => {
     try {
         await uploadFileMinio(req.mc, buffer, currentFilename, size, mimetype);
         const result = `${URL_FILE}/${currentFilename}`;
-        console.log(result);
         res.json(result);
     } catch (error) {
         console.log(error);

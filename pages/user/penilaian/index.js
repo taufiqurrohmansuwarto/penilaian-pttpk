@@ -99,7 +99,7 @@ const Penilaian = () => {
                     </Typography.Link>
                     <Divider type="vertical" />
                     <Typography.Link onClick={() => gotoDetail(row?.id)}>
-                        Lihat Target
+                        Target
                     </Typography.Link>
                     <Divider type="vertical" />
                     <Typography.Link

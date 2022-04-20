@@ -221,18 +221,24 @@ const renderRincianPekerjaan = (listKerja) => {
 
 const renderPerjanjian = (currentUser) => {
     const { nama, niptt, atasanDua, atasanSatu } = currentUser;
+    const ttd = currentUser?.ttd;
+    const {
+        tempat,
+        tanggal,
+        is_having_atasnama,
+        pejabat,
+        jabatan_penandatangan
+    } = ttd;
 
     return {
         style: "perjanjian",
         table: {
-            widths: ["50%", "50%"],
+            widths: ["50%", "40%"],
             body: [
                 [
                     {},
                     {
-                        text: `. . . . .    ${moment()
-                            .locale("id")
-                            .format("DD MMMM YYYY")}`,
+                        text: `${tempat}, ${tanggal}`,
                         alignment: "center"
                     }
                 ],
@@ -249,8 +255,9 @@ const renderPerjanjian = (currentUser) => {
                     {
                         stack: [
                             // { text: `a.n Pimpinan` },
+                            is_having_atasnama ? { text: "Atas Nama" } : null,
                             {
-                                text: `${atasanSatu?.jabatan}`,
+                                text: `${jabatan_penandatangan}`,
                                 style: "headerTtd"
                             }
                         ],
@@ -260,24 +267,23 @@ const renderPerjanjian = (currentUser) => {
                 [
                     {
                         stack: [
-                            { text: `${nama}`, style: "namaAtasan" },
+                            { text: `${nama}`, style: "namaAtasanBaru" },
                             { text: `NIPTT-PK : ${niptt}`, style: "namaAtasan" }
                         ],
                         alignment: "center"
                     },
                     {
                         stack: [
-                            // { text: `a.n Pimpinan` },
                             {
-                                text: `${atasanSatu?.nama}`,
+                                text: `${pejabat?.nama}`,
+                                style: "namaAtasanBaru"
+                            },
+                            {
+                                text: `${pejabat?.golongan} ${pejabat?.pangkat}`,
                                 style: "namaAtasan"
                             },
                             {
-                                text: `${atasanSatu?.golongan}`,
-                                style: "namaAtasan"
-                            },
-                            {
-                                text: `NIP. ${atasanSatu?.nip}`,
+                                text: `NIP. ${pejabat?.nip}`,
                                 style: "namaAtasan"
                             }
                         ],
@@ -330,6 +336,12 @@ export const generatePdf = (currentUser) => {
             namaAtasan: {
                 fontSize: 8,
                 font: "OpenSans"
+            },
+            namaAtasanBaru: {
+                fontSize: 8,
+                font: "OpenSans",
+                bold: true,
+                decoration: "underline"
             },
             namaTerang: {
                 fontSize: 8,

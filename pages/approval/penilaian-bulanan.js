@@ -135,7 +135,6 @@ const FormApprovalModal = ({
                 tahun,
                 id_ptt: idPtt
             };
-            // console.log(value);
             verifMutationApproval.mutate(value);
         }
     };
