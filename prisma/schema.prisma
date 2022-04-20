@@ -82,35 +82,50 @@ model kinerja_bulanan {
 }
 
 model penilaian {
-  id                  String                @id @default(cuid())
-  user_custom_id      String
-  tahun               Int?                  @db.SmallInt
-  id_skpd             String?               @db.VarChar(200)
-  skpd                Json?
-  id_jabatan          String?               @db.VarChar(200)
-  jabatan             Json?
-  aktif               Boolean?              @default(false)
-  sudah_verif         Boolean?              @default(false)
-  diverif_oleh        String?               @db.VarChar(200)
-  awal_periode        DateTime              @db.Date
-  akhir_periode       DateTime              @db.Date
-  id_atasan_langsung  String?               @db.VarChar(200)
-  atasan_langsung     Json?
-  id_atasan_banding   String?               @db.VarChar(200)
-  atasan_banding      Json?
-  id_eselon_ii        String?               @db.VarChar(200)
-  eselon_ii           Json?
-  created_at          DateTime?             @default(now()) @db.Timestamp(6)
-  updated_at          DateTime?             @db.Timestamp(6)
-  pengalaman_kerja    Int?                  @default(0) @db.SmallInt
-  pekerjaan_tambahan  String[]
-  acc_kinerja_bulanan acc_kinerja_bulanan[]
-  kinerja_bulanan     kinerja_bulanan[]
-  target_penilaian    target_penilaian[]
+  id                               String                @id @default(cuid())
+  user_custom_id                   String
+  tahun                            Int?                  @db.SmallInt
+  id_skpd                          String?               @db.VarChar(200)
+  skpd                             Json?
+  id_jabatan                       String?               @db.VarChar(200)
+  jabatan                          Json?
+  aktif                            Boolean?              @default(false)
+  sudah_verif                      Boolean?              @default(false)
+  diverif_oleh                     String?               @db.VarChar(200)
+  awal_periode                     DateTime              @db.Date
+  akhir_periode                    DateTime              @db.Date
+  id_atasan_langsung               String?               @db.VarChar(200)
+  atasan_langsung                  Json?
+  id_atasan_banding                String?               @db.VarChar(200)
+  atasan_banding                   Json?
+  id_eselon_ii                     String?               @db.VarChar(200)
+  eselon_ii                        Json?
+  created_at                       DateTime?             @default(now()) @db.Timestamp(6)
+  updated_at                       DateTime?             @db.Timestamp(6)
+  pengalaman_kerja                 Int?                  @default(0) @db.SmallInt
+  integritas                       Int?                  @default(0) @db.SmallInt
+  kedisiplinan                     Int?                  @default(0) @db.SmallInt
+  orientasi_pelayanan              Int?                  @default(0) @db.SmallInt
+  kerjasama_koordinasi             Int?                  @default(0) @db.SmallInt
+  pemanfaatan_alat_dan_media_kerja Int?                  @default(0) @db.SmallInt
+  pekerjaan_tambahan               String[]
+  acc_kinerja_bulanan              acc_kinerja_bulanan[]
+  kinerja_bulanan                  kinerja_bulanan[]
+  target_penilaian                 target_penilaian[]
 
 
   pegawai             users                 @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
   acc_kinerja_tahunan acc_kinerja_tahunan[]
+  tugas_tambahan      tugas_tambahan[]
+}
+
+model tugas_tambahan {
+  id           String     @id @default(cuid())
+  title        String
+  penilaian_id String?
+  created_at   DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at   DateTime?  @db.Timestamp(6)
+  penilaian    penilaian? @relation(fields: [penilaian_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model ref_satuan_kinerja {
