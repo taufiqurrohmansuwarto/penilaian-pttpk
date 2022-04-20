@@ -57,6 +57,8 @@ model acc_kinerja_tahunan {
   updated_at         DateTime?  @db.Timestamp(6)
   pegawai_id         String?
   id_atasan_langsung String?
+  atasan_langsung    Json?
+  catatan            String?
   penilaian          penilaian? @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
   pegawai            users?     @relation(fields: [pegawai_id], references: [custom_id])
 }
@@ -105,6 +107,7 @@ model penilaian {
   acc_kinerja_bulanan acc_kinerja_bulanan[]
   kinerja_bulanan     kinerja_bulanan[]
   target_penilaian    target_penilaian[]
+
 
   pegawai             users                 @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
   acc_kinerja_tahunan acc_kinerja_tahunan[]
