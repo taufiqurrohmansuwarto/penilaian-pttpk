@@ -1,19 +1,29 @@
 import {
+    CloseOutlined,
+    FileAddOutlined,
+    PrinterOutlined,
+    SendOutlined
+} from "@ant-design/icons";
+import {
     Button,
     Card,
     Col,
     DatePicker,
+    Descriptions,
     Divider,
     Drawer,
     Form,
     Input,
     InputNumber,
     message,
+    Modal,
+    Popconfirm,
     Row,
     Select,
     Skeleton,
     Space,
-    Table
+    Table,
+    Typography
 } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
@@ -46,7 +56,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
     const kirimAtasanMutation = useMutation((data) => kirimAtasan(data), {
         onSuccess: () => {
             queryClient.invalidateQueries(["data-request-penilaian"]);
-            message.success("success");
+            message.success("Berhasil kirim ke atasan");
         }
     });
 
@@ -54,7 +64,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
         (data) => batalKirimAtasan(data),
         {
             onSuccess: () => {
-                message.success("sukses");
+                message.success("Batal Kirim sukses");
                 queryClient.invalidateQueries(["data-request-penilaian"]);
             }
         }
@@ -64,14 +74,32 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
         if (!dataBulanan?.length) {
             message.error("Kinerja bulanan anda masih kosong!");
         } else {
-            kirimAtasanMutation.mutate({ bulan, tahun });
+            Modal.confirm({
+                title: "Perhatian",
+                content:
+                    "Apakah anda ingin mengirimkan penilaian ke Atasan? Penilaian yang sudah dikirim ke atasan tidak dapat dihapus ataupun di edit.",
+                width: 500,
+                centered: true,
+                onOk: () => {
+                    kirimAtasanMutation.mutate({ bulan, tahun });
+                }
+            });
         }
     };
 
     const handleCetak = () => {};
 
     const handleBatalKirimAtasan = () => {
-        batalKirimAtasaMutation.mutate({ bulan, tahun });
+        Modal.confirm({
+            title: "Perhatian",
+            content:
+                "Dengan mengklik tombol batal kirim atasan anda dapat mengentri ulang data pekerjaan bulanan anda kembali. Apakah anda yakin?",
+            width: 500,
+            centered: true,
+            onOk: () => {
+                batalKirimAtasaMutation.mutate({ bulan, tahun });
+            }
+        });
     };
 
     return (
@@ -84,17 +112,31 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
             >
                 {!data ? (
                     <Space>
-                        <Button type="primary" onClick={handleKirimAtasan}>
-                            Kirim Atasan
+                        <Button
+                            disabled={!dataBulanan?.length}
+                            type="primary"
+                            onClick={handleKirimAtasan}
+                            icon={<SendOutlined />}
+                        >
+                            Atasan
                         </Button>
                     </Space>
                 ) : (
                     <Space>
-                        <Button type="primary" onClick={handleBatalKirimAtasan}>
+                        <Button
+                            type="danger"
+                            onClick={handleBatalKirimAtasan}
+                            icon={<CloseOutlined />}
+                        >
                             Batal Kirim Atasan
                         </Button>
-                        <Button type="primary" onClick={handleCetak}>
-                            Cetak
+                        <Button
+                            disabled={!data?.sudah_verif}
+                            type="primary"
+                            onClick={handleCetak}
+                            icon={<PrinterOutlined />}
+                        >
+                            Penilaian Bulanan
                         </Button>
                     </Space>
                 )}
@@ -105,8 +147,17 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
 
 const CreateFormBulanan = ({ targets, form }) => {
     return (
-        <Form form={form} name="create-form-bulanan">
-            <Form.Item name="id_target_penilaian">
+        <Form
+            form={form}
+            name="create-form-bulanan"
+            requiredMark={false}
+            layout="vertical"
+        >
+            <Form.Item
+                name="id_target_penilaian"
+                label="Induk Pekerjaan"
+                rules={[{ required: true, message: "Tidak boleh kosong" }]}
+            >
                 <Select showSearch optionFilterProp="name">
                     {targets?.map((target) => (
                         <Select.Option
@@ -118,13 +169,25 @@ const CreateFormBulanan = ({ targets, form }) => {
                     ))}
                 </Select>
             </Form.Item>
-            <Form.Item name="title">
+            <Form.Item
+                name="title"
+                label="Detail Pekerjaan"
+                rules={[{ required: true, message: "Tidak boleh kosong" }]}
+            >
                 <Input.TextArea />
             </Form.Item>
-            <Form.Item name="waktu_pekerjaan">
+            <Form.Item
+                name="waktu_pekerjaan"
+                label="Waktu Pengerjaan"
+                rules={[{ required: true, message: "Tidak boleh kosong" }]}
+            >
                 <DatePicker.RangePicker />
             </Form.Item>
-            <Form.Item name="kuantitas">
+            <Form.Item
+                name="kuantitas"
+                label="Kuantitas"
+                rules={[{ required: true, message: "Tidak boleh kosong" }]}
+            >
                 <InputNumber />
             </Form.Item>
         </Form>
@@ -155,8 +218,17 @@ const UpdateFormBulanan = ({ form, id, targets }) => {
 
     return (
         <Skeleton loading={isLoading}>
-            <Form form={form} name="create-form-bulanan">
-                <Form.Item name="id_target_penilaian">
+            <Form
+                form={form}
+                name="create-form-bulanan"
+                layout="vertical"
+                requiredMark={false}
+            >
+                <Form.Item
+                    name="id_target_penilaian"
+                    label="Induk Pekerjaan"
+                    rules={[{ required: true, message: "Tidak boleh kosong" }]}
+                >
                     <Select showSearch optionFilterProp="name">
                         {targets?.map((target) => (
                             <Select.Option
@@ -168,13 +240,25 @@ const UpdateFormBulanan = ({ form, id, targets }) => {
                         ))}
                     </Select>
                 </Form.Item>
-                <Form.Item name="title">
+                <Form.Item
+                    name="title"
+                    label="Detail Pekerjaan"
+                    rules={[{ required: true, message: "Tidak boleh kosong" }]}
+                >
                     <Input.TextArea />
                 </Form.Item>
-                <Form.Item name="waktu_pekerjaan">
+                <Form.Item
+                    name="waktu_pekerjaan"
+                    label="Waktu Pengerjaan"
+                    rules={[{ required: true, message: "Tidak boleh kosong" }]}
+                >
                     <DatePicker.RangePicker />
                 </Form.Item>
-                <Form.Item name="kuantitas">
+                <Form.Item
+                    name="kuantitas"
+                    label="Kuantitas"
+                    rules={[{ required: true, message: "Tidak boleh kosong" }]}
+                >
                     <InputNumber />
                 </Form.Item>
             </Form>
@@ -302,18 +386,25 @@ const Penilaian = ({ tahun, bulan }) => {
                     <>
                         {!dataRequestPenilaian ? (
                             <Space>
-                                <Button
+                                <Typography.Link
                                     disabled={dataRequestPenilaian}
                                     onClick={() => showUpdate(row?.id)}
                                 >
                                     Edit
-                                </Button>
-                                <Button
-                                    disabled={dataRequestPenilaian}
-                                    onClick={() => handleRemoveBulanan(row?.id)}
+                                </Typography.Link>
+                                <Divider />
+                                <Popconfirm
+                                    title="Apakah anda yakin ingin menghapus data pekerjaan bulanan anda?"
+                                    onConfirm={() =>
+                                        handleRemoveBulanan(row?.id)
+                                    }
                                 >
-                                    Hapus
-                                </Button>
+                                    <Typography.Link
+                                        disabled={dataRequestPenilaian}
+                                    >
+                                        Hapus
+                                    </Typography.Link>
+                                </Popconfirm>
                             </Space>
                         ) : null}
                     </>
@@ -384,11 +475,13 @@ const Penilaian = ({ tahun, bulan }) => {
                 title={() => (
                     <>
                         {!dataRequestPenilaian && (
-                            <Space>
-                                <Button onClick={showCreate}>
-                                    Tambah Pekerjaan
-                                </Button>
-                            </Space>
+                            <Button
+                                onClick={showCreate}
+                                type="primary"
+                                icon={<FileAddOutlined />}
+                            >
+                                Pekerjaan
+                            </Button>
                         )}
                     </>
                 )}
@@ -410,11 +503,13 @@ const Penilaian = ({ tahun, bulan }) => {
                 key="create"
                 onClose={closeVisibleCreate}
                 visible={visibleCreate}
+                width={500}
                 destroyOnClose
                 extra={
                     <Button
                         loading={createPenilaianBulananMutation.isLoading}
                         onClick={handleSubmitCreate}
+                        type="primary"
                     >
                         Submit
                     </Button>
@@ -429,11 +524,13 @@ const Penilaian = ({ tahun, bulan }) => {
                 key="update"
                 visible={visibleUpdate}
                 onClose={closeVisibleUpdate}
+                width={500}
                 destroyOnClose
                 extra={
                     <Button
                         loading={updatePenilaianBulannanMutation.isLoading}
                         onClick={handleSubmitUpdate}
+                        type="primary"
                     >
                         Update
                     </Button>
@@ -477,19 +574,45 @@ const BulananBaru = ({ data }) => {
     };
 
     return (
-        <UserLayout title="Penilaian Bulanan">
+        <UserLayout
+            title="Penilaian Bulanan"
+            content={
+                <Skeleton loading={isLoadingPenilaianAktif}>
+                    <Descriptions size="small">
+                        <Descriptions.Item label="Tahun">
+                            {dataPenilaianAktif?.tahun}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Periode">
+                            {moment(dataPenilaianAktif?.awal_periode).format(
+                                "DD-MM-YYYY"
+                            )}{" "}
+                            s/d{" "}
+                            {moment(dataPenilaianAktif?.akhir_periode).format(
+                                "DD-MM-YYYY"
+                            )}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Atasan Langsung (Subordinator)">
+                            {dataPenilaianAktif?.atasan_langsung?.label[0]}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Unit Kerja">
+                            {dataPenilaianAktif?.skpd?.detail}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Jabatan">
+                            {dataPenilaianAktif?.jabatan?.nama}
+                        </Descriptions.Item>
+                    </Descriptions>
+                </Skeleton>
+            }
+        >
             <Row gutter={[16, 16]}>
                 <Col span={24}>
-                    <Card loading={isLoadingPenilaianAktif}>
-                        {JSON.stringify(dataPenilaianAktif)}
-                    </Card>
-                </Col>
-                <Col span={24}>
                     <Card>
-                        <DatePicker.MonthPicker
-                            defaultValue={moment(`${tahun}-${bulan}`)}
-                            onChange={handleChange}
-                        />
+                        <Form.Item label="Bulan">
+                            <DatePicker.MonthPicker
+                                defaultValue={moment(`${tahun}-${bulan}`)}
+                                onChange={handleChange}
+                            />
+                        </Form.Item>
                         <Divider />
                         <Penilaian tahun={tahun} bulan={bulan} />
                     </Card>

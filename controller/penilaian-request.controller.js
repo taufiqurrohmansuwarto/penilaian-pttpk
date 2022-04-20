@@ -70,7 +70,7 @@ const kirimAtasan = async (req, res) => {
                             custom_id: customId
                         }
                     },
-                    id_atasan_langsung: `master|${currentPenilaian?.nip_atasan_langsung}`,
+                    id_atasan_langsung: currentPenilaian?.id_atasan_langsung,
                     penilaian: {
                         connect: {
                             id: currentPenilaian?.id
@@ -78,7 +78,7 @@ const kirimAtasan = async (req, res) => {
                     }
                 },
                 update: {
-                    id_atasan_langsung: `master|${currentPenilaian?.nip_atasan_langsung}`
+                    id_atasan_langsung: currentPenilaian?.id_atasan_langsung
                 }
             });
 
@@ -125,7 +125,7 @@ const batalKirimAtasan = async (req, res) => {
             await batalKirimTransaction(
                 currentPenilaian?.id,
                 customId,
-                `master|${currentPenilaian?.nip_atasan_langsung}`,
+                currentPenilaian?.id_atasan_langsung,
                 listIdPenilaian?.map((l) => l?.id),
                 bulan,
                 tahun

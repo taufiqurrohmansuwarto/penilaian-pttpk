@@ -106,9 +106,9 @@ const CreatePenilaian = () => {
         const {
             id_jabatan,
             id_skpd,
-            nip_atasan_langsung,
-            nip_atasan_banding,
-            nip_eselon_ii,
+            atasan_banding,
+            atasan_langsung,
+            eselon_ii,
             periode,
             tahun
         } = values;
@@ -119,20 +119,20 @@ const CreatePenilaian = () => {
             (jabatan) => parseInt(jabatan?.id) === parseInt(id_jabatan)
         );
 
-        const id_atasan_langsung = nip_atasan_langsung?.value;
-        const id_atasan_banding = nip_atasan_banding?.value;
-        const id_eselon_ii = nip_eselon_ii?.value;
+        const id_atasan_langsung = atasan_langsung?.value;
+        const id_atasan_banding = atasan_banding?.value;
+        const id_eselon_ii = eselon_ii?.value;
 
         const data = {
-            nip_atasan_banding: id_atasan_banding?.toString(),
-            nip_atasan_langsung: id_atasan_langsung?.toString(),
-            nip_eselon_ii: id_eselon_ii?.toString(),
+            id_atasan_banding: `master|${id_atasan_banding?.toString()}`,
+            id_atasan_langsung: `master|${id_atasan_langsung?.toString()}`,
+            id_eselon_ii: `master|${id_eselon_ii?.toString()}`,
             awal_periode,
             akhir_periode,
             id_jabatan,
-            atasan_langsung: nip_atasan_langsung,
-            atasan_banding: nip_atasan_banding,
-            eselon_ii: nip_eselon_ii,
+            atasan_langsung,
+            atasan_banding,
+            eselon_ii,
             jabatan,
             tahun,
             id_skpd
@@ -165,15 +165,15 @@ const CreatePenilaian = () => {
                         </Form.Item>
                         <FormPegawaiPNS
                             label="Atasan Langsung (Subordinator)"
-                            name="nip_atasan_langsung"
+                            name="atasan_langsung"
                         />
                         <FormPegawaiPNS
                             label="Atasan Banding (Eselon III)"
-                            name="nip_atasan_banding"
+                            name="atasan_banding"
                         />
                         <FormPegawaiPNS
                             label="Kepala Badan/Dinas (Eselon II)"
-                            name={"nip_eselon_ii"}
+                            name="eselon_ii"
                         />
                         <Form.Item
                             name="periode"

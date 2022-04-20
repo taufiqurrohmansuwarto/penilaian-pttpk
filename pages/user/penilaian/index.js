@@ -134,7 +134,6 @@ const Penilaian = () => {
                             Penilaian
                         </Button>
                     )}
-                    size="small"
                     loading={isLoading}
                     columns={columns}
                     rowKey={(row) => row?.id}

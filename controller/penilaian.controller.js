@@ -53,12 +53,21 @@ const get = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        const { body } = req;
+        const { body, fetcher } = req;
         const { customId } = req.user;
         const data = { ...body, user_custom_id: customId };
+        const skpd_id = parseInt(data?.id_skpd);
+
+        const perangkatDaerah = await fetcher.get(
+            `/pttpk/unor/${skpd_id}?type=text`
+        );
+        const perangkatDaerahJson = perangkatDaerah?.data?.data;
 
         await prisma.penilaian.create({
-            data
+            data: {
+                ...data,
+                skpd: perangkatDaerahJson
+            }
         });
 
         res.json({ code: 200, message: "success" });
