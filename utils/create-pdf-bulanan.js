@@ -5,6 +5,7 @@ const warnaAbuAbu = "#dbd7c5";
 const orange = "#e3d8ac";
 const warnaBiru = "#1919ff";
 
+import { meanBy } from "lodash";
 import moment from "moment";
 
 const renderHeader = (bulan, tahun) => {
@@ -202,7 +203,17 @@ const renderRincianPekerjaan = (listKerja) => {
                     ""
                 ],
                 // berisikan nomer, detail kegiatan, target kuantitas, capaian kuantitas dan penilaian
-                ...listKerjaTahunan
+                ...listKerjaTahunan,
+                [
+                    { colSpan: 7, text: "Rerata" },
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    { text: meanBy(listKerja, "kualitas") }
+                ]
             ]
         }
     };
