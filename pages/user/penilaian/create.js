@@ -110,7 +110,8 @@ const CreatePenilaian = () => {
             atasan_langsung,
             eselon_ii,
             periode,
-            tahun
+            tahun,
+            pengalaman_kerja
         } = values;
         const [awal, akhir] = periode;
         const awal_periode = moment(awal).toISOString();
@@ -135,7 +136,8 @@ const CreatePenilaian = () => {
             eselon_ii,
             jabatan,
             tahun,
-            id_skpd
+            id_skpd,
+            pengalaman_kerja
         };
 
         createPenilaianMutation.mutate(data);
@@ -227,6 +229,13 @@ const CreatePenilaian = () => {
                                 treeNodeFilterProp="title"
                                 treeData={dataUnor}
                             />
+                        </Form.Item>
+                        <Form.Item
+                            name="pengalaman_kerja"
+                            label="Pengalaman Kerja"
+                            help="Dalam tahun"
+                        >
+                            <InputNumber max={100} min={0} defaultValue={0} />
                         </Form.Item>
                         <Form.Item>
                             <Button htmlType="submit" type="primary">

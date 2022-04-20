@@ -4,6 +4,8 @@ import {
     Card,
     DatePicker,
     Divider,
+    Form,
+    Input,
     InputNumber,
     message,
     Modal,
@@ -23,7 +25,15 @@ import {
 } from "../../services/approval.service";
 import ApprovalLayout from "../../src/components/ApprovalLayout";
 
-const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible, idPtt }) => {
+const FormApprovalModal = ({
+    id,
+    bulan,
+    tahun,
+    onCancel,
+    visible,
+    idPtt,
+    catatanAtasanLangsung
+}) => {
     const { data, isLoading, status } = useQuery(
         ["approval_penilaian_bulanan", `${id}${bulan}${tahun}`],
         () => getPenilaianBulananApproval({ id, bulan, tahun }),
@@ -35,6 +45,11 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible, idPtt }) => {
     const [kualitasValue, setKualitasValue] = useState([]);
     const [lowValue, setLowValue] = useState(0);
     const [highValue, setHightValue] = useState(0);
+    const [catatan, setCatatan] = useState(catatanAtasanLangsung);
+
+    const handleChangeCatatan = (e) => {
+        setCatatan(e?.target?.value);
+    };
 
     useEffect(() => {
         if (status === "success") {
@@ -47,7 +62,7 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible, idPtt }) => {
                 }))
             );
         }
-    }, [status, data, visible]);
+    }, [status, data, visible, catatanAtasanLangsung, catatan]);
 
     const columns = [
         { dataIndex: "title", title: "Deskripsi Pekerjaan" },
@@ -112,11 +127,15 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible, idPtt }) => {
         } else {
             const value = {
                 id,
-                data: kualitasValue,
+                data: {
+                    list: kualitasValue,
+                    catatan
+                },
                 bulan,
                 tahun,
                 id_ptt: idPtt
             };
+            // console.log(value);
             verifMutationApproval.mutate(value);
         }
     };
@@ -137,7 +156,7 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible, idPtt }) => {
     return (
         <Modal
             title="Pekerjaan Bulanan"
-            okText="Update Kualitas"
+            okText="Beri Nilai"
             destroyOnClose
             confirmLoading={verifMutationApproval.isLoading}
             centered
@@ -171,11 +190,15 @@ const FormApprovalModal = ({ id, bulan, tahun, onCancel, visible, idPtt }) => {
                 dataSource={data?.kinerja_bulanan}
                 rowKey={(row) => row?.id}
             />
+            <Divider />
+            <p>Catatan : </p>
+            <Input.TextArea value={catatan} onChange={handleChangeCatatan} />
         </Modal>
     );
 };
 
 // hehe patut di contoh
+/** @param {import('next').InferGetServerSidePropsType<typeof getServerSideProps> } props */
 function Penilaian({ data: query }) {
     const [date, setDate] = useState(
         moment(`${query?.tahun}-${query?.bulan}-01`)
@@ -219,11 +242,13 @@ function Penilaian({ data: query }) {
     const [showModal, setShowModal] = useState(false);
     const [id, setId] = useState();
     const [idPtt, setIdPtt] = useState();
+    const [catatanAtasan, setCatatanAtasan] = useState("");
 
     const closeModal = () => setShowModal(false);
     const openModal = (row) => {
         setShowModal(true);
         setId(row?.id_penilaian);
+        setCatatanAtasan(row?.catatan);
         setIdPtt(row?.pegawai_id);
     };
 
@@ -270,6 +295,7 @@ function Penilaian({ data: query }) {
             <FormApprovalModal
                 visible={showModal}
                 onCancel={closeModal}
+                catatanAtasanLangsung={catatanAtasan}
                 idPtt={idPtt}
                 id={id}
                 bulan={moment(date).format("M")}

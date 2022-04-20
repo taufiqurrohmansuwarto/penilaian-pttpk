@@ -8,7 +8,8 @@ const batalKirimTransaction = async (
     nipAtasanLangsung,
     listIdPenilaian,
     bulan,
-    tahun
+    tahun,
+    atasanLangsung
 ) => {
     return await prisma.$transaction(async (prisma) => {
         await prisma.acc_kinerja_bulanan.deleteMany({
@@ -65,6 +66,7 @@ const kirimAtasan = async (req, res) => {
                 create: {
                     bulan,
                     tahun,
+                    atasan_langsung: currentPenilaian?.atasan_langsung,
                     pegawai: {
                         connect: {
                             custom_id: customId
@@ -78,7 +80,8 @@ const kirimAtasan = async (req, res) => {
                     }
                 },
                 update: {
-                    id_atasan_langsung: currentPenilaian?.id_atasan_langsung
+                    id_atasan_langsung: currentPenilaian?.id_atasan_langsung,
+                    atasan_langsung: currentPenilaian?.atasan_langsung
                 }
             });
 

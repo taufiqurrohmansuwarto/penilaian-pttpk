@@ -57,7 +57,7 @@ const listPenilianBulanan = async (req, res) => {
             return {
                 id,
                 sudah_verif: r?.sudah_verif,
-                penilai: r?.penilaian?.atasan_langsung?.label[0],
+                penilai: r?.atasan_langsung?.label[0],
                 nip: r?.penilaian?.atasan_langsung?.label[2],
                 rerata_kinerja: meanBy(
                     r?.penilaian?.kinerja_bulanan,

@@ -17,7 +17,10 @@ const dataPenilaian = async (req, res) => {
             where: {
                 bulan: parseInt(queryBulan),
                 tahun: parseInt(queryTahun),
-                id_atasan_langsung: customId
+                id_atasan_langsung: customId,
+                penilaian: {
+                    aktif: true
+                }
             },
             include: {
                 pegawai: true
@@ -74,7 +77,7 @@ const approvePenilaianBulanan = async (req, res) => {
         const id_ptt = req.query?.id_ptt;
         const id_atasan_langsung = req.user?.customId;
 
-        const verifApproval = body?.map((d) => {
+        const verifApproval = body?.list?.map((d) => {
             const { id, ...data } = d;
             return prisma.kinerja_bulanan.update({
                 data: {
@@ -100,7 +103,8 @@ const approvePenilaianBulanan = async (req, res) => {
                     }
                 },
                 data: {
-                    sudah_verif: true
+                    sudah_verif: true,
+                    catatan: body?.catatan
                 }
             })
         ]);

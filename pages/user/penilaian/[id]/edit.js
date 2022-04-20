@@ -82,7 +82,8 @@ const EditFormPenilaian = ({
             id_skpd: data?.id_skpd,
             atasan_langsung: data?.atasan_langsung,
             atasan_banding: data?.atasan_banding,
-            eselon_ii: data?.eselon_ii
+            eselon_ii: data?.eselon_ii,
+            pengalaman_kerja: data?.pengalaman_kerja
         });
     }, [data]);
 
@@ -155,6 +156,13 @@ const EditFormPenilaian = ({
                         treeData={dataUnor}
                     />
                 </Form.Item>
+                <Form.Item
+                    name="pengalaman_kerja"
+                    label="Pengalaman Kerja"
+                    help="Dalam Tahun"
+                >
+                    <InputNumber min={0} max={100} />
+                </Form.Item>
                 <Form.Item>
                     <Button loading={loading} htmlType="submit" type="primary">
                         Submit
@@ -224,7 +232,8 @@ const TargetTahunan = () => {
             atasan_banding,
             eselon_ii,
             id_skpd,
-            tahun
+            tahun,
+            pengalaman_kerja
         } = values;
         const [awal, akhir] = periode;
         const awal_periode = moment(awal).toISOString();
@@ -249,7 +258,8 @@ const TargetTahunan = () => {
             id_atasan_banding,
             id_atasan_langsung,
             id_eselon_ii,
-            id_skpd
+            id_skpd,
+            pengalaman_kerja
         };
 
         const currentData = { id, data };

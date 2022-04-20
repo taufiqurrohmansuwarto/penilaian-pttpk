@@ -122,23 +122,32 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                         </Button>
                     </Space>
                 ) : (
-                    <Space>
-                        <Button
-                            type="danger"
-                            onClick={handleBatalKirimAtasan}
-                            icon={<CloseOutlined />}
-                        >
-                            Batal Kirim Atasan
-                        </Button>
-                        <Button
-                            disabled={!data?.sudah_verif}
-                            type="primary"
-                            onClick={handleCetak}
-                            icon={<PrinterOutlined />}
-                        >
-                            Penilaian Bulanan
-                        </Button>
-                    </Space>
+                    <>
+                        {data?.sudah_verif && (
+                            <div>
+                                <p>Catatan : </p>
+                                <p>{data?.catatan}</p>
+                                <Divider />
+                            </div>
+                        )}
+                        <Space>
+                            <Button
+                                type="danger"
+                                onClick={handleBatalKirimAtasan}
+                                icon={<CloseOutlined />}
+                            >
+                                Batal Kirim Atasan
+                            </Button>
+                            <Button
+                                disabled={!data?.sudah_verif}
+                                type="primary"
+                                onClick={handleCetak}
+                                icon={<PrinterOutlined />}
+                            >
+                                Penilaian Bulanan
+                            </Button>
+                        </Space>
+                    </>
                 )}
             </Skeleton>
         </>

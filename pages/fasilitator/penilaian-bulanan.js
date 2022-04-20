@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { downloadPenilaianBulanan } from "../../services/fasilitator.service";
 import FileSaver from "file-saver";
 
+/** @param {import('next').InferGetServerSidePropsType<typeof getServerSideProps> } props */
 function PenilaianBulanan({ data }) {
     const router = useRouter();
 
@@ -18,20 +19,31 @@ function PenilaianBulanan({ data }) {
         const tahun = moment(e).format("YYYY");
         const bulan = moment(e).format("M");
 
-        router?.push({
-            query: {
-                bulan,
-                tahun
+        router?.push(
+            {
+                query: {
+                    bulan,
+                    tahun
+                }
+            },
+            undefined,
+            {
+                shallow: true
             }
-        });
+        );
     };
 
     const handleDownload = async () => {
+        const currentBulan =
+            router?.query?.bulan || moment(new Date()).format("M");
+        const currentTahun =
+            router?.query?.tahun || moment(new Date()).format("YYYY");
+
         setLoading(true);
         try {
             const result = await downloadPenilaianBulanan({
-                bulan: router?.query?.bulan,
-                tahun: router?.query?.tahun
+                bulan: currentBulan,
+                tahun: currentTahun
             });
             await FileSaver.saveAs(result, "hasil.xlsx");
         } catch (error) {
