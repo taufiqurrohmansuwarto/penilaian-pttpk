@@ -133,17 +133,18 @@ const renderTugasTambahan = (pekerjaanTambahan, total) => {
     };
 };
 
-const renderRincianPekerjaan = (listKerja, total) => {
+const renderRincianPekerjaan = (listKerja) => {
     let listKerjaTahunan;
 
     if (listKerja.length > 0) {
-        listKerjaTahunan = listKerja.map((x, index) => {
-            const satuanKuantitas = x?.targetTahunan?.satuan_kuantitas;
-            const kuantitas = x?.targetTahunan?.kuantitas;
-            const capaian = x?.kuantitas_capaian;
-            const nilai = x?.kualitas_capaian;
-            const rincianPekerjaan = x?.rincian_pekerjaan;
-            const indukKegiatan = x?.targetTahunan?.rincian_pekerjaan;
+        listKerjaTahunan = listKerja?.map((x, index) => {
+            const satuanKuantitas =
+                x?.target_penilaian?.ref_satuan_kinerja?.nama;
+            const kuantitas = x?.target_penilaian?.kuantitas;
+            const capaian = x?.kuantitas;
+            const nilai = x?.kualitas;
+            const rincianPekerjaan = x?.title;
+            const indukKegiatan = x?.target_penilaian?.pekerjaan;
 
             return [
                 `${index + 1}.`,
@@ -350,11 +351,8 @@ export const generatePdf = (currentUser) => {
         content: [
             renderHeader(currentUser.bulan, currentUser.tahun),
             renderInformasi(currentUser),
-            renderRincianPekerjaan(
-                currentUser?.listKegiatanBulanan,
-                currentUser?.totalKegiatanBulanan
-            ),
-            renderCatatanAtasan(),
+            renderRincianPekerjaan(currentUser?.listKegiatanBulanan),
+            renderCatatanAtasan(currentUser?.catatan),
             renderPerjanjian(currentUser)
         ]
     };
@@ -362,7 +360,7 @@ export const generatePdf = (currentUser) => {
     return docDefinition;
 };
 
-const renderCatatanAtasan = () => {
+const renderCatatanAtasan = (catatan) => {
     return {
         style: "informasi",
         table: {
@@ -381,7 +379,7 @@ const renderCatatanAtasan = () => {
                 [
                     {
                         stack: [
-                            { text: " " },
+                            { text: catatan },
                             { text: " " },
                             { text: " " },
                             { text: " " },
