@@ -71,7 +71,7 @@ const Penilaian = () => {
             key: "akhir_periode",
             title: "Akhir Periode",
             render: (_, row) => (
-                <div>{moment(row?.akhir_periode).format("DD-M-YYYY")}</div>
+                <div>{moment(row?.akhir_periode).format("DD-MM-YYYY")}</div>
             )
         },
         {
@@ -82,7 +82,7 @@ const Penilaian = () => {
         {
             key: "satuan_kerja",
             title: "Satuan Kerja",
-            render: (_, row) => <div>{row?.id_skpd}</div>
+            render: (_, row) => <div>{row?.skpd?.detail}</div>
         },
         {
             key: "aktif",
@@ -99,7 +99,7 @@ const Penilaian = () => {
                     </Typography.Link>
                     <Divider type="vertical" />
                     <Typography.Link onClick={() => gotoDetail(row?.id)}>
-                        Detail
+                        Lihat Target
                     </Typography.Link>
                     <Divider type="vertical" />
                     <Typography.Link

@@ -1,8 +1,10 @@
+import moment from "moment";
 import { FileAddOutlined } from "@ant-design/icons";
 import {
     Button,
     Card,
     Col,
+    Descriptions,
     Divider,
     Drawer,
     Form,
@@ -121,7 +123,6 @@ const DetailPenilaian = () => {
         try {
             const { id: targetId } = initialValues;
             const values = await editForm.validateFields();
-            console.log(values);
 
             const data = { id, data: values, targetId };
             updateTargetPenilaianMutation.mutate(data);
@@ -162,8 +163,29 @@ const DetailPenilaian = () => {
     ];
 
     return (
-        <UserLayout title="Detail Penilaian">
-            <Divider />
+        <UserLayout
+            title="Detail Penilaian"
+            content={
+                <Descriptions size="small">
+                    <Descriptions.Item label="Tahun">
+                        {data?.tahun}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Periode">
+                        {moment(data?.awal_periode).format("DD-MM-YYYY")} s/d{" "}
+                        {moment(data?.akhir_periode).format("DD-MM-YYYY")}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Atasan Langsung (Subordinator)">
+                        {data?.atasan_langsung?.label[0]}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Unit Kerja">
+                        {data?.skpd?.detail}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Jabatan">
+                        {data?.jabatan?.nama}
+                    </Descriptions.Item>
+                </Descriptions>
+            }
+        >
             <Card>
                 <Card.Meta
                     title="Target Penilaian"
@@ -351,7 +373,6 @@ const DetailPenilaian = () => {
                                 </Row>
                             </Form>
                         </Drawer>
-                        <Divider />
                         <Table
                             title={() => (
                                 <Button

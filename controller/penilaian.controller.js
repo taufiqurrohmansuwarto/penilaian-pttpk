@@ -72,10 +72,14 @@ const update = async (req, res) => {
     const { customId } = req.user;
     const { id } = req.query;
     const { body, fetcher } = req;
+    const skpd_id = parseInt(body?.id_skpd);
     // fetch to pemprov api
 
-    const perangkatDaerah = await fetcher.get(`/pttpk/unor/${body?.id_skpd}`);
-    const perangkatDaerahJson = perangkatDaerah?.data;
+    const perangkatDaerah = await fetcher.get(
+        `/pttpk/unor/${skpd_id}?type=text`
+    );
+    const perangkatDaerahJson = perangkatDaerah?.data?.data;
+    const data = { ...body, skpd: perangkatDaerahJson };
 
     try {
         await prisma.penilaian.updateMany({
@@ -84,7 +88,8 @@ const update = async (req, res) => {
                 user_custom_id: customId
             },
             data: {
-                ...body
+                ...data,
+                updated_at: new Date()
             }
         });
 

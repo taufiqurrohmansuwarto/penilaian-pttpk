@@ -23,7 +23,11 @@ export const getPenilaianAktif = () => {
 };
 
 // todo get this shit out
-export const updatePenilaian = () => {};
+export const updatePenilaian = ({ id, data }) => {
+    return fetcher
+        .patch(`/user/penilaian/${id}`, data)
+        .then((res) => res?.data);
+};
 
 export const hapusPenilaian = (id) => {
     return fetcher.delete(`/user/penilaian/${id}`).then((res) => res?.data);

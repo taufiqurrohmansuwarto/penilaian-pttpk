@@ -90,11 +90,11 @@ model penilaian {
   diverif_oleh        String?               @db.VarChar(200)
   awal_periode        DateTime              @db.Date
   akhir_periode       DateTime              @db.Date
-  nip_atasan_langsung String?               @db.VarChar(200)
+  id_atasan_langsung  String?               @db.VarChar(200)
   atasan_langsung     Json?
-  nip_atasan_banding  String?               @db.VarChar(200)
+  id_atasan_banding   String?               @db.VarChar(200)
   atasan_banding      Json?
-  nip_eselon_ii       String?               @db.VarChar(200)
+  id_eselon_ii        String?               @db.VarChar(200)
   eselon_ii           Json?
   created_at          DateTime?             @default(now()) @db.Timestamp(6)
   updated_at          DateTime?             @db.Timestamp(6)

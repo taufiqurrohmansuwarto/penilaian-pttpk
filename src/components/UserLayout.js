@@ -44,7 +44,7 @@ const rightContentRender = (user) => {
     );
 };
 
-const UserLayout = ({ children, title = "" }) => {
+const UserLayout = ({ children, title = "", content = null }) => {
     const { data } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
@@ -71,7 +71,9 @@ const UserLayout = ({ children, title = "" }) => {
             fixSiderbar
             disableContentMargin
         >
-            <PageContainer title={title}>{children}</PageContainer>
+            <PageContainer content={content} title={title}>
+                {children}
+            </PageContainer>
         </ProLayout>
     );
 };

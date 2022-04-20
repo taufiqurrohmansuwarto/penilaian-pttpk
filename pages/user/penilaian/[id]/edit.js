@@ -6,14 +6,17 @@ import {
     cariPegawaiPNS,
     detailPenilaian,
     getJabatan,
-    getUnor
+    getUnor,
+    updatePenilaian
 } from "../../../../services/users.service";
 import { useEffect, useState } from "react";
 import {
     Button,
+    Card,
     DatePicker,
     Form,
     InputNumber,
+    message,
     Select,
     Skeleton,
     Spin,
@@ -23,7 +26,7 @@ import moment from "moment";
 import { useDebouncedValue } from "@mantine/hooks";
 import { isEmpty } from "lodash";
 
-const FormPegawaiPNS = ({ form, name }) => {
+const FormPegawaiPNS = ({ label, name, help }) => {
     const [nip, setNip] = useState("");
     const [debounceValue] = useDebouncedValue(nip, 500);
 
@@ -37,7 +40,7 @@ const FormPegawaiPNS = ({ form, name }) => {
     );
 
     return (
-        <Form.Item name={name}>
+        <Form.Item name={name} label={label} help={help}>
             <Select
                 showSearch
                 labelInValue
@@ -63,32 +66,71 @@ const FormPegawaiPNS = ({ form, name }) => {
     );
 };
 
-const EditFormPenilaian = ({ form, data, dataJabatan, dataUnor }) => {
+const EditFormPenilaian = ({
+    form,
+    data,
+    dataJabatan,
+    dataUnor,
+    handleSubmit,
+    loading
+}) => {
     useEffect(() => {
         form.setFieldsValue({
             tahun: data?.tahun,
             periode: [moment(data?.awal_periode), moment(data?.akhir_periode)],
             id_jabatan: data?.id_jabatan,
             id_skpd: data?.id_skpd,
-            atasan_langsung: data?.atasan_langsung
+            atasan_langsung: data?.atasan_langsung,
+            atasan_banding: data?.atasan_banding,
+            eselon_ii: data?.eselon_ii
         });
     }, [data]);
 
-    const handleSubmit = (values) => {
-        console.log(values);
-    };
-
     return (
-        <div>
-            <Form form={form} onFinish={handleSubmit}>
-                <Form.Item name="tahun">
+        <Card>
+            <Form
+                form={form}
+                onFinish={handleSubmit}
+                layout="vertical"
+                requiredMark={false}
+            >
+                <Form.Item
+                    name="tahun"
+                    label="Tahun"
+                    rules={[{ required: true, message: "tidak boleh kosong" }]}
+                >
                     <InputNumber />
                 </Form.Item>
-                <Form.Item name="periode">
+                <Form.Item
+                    name="periode"
+                    label="Periode"
+                    rules={[{ required: true, message: "tidak boleh kosong" }]}
+                >
                     <DatePicker.RangePicker />
                 </Form.Item>
-                <FormPegawaiPNS name="atasan_langsung" />
-                <Form.Item name="id_jabatan">
+                <FormPegawaiPNS
+                    name="atasan_langsung"
+                    label="Atasan Langsung (Subordinator)"
+                    help="Ketik NIP untuk mencari PNS"
+                    rules={[{ required: true, message: "tidak boleh kosong" }]}
+                />
+                <FormPegawaiPNS
+                    name="atasan_banding"
+                    label="Atasan Banding Eselon III"
+                    help="Ketik NIP untuk mencari PNS"
+                    rules={[{ required: true, message: "tidak boleh kosong" }]}
+                />
+                <FormPegawaiPNS
+                    name="eselon_ii"
+                    label="Eselon II"
+                    help="Ketik NIP untuk mencari PNS"
+                    rules={[{ required: true, message: "tidak boleh kosong" }]}
+                />
+                <Form.Item
+                    name="id_jabatan"
+                    label="Jabatan"
+                    rules={[{ required: true, message: "tidak boleh kosong" }]}
+                >
                     <Select>
                         {dataJabatan?.map((d) => (
                             <Select.Option
@@ -101,7 +143,11 @@ const EditFormPenilaian = ({ form, data, dataJabatan, dataUnor }) => {
                         ))}
                     </Select>
                 </Form.Item>
-                <Form.Item name="id_skpd">
+                <Form.Item
+                    name="id_skpd"
+                    label="Unit Kerja"
+                    rules={[{ required: true, message: "tidak boleh kosong" }]}
+                >
                     <TreeSelect
                         // labelInValue
                         showSearch
@@ -110,17 +156,18 @@ const EditFormPenilaian = ({ form, data, dataJabatan, dataUnor }) => {
                     />
                 </Form.Item>
                 <Form.Item>
-                    <Button htmlType="submit">Submit</Button>
+                    <Button loading={loading} htmlType="submit" type="primary">
+                        Submit
+                    </Button>
                 </Form.Item>
             </Form>
-        </div>
+        </Card>
     );
 };
 
 const TargetTahunan = () => {
-    const {
-        query: { id }
-    } = useRouter();
+    const router = useRouter();
+    const { id } = router?.query;
 
     useEffect(() => {}, [id]);
 
@@ -156,19 +203,72 @@ const TargetTahunan = () => {
 
     const [form] = Form.useForm();
 
-    const updatePenilaianMutation = useMutation();
+    const updatePenilaianMutation = useMutation(
+        (data) => updatePenilaian(data),
+        {
+            onSuccess: () => {
+                message.success("Sukses update");
+                router.push("/user/penilaian");
+            },
+            onError: (error) => {
+                message.error(error);
+            }
+        }
+    );
+
+    const handleSubmit = (values) => {
+        const {
+            periode,
+            id_jabatan,
+            atasan_langsung,
+            atasan_banding,
+            eselon_ii,
+            id_skpd,
+            tahun
+        } = values;
+        const [awal, akhir] = periode;
+        const awal_periode = moment(awal).toISOString();
+        const akhir_periode = moment(akhir).toISOString();
+        const jabatan = dataJabatan?.find(
+            (jabatan) => parseInt(jabatan?.id) === parseInt(id_jabatan)
+        );
+
+        const id_atasan_langsung = `master|${atasan_langsung?.value}`;
+        const id_atasan_banding = `master|${atasan_banding?.value}`;
+        const id_eselon_ii = `master|${eselon_ii?.value}`;
+
+        const data = {
+            tahun,
+            awal_periode,
+            akhir_periode,
+            id_jabatan,
+            jabatan,
+            atasan_langsung,
+            atasan_banding,
+            eselon_ii,
+            id_atasan_banding,
+            id_atasan_langsung,
+            id_eselon_ii,
+            id_skpd
+        };
+
+        const currentData = { id, data };
+
+        updatePenilaianMutation.mutate(currentData);
+    };
 
     return (
-        <UserLayout>
+        <UserLayout title="Update Penilaian">
             <Skeleton
                 loading={isLoading || isLoadingDataJabatan || isLoadingUnor}
             >
-                {JSON.stringify(data)}
                 <EditFormPenilaian
                     form={form}
                     data={data}
+                    loading={updatePenilaianMutation?.isLoading}
                     dataJabatan={dataJabatan}
                     dataUnor={dataUnor}
+                    handleSubmit={handleSubmit}
                 />
             </Skeleton>
         </UserLayout>
