@@ -41,6 +41,7 @@ import {
     kirimAtasan,
     updatePenilaianBulanan
 } from "../../../services/users.service";
+import FormCetakModal from "../../../src/components/FormCetakModal";
 import UserLayout from "../../../src/components/UserLayout";
 
 const DataPenilaianAktif = () => {
@@ -87,7 +88,14 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
         }
     };
 
-    const handleCetak = () => {};
+    const [visible, setVisible] = useState(false);
+    const handleShowModal = () => setVisible(true);
+    const handleCancelShowModal = () => setVisible(false);
+    const [formCetak] = Form.useForm();
+
+    const handleCetak = () => {
+        setVisible(true);
+    };
 
     const handleBatalKirimAtasan = () => {
         Modal.confirm({
@@ -104,6 +112,14 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
 
     return (
         <>
+            <FormCetakModal
+                visible={visible}
+                onCancel={handleCancelShowModal}
+                form={formCetak}
+                bulan={bulan}
+                tahun={tahun}
+                onClose={handleCancelShowModal}
+            />
             <Skeleton
                 loading={
                     kirimAtasanMutation.isLoading ||

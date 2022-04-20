@@ -124,3 +124,15 @@ export const getRequestPenilaian = (bulan, tahun) => {
         .get(`/user/acc-kinerja-bulanan?bulan=${bulan}&tahun=${tahun}`)
         .then((res) => res?.data);
 };
+
+export const cetakPenilaianBulanan = ({ bulan, tahun, data }) => {
+    return fetcher
+        .post(
+            `/user/cetak-penilaian-bulanan?bulan=${bulan}&tahun=${tahun}`,
+            data,
+            {
+                responseType: "blob"
+            }
+        )
+        .then((res) => res?.data);
+};
