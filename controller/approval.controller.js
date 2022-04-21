@@ -104,7 +104,8 @@ const approvePenilaianBulanan = async (req, res) => {
                 },
                 data: {
                     sudah_verif: true,
-                    catatan: body?.catatan
+                    catatan: body?.catatan,
+                    updated_at: new Date()
                 }
             })
         ]);

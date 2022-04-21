@@ -1,4 +1,5 @@
 import {
+    ClockCircleOutlined,
     DashboardOutlined,
     FundOutlined,
     RadarChartOutlined
@@ -20,6 +21,11 @@ export default {
             path: "/user/penilaian/bulanan-baru",
             name: " Penilaian Bulanan",
             icon: <FundOutlined />
+        },
+        {
+            path: "/user/penilaian/penilaian-akhir",
+            name: " Penilaian Akhir",
+            icon: <ClockCircleOutlined />
         }
     ]
 };

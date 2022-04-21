@@ -122,7 +122,9 @@ const cetakPenilaianBulananUser = async (req, res) => {
                     pangkat: body?.pejabat_penandatangan?.pangkat
                 },
                 jabatan_penandatangan: body?.jabatan_penandatangan
-            }
+            },
+            penilai: accKinerjaBulanan?.atasan_langsung?.label[0],
+            tanggal_dinilai: accKinerjaBulanan?.updated_at
         };
 
         const dd = generatePdf(data);

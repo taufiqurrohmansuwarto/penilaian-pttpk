@@ -220,7 +220,7 @@ const renderRincianPekerjaan = (listKerja) => {
 };
 
 const renderPerjanjian = (currentUser) => {
-    const { nama, niptt, atasanDua, atasanSatu } = currentUser;
+    const { nama, niptt } = currentUser;
     const ttd = currentUser?.ttd;
     const {
         tempat,
@@ -297,12 +297,14 @@ const renderPerjanjian = (currentUser) => {
 };
 
 export const generatePdf = (currentUser) => {
+    const { penilai, tanggal_dinilai } = currentUser;
+
     const docDefinition = {
         pageSize: "FOLIO",
         footer: {
             columns: [
                 {
-                    text: "*) Laporan digenerate oleh Aplikasi PTT PK",
+                    text: `*) Laporan digenerate oleh Aplikasi PTT PK dinilai oleh ${penilai} pada tanggal ${tanggal_dinilai}`,
                     style: {
                         font: "OpenSans",
                         fontSize: 8,

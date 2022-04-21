@@ -9,6 +9,14 @@ const index = async (req, res) => {
                 where: {
                     user_custom_id: customId,
                     aktif: true
+                },
+                include: {
+                    target_penilaian: {
+                        include: {
+                            kinerja_bulanan: true,
+                            ref_satuan_kinerja: true
+                        }
+                    }
                 }
             });
             res.json(result);
@@ -32,6 +40,7 @@ const index = async (req, res) => {
 const get = async (req, res) => {
     const { id } = req.query;
     const { customId } = req.user;
+
     try {
         const result = await prisma.penilaian.findFirst({
             where: {
