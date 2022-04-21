@@ -8,8 +8,7 @@ const batalKirimTransaction = async (
     nipAtasanLangsung,
     listIdPenilaian,
     bulan,
-    tahun,
-    atasanLangsung
+    tahun
 ) => {
     return await prisma.$transaction(async (prisma) => {
         await prisma.acc_kinerja_bulanan.deleteMany({
@@ -28,7 +27,8 @@ const batalKirimTransaction = async (
                 }
             },
             data: {
-                kualitas: 0
+                kualitas: 0,
+                sudah_verif: false
             }
         });
         return true;

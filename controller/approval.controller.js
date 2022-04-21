@@ -81,7 +81,8 @@ const approvePenilaianBulanan = async (req, res) => {
             const { id, ...data } = d;
             return prisma.kinerja_bulanan.update({
                 data: {
-                    ...data
+                    ...data,
+                    sudah_verif: true
                 },
                 where: {
                     id: d?.id

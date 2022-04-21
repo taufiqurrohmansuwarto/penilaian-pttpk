@@ -76,6 +76,7 @@ model kinerja_bulanan {
   end                 DateTime?         @db.Timestamp(6)
   created_at          DateTime?         @default(now()) @db.Timestamp(6)
   updated_at          DateTime?         @db.Timestamp(6)
+  sudah_verif         Boolean           @default(false)
   penilaian           penilaian?        @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
   target_penilaian    target_penilaian? @relation(fields: [id_target_penilaian], references: [id], onDelete: Cascade)
 

@@ -11,6 +11,9 @@ const index = async (req, res) => {
                     user_custom_id: customId,
                     aktif: true
                 }
+            },
+            orderBy: {
+                created_at: "desc"
             }
         });
         res.json(result);
@@ -21,13 +24,16 @@ const index = async (req, res) => {
 };
 
 const create = async (req, res) => {
-    // const { id } = req.query;
+    const { id } = req.query;
     // const { customId } = req.user;
     const { body } = req;
 
     try {
         await prisma.tugas_tambahan.create({
-            data: body
+            data: {
+                ...body,
+                penilaian_id: id
+            }
         });
         res.json({ code: 200, message: "success" });
     } catch (error) {

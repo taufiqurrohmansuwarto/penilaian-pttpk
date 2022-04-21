@@ -13,7 +13,11 @@ const index = async (req, res) => {
                 include: {
                     target_penilaian: {
                         include: {
-                            kinerja_bulanan: true,
+                            kinerja_bulanan: {
+                                where: {
+                                    sudah_verif: true
+                                }
+                            },
                             ref_satuan_kinerja: true
                         }
                     }
