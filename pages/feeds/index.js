@@ -1,4 +1,4 @@
-import { Col, Divider, Row } from "antd";
+import { Col, Divider, Row, Typography } from "antd";
 import FeaturesNotWell from "../../src/components/FeaturesNotWell";
 import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
@@ -10,11 +10,7 @@ const Feeds = ({ data }) => {
             <PageContainer
                 title="Beta Features"
                 fixedHeader
-                content={
-                    <>
-                        <FeaturesNotWell />
-                    </>
-                }
+                content="Social Media. Dalam tahap pengembangan. Bisa dicoba tapi percakapan akan dihapus dalam waktu dekat"
             >
                 <Row gutter={32}>
                     <Col span={6}></Col>

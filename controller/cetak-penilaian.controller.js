@@ -141,6 +141,38 @@ const cetakPenilaianBulananUser = async (req, res) => {
     }
 };
 
+const cetakPenilaianAkhirUser = async (req, res) => {
+    try {
+        const { customId } = req.user;
+        const result = await prisma.penilaian.findFirst({
+            where: {
+                aktif: true,
+                user_custom_id: customId,
+                status: "diverif"
+            },
+            include: {
+                tugas_tambahan: true,
+                target_penilaian: {
+                    include: {
+                        kinerja_bulanan: true,
+                        ref_satuan_kinerja: true
+                    }
+                }
+            }
+        });
+
+        if (!result) {
+            res.status(404).json({ code: 404, message: "Not Found" });
+        } else {
+            res.json(result);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
 module.exports = {
-    cetakPenilaianBulananUser
+    cetakPenilaianBulananUser,
+    cetakPenilaianAkhirUser
 };

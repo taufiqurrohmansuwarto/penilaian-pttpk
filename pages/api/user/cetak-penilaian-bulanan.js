@@ -3,7 +3,4 @@ import { cetakPenilaianBulananUser } from "../../../controller/cetak-penilaian.c
 import auth from "../../../middleware/auth";
 const handler = nc();
 
-export default handler
-    .use(auth)
-    .get(cetakPenilaianBulananUser)
-    .post(cetakPenilaianBulananUser);
+export default handler.use(auth).post(cetakPenilaianBulananUser);

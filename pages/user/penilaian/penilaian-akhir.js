@@ -250,7 +250,7 @@ const DataTargetPenilaian = ({ data }) => {
                             message="Perhatian"
                             type="warning"
                             showIcon
-                            description="Ingat Perhitungan Capaian dilihat dari kinerja bulanan yang sudah diverif oleh atasan"
+                            description="Ingat Perhitungan capaian kinerja dilihat dari kinerja bulanan yang sudah diverif oleh atasan. Kinerja bulanan yang belum diverif / dinilai atasan tidak akan masuk ke total penilaian"
                         />
                     </div>
                 )}
