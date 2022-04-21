@@ -1,5 +1,6 @@
 import { PlusOutlined } from "@ant-design/icons";
 import {
+    Alert,
     Button,
     Divider,
     Form,
@@ -16,15 +17,17 @@ import { sumBy } from "lodash";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
+    batalKirimAtasanPenilaianAkhir,
     createTugasTambahan,
     getPenilaianAktif,
     getTugasTambahan,
+    kirimAtasanPenilaianAkhir,
     removeTugasTambahan,
     updateTugasTambahan
 } from "../../../services/users.service";
 import UserLayout from "../../../src/components/UserLayout";
 
-const DataPekerjaanTambahan = ({ penilaianId }) => {
+const DataPekerjaanTambahan = ({ penilaianId, status }) => {
     const { data, isLoading } = useQuery(
         ["tugas-tambahan", penilaianId],
         () => getTugasTambahan(penilaianId),
@@ -117,17 +120,21 @@ const DataPekerjaanTambahan = ({ penilaianId }) => {
             key: "aksi",
             title: "Aksi",
             render: (_, row) => (
-                <Space>
-                    <Typography.Link onClick={() => handleEdit(row)}>
-                        Edit
-                    </Typography.Link>
-                    <Popconfirm
-                        title="Apakah anda yakin ingin menghapus data?"
-                        onConfirm={() => handleRemove(row?.id)}
-                    >
-                        <Typography.Link>Hapus</Typography.Link>
-                    </Popconfirm>
-                </Space>
+                <>
+                    {status === "dikerjakan" ? (
+                        <Space>
+                            <Typography.Link onClick={() => handleEdit(row)}>
+                                Edit
+                            </Typography.Link>
+                            <Popconfirm
+                                title="Apakah anda yakin ingin menghapus data?"
+                                onConfirm={() => handleRemove(row?.id)}
+                            >
+                                <Typography.Link>Hapus</Typography.Link>
+                            </Popconfirm>
+                        </Space>
+                    ) : null}
+                </>
             )
         }
     ];
@@ -230,9 +237,23 @@ const DataTargetPenilaian = ({ data }) => {
         }
     ];
 
+    const Warning = () => {
+        return <div>Header</div>;
+    };
+
     return (
         <>
             <Table
+                title={() => (
+                    <div>
+                        <Alert
+                            message="Perhatian"
+                            type="warning"
+                            showIcon
+                            description="Ingat Perhitungan Capaian dilihat dari kinerja bulanan yang sudah diverif oleh atasan"
+                        />
+                    </div>
+                )}
                 dataSource={data}
                 columns={columns}
                 rowKey={(row) => row?.id}
@@ -243,16 +264,88 @@ const DataTargetPenilaian = ({ data }) => {
 };
 
 function PenilaianAkhir() {
+    const queryClient = useQueryClient();
     const { data: dataPenilaianAktif, isLoading: isLoadingDataPenilaianAktif } =
         useQuery(["penilaian-aktif"], () => getPenilaianAktif(), {});
+
+    const kirimAtasanMutation = useMutation(() => kirimAtasanPenilaianAkhir(), {
+        onSuccess: () => {
+            message.success("Berhasil Kirim");
+            queryClient.invalidateQueries(["penilaian-aktif"]);
+        }
+    });
+
+    const batalKirimAtasanMutation = useMutation(
+        () => batalKirimAtasanPenilaianAkhir(),
+        {
+            onSuccess: () => {
+                message.success("Berhasil batal kirim");
+                queryClient.invalidateQueries(["penilaian-aktif"]);
+            }
+        }
+    );
+
+    const handleKirimAtasan = () => {
+        Modal.confirm({
+            title: "Perhatian",
+            centered: true,
+            width: 600,
+
+            content:
+                "Apakah anda yakin ingin mengirim penilaian akhir ke atasan anda?. Anda tidak bisa lagi menambah / mengurangi pekerjaan tambahan anda.",
+            onOk: () => {
+                return new Promise(async (resolve, reject) => {
+                    try {
+                        await kirimAtasanMutation.mutateAsync();
+                        resolve("succes");
+                    } catch (error) {
+                        reject("error");
+                    }
+                });
+            }
+        });
+    };
+
+    const handleBatalKirimAtasan = () => {
+        Modal.confirm({
+            title: "Perhatian",
+            centered: true,
+            width: 600,
+
+            content:
+                "Apakah anda yakin membatalkan kirim atasan?. Anda dapat menambah / menguruangi pekerjaan tambahan anda.",
+            onOk: () => {
+                return new Promise(async (resolve, reject) => {
+                    try {
+                        await batalKirimAtasanMutation.mutateAsync();
+                        resolve("succes");
+                    } catch (error) {
+                        reject("error");
+                    }
+                });
+            }
+        });
+    };
+
+    const cetakPenilaianAkhir = async () => {
+        try {
+        } catch (error) {}
+    };
 
     return (
         <UserLayout>
             <Skeleton loading={isLoadingDataPenilaianAktif}>
+                {JSON.stringify(dataPenilaianAktif?.status)}
+                <Button onClick={handleKirimAtasan}>Kirim Atasan</Button>
+                <Button onClick={handleBatalKirimAtasan}>Batal Kirim</Button>
+                <Button onClick={cetakPenilaianAkhir}>Cetak</Button>
                 <DataTargetPenilaian
                     data={dataPenilaianAktif?.target_penilaian}
                 />
-                <DataPekerjaanTambahan penilaianId={dataPenilaianAktif?.id} />
+                <DataPekerjaanTambahan
+                    penilaianId={dataPenilaianAktif?.id}
+                    status={dataPenilaianAktif?.status}
+                />
             </Skeleton>
         </UserLayout>
     );

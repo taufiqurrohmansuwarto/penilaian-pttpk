@@ -28,7 +28,6 @@ model users {
   comments_notifications_sender    comments_notifications[]   @relation("user_sender")
   comments_notifications_receiver  comments_notifications[]   @relation("user_receiver")
   comments                         comments[]
-  acc_kinerja_tahunan              acc_kinerja_tahunan[]
 }
 
 model acc_kinerja_bulanan {
@@ -46,21 +45,6 @@ model acc_kinerja_bulanan {
   pegawai            users?     @relation("acc_pegawai", fields: [pegawai_id], references: [custom_id])
 
   @@id([id_penilaian, bulan, tahun])
-}
-
-model acc_kinerja_tahunan {
-  id                 String     @id @default(cuid())
-  id_penilaian       String
-  tahun              Int        @db.SmallInt
-  sudah_verif        Boolean?   @default(false)
-  created_at         DateTime?  @default(now()) @db.Timestamp(6)
-  updated_at         DateTime?  @db.Timestamp(6)
-  pegawai_id         String?
-  id_atasan_langsung String?
-  atasan_langsung    Json?
-  catatan            String?
-  penilaian          penilaian? @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
-  pegawai            users?     @relation(fields: [pegawai_id], references: [custom_id])
 }
 
 model kinerja_bulanan {
@@ -91,8 +75,7 @@ model penilaian {
   id_jabatan                       String?               @db.VarChar(200)
   jabatan                          Json?
   aktif                            Boolean?              @default(false)
-  sudah_verif                      Boolean?              @default(false)
-  diverif_oleh                     String?               @db.VarChar(200)
+  status                           Status?               @default(dikerjakan)
   awal_periode                     DateTime              @db.Date
   akhir_periode                    DateTime              @db.Date
   id_atasan_langsung               String?               @db.VarChar(200)
@@ -103,6 +86,8 @@ model penilaian {
   eselon_ii                        Json?
   created_at                       DateTime?             @default(now()) @db.Timestamp(6)
   updated_at                       DateTime?             @db.Timestamp(6)
+  tanggal_verif                    DateTime?             @db.Timestamp(6)
+  catatan                          String?
   pengalaman_kerja                 Int?                  @default(0) @db.SmallInt
   integritas                       Int?                  @default(0) @db.SmallInt
   kedisiplinan                     Int?                  @default(0) @db.SmallInt
@@ -115,9 +100,8 @@ model penilaian {
   target_penilaian                 target_penilaian[]
 
 
-  pegawai             users                 @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
-  acc_kinerja_tahunan acc_kinerja_tahunan[]
-  tugas_tambahan      tugas_tambahan[]
+  pegawai        users            @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  tugas_tambahan tugas_tambahan[]
 }
 
 model tugas_tambahan {
@@ -356,4 +340,10 @@ model discussions_posts_joined {
 
 
   @@id([user_custom_id, discussion_post_id])
+}
+
+enum Status {
+  dikerjakan
+  diajukan
+  diverif
 }

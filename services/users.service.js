@@ -167,3 +167,15 @@ export const removeTugasTambahan = ({ penilaianId, id }) => {
         .delete(`/user/penilaian/${penilaianId}/tambahan/${id}`)
         .then((res) => res?.data);
 };
+
+export const kirimAtasanPenilaianAkhir = () => {
+    return fetcher
+        .put(`/user/request-penilaian-akhir`)
+        .then((res) => res?.data);
+};
+
+export const batalKirimAtasanPenilaianAkhir = () => {
+    return fetcher
+        .delete(`/user/request-penilaian-akhir`)
+        .then((res) => res?.data);
+};
