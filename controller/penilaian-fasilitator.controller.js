@@ -110,7 +110,7 @@ const listPenilianBulanan = async (req, res) => {
     }
 };
 
-const listPenialianTahunan = async (req, res) => {
+const listPenilaianTahunan = async (req, res) => {
     try {
         const { fetcher } = req;
 
@@ -140,8 +140,8 @@ const listPenialianTahunan = async (req, res) => {
 
             return {
                 id,
-                status: r?.status,
-                penilai: r?.atasan_langsung?.label[0],
+                status: r?.status || "belum dikerjakan / belum diaktifkan",
+                penilai: r?.atasan_langsung?.label[0] || "belum dikerjakan",
                 nip: r?.atasan_langsung?.label[2]
             };
         });
@@ -181,10 +181,13 @@ const listPenialianTahunan = async (req, res) => {
 
         await workbook.xlsx.write(res);
         res.status(200).end();
-    } catch (error) {}
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
 };
 
 module.exports = {
     listPenilianBulanan,
-    listPenialianTahunan
+    listPenilaianTahunan
 };

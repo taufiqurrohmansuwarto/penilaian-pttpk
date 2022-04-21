@@ -8,15 +8,17 @@ const Feeds = ({ data }) => {
     return (
         <Layout>
             <PageContainer
-                title="Curhat"
+                title="Beta Features"
                 fixedHeader
-                content="Isi curhat mu disini"
+                content={
+                    <>
+                        <FeaturesNotWell />
+                    </>
+                }
             >
                 <Row gutter={32}>
                     <Col span={6}></Col>
                     <Col span={12}>
-                        <FeaturesNotWell />
-                        <Divider />
                         <UserComments sort={data?.sort} />
                     </Col>
                     <Col span={6}></Col>

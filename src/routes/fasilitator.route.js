@@ -1,4 +1,8 @@
-import { DashboardOutlined, RadarChartOutlined } from "@ant-design/icons";
+import {
+    BookOutlined,
+    DashboardOutlined,
+    RadarChartOutlined
+} from "@ant-design/icons";
 
 export default {
     routes: [
@@ -9,8 +13,13 @@ export default {
         },
         {
             path: "/fasilitator/penilaian-bulanan",
-            name: " Penilaian",
+            name: " Penilaian Bulanan",
             icon: <RadarChartOutlined />
+        },
+        {
+            path: "/fasilitator/penilaian-tahunan",
+            name: " Penilaian Tahunan",
+            icon: <BookOutlined />
         }
     ]
 };

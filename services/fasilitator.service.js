@@ -11,3 +11,9 @@ export const downloadPenilaianBulanan = ({ tahun, bulan }) => {
         })
         .then((res) => res?.data);
 };
+
+export const downloadPenilaianAkhir = ({ tahun }) => {
+    return fetcher
+        .get(`/penilaian-tahunan?tahun=${tahun}`, { responseType: "blob" })
+        .then((res) => res?.data);
+};

@@ -4,7 +4,7 @@ function FeaturesNotWell() {
     return (
         <Alert
             message="Perhatian"
-            description="Ini merupakan fitur percobaan"
+            description="Fitur masih dalam tahap pengembangan. Chat akan dihapus dalam waktu dekat. "
             type="warning"
             showIcon
         />
