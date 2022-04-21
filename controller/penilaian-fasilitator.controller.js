@@ -110,6 +110,81 @@ const listPenilianBulanan = async (req, res) => {
     }
 };
 
+const listPenialianTahunan = async (req, res) => {
+    try {
+        const { fetcher } = req;
+
+        const queryTahun =
+            req?.query?.tahun || moment(new Date()).format("YYYY");
+
+        const tahun = parseInt(queryTahun);
+
+        let workbook = new excel.Workbook();
+        let worksheet = workbook.addWorksheet(`${tahun}`);
+
+        // ini hanya yang aktif saja
+        const result = await prisma.penilaian.findMany({
+            where: {
+                tahun,
+                aktif: true,
+                status: "diverif"
+            },
+            include: {
+                pegawai: true
+            }
+        });
+
+        const currentPembanding = result?.map((r) => {
+            const currentUserId = r?.pegawai?.custom_id?.split("|");
+            const id = currentUserId[1];
+
+            return {
+                id,
+                status: r?.status,
+                penilai: r?.atasan_langsung?.label[0],
+                nip: r?.atasan_langsung?.label[2]
+            };
+        });
+
+        const hasil = await fetcher.get("/pttpk-fasilitator/employees");
+        const userData = hasil?.data?.data;
+
+        const groupingPenilaian = arrayToObject(currentPembanding, "id");
+
+        const currentResult = await userData?.map((d) => {
+            return {
+                ...d,
+                status: groupingPenilaian[d?.id_ptt]?.status || false,
+                penilai: groupingPenilaian[d?.id_ptt]?.penilai || ""
+            };
+        });
+
+        worksheet.columns = [
+            { header: "NIPTT", key: "niptt" },
+            { header: "Nama", key: "nama" },
+            { header: "Perangkat Daerah", key: "perangkat_daerah" },
+            { header: "Status", key: "status" },
+            { header: "Penilai", key: "penilai" }
+        ];
+
+        // now its time to shine motherfucker
+        worksheet.addRows(currentResult);
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=" + "result.xlsx"
+        );
+
+        await workbook.xlsx.write(res);
+        res.status(200).end();
+    } catch (error) {}
+};
+
 module.exports = {
-    listPenilianBulanan
+    listPenilianBulanan,
+    listPenialianTahunan
 };

@@ -88,7 +88,9 @@ const listKinerjaApproval = async (req, res) => {
                 tahun,
                 aktif: true,
                 id_atasan_langsung: customId,
-                status: "diajukan"
+                NOT: {
+                    status: "dikerjakan"
+                }
             },
             include: {
                 pegawai: true,

@@ -45,6 +45,7 @@ const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
         onSuccess: () => {
             queryClient.invalidateQueries(["data-penilaian-akhir"]);
             message.success("Berhasil di approve");
+            onCancel();
         }
     });
 
@@ -67,28 +68,28 @@ const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
         >
             <Form form={form} layout="vertical">
                 <Form.Item name="integritas" label="Integritas">
-                    <InputNumber />
+                    <InputNumber min={0} max={100} />
                 </Form.Item>
                 <Form.Item name="kedisiplinan" label="Kedisiplinan">
-                    <InputNumber />
+                    <InputNumber min={0} max={100} />
                 </Form.Item>
                 <Form.Item
                     name="orientasi_pelayanan"
                     label="Orientasi Pelayanan"
                 >
-                    <InputNumber />
+                    <InputNumber min={0} max={100} />
                 </Form.Item>
                 <Form.Item
                     name="kerjasama_koordinasi"
                     label="Kerjasama Koordinasi"
                 >
-                    <InputNumber />
+                    <InputNumber min={0} max={100} />
                 </Form.Item>
                 <Form.Item
                     name="pemanfaatan_alat_dan_media_kerja"
                     label="Pemanfaatan Alat dan Media Kerja"
                 >
-                    <InputNumber />
+                    <InputNumber min={0} max={100} />
                 </Form.Item>
                 <Form.Item name="catatan" label="Catatan">
                     <Input.TextArea />

@@ -40,7 +40,7 @@ export const getPenilaianAkhir = (tahun) => {
 export const approvePenilaianAkhir = ({ tahun, id_ptt, data }) => {
     return fetcher
         .put(
-            `/penialian/request-penilaian-akhir?tahun=${tahun}&id_ptt=${id_ptt}`,
+            `/penilaian/request-penilaian-akhir?tahun=${tahun}&id_ptt=${id_ptt}`,
             data
         )
         .then((res) => res?.data);
