@@ -136,3 +136,34 @@ export const cetakPenilaianBulanan = ({ bulan, tahun, data }) => {
         )
         .then((res) => res?.data);
 };
+
+// tugas tambahan motherfucker
+export const getTugasTambahan = (penilaianId) => {
+    return fetcher
+        .get(`/user/penilaian/${penilaianId}/tambahan`)
+        .then((res) => res?.data);
+};
+
+export const getDetailTugasTambahan = (penilaianId, id) => {
+    return fetcher
+        .get(`/user/penilaian/${penilaianId}/tambahan/${id}`)
+        .then((res) => res?.data);
+};
+
+export const createTugasTambahan = ({ id, data }) => {
+    return fetcher
+        .post(`/user/penilaian/${id}/tambahan`, data)
+        .then((res) => res?.data);
+};
+
+export const updateTugasTambahan = ({ penilaianId, data, id }) => {
+    return fetcher
+        .patch(`/user/penilaian/${penilaianId}/tambahan/${id}`, data)
+        .then((res) => res?.data);
+};
+
+export const removeTugasTambahan = ({ penilaianId, id }) => {
+    return fetcher
+        .delete(`/user/penilaian/${penilaianId}/tambahan/${id}`)
+        .then((res) => res?.data);
+};
