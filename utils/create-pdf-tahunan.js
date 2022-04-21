@@ -9,7 +9,7 @@ const orange = "#e3d8ac";
 const warnaBiru = "#1919ff";
 
 const renderCatatanAtasanLangsung = (currentUser) => {
-    const { atasanSatu } = currentUser;
+    const { penilai, catatan_atasan_langsung } = currentUser;
     return {
         style: "informasi",
         table: {
@@ -28,23 +28,23 @@ const renderCatatanAtasanLangsung = (currentUser) => {
                     {}
                 ],
                 [
-                    currentUser.catatan_atasan_langsung,
+                    catatan_atasan_langsung,
                     {
                         stack: [
                             {
-                                text: `${atasanSatu?.jabatan}`,
+                                text: `${penilai}`,
                                 style: "headerTtd"
                             },
                             {
-                                text: `${atasanSatu?.nama}`,
+                                text: `${penilai}`,
                                 style: "namaTerang"
                             },
                             {
-                                text: `${atasanSatu?.golongan}`,
+                                text: `${penilai}`,
                                 style: "namaAtasan"
                             },
                             {
-                                text: `NIP. ${atasanSatu?.nip}`,
+                                text: `NIP. ${penilai}`,
                                 style: "namaAtasan"
                             }
                         ],
@@ -57,7 +57,7 @@ const renderCatatanAtasanLangsung = (currentUser) => {
 };
 
 const renderPerilakuKerja = (perilakuKerja, total) => {
-    const perilaku = perilakuKerja.map((a, b) => [
+    const perilaku = perilakuKerja?.map((a, b) => [
         `${b + 1}.`,
         a?.name,
         a?.nilaiSekarang,
@@ -103,7 +103,7 @@ const renderPerilakuKerja = (perilakuKerja, total) => {
                     },
                     {},
                     {},
-                    { text: "100%", style: "totalNilai" },
+                    { text: `${total}`, style: "totalNilai" },
                     { text: total, style: "totalNilai" }
                 ]
             ]
@@ -187,29 +187,35 @@ const renderInformasi = (currentUser) => {
     };
 };
 
-const renderRincianPekerjaan = (listKerja, total) => {
+const renderRincianPekerjaan = (listKerja) => {
     let listKerjaTahunan;
+    let total = 0;
 
     const totalCapaian = function (capaianKerjaBulanan) {
-        if (capaianKerjaBulanan.length === 0) {
+        if (capaianKerjaBulanan?.length === 0) {
             return 0;
         } else {
-            return sumBy(capaianKerjaBulanan, "kuantitas_capaian");
+            return sumBy(capaianKerjaBulanan, "kuantitas");
         }
     };
 
-    if (listKerja.length > 0) {
-        listKerjaTahunan = listKerja.map((x, index) => {
-            const satuanKuantitas = x?.satuan_kuantitas;
+    if (listKerja?.length > 0) {
+        listKerjaTahunan = listKerja?.map((x, index) => {
+            const satuanKuantitas = x?.ref_satuan_kinerja?.nama;
             const kuantitas = x?.kuantitas;
-            const capaian = totalCapaian(x?.bulanan);
-            const presentaseCapaian = ((capaian / kuantitas) * 100).toFixed(2);
-            const presentase =
-                presentaseCapaian > 100 ? 100 : presentaseCapaian;
+            const capaian = totalCapaian(x?.kinerja_bulanan);
+            const presentaseCapaian = (capaian / kuantitas) * 100;
+            const newPresentase =
+                presentaseCapaian <= 0
+                    ? presentaseCapaian?.toFixed(0)
+                    : presentaseCapaian?.toFixed(2);
+
+            const presentase = newPresentase > 100 ? 100 : newPresentase;
+            total = total + presentase;
 
             return [
                 `${index + 1}.`,
-                x.rincian_pekerjaan,
+                x.pekerjaan,
                 { text: kuantitas, fillColor: orange },
                 { text: satuanKuantitas, fillColor: orange },
                 { text: capaian, fillColor: warnaHijauMuda },
@@ -220,6 +226,9 @@ const renderRincianPekerjaan = (listKerja, total) => {
     } else {
         listKerjaTahunan = [];
     }
+
+    const currentTotal =
+        listKerja?.length === 0 ? 0 : total / listKerja?.length;
 
     return {
         style: "informasi",
@@ -272,7 +281,8 @@ const renderRincianPekerjaan = (listKerja, total) => {
                     {},
                     {},
                     {
-                        text: `${total}%`,
+                        // text: `${total}%`,
+                        text: `${currentTotal}`,
                         style: { fillColor: warnaAbuAbu }
                     }
                 ]
@@ -284,19 +294,19 @@ const renderRincianPekerjaan = (listKerja, total) => {
 const renderTugasTambahan = (pekerjaanTambahan, total) => {
     let listPekerjaanTambahan;
 
-    if (pekerjaanTambahan.length > 0) {
+    if (pekerjaanTambahan?.length > 0) {
         // jika panjangnya ganjil tambahkan 1 tapi kosong
         const pekerjaanTambahanCustom =
-            pekerjaanTambahan.length % 2 === 0
+            pekerjaanTambahan?.length % 2 === 0
                 ? pekerjaanTambahan
-                : [...pekerjaanTambahan, { deskripsi: "" }];
+                : [...pekerjaanTambahan, { title: "" }];
 
-        listPekerjaanTambahan = pekerjaanTambahanCustom.map((x, index) => {
+        listPekerjaanTambahan = pekerjaanTambahanCustom?.map((x, index) => {
             return (index + 1) % 2 === 0
-                ? [{ text: `${index + 1}.` }, { text: x.deskripsi }, {}]
+                ? [{ text: `${index + 1}.` }, { text: x?.title }, {}]
                 : [
                       { text: `${index + 1}.` },
-                      { text: x.deskripsi },
+                      { text: x?.title },
                       { text: "1%", rowSpan: 2 }
                   ];
         });
@@ -322,7 +332,8 @@ const renderTugasTambahan = (pekerjaanTambahan, total) => {
                         style: "totalNilai"
                     },
                     {},
-                    { text: `${total}%`, style: "totalNilai" }
+                    // { text: `${total}%`, style: "totalNilai" }
+                    { text: `${total} %`, style: "totalNilai" }
                 ]
             ]
         }
@@ -423,14 +434,14 @@ export const generateKinerjaTahunanFull = (currentUser) => {
                 currentUser.totalPerilaku
             ),
 
-            // tetek bengek
+            // // tetek bengek
             renderCatatanAtasanLangsung(currentUser),
-            // render tambahan nilai
-            renderNilai(
-                currentUser?.nilaiRincianPekerjaan,
-                currentUser?.totalPerilaku
-            ),
-            renderHasil(currentUser.rekom),
+            // // render tambahan nilai
+            // renderNilai(
+            //     currentUser?.nilaiRincianPekerjaan,
+            //     currentUser?.totalPerilaku
+            // ),
+            // renderHasil(currentUser.rekom),
             renderKeterangan(),
             renderPerjanjian(currentUser)
             //   this._renderBarcode(currentUser),
