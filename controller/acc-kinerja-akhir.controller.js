@@ -87,9 +87,11 @@ const listKinerjaApproval = async (req, res) => {
             where: {
                 tahun,
                 aktif: true,
-                id_atasan_langsung: customId
+                id_atasan_langsung: customId,
+                status: "diajukan"
             },
             include: {
+                pegawai: true,
                 target_penilaian: {
                     include: {
                         kinerja_bulanan: true,

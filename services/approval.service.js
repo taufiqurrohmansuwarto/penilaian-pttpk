@@ -30,3 +30,18 @@ export const approvaPenilaianBulananApproval = ({
         )
         .then((res) => res?.data);
 };
+
+export const getPenilaianAkhir = (tahun) => {
+    return fetcher
+        .get(`/penilaian/request-penilaian-akhir?tahun=${tahun}`)
+        .then((res) => res?.data);
+};
+
+export const approvePenilaianAkhir = ({ tahun, id_ptt, data }) => {
+    return fetcher
+        .put(
+            `/penialian/request-penilaian-akhir?tahun=${tahun}&id_ptt=${id_ptt}`,
+            data
+        )
+        .then((res) => res?.data);
+};
