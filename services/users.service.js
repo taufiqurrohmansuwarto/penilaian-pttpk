@@ -125,6 +125,7 @@ export const getRequestPenilaian = (bulan, tahun) => {
         .then((res) => res?.data);
 };
 
+// cetak penilaian bulanan dan penilaian akhir
 export const cetakPenilaianBulanan = ({ bulan, tahun, data }) => {
     return fetcher
         .post(
@@ -134,6 +135,12 @@ export const cetakPenilaianBulanan = ({ bulan, tahun, data }) => {
                 responseType: "blob"
             }
         )
+        .then((res) => res?.data);
+};
+
+export const cetakPenilaianAkhir = (data) => {
+    return fetcher
+        .post(`/user/cetak-penilaian-akhir`, data)
         .then((res) => res?.data);
 };
 

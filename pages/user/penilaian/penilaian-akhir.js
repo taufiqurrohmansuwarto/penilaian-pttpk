@@ -25,6 +25,7 @@ import {
     removeTugasTambahan,
     updateTugasTambahan
 } from "../../../services/users.service";
+import FormCetakPenilaianAkhir from "../../../src/components/FormCetakPenilaianAkhir";
 import UserLayout from "../../../src/components/UserLayout";
 
 const DataPekerjaanTambahan = ({ penilaianId, status }) => {
@@ -148,6 +149,7 @@ const DataPekerjaanTambahan = ({ penilaianId, status }) => {
                         onClick={handleOpenCreateModal}
                         type="primary"
                         icon={<PlusOutlined />}
+                        disabled={status !== "dikerjakan"}
                     >
                         Pekerjaan Tambahan
                     </Button>
@@ -327,15 +329,22 @@ function PenilaianAkhir() {
         });
     };
 
-    const cetakPenilaianAkhir = async () => {
-        try {
-        } catch (error) {}
+    const [loading, setLoading] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const handleCancelModal = () => setVisible(false);
+
+    const cetakPenilaianAkhir = () => {
+        setVisible(true);
     };
 
     return (
         <UserLayout>
             <Skeleton loading={isLoadingDataPenilaianAktif}>
                 {JSON.stringify(dataPenilaianAktif?.status)}
+                <FormCetakPenilaianAkhir
+                    visible={visible}
+                    onCancel={handleCancelModal}
+                />
                 <Button onClick={handleKirimAtasan}>Kirim Atasan</Button>
                 <Button onClick={handleBatalKirimAtasan}>Batal Kirim</Button>
                 <Button onClick={cetakPenilaianAkhir}>Cetak</Button>

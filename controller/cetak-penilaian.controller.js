@@ -141,6 +141,7 @@ const cetakPenilaianBulananUser = async (req, res) => {
     }
 };
 
+// ini dicetak berdasarkan status yang aktif bukan dari id
 const cetakPenilaianAkhirUser = async (req, res) => {
     try {
         const { customId } = req.user;
