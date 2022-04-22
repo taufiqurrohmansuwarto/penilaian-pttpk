@@ -28,6 +28,7 @@ model users {
   comments_notifications_sender    comments_notifications[]   @relation("user_sender")
   comments_notifications_receiver  comments_notifications[]   @relation("user_receiver")
   comments                         comments[]
+  comments_likes                   comments_likes[]           @relation("user_like")
 }
 
 model acc_kinerja_bulanan {
@@ -144,6 +145,7 @@ model comments {
   comments_tags  comments_tags[]
   likes          Int             @default(0)
   dislikes       Int             @default(0)
+  is_edited      Boolean?        @default(false)
   parent_id      String?
   parent         comments?       @relation("SubComments", fields: [parent_id], references: [id], onDelete: Cascade)
   children       comments[]      @relation("SubComments")
@@ -162,6 +164,7 @@ model comments_likes {
   user_custom_id String
   value          Int?
   comments       comments? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+  users          users     @relation("user_like", fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([comment_id, user_custom_id])
 }

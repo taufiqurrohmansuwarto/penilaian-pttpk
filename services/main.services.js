@@ -9,6 +9,16 @@ export const createComments = (data) => {
     return fetcher.post("/comments", data).then((res) => res?.data);
 };
 
+export const removeComment = (id) => {
+    return fetcher.delete(`/comments/${id}`).then((res) => res?.data);
+};
+
+export const updateComment = ({ id, comment }) => {
+    return fetcher
+        .patch(`/comments/${id}`, { comment })
+        .then((res) => res?.data);
+};
+
 export const getComments = ({ cursor = 0, sort = "terbaru" }) => {
     return fetcher
         .get(`/comments?cursor=${cursor}&sort=${sort}`)

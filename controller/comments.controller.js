@@ -10,7 +10,15 @@ const index = async (req, res) => {
         take,
 
         include: {
-            comments_likes: true,
+            comments_likes: {
+                include: {
+                    users: {
+                        select: {
+                            username: true
+                        }
+                    }
+                }
+            },
             user: true,
             children: {
                 orderBy: {
@@ -21,16 +29,6 @@ const index = async (req, res) => {
                 }
             }
         }
-        // orderBy: [
-        //     {
-        //         created_at: "desc"
-        //     },
-        //     {
-        //         children: {
-        //             _count: "desc"
-        //         }
-        //     }
-        // ]
     };
 
     // pretty wrong btw
@@ -121,33 +119,43 @@ const create = async (req, res) => {
 
 // const for likes
 const update = async (req, res) => {
-    const { userId, name } = req.user;
-    const data = {
-        user_custom_id: userId,
-        user_name: name,
-        comment_id: req?.query?.commentId
-    };
-
+    const { commentId } = req.query;
+    const { customId } = req.user;
+    const { comment } = req?.body;
     try {
-        await prisma.comments_likes.upsert({
+        await prisma.comments.updateMany({
             where: {
-                comment_id: data?.comment_id,
-                user_custom_id: data?.user_custom_id
+                id: commentId,
+                user_custom_id: customId
             },
-            create: {
-                comment_id: data?.comment_id,
-                user_custom_id: data?.user_custom_id,
-                user_name: data?.user_name
-            },
-            update: {}
+            data: {
+                comment,
+                is_edited: true,
+                updated_at: new Date()
+            }
         });
-    } catch (error) {}
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
 };
 
 const remove = async (req, res) => {
-    const { userId } = req.user;
+    const { commentId } = req.query;
+    const { customId } = req.user;
     try {
-    } catch (error) {}
+        await prisma.comments.deleteMany({
+            where: {
+                user_custom_id: customId,
+                id: commentId
+            }
+        });
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
 };
 
 const likes = async (req, res) => {

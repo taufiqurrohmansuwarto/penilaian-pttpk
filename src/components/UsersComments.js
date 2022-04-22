@@ -5,6 +5,7 @@ import {
     LikeOutlined
 } from "@ant-design/icons";
 import {
+    Avatar,
     Button,
     Card,
     Comment,
@@ -12,6 +13,7 @@ import {
     Input,
     List,
     message,
+    Popconfirm,
     Skeleton,
     Space
 } from "antd";
@@ -27,6 +29,8 @@ import {
     dislikes,
     getComments,
     likes,
+    removeComment,
+    updateComment,
     uploads
 } from "../../services/main.services";
 import RichTextEditor from "./RichTextEditor";
@@ -114,11 +118,17 @@ const ChildrenComment = ({ data }) => {
                     itemLayout="horizontal"
                     header={`${data?.length} balasan`}
                     dataSource={data}
+                    rowKey={(row) => row?.id}
                     renderItem={(item) => {
                         return (
                             <li>
                                 <Comment
-                                    avatar={item?.user?.image}
+                                    avatar={
+                                        <Avatar
+                                            shape="square"
+                                            src={item?.user?.image}
+                                        />
+                                    }
                                     author={item?.user?.username}
                                     content={
                                         <div
@@ -147,15 +157,20 @@ const ListComments = ({
     mutation,
     show = true,
     handleLike,
-    handleDislike
+    handleDislike,
+    handleRemove,
+    handleUpdate
 }) => {
     const [id, setId] = useState(null);
+    const [editId, setEditId] = useState(null);
+
     const handleShowEditor = (currentId) => {
         setId(currentId);
         setComment("");
     };
 
     const [comment, setComment] = useState("");
+    const [editComment, setEditComment] = useState("");
 
     const handleSubmit = async (id) => {
         const data = { parent_id: id, comment };
@@ -170,6 +185,7 @@ const ListComments = ({
     };
 
     const handleCancel = () => setId(null);
+    const handleCancelEdit = () => setEditId(null);
 
     const [visibleChildrenComment, setVisibleChildrenComment] = useState(null);
 
@@ -187,6 +203,7 @@ const ListComments = ({
                 <List
                     itemLayout="horizontal"
                     dataSource={data}
+                    rowKey={(row) => row?.id}
                     loading={isLoading}
                     renderItem={(item) => (
                         <li>
@@ -292,18 +309,76 @@ const ListComments = ({
                                                 {item?.children?.length} balasan
                                             </span>
                                         ) : null}
+                                    </>,
+                                    <>
+                                        {item?.user_custom_id ===
+                                            user?.user?.id && (
+                                            <Popconfirm
+                                                title="Apakah anda yakin ingin menghapus komentar?"
+                                                onConfirm={() =>
+                                                    handleRemove(item?.id)
+                                                }
+                                            >
+                                                <span>Hapus</span>
+                                            </Popconfirm>
+                                        )}
+                                    </>,
+                                    <>
+                                        {item?.user_custom_id ===
+                                            user?.user?.id && (
+                                            <span
+                                                onClick={() => {
+                                                    setEditId(item?.id);
+                                                    setEditComment(
+                                                        item?.comment
+                                                    );
+                                                }}
+                                            >
+                                                Edit
+                                            </span>
+                                        )}
                                     </>
                                 ]}
                                 content={
-                                    <div
-                                        dangerouslySetInnerHTML={{
-                                            __html: item?.comment
-                                        }}
+                                    <>
+                                        {editId === item?.id ? (
+                                            <Editor
+                                                buttonText="Edit"
+                                                value={editComment}
+                                                onSubmit={async () => {
+                                                    await handleUpdate({
+                                                        id: item?.id,
+                                                        comment: editComment
+                                                    });
+                                                    setEditId(null);
+                                                }}
+                                                onCancel={handleCancelEdit}
+                                                onChange={setEditComment}
+                                            />
+                                        ) : (
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: item?.comment
+                                                }}
+                                            />
+                                        )}
+                                    </>
+                                }
+                                datetime={
+                                    <div>
+                                        {moment(item?.created_at).fromNow()}
+                                        <span style={{ marginLeft: 8 }}>
+                                            {item?.is_edited ? "diedit" : null}
+                                        </span>
+                                    </div>
+                                }
+                                author={item?.user?.username}
+                                avatar={
+                                    <Avatar
+                                        shape="square"
+                                        src={item?.user?.image}
                                     />
                                 }
-                                datetime={moment(item?.created_at).fromNow()}
-                                author={item?.user?.username}
-                                avatar={item?.user?.image}
                             >
                                 {id === item?.id && (
                                     <Comment
@@ -338,7 +413,7 @@ const ListComments = ({
 
 // todo implement likes, filter
 const UserComments = ({ sort }) => {
-    const filter = ["terbaru", "like", "popular"];
+    const filter = ["like", "terbaru", "popular"];
     const router = useRouter();
 
     const [selectedFilter, setSelectedFilter] = useState(sort);
@@ -409,8 +484,20 @@ const UserComments = ({ sort }) => {
         onSuccess: () => queryClient.invalidateQueries("comments")
     });
 
+    const removeMutation = useMutation((data) => removeComment(data), {
+        onSuccess: () => queryClient.invalidateQueries("comments")
+    });
+
+    const updateMutation = useMutation((data) => updateComment(data), {
+        onSuccess: () => queryClient.invalidateQueries("comments")
+    });
+
     const handleLike = (data) => likeMutation.mutate(data);
     const handleDislike = (data) => dislikeMutation.mutate(data);
+    const handleRemove = (data) => removeMutation.mutate(data);
+    const handleUpdate = async (data) => {
+        updateMutation.mutateAsync(data);
+    };
 
     const handleChangeFilter = (a, b) => {
         if (a) {
@@ -476,6 +563,8 @@ const UserComments = ({ sort }) => {
                                 mutation={createCommentMutation}
                                 handleLike={handleLike}
                                 handleDislike={handleDislike}
+                                handleRemove={handleRemove}
+                                handleUpdate={handleUpdate}
                                 isLoading={
                                     isLoadingComments || isFetchingNextPage
                                 }
