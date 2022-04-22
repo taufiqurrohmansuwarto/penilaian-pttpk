@@ -140,7 +140,7 @@ export const cetakPenilaianBulanan = ({ bulan, tahun, data }) => {
 
 export const cetakPenilaianAkhir = (data) => {
     return fetcher
-        .post(`/user/cetak-penilaian-akhir`, data)
+        .post(`/user/cetak-penilaian-akhir`, data, { responseType: "blob" })
         .then((res) => res?.data);
 };
 

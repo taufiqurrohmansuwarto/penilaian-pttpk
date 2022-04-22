@@ -37,10 +37,10 @@ const totalPekerjaanTambahanFn = function (listPekerjaanTambahan) {
 
 export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
     let total;
-    if (!kegiatanTahunan?.target_penilaian?.length) {
+    if (!kegiatanTahunan.length) {
         total = 0;
     } else {
-        const result = kegiatanTahunan?.target_penilaian?.map((kegiatan) => {
+        const result = kegiatanTahunan?.map((kegiatan) => {
             const target = kegiatan?.kuantitas;
             const capaian = sumBy(kegiatan?.kinerja_bulanan, "kuantitas");
 
@@ -52,6 +52,6 @@ export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
 
     return {
         totalKegiatanTambahan,
-        totalPenilaianPekerjaan: total
+        totalPenilaianPekerjaan: total * 100 > 100 ? 100 : total * 100
     };
 };

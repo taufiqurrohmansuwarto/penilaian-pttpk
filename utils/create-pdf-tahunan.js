@@ -1,5 +1,4 @@
 import { sumBy } from "lodash";
-import moment from "moment";
 
 const lebarKolomPenilaian = 35;
 const warnaHijau = "#78AB46";
@@ -9,7 +8,10 @@ const orange = "#e3d8ac";
 const warnaBiru = "#1919ff";
 
 const renderCatatanAtasanLangsung = (currentUser) => {
-    const { penilai, catatan_atasan_langsung } = currentUser;
+    const { nama, nip, golongan, pangkat, jabatan_penilai } =
+        currentUser?.penilai;
+    const { catatan_atasan_langsung } = currentUser;
+
     return {
         style: "informasi",
         table: {
@@ -32,19 +34,19 @@ const renderCatatanAtasanLangsung = (currentUser) => {
                     {
                         stack: [
                             {
-                                text: `${penilai}`,
+                                text: `${jabatan_penilai}`,
                                 style: "headerTtd"
                             },
                             {
-                                text: `${penilai}`,
+                                text: `${nama}`,
                                 style: "namaTerang"
                             },
                             {
-                                text: `${penilai}`,
+                                text: `${golongan}-${pangkat}`,
                                 style: "namaAtasan"
                             },
                             {
-                                text: `NIP. ${penilai}`,
+                                text: `NIP. ${nip}`,
                                 style: "namaAtasan"
                             }
                         ],
@@ -103,7 +105,7 @@ const renderPerilakuKerja = (perilakuKerja, total) => {
                     },
                     {},
                     {},
-                    { text: `${total}`, style: "totalNilai" },
+                    { text: 100, style: "totalNilai" },
                     { text: total, style: "totalNilai" }
                 ]
             ]
@@ -307,7 +309,7 @@ const renderTugasTambahan = (pekerjaanTambahan, total) => {
                 : [
                       { text: `${index + 1}.` },
                       { text: x?.title },
-                      { text: "1%", rowSpan: 2 }
+                      { text: "1", rowSpan: 2 }
                   ];
         });
     } else {
@@ -426,7 +428,7 @@ export const generateKinerjaTahunanFull = (currentUser) => {
 
             renderTugasTambahan(
                 currentUser.listPekerjaanTambahan,
-                currentUser.totalNilaiCapaianKerja
+                currentUser.totalNilaiCapaianKinerja
             ),
 
             renderPerilakuKerja(
@@ -441,7 +443,7 @@ export const generateKinerjaTahunanFull = (currentUser) => {
             //     currentUser?.nilaiRincianPekerjaan,
             //     currentUser?.totalPerilaku
             // ),
-            // renderHasil(currentUser.rekom),
+            renderHasil(currentUser.rekom),
             renderKeterangan(),
             renderPerjanjian(currentUser)
             //   this._renderBarcode(currentUser),
@@ -485,7 +487,7 @@ const renderKeterangan = () => {
 };
 
 const renderPerjanjian = (currentUser) => {
-    const { nama, niptt, atasanDua, pimpinan } = currentUser;
+    const { tempat_waktu, penandatangan, nama, niptt } = currentUser;
 
     return {
         style: "perjanjian",
@@ -495,9 +497,7 @@ const renderPerjanjian = (currentUser) => {
                 [
                     {},
                     {
-                        text: `. . . . .    ${moment()
-                            .locale("id")
-                            .format("DD MMMM YYYY")}`,
+                        text: `${tempat_waktu?.tempat} ${tempat_waktu?.waktu}`,
                         alignment: "center"
                     }
                 ],
@@ -513,8 +513,11 @@ const renderPerjanjian = (currentUser) => {
                     },
                     {
                         stack: [
+                            penandatangan?.is_having_atasnama
+                                ? "Atas Nama"
+                                : null,
                             {
-                                text: `${pimpinan?.jabatan} ${pimpinan?.perangkat_daerah}`,
+                                text: `${penandatangan?.jabatan_penandatangan}`,
                                 style: "headerTtd"
                             }
                         ],
@@ -531,13 +534,16 @@ const renderPerjanjian = (currentUser) => {
                     },
                     {
                         stack: [
-                            { text: `${pimpinan?.nama}`, style: "namaTerang" },
                             {
-                                text: `${pimpinan?.golongan}`,
+                                text: `${penandatangan?.nama_penandatangan}`,
+                                style: "namaTerang"
+                            },
+                            {
+                                text: `${penandatangan?.golongan_penandatangan}-${penandatangan?.pangkat_penandatangan}`,
                                 style: "namaAtasan"
                             },
                             {
-                                text: `NIP. ${pimpinan?.nip}`,
+                                text: `NIP. ${penandatangan?.nip_penandatangan}`,
                                 style: "namaAtasan"
                             }
                         ],

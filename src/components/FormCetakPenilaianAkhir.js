@@ -1,5 +1,14 @@
 import { useDebouncedValue } from "@mantine/hooks";
-import { Checkbox, DatePicker, Form, Input, Modal, Select, Spin } from "antd";
+import {
+    Checkbox,
+    DatePicker,
+    Form,
+    Input,
+    message,
+    Modal,
+    Select,
+    Spin
+} from "antd";
 import FileSaver from "file-saver";
 import moment from "moment";
 import { isEmpty } from "lodash";
@@ -7,7 +16,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import {
     cariPegawaiPNS,
-    cetakPenilaianBulanan
+    cetakPenilaianAkhir
 } from "../../services/users.service";
 import "moment/locale/id";
 moment.locale("id");
@@ -36,7 +45,6 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
             const {
                 tempat,
                 tanggal,
-                penilai,
                 jabatan_penilai,
                 is_having_atasnama,
                 pejabat_penandatangan,
@@ -48,32 +56,32 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
                 pejabat_penandatangan?.label;
 
             const data = {
-                tanggal: currentTanggal,
+                waktu: currentTanggal,
                 tempat,
                 is_having_atasnama,
-                pejabat_penandatangan: {
-                    nama,
-                    nip,
-                    golongan,
-                    pangkat
-                },
-                jabatan_penandatangan
+                nama_penandatangan: nama,
+                nip_penandatangan: nip,
+                golongan_penandatangan: golongan,
+                pangkat_penandatangan: pangkat,
+                jabatan_penandatangan,
+                jabatan_penilai
             };
 
-            //     harus mengirim data
-            //     const hasil = await cetakPenilaianAkhir({
-            //         data
-            //     });
-            //     await FileSaver.saveAs(hasil, "bulanan.pdf");
-            //     onCancel();
+            const hasil = await cetakPenilaianAkhir({
+                data
+            });
+            await FileSaver.saveAs(hasil, "akhir.pdf");
+            onCancel();
         } catch (error) {
+            console.log(error);
+            message.error("error");
         } finally {
             setLoading(false);
         }
     };
     return (
         <Modal
-            title="Cetak Penilaian Bulanan"
+            title="Cetak Penilaian Akhir"
             width={800}
             visible={visible}
             onCancel={onCancel}
@@ -98,6 +106,9 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
                     rules={[{ required: true, message: "Tidak boleh kosong" }]}
                 >
                     <DatePicker format="DD-MM-YYYY" />
+                </Form.Item>
+                <Form.Item name="jabatan_penilai" label="Jabatan Penilai">
+                    <Input />
                 </Form.Item>
                 <Form.Item
                     label="Atas Nama?"

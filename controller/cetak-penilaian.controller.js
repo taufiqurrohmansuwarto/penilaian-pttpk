@@ -242,6 +242,22 @@ const cetakPenilaianAkhirUser = async (req, res) => {
             const totalNilaiCapaianKinerja =
                 nilai.totalKegiatanTambahan + nilai.totalPenilaianPekerjaan;
 
+            const rekom =
+                parseFloat(totalNilaiCapaianKinerja).toFixed(2) > 70 &&
+                totalNilaiPerilaku > 70;
+
+            const {
+                jabatan_penilai,
+                is_having_atasnama,
+                jabatan_penandatangan,
+                nama_penandatangan,
+                pangkat_penandatangan,
+                nip_penandatangan,
+                golongan_penandatangan,
+                tempat,
+                waktu
+            } = req?.body?.data;
+
             const data = {
                 id: result?.id,
                 nama: result?.pegawai?.username,
@@ -251,16 +267,30 @@ const cetakPenilaianAkhirUser = async (req, res) => {
                 skpd: result?.skpd?.detail,
                 tahun: result?.tahun,
                 pengalaman: result?.pengalaman_kerja,
-                listPekerjaanTambahan: result?.pekerjaan_tambahan,
+                listPekerjaanTambahan: result?.tugas_tambahan,
                 listKegiatanTahunan: result?.target_penilaian,
                 catatan_atasan_langsung: result?.catatan,
                 penilai: {
                     nama: result?.atasan_langsung?.label[0],
                     nip: result?.atasan_langsung?.label[2],
-                    golongan: result?.atasan_langsung?.label[5],
-                    pangkat: result?.atasan_langsung?.label[7]
+                    golongan: result?.atasan_langsung?.label[4],
+                    pangkat: result?.atasan_langsung?.label[6],
+                    jabatan_penilai
+                },
+                penandatangan: {
+                    is_having_atasnama,
+                    jabatan_penandatangan,
+                    nama_penandatangan,
+                    nip_penandatangan,
+                    golongan_penandatangan,
+                    pangkat_penandatangan
+                },
+                tempat_waktu: {
+                    tempat,
+                    waktu
                 },
                 totalKegiatanBulanan: nilai?.totalPenilaianPekerjaan,
+                rekom,
                 totalNilaiCapaianKinerja,
                 currentPerilaku,
                 totalPerilaku: totalNilaiPerilaku
