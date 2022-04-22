@@ -4,7 +4,7 @@ export default {
     routes: [
         {
             path: "/feeds",
-            name: " Curhat",
+            name: " Feedback",
             icon: <MessageOutlined />
         },
         {

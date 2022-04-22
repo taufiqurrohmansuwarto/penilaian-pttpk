@@ -1,6 +1,7 @@
 import {
     BookOutlined,
     DashboardOutlined,
+    DatabaseOutlined,
     RadarChartOutlined
 } from "@ant-design/icons";
 
@@ -20,6 +21,11 @@ export default {
             path: "/fasilitator/penilaian-tahunan",
             name: " Penilaian Tahunan",
             icon: <BookOutlined />
+        },
+        {
+            path: "/fasilitator/data-satuan-kinerja",
+            name: " Data Satuan Kinerja",
+            icon: <DatabaseOutlined />
         }
     ]
 };

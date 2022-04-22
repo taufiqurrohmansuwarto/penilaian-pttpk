@@ -114,11 +114,13 @@ model tugas_tambahan {
 }
 
 model ref_satuan_kinerja {
-  id               Int                @id @default(autoincrement())
-  nama             String?            @db.VarChar(200)
-  created_at       DateTime?          @default(now()) @db.Timestamp(6)
-  updated_at       DateTime?          @db.Timestamp(6)
+  id         Int       @id @default(autoincrement())
+  nama       String    @db.VarChar(200)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @db.Timestamp(6)
+
   target_penilaian target_penilaian[]
+  @@unique([nama])
 }
 
 model target_penilaian {

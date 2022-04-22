@@ -53,6 +53,9 @@ const upsert = async (currentUser) => {
 };
 
 export default NextAuth({
+    // pages: {
+    //     signIn: "/ptt-penilaian/signin"
+    // },
     providers: [
         {
             name: "SIMASTER",

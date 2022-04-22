@@ -17,3 +17,17 @@ export const downloadPenilaianAkhir = ({ tahun }) => {
         .get(`/penilaian-tahunan?tahun=${tahun}`, { responseType: "blob" })
         .then((res) => res?.data);
 };
+
+export const getSatuanKinerja = () => {
+    return fetcher.get(`/satuan-kinerja`).then((res) => res?.data);
+};
+
+export const createSatuanKinerja = (data) => {
+    return fetcher.post(`/satuan-kinerja`, data).then((res) => res?.data);
+};
+
+export const updateSatuanKinerja = ({ id, data }) => {
+    return fetcher
+        .patch(`/satuan-kinerja/${id}`, data)
+        .then((res) => res?.data);
+};

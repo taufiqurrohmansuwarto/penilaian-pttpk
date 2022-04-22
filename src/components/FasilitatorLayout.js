@@ -51,7 +51,7 @@ const FasilitatorLayout = ({ children, title = "" }) => {
     });
 
     const router = useRouter();
-    const active = `/${router?.asPath?.split("/")?.[1]}`;
+    const active = `${router?.pathname}`;
 
     return (
         <ProLayout

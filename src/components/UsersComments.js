@@ -393,6 +393,7 @@ const UserComments = ({ sort }) => {
 
     const handleSubmit = () => {
         const data = { comment, parent_id: null };
+        // fucking bug cant empty cause something
         if (!comment) {
             return;
         } else {
