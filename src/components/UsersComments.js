@@ -393,8 +393,9 @@ const UserComments = ({ sort }) => {
 
     const handleSubmit = () => {
         const data = { comment, parent_id: null };
-        // fucking bug cant empty cause something
-        if (!comment) {
+
+        const hasil = comment.replace(/<(.|\n)*?>/g, "").trim();
+        if (hasil.length === 0) {
             return;
         } else {
             createCommentMutation.mutate(data);
