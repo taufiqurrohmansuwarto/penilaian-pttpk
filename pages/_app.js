@@ -17,8 +17,8 @@ export default function MyApp({
 
     return (
         <SessionProvider
-            basePath="/pttpk-penilaian/api/auth"
-            baseUrl="/pttpk-penilaian"
+            basePath="/ptt-penilaian/api/auth"
+            baseUrl="/ptt-penilaian"
             session={session}
         >
             <QueryClientProvider client={queryClient}>

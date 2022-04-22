@@ -30,7 +30,7 @@ function getBasePath() {
 
 module.exports = withTM(
     withAntdLess({
-        basePath: "/pttpk-penilaian",
+        basePath: "/ptt-penilaian",
         publicRuntimeConfig: {
             basePath: getBasePath()
         },

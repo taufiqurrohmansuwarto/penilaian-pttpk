@@ -329,7 +329,6 @@ function PenilaianAkhir() {
         });
     };
 
-    const [loading, setLoading] = useState(false);
     const [visible, setVisible] = useState(false);
     const handleCancelModal = () => setVisible(false);
 
@@ -338,16 +337,37 @@ function PenilaianAkhir() {
     };
 
     return (
-        <UserLayout>
+        <UserLayout title="Penilaian Akhir">
             <Skeleton loading={isLoadingDataPenilaianAktif}>
-                {JSON.stringify(dataPenilaianAktif?.status)}
                 <FormCetakPenilaianAkhir
                     visible={visible}
                     onCancel={handleCancelModal}
                 />
-                <Button onClick={handleKirimAtasan}>Kirim Atasan</Button>
-                <Button onClick={handleBatalKirimAtasan}>Batal Kirim</Button>
-                <Button onClick={cetakPenilaianAkhir}>Cetak</Button>
+                <div style={{ marginBottom: 8 }}>
+                    Status : {dataPenilaianAktif?.status?.toUpperCase()}
+                </div>
+                <Space>
+                    {dataPenilaianAktif?.status === "dikerjakan" ? (
+                        <Button onClick={handleKirimAtasan}>
+                            Kirim Atasan
+                        </Button>
+                    ) : (
+                        <Space>
+                            <Button onClick={handleBatalKirimAtasan}>
+                                Batal Kirim
+                            </Button>
+                            <Button
+                                onClick={cetakPenilaianAkhir}
+                                disabled={
+                                    dataPenilaianAktif?.status !== "diverif"
+                                }
+                            >
+                                Cetak
+                            </Button>
+                        </Space>
+                    )}
+                </Space>
+                <Divider />
                 <DataTargetPenilaian
                     data={dataPenilaianAktif?.target_penilaian}
                 />

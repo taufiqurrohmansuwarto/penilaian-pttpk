@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const fetcher = axios.create({
-    baseURL: "/pttpk-penilaian/api"
+    baseURL: "/ptt-penilaian/api"
 });
 
 // create social media

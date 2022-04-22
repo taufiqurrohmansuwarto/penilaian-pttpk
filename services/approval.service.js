@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const fetcher = axios.create({
-    baseURL: "/pttpk-penilaian/api/approval"
+    baseURL: "/ptt-penilaian/api/approval"
 });
 
 export const getPenilaianApproval = ({ bulan, tahun }) => {

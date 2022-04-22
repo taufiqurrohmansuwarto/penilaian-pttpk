@@ -1,6 +1,6 @@
 import axios from "axios";
 const fetcher = axios.create({
-    baseURL: "/pttpk-penilaian/api"
+    baseURL: "/ptt-penilaian/api"
 });
 
 export const getRefSatuanKinerja = (query = "satuan") => {
