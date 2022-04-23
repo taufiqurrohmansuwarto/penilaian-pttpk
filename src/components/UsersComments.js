@@ -72,45 +72,64 @@ const Editor = ({
     value,
     onCancel,
     handleUpload,
-    buttonText = "Apa yang kamu kerjakan hari ini?"
-}) => (
-    <div>
-        <Form.Item>
-            <RichTextEditor
-                onImageUpload={handleUpload}
-                style={{ minHeight: 250 }}
-                onChange={onChange}
-                controls={[
-                    [
-                        "bold",
-                        "italic",
-                        "underline",
-                        "link",
-                        "orderedList",
-                        "unorderedList"
-                    ],
-                    ["alignCenter", "alignLeft", "alignRight"]
-                ]}
-                value={value}
-            />
-        </Form.Item>
-        <Form.Item>
-            <Space>
-                <Button
-                    htmlType="submit"
-                    loading={submitting}
-                    onClick={onSubmit}
-                    type="primary"
-                >
-                    {buttonText}
-                </Button>
-                {!main && <Button onClick={onCancel}>Batal</Button>}
-            </Space>
-        </Form.Item>
-    </div>
-);
+    buttonText = "Apa yang ingin anda sampaikan hari ini?"
+}) => {
+    const upload = async (file) => {
+        try {
+            const formData = new FormData();
+            formData.append("image", file);
+            const result = await uploads(formData);
+            return result;
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-const ChildrenComment = ({ data }) => {
+    return (
+        <div>
+            <Form.Item>
+                <RichTextEditor
+                    onImageUpload={upload}
+                    style={{ minHeight: 250 }}
+                    onChange={onChange}
+                    controls={[
+                        [
+                            "bold",
+                            "italic",
+                            "underline",
+                            "link",
+                            "orderedList",
+                            "unorderedList"
+                        ],
+                        ["alignCenter", "alignLeft", "alignRight"]
+                    ]}
+                    value={value}
+                />
+            </Form.Item>
+            <Form.Item>
+                <Space>
+                    <Button
+                        htmlType="submit"
+                        loading={submitting}
+                        onClick={onSubmit}
+                        type="primary"
+                    >
+                        {buttonText}
+                    </Button>
+                    {!main && <Button onClick={onCancel}>Batal</Button>}
+                </Space>
+            </Form.Item>
+        </div>
+    );
+};
+const ChildrenComment = ({ data, handleRemove, handleUpdate, user }) => {
+    const [editId, setEditId] = useState();
+    const [comment, setComment] = useState();
+
+    const onCancel = () => {
+        setEditId(null);
+    };
+
     return (
         <div>
             {data?.length > 0 ? (
@@ -129,13 +148,62 @@ const ChildrenComment = ({ data }) => {
                                             src={item?.user?.image}
                                         />
                                     }
+                                    actions={[
+                                        <>
+                                            {user?.user?.id ===
+                                                item?.user_custom_id && (
+                                                <span
+                                                    onClick={() => {
+                                                        setEditId(item?.id);
+                                                        setComment(
+                                                            item?.comment
+                                                        );
+                                                    }}
+                                                >
+                                                    Edit
+                                                </span>
+                                            )}
+                                        </>,
+
+                                        <>
+                                            {user?.user?.id ===
+                                                item?.user_custom_id && (
+                                                <Popconfirm
+                                                    title="Apakah anda yakin ingin menghapus"
+                                                    onConfirm={() =>
+                                                        handleRemove(item?.id)
+                                                    }
+                                                >
+                                                    <span>Hapus</span>
+                                                </Popconfirm>
+                                            )}
+                                        </>
+                                    ]}
                                     author={item?.user?.username}
                                     content={
-                                        <div
-                                            dangerouslySetInnerHTML={{
-                                                __html: item?.comment
-                                            }}
-                                        />
+                                        <>
+                                            {item?.id === editId ? (
+                                                <Editor
+                                                    onCancel={onCancel}
+                                                    value={comment}
+                                                    onChange={setComment}
+                                                    onSubmit={async () => {
+                                                        await handleUpdate({
+                                                            id: item?.id,
+                                                            comment: comment
+                                                        });
+                                                        setEditId(null);
+                                                    }}
+                                                    buttonText="Edit"
+                                                />
+                                            ) : (
+                                                <div
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: item?.comment
+                                                    }}
+                                                />
+                                            )}
+                                        </>
                                     }
                                     datetime={moment(
                                         item?.created_at
@@ -368,7 +436,9 @@ const ListComments = ({
                                     <div>
                                         {moment(item?.created_at).fromNow()}
                                         <span style={{ marginLeft: 8 }}>
-                                            {item?.is_edited ? "diedit" : null}
+                                            {item?.is_edited
+                                                ? "(diedit)"
+                                                : null}
                                         </span>
                                     </div>
                                 }
@@ -400,6 +470,9 @@ const ListComments = ({
                                     <ChildrenComment
                                         show={show}
                                         data={item?.children}
+                                        handleRemove={handleRemove}
+                                        user={user}
+                                        handleUpdate={handleUpdate}
                                     />
                                 ) : null}
                             </Comment>
@@ -413,7 +486,7 @@ const ListComments = ({
 
 // todo implement likes, filter
 const UserComments = ({ sort }) => {
-    const filter = ["like", "terbaru", "popular"];
+    const filter = ["like", "terbaru", "popular", "me"];
     const router = useRouter();
 
     const [selectedFilter, setSelectedFilter] = useState(sort);

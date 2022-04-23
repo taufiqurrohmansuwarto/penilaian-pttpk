@@ -1,6 +1,7 @@
 import prisma from "../lib/prisma";
 
 const index = async (req, res) => {
+    const { customId } = req.user;
     const cursor = req?.query?.cursor;
     const sort = req?.query?.sort || "terbaru";
 
@@ -8,7 +9,9 @@ const index = async (req, res) => {
 
     let query = {
         take,
-
+        where: {
+            parent_id: null
+        },
         include: {
             comments_likes: {
                 include: {
@@ -39,6 +42,20 @@ const index = async (req, res) => {
             skip: 1,
             cursor: {
                 id: cursor
+            }
+        };
+    }
+
+    if (sort === "me") {
+        query = {
+            ...query,
+            where: {
+                ...query?.where,
+                user_custom_id: customId,
+                parent_id: null
+            },
+            orderBy: {
+                created_at: "desc"
             }
         };
     }
@@ -75,10 +92,7 @@ const index = async (req, res) => {
     try {
         // todo paging or infinte scroll
         const result = await prisma.comments.findMany({
-            ...query,
-            where: {
-                parent_id: null
-            }
+            ...query
         });
 
         const nextCursor =
