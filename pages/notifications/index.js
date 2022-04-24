@@ -47,9 +47,15 @@ const ListNotif = ({
         <Card>
             <List
                 header={
-                    <Typography.Link onClick={handleReadAllNotification}>
-                        Tandai semua sebagai telah dibaca
-                    </Typography.Link>
+                    <>
+                        {data?.total !== 0 && (
+                            <Typography.Link
+                                onClick={handleReadAllNotification}
+                            >
+                                Tandai semua sebagai telah dibaca
+                            </Typography.Link>
+                        )}
+                    </>
                 }
                 size="small"
                 dataSource={data?.result}

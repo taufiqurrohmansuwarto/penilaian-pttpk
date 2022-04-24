@@ -147,6 +147,9 @@ const create = async (req, res) => {
             const result = await prisma.comments.findUnique({
                 where: {
                     id: body?.parent_id
+                },
+                include: {
+                    children: true
                 }
             });
 
