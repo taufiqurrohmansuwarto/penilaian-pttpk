@@ -6,6 +6,7 @@ import {
     Button,
     Card,
     DatePicker,
+    Divider,
     Form,
     Input,
     InputNumber,
@@ -151,6 +152,7 @@ const TablePenilaianAkhir = ({ data, tahun }) => {
     return (
         <>
             <Table
+                size="small"
                 dataSource={data}
                 columns={columns}
                 pagination={false}
@@ -210,6 +212,7 @@ function PenilaianTahunan({ data }) {
                         allowClear={false}
                         defaultValue={date}
                     />
+                    <Divider />
                     <Skeleton loading={isLoading}>
                         <TablePenilaianAkhir
                             data={dataPenilaianUser}

@@ -111,12 +111,18 @@ const index = async (req, res) => {
 const get = async (req, res) => {
     const { commentId } = req.query;
     try {
-        const result = await prisma.comments.findMany({
+        const result = await prisma.comments.findFirst({
             where: {
                 id: commentId
             },
             include: {
-                children: true
+                comments_likes: true,
+                children: {
+                    include: {
+                        user: true
+                    }
+                },
+                user: true
             }
         });
 
@@ -154,6 +160,7 @@ const create = async (req, res) => {
             });
 
             // kalau sama dengan user jangan dikiri
+            // harus ada notifikasi di user lain yang berkomentar di chilren
             if (customId !== result?.user_custom_id) {
                 await prisma.comments_notifications.create({
                     data: {
@@ -202,12 +209,33 @@ const remove = async (req, res) => {
     const { commentId } = req.query;
     const { customId } = req.user;
     try {
-        await prisma.comments.deleteMany({
+        const result = await prisma.comments.findUnique({
             where: {
-                user_custom_id: customId,
                 id: commentId
+            },
+            include: {
+                children: true
             }
         });
+
+        if (result?.parent_id === null && result?.children?.length !== 0) {
+            await prisma.comments.update({
+                where: {
+                    id: commentId
+                },
+                data: {
+                    comment: "<i>Pesan telah dihapus</i>"
+                }
+            });
+        } else {
+            await prisma.comments.deleteMany({
+                where: {
+                    user_custom_id: customId,
+                    id: commentId
+                }
+            });
+        }
+
         res.json({ code: 200, message: "success" });
     } catch (error) {
         console.log(error);

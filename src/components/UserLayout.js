@@ -56,7 +56,7 @@ const UserLayout = ({ children, title = "", content = null }) => {
     return (
         <ProLayout
             menuItemRender={menuItemRender}
-            collapsed
+            // collapsed
             selectedKeys={[active]}
             title="PTTPK"
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
@@ -71,9 +71,7 @@ const UserLayout = ({ children, title = "", content = null }) => {
             fixSiderbar
             disableContentMargin
         >
-            <PageContainer content={content} title={title}>
-                {children}
-            </PageContainer>
+            {children}
         </ProLayout>
     );
 };

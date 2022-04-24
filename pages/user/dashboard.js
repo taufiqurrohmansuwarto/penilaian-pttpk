@@ -1,6 +1,7 @@
 import { Avatar, Card, Skeleton } from "antd";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import PageContainer from "../../src/components/PageContainer";
 import UserLayout from "../../src/components/UserLayout";
 
 const Dashboard = () => {
@@ -8,13 +9,15 @@ const Dashboard = () => {
 
     return (
         <UserLayout title="Dashboard Penilaian">
-            <Card>
-                <Skeleton loading={status === "loading"}>
-                    <Avatar src={data?.user?.image} size="large" />
-                    <p>Selamat Datang, {data?.user?.name} </p>
-                    <p>{data?.user?.employee_number}</p>
-                </Skeleton>
-            </Card>
+            <PageContainer title="Dashboard Penilaian" subTitle="PTTPK">
+                <Card>
+                    <Skeleton loading={status === "loading"}>
+                        <Avatar src={data?.user?.image} size="large" />
+                        <p>Selamat Datang, {data?.user?.name} </p>
+                        <p>{data?.user?.employee_number}</p>
+                    </Skeleton>
+                </Card>
+            </PageContainer>
         </UserLayout>
     );
 };

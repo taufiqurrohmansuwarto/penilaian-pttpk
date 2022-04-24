@@ -1,4 +1,5 @@
-import { Col, Row, Skeleton } from "antd";
+import { Breadcrumb, Col, Row, Skeleton } from "antd";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "react-query";
@@ -36,12 +37,21 @@ function Comments() {
         <Layout>
             <PageContainer
                 title="Komentar"
-                content="Isikan komentar anda"
+                subTitle="Diskusi"
                 fixedHeader
+                breadcrumbRender={() => (
+                    <Breadcrumb>
+                        <Breadcrumb.Item>
+                            <Link href="/discussions">
+                                <a>Diskusi</a>
+                            </Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>Komentar</Breadcrumb.Item>
+                    </Breadcrumb>
+                )}
             >
                 <Row gutter={[16, 16]}>
-                    <Col span={4}></Col>
-                    <Col span={15}>
+                    <Col span={13} offset={4}>
                         <Skeleton avatar loading={isLoadingPost}>
                             <CardPost data={dataPost} />
                         </Skeleton>
@@ -50,7 +60,7 @@ function Comments() {
                             id={router?.query?.id}
                         />
                     </Col>
-                    <Col span={5}>
+                    <Col span={6}>
                         <Row gutter={[8, 8]}>
                             <Col span={24}>
                                 <Skeleton loading={isLoadingPost}>

@@ -26,6 +26,7 @@ import {
     updateTugasTambahan
 } from "../../../services/users.service";
 import FormCetakPenilaianAkhir from "../../../src/components/FormCetakPenilaianAkhir";
+import PageContainer from "../../../src/components/PageContainer";
 import UserLayout from "../../../src/components/UserLayout";
 
 const DataPekerjaanTambahan = ({ penilaianId, status }) => {
@@ -246,16 +247,6 @@ const DataTargetPenilaian = ({ data }) => {
     return (
         <>
             <Table
-                title={() => (
-                    <div>
-                        <Alert
-                            message="Perhatian"
-                            type="warning"
-                            showIcon
-                            description="Ingat Perhitungan capaian kinerja dilihat dari kinerja bulanan yang sudah diverif oleh atasan. Kinerja bulanan yang belum diverif / dinilai atasan tidak akan masuk ke total penilaian"
-                        />
-                    </div>
-                )}
                 dataSource={data}
                 columns={columns}
                 rowKey={(row) => row?.id}
@@ -338,44 +329,58 @@ function PenilaianAkhir() {
 
     return (
         <UserLayout title="Penilaian Akhir">
-            <Skeleton loading={isLoadingDataPenilaianAktif}>
-                <FormCetakPenilaianAkhir
-                    visible={visible}
-                    onCancel={handleCancelModal}
-                />
-                <div style={{ marginBottom: 8 }}>
-                    Status : {dataPenilaianAktif?.status?.toUpperCase()}
-                </div>
-                <Space>
-                    {dataPenilaianAktif?.status === "dikerjakan" ? (
-                        <Button onClick={handleKirimAtasan}>
-                            Kirim Atasan
-                        </Button>
-                    ) : (
-                        <Space>
-                            <Button onClick={handleBatalKirimAtasan}>
-                                Batal Kirim
+            <PageContainer
+                title="Penilaian Akhir"
+                subTitle="PTTPK"
+                fixedHeader
+                content={
+                    <Alert
+                        type="warning"
+                        showIcon
+                        message="Perhatian"
+                        description="Untuk dapat mencetak penilaian tahunan/akhir. Pastikan kembali atasan langsung anda masuk pada aplikasi dan menilai penilaian akhir tahunan anda. Perlu diingat, Capaian pada penilaian akhir merupakan pekerjaan bulanan yang sudah dinilai dan diacc atasan langsung"
+                    />
+                }
+            >
+                <Skeleton loading={isLoadingDataPenilaianAktif}>
+                    <FormCetakPenilaianAkhir
+                        visible={visible}
+                        onCancel={handleCancelModal}
+                    />
+                    <div style={{ marginBottom: 8 }}>
+                        Status : {dataPenilaianAktif?.status?.toUpperCase()}
+                    </div>
+                    <Space>
+                        {dataPenilaianAktif?.status === "dikerjakan" ? (
+                            <Button onClick={handleKirimAtasan}>
+                                Kirim Atasan
                             </Button>
-                            <Button
-                                onClick={cetakPenilaianAkhir}
-                                disabled={
-                                    dataPenilaianAktif?.status !== "diverif"
-                                }
-                            >
-                                Cetak
-                            </Button>
-                        </Space>
-                    )}
-                </Space>
-                <Divider />
-                <DataTargetPenilaian
-                    data={dataPenilaianAktif?.target_penilaian}
-                />
-                <DataPekerjaanTambahan
-                    penilaianId={dataPenilaianAktif?.id}
-                    status={dataPenilaianAktif?.status}
-                />
-            </Skeleton>
+                        ) : (
+                            <Space>
+                                <Button onClick={handleBatalKirimAtasan}>
+                                    Batal Kirim
+                                </Button>
+                                <Button
+                                    onClick={cetakPenilaianAkhir}
+                                    disabled={
+                                        dataPenilaianAktif?.status !== "diverif"
+                                    }
+                                >
+                                    Cetak
+                                </Button>
+                            </Space>
+                        )}
+                    </Space>
+                    <Divider />
+                    <DataTargetPenilaian
+                        data={dataPenilaianAktif?.target_penilaian}
+                    />
+                    <DataPekerjaanTambahan
+                        penilaianId={dataPenilaianAktif?.id}
+                        status={dataPenilaianAktif?.status}
+                    />
+                </Skeleton>
+            </PageContainer>
         </UserLayout>
     );
 }

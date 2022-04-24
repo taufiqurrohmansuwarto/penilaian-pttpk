@@ -5,6 +5,7 @@ import {
     SendOutlined
 } from "@ant-design/icons";
 import {
+    Alert,
     Button,
     Card,
     Col,
@@ -42,6 +43,7 @@ import {
     updatePenilaianBulanan
 } from "../../../services/users.service";
 import FormCetakModal from "../../../src/components/FormCetakModal";
+import PageContainer from "../../../src/components/PageContainer";
 import UserLayout from "../../../src/components/UserLayout";
 
 const DataPenilaianAktif = () => {
@@ -629,20 +631,29 @@ const BulananBaru = ({ data }) => {
                 </Skeleton>
             }
         >
-            <Row gutter={[16, 16]}>
-                <Col span={24}>
-                    <Card>
-                        <Form.Item label="Bulan">
-                            <DatePicker.MonthPicker
-                                defaultValue={moment(`${tahun}-${bulan}`)}
-                                onChange={handleChange}
-                            />
-                        </Form.Item>
-                        <Divider />
-                        <Penilaian tahun={tahun} bulan={bulan} />
-                    </Card>
-                </Col>
-            </Row>
+            <PageContainer
+                title="Penilaian Bulanan"
+                subTitle="PTTPK"
+                content={
+                    <Alert
+                        type="warning"
+                        message="Info"
+                        showIcon
+                        description="Untuk dapat mencetak penilaian bulanan, pastikan atasan langsung anda (PNS) masuk pada aplikasi dan menilai kinerja bulanan anda."
+                    />
+                }
+            >
+                <Card>
+                    <Form.Item label="Bulan">
+                        <DatePicker.MonthPicker
+                            defaultValue={moment(`${tahun}-${bulan}`)}
+                            onChange={handleChange}
+                        />
+                    </Form.Item>
+                    <Divider />
+                    <Penilaian tahun={tahun} bulan={bulan} />
+                </Card>
+            </PageContainer>
         </UserLayout>
     );
 };

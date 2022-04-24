@@ -77,13 +77,17 @@ const changeRoutes = (user) => {
         ];
 
         const userPttpkRoutes = [
-            { path: "/user/dashboard", name: " User", icon: <ReadOutlined /> }
+            {
+                path: "/user/dashboard",
+                name: " Penilaian PTTPK",
+                icon: <ReadOutlined />
+            }
         ];
 
         const fasilitatorRoutes = [
             {
                 path: "/fasilitator/dashboard",
-                name: " Fasilitator",
+                name: " Penilaian PTTPK",
                 icon: <ReadOutlined />
             }
         ];

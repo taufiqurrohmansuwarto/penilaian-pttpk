@@ -11,6 +11,7 @@ import {
 } from "../../../../services/users.service";
 import { useEffect, useState } from "react";
 import {
+    Breadcrumb,
     Button,
     Card,
     DatePicker,
@@ -25,6 +26,8 @@ import {
 import moment from "moment";
 import { useDebouncedValue } from "@mantine/hooks";
 import { isEmpty } from "lodash";
+import PageContainer from "../../../../src/components/PageContainer";
+import Link from "next/link";
 
 const FormPegawaiPNS = ({ label, name, help }) => {
     const [nip, setNip] = useState("");
@@ -269,18 +272,33 @@ const TargetTahunan = () => {
 
     return (
         <UserLayout title="Update Penilaian">
-            <Skeleton
-                loading={isLoading || isLoadingDataJabatan || isLoadingUnor}
+            <PageContainer
+                title="Edit Penilaian"
+                subTitle="PTTPK"
+                breadcrumbRender={() => (
+                    <Breadcrumb>
+                        <Breadcrumb.Item>
+                            <Link href="/user/penilaian">
+                                <a>Penilaian</a>
+                            </Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>Edit Penilaian</Breadcrumb.Item>
+                    </Breadcrumb>
+                )}
             >
-                <EditFormPenilaian
-                    form={form}
-                    data={data}
-                    loading={updatePenilaianMutation?.isLoading}
-                    dataJabatan={dataJabatan}
-                    dataUnor={dataUnor}
-                    handleSubmit={handleSubmit}
-                />
-            </Skeleton>
+                <Skeleton
+                    loading={isLoading || isLoadingDataJabatan || isLoadingUnor}
+                >
+                    <EditFormPenilaian
+                        form={form}
+                        data={data}
+                        loading={updatePenilaianMutation?.isLoading}
+                        dataJabatan={dataJabatan}
+                        dataUnor={dataUnor}
+                        handleSubmit={handleSubmit}
+                    />
+                </Skeleton>
+            </PageContainer>
         </UserLayout>
     );
 };

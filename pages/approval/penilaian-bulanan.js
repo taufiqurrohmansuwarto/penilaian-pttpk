@@ -65,7 +65,7 @@ const FormApprovalModal = ({
                 }))
             );
         }
-    }, [status, data, visible, catatanAtasanLangsung, catatan]);
+    }, [status, data, visible]);
 
     const columns = [
         { dataIndex: "title", title: "Deskripsi Pekerjaan" },
@@ -164,7 +164,7 @@ const FormApprovalModal = ({
             centered
             onCancel={onCancel}
             visible={visible}
-            width={800}
+            width={900}
             onOk={handleSubmit}
         >
             <Space>
@@ -182,9 +182,9 @@ const FormApprovalModal = ({
                     defaultValue={0}
                     onChange={handleChangeHighValue}
                 />
-                <Button onClick={handleSetRandomValue}>Random</Button>
+                <Button onClick={handleSetRandomValue}>Set Range Nilai</Button>
             </Space>
-
+            <Divider />
             <Table
                 pagination={false}
                 columns={columns}
@@ -335,6 +335,7 @@ function Penilaian({ data: query }) {
                             columns={columns}
                             dataSource={dataPenilaianApproval}
                             loading={loadingDataPenilaianApproval}
+                            pagination={false}
                         />
                     </Card>
                 </Skeleton>

@@ -1,4 +1,8 @@
-import { FileAddOutlined } from "@ant-design/icons";
+import {
+    CheckOutlined,
+    CloseOutlined,
+    FileAddOutlined
+} from "@ant-design/icons";
 import {
     Alert,
     Button,
@@ -18,6 +22,7 @@ import {
     getPenilaian,
     hapusPenilaian
 } from "../../../services/users.service";
+import PageContainer from "../../../src/components/PageContainer";
 import UserLayout from "../../../src/components/UserLayout";
 
 const PeringatanPenilaian = () => {
@@ -87,7 +92,9 @@ const Penilaian = () => {
         {
             key: "aktif",
             title: "Aktif",
-            render: (_, row) => <div>{JSON.stringify(row?.aktif)}</div>
+            render: (_, row) => (
+                <div>{row?.aktif ? <CheckOutlined /> : <CloseOutlined />}</div>
+            )
         },
         {
             key: "action",
@@ -121,26 +128,31 @@ const Penilaian = () => {
 
     return (
         <UserLayout title="Penilaian">
-            <Card>
-                <PeringatanPenilaian />
-                <Divider />
-                <Table
-                    title={() => (
-                        <Button
-                            icon={<FileAddOutlined />}
-                            type="primary"
-                            onClick={createPenilaian}
-                        >
-                            Penilaian
-                        </Button>
-                    )}
-                    loading={isLoading}
-                    columns={columns}
-                    rowKey={(row) => row?.id}
-                    dataSource={data}
-                    pagination={false}
-                />
-            </Card>
+            <PageContainer
+                title="Daftar Penilaian"
+                subTitle="PTTPK"
+                content={<PeringatanPenilaian />}
+            >
+                <Card>
+                    <Divider />
+                    <Table
+                        title={() => (
+                            <Button
+                                icon={<FileAddOutlined />}
+                                type="primary"
+                                onClick={createPenilaian}
+                            >
+                                Penilaian
+                            </Button>
+                        )}
+                        loading={isLoading}
+                        columns={columns}
+                        rowKey={(row) => row?.id}
+                        dataSource={data}
+                        pagination={false}
+                    />
+                </Card>
+            </PageContainer>
         </UserLayout>
     );
 };

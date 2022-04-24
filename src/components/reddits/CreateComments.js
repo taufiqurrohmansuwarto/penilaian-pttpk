@@ -83,7 +83,7 @@ const MyComment = ({ comment, user, id }) => {
             author={
                 <div>
                     <Space>
-                        <span>{user?.user?.name}</span>
+                        <span>{comment?.user?.username}</span>
                         {comment?.user_custom_id ===
                             comment?.parent_comments?.user_custom_id && (
                             <Tag color="green">Pembuat Postingan</Tag>
