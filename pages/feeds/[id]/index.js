@@ -3,10 +3,12 @@ import {
     Avatar,
     Breadcrumb,
     Button,
+    Card,
     Col,
     Comment,
     Form,
     List,
+    message,
     Popconfirm,
     Row,
     Skeleton,
@@ -29,6 +31,37 @@ import Layout from "../../../src/components/Layout";
 import PageContainer from "../../../src/components/PageContainer";
 import RichTextEditor from "../../../src/components/RichTextEditor";
 import Link from "next/link";
+import {
+    DislikeFilled,
+    DislikeOutlined,
+    LikeFilled,
+    LikeOutlined
+} from "@ant-design/icons";
+
+const filterValue = (commentId, userId, items) => {
+    return items?.find(
+        (item) =>
+            item?.comment_id === commentId && item?.user_custom_id === userId
+    )?.value;
+};
+
+const hasLike = (commentId, userId, items) => {
+    const likeValue = items?.find(
+        (item) =>
+            item?.comment_id === commentId && item?.user_custom_id === userId
+    )?.value;
+
+    return likeValue === 1 ? true : false;
+};
+
+const hasDislike = (commentId, userId, items) => {
+    const dislikeValue = items?.find(
+        (item) =>
+            item?.comment_id === commentId && item?.user_custom_id === userId
+    )?.value;
+
+    return dislikeValue === -1 ? true : false;
+};
 
 const Editor = ({
     main,
@@ -197,8 +230,6 @@ function DetailFeed() {
         }
     );
 
-    const [comment, setComment] = useState();
-
     const queryClient = useQueryClient();
 
     const createCommentMutation = useMutation((data) => createComments(data), {
@@ -230,11 +261,37 @@ function DetailFeed() {
     const handleLike = (data) => likeMutation.mutate(data);
     const handleDislike = (data) => dislikeMutation.mutate(data);
     const handleRemove = (data) => removeMutation.mutate(data);
+
     const handleUpdate = async (data) => {
         updateMutation.mutateAsync(data);
     };
 
     const { data: dataUser, status } = useSession();
+
+    const [id, setId] = useState(null);
+    const [editId, setEditId] = useState(null);
+
+    const handleShowEditor = (currentId) => {
+        setId(currentId);
+        setComment("");
+    };
+
+    const [comment, setComment] = useState("");
+    const [editComment, setEditComment] = useState("");
+
+    const handleSubmit = async (id) => {
+        const data = { parent_id: id, comment };
+        if (!comment) {
+            return;
+        } else {
+            createCommentMutation.mutate(data);
+            setComment("");
+            setId(null);
+        }
+    };
+
+    const handleCancel = () => setId(null);
+    const handleCancelEdit = () => setEditId(null);
 
     return (
         <Layout>
@@ -254,29 +311,191 @@ function DetailFeed() {
             >
                 <Skeleton loading={isLoading || status === "loading"}>
                     <Row>
-                        <Col span={10} offset={6}>
-                            <Comment
-                                avatar={
-                                    <Avatar
-                                        src={data?.user?.image}
-                                        shape="square"
+                        <Col span={12} offset={6}>
+                            <Card>
+                                <Comment
+                                    actions={[
+                                        <span
+                                            onClick={() => {
+                                                const value = filterValue(
+                                                    data?.id,
+                                                    dataUser?.user?.id,
+                                                    data?.comments_likes
+                                                );
+                                                handleLike({
+                                                    commentId: data?.id,
+                                                    value
+                                                });
+                                            }}
+                                        >
+                                            {hasLike(
+                                                data?.id,
+                                                dataUser?.user?.id,
+                                                data?.comments_likes
+                                            ) ? (
+                                                <>
+                                                    <LikeFilled />
+                                                    <span
+                                                        style={{
+                                                            paddingLeft: 8
+                                                        }}
+                                                    >
+                                                        {data?.likes}
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <LikeOutlined />
+                                                    <span
+                                                        style={{
+                                                            paddingLeft: 8
+                                                        }}
+                                                    >
+                                                        {data?.likes}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </span>,
+
+                                        <span
+                                            onClick={() => {
+                                                const value = filterValue(
+                                                    data?.id,
+                                                    dataUser?.user?.id,
+                                                    data?.comments_likes
+                                                );
+                                                handleDislike({
+                                                    commentId: data?.id,
+                                                    value
+                                                });
+                                            }}
+                                        >
+                                            {hasDislike(
+                                                data?.id,
+                                                dataUser?.user?.id,
+                                                data?.comments_likes
+                                            ) ? (
+                                                <>
+                                                    <DislikeFilled />
+                                                    <span
+                                                        style={{
+                                                            paddingLeft: 8
+                                                        }}
+                                                    >
+                                                        {data?.dislikes}
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <DislikeOutlined />
+                                                    <span
+                                                        style={{
+                                                            paddingLeft: 8
+                                                        }}
+                                                    >
+                                                        {data?.dislikes}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </span>,
+
+                                        <span
+                                            onClick={() =>
+                                                handleShowEditor(data?.id)
+                                            }
+                                            style={{ fontWeight: "bold" }}
+                                        >
+                                            Balas
+                                        </span>,
+                                        <>
+                                            {data?.user_custom_id ===
+                                                dataUser?.user?.id && (
+                                                <Popconfirm
+                                                    title="Apakah anda yakin ingin menghapus komentar?"
+                                                    onConfirm={() =>
+                                                        handleRemove(data?.id)
+                                                    }
+                                                >
+                                                    <span>Hapus</span>
+                                                </Popconfirm>
+                                            )}
+                                        </>,
+                                        <>
+                                            {data?.user_custom_id ===
+                                                dataUser?.user?.id && (
+                                                <span
+                                                    onClick={() => {
+                                                        setEditId(data?.id);
+                                                        setEditComment(
+                                                            data?.comment
+                                                        );
+                                                    }}
+                                                >
+                                                    Edit
+                                                </span>
+                                            )}
+                                        </>
+                                    ]}
+                                    avatar={
+                                        <Avatar
+                                            src={data?.user?.image}
+                                            shape="square"
+                                        />
+                                    }
+                                    author={data?.user?.username}
+                                    datetime={moment(
+                                        data?.created_at
+                                    ).fromNow()}
+                                    content={
+                                        <>
+                                            {editId === data?.id ? (
+                                                <Editor
+                                                    buttonText="Edit"
+                                                    value={editComment}
+                                                    onSubmit={async () => {
+                                                        await handleUpdate({
+                                                            id: data?.id,
+                                                            comment: editComment
+                                                        });
+                                                        setEditId(null);
+                                                    }}
+                                                    onCancel={handleCancelEdit}
+                                                    onChange={setEditComment}
+                                                />
+                                            ) : (
+                                                <div
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: data?.comment
+                                                    }}
+                                                />
+                                            )}
+                                        </>
+                                    }
+                                >
+                                    {id === data?.id && (
+                                        <Comment
+                                            author={dataUser?.user?.name}
+                                            avatar={dataUser?.user?.image}
+                                        >
+                                            <Editor
+                                                buttonText="Balas"
+                                                value={comment}
+                                                onSubmit={() =>
+                                                    handleSubmit(data?.id)
+                                                }
+                                                onCancel={handleCancel}
+                                                onChange={setComment}
+                                            />
+                                        </Comment>
+                                    )}
+                                    <ChildrenComponent
+                                        data={data?.children}
+                                        user={dataUser}
+                                        handleRemove={handleRemove}
+                                        handleUpdate={handleUpdate}
                                     />
-                                }
-                                author={data?.user?.username}
-                                datetime={moment(data?.created_at).fromNow()}
-                                content={
-                                    <div
-                                        dangerouslySetInnerHTML={{
-                                            __html: data?.comment
-                                        }}
-                                    />
-                                }
-                            >
-                                <ChildrenComponent
-                                    data={data?.children}
-                                    user={dataUser}
-                                />
-                            </Comment>
+                                </Comment>
+                            </Card>
                         </Col>
                     </Row>
                 </Skeleton>

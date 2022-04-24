@@ -1,3 +1,4 @@
+import { uniq } from "lodash";
 import prisma from "../lib/prisma";
 
 const index = async (req, res) => {
@@ -120,9 +121,15 @@ const get = async (req, res) => {
                 children: {
                     include: {
                         user: true
+                    },
+                    orderBy: {
+                        created_at: "asc"
                     }
                 },
                 user: true
+            },
+            orderBy: {
+                created_at: "desc"
             }
         });
 
@@ -162,6 +169,9 @@ const create = async (req, res) => {
             // kalau sama dengan user jangan dikiri
             // harus ada notifikasi di user lain yang berkomentar di chilren
             if (customId !== result?.user_custom_id) {
+                const comment_owner = result?.user_custom_id;
+                const commentator = req.user?.customId;
+
                 await prisma.comments_notifications.create({
                     data: {
                         comment_id: body?.parent_id,
@@ -171,6 +181,26 @@ const create = async (req, res) => {
                         message: body?.comment
                     }
                 });
+
+                if (result?.children?.length !== 0) {
+                    const usersSender = result?.children
+                        .map((b) => b?.user_custom_id)
+                        ?.filter(
+                            (x) => x !== comment_owner && x !== commentator
+                        );
+
+                    const data = uniq(usersSender)?.map((user) => ({
+                        comment_id: body?.parent_id,
+                        sender: customId,
+                        receiver: user,
+                        type: "replied-comment",
+                        message: body?.comment
+                    }));
+
+                    await prisma.comments_notifications.createMany({
+                        data
+                    });
+                }
             }
         }
 

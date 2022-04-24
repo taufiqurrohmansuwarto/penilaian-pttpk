@@ -8,6 +8,11 @@ const index = async (req, res) => {
                 receiver: customId
             },
             include: {
+                comments: {
+                    include: {
+                        user: true
+                    }
+                },
                 user_receiver_notification: true,
                 user_sender_notification: true
             },

@@ -25,8 +25,9 @@ const CustomDescription = ({ item, handleReadById }) => {
     return (
         <Typography.Text type="secondary">
             {item?.user_sender_notification?.username}
-            {item?.type === "replied" ? " mengomentari" : " menyukai"} status
-            anda
+            {item?.type === "replied"
+                ? " mengomentari status anda"
+                : ` mengomentari status ${item?.comments?.user?.username}`}{" "}
         </Typography.Text>
     );
 };
@@ -134,8 +135,7 @@ function Notifications() {
                 subTitle="Notifikasi Feedback dan diskusi"
             >
                 <Row>
-                    <Col span={6}></Col>
-                    <Col span={12}>
+                    <Col span={10} offset={6}>
                         <Skeleton loading={isLoading}>
                             <ListNotif
                                 handleReadAllNotification={
@@ -148,7 +148,6 @@ function Notifications() {
                             />
                         </Skeleton>
                     </Col>
-                    <Col span={6}></Col>
                 </Row>
             </PageContainer>
         </Layout>
