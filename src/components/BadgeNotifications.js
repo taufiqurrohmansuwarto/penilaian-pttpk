@@ -1,6 +1,7 @@
 import { BellOutlined } from "@ant-design/icons";
-import { Avatar, Badge, Skeleton } from "antd";
+import { Avatar, Badge } from "antd";
 import { useQuery } from "react-query";
+import { getNotifications } from "../../services/main.services";
 
 function BadgeNotifications() {
     const { data, isLoading } = useQuery(["notifications"], () =>
