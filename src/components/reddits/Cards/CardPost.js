@@ -4,7 +4,7 @@ import {
     ArrowUpOutlined,
     CommentOutlined
 } from "@ant-design/icons";
-import { Avatar, Card, Space, Typography } from "antd";
+import { Avatar, Card, Col, Row, Space, Typography } from "antd";
 import { useRouter } from "next/router";
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
@@ -102,25 +102,50 @@ function CardPost({ data }) {
         <Card
             style={{ marginBottom: 8 }}
             size="small"
-            extra={[
-                <>
-                    <Typography.Link onClick={gotoLink}>
-                        #{data?.parent?.title}
-                    </Typography.Link>
-                </>
-            ]}
+            // extra={[
+            //     <>
+            //         <Typography.Link onClick={gotoLink}>
+            //             #{data?.parent?.title}
+            //         </Typography.Link>
+            //     </>
+            // ]}
             title={
-                <div style={{ fontWeight: "normal", fontSize: 14 }}>
-                    <Space align="start">
-                        <Avatar size="default" src={data?.user?.image} />
-                        <Typography.Text>
-                            {data?.user?.username}
-                        </Typography.Text>
-                        <Typography.Text type="secondary">
-                            {moment(data?.created_at).fromNow()}
-                        </Typography.Text>
-                    </Space>
-                </div>
+                <>
+                    <Row>
+                        <Col span={20}>
+                            <div>
+                                <Space align="start">
+                                    <Avatar
+                                        src={data?.user?.image}
+                                        size="large"
+                                    />
+                                    <div>
+                                        <Space
+                                            align="start"
+                                            direction="vertical"
+                                            wrap
+                                            size="small"
+                                        >
+                                            <span>test</span>
+                                            <span>test</span>
+                                        </Space>
+                                    </div>
+                                </Space>
+                            </div>
+                        </Col>
+                    </Row>
+                    {/* <div style={{ fontWeight: "normal", fontSize: 14 }}>
+                        <Space align="start">
+                            <Avatar size="default" src={data?.user?.image} />
+                            <Typography.Text>
+                                {data?.user?.username}
+                            </Typography.Text>
+                            <Typography.Text type="secondary">
+                                {moment(data?.created_at).fromNow()}
+                            </Typography.Text>
+                        </Space>
+                    </div> */}
+                </>
             }
             actions={[
                 <>
@@ -131,7 +156,7 @@ function CardPost({ data }) {
                 </>
             ]}
         >
-            <Card.Meta
+            {/* <Card.Meta
                 avatar={
                     <>
                         <Space align="start">
@@ -145,7 +170,7 @@ function CardPost({ data }) {
                         </Space>
                     </>
                 }
-                title={"test"}
+                title={data?.title}
                 description={
                     <div
                         dangerouslySetInnerHTML={{
@@ -154,6 +179,12 @@ function CardPost({ data }) {
                     />
                 }
             />
+            <div
+                dangerouslySetInnerHTML={{
+                    __html: data?.content
+                }}
+            /> */}
+            <div dangerouslySetInnerHTML={{ __html: data?.content }} />
         </Card>
     );
 }
