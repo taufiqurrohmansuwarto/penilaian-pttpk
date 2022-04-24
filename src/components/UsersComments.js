@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import {
     Avatar,
+    Badge,
     Button,
     Card,
     Comment,
@@ -72,7 +73,8 @@ const Editor = ({
     value,
     onCancel,
     handleUpload,
-    buttonText = "Apa yang ingin anda sampaikan hari ini?"
+    buttonText = "Kirim",
+    placeholder = "Apa yang ingin anda sampaikan?"
 }) => {
     const upload = async (file) => {
         try {
@@ -90,7 +92,9 @@ const Editor = ({
             <Form.Item>
                 <RichTextEditor
                     onImageUpload={upload}
-                    style={{ minHeight: 250 }}
+                    style={{ minHeight: 180 }}
+                    labels={placeholder}
+                    radius="md"
                     onChange={onChange}
                     controls={[
                         [
@@ -357,6 +361,7 @@ const ListComments = ({
                                         onClick={() =>
                                             handleShowEditor(item?.id)
                                         }
+                                        style={{ fontWeight: "bold" }}
                                     >
                                         Balas
                                     </span>,
@@ -589,23 +594,28 @@ const UserComments = ({ sort }) => {
 
     return (
         <>
-            <Card>
-                <Comment
-                    avatar={userData?.user?.image}
-                    content={
-                        <>
-                            <Editor
-                                main={true}
-                                value={comment}
-                                submitting={createCommentMutation.isLoading}
-                                onChange={setComment}
-                                handleUpload={handleUpload}
-                                onSubmit={handleSubmit}
-                            />
-                        </>
-                    }
-                />
-            </Card>
+            <Badge.Ribbon text="Status" color="green">
+                <Card>
+                    <Card.Meta
+                        description={`Apa yang ingin anda sampaikan hari ini, ${userData?.user?.name}?`}
+                    />
+                    <Comment
+                        avatar={userData?.user?.image}
+                        content={
+                            <>
+                                <Editor
+                                    main={true}
+                                    value={comment}
+                                    submitting={createCommentMutation.isLoading}
+                                    onChange={setComment}
+                                    handleUpload={handleUpload}
+                                    onSubmit={handleSubmit}
+                                />
+                            </>
+                        }
+                    />
+                </Card>
+            </Badge.Ribbon>
 
             <Skeleton loading={isLoadingComments}>
                 <>

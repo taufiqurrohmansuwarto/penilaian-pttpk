@@ -1,4 +1,8 @@
-import { CommentOutlined, MessageOutlined } from "@ant-design/icons";
+import {
+    BellOutlined,
+    CommentOutlined,
+    MessageOutlined
+} from "@ant-design/icons";
 
 export default {
     routes: [
@@ -11,6 +15,11 @@ export default {
             path: "/discussions",
             name: " Diskusi",
             icon: <CommentOutlined />
+        },
+        {
+            path: "/notifications",
+            name: " Notifikasi",
+            icon: <BellOutlined />
         }
     ]
 };

@@ -180,10 +180,13 @@ model comments_mentioned {
 }
 
 model comments_notifications {
-  id         String  @id @default(cuid())
+  id         String   @id @default(cuid())
   comment_id String?
   sender     String?
   receiver   String?
+  is_read    Boolean? @default(false)
+  type       String?
+  message    String?
 
   created_at DateTime? @default(now()) @db.Timestamp(6)
   updated_at DateTime? @db.Timestamp(6)

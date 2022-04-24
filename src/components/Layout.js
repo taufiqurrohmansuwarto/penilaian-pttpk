@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import routes from "../routes/routes";
+import BadgeNotifications from "./BadgeNotifications";
 
 const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
     ssr: false
@@ -28,24 +29,38 @@ const menuUser = () => (
 );
 
 const rightContentRender = (user) => {
+    const router = useRouter();
+
+    const gotoNotificationPage = () => {
+        router.push(`/notifications`);
+    };
+
     return (
-        <Dropdown overlay={menuUser()}>
-            <Space align="center">
-                <Avatar style={{ cursor: "pointer" }} src={user?.image} />
-                <Typography.Text strong>{user?.name}</Typography.Text>
+        <Space size="large">
+            <Space
+                align="center"
+                style={{ cursor: "pointer" }}
+                onClick={gotoNotificationPage}
+            >
+                <BadgeNotifications />
             </Space>
-        </Dropdown>
+
+            <Dropdown overlay={menuUser()}>
+                <Space align="center">
+                    <Avatar
+                        shape="square"
+                        size="small"
+                        style={{ cursor: "pointer" }}
+                        src={user?.image}
+                    />
+                    <Typography.Text strong>{user?.name}</Typography.Text>
+                </Space>
+            </Dropdown>
+        </Space>
     );
 };
 
-const PageContainer = dynamic(
-    () => import("@ant-design/pro-layout").then((m) => m?.PageContainer),
-    {
-        ssr: false
-    }
-);
-
-const changeRoutes = (user, status) => {
+const changeRoutes = (user) => {
     return new Promise((resolve, reject) => {
         const role = user?.role;
         const group = user?.group;
@@ -56,7 +71,7 @@ const changeRoutes = (user, status) => {
         const userMasterRoutes = [
             {
                 path: "/approval/dashboard",
-                name: " Approval",
+                name: " Penilaian PTTPK",
                 icon: <ReadOutlined />
             }
         ];
@@ -83,7 +98,7 @@ const changeRoutes = (user, status) => {
     });
 };
 
-const Layout = ({ children, title = "Feeds" }) => {
+const Layout = ({ children }) => {
     const { data } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
@@ -95,15 +110,22 @@ const Layout = ({ children, title = "Feeds" }) => {
     return (
         <ProLayout
             menu={{
+                defaultOpenAll: false,
                 request: async () => {
-                    const user = await changeRoutes(data?.user);
-                    return user;
+                    try {
+                        const user = await changeRoutes(data?.user);
+                        return user;
+                    } catch (e) {
+                        console.log(e);
+                    }
                 }
             }}
+            title="Apps"
             fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}
-            collapsed
+            theme="light"
+            // collapsed
             rightContentRender={() => rightContentRender(data?.user)}
             collapsedButtonRender={false}
             navTheme="dark"

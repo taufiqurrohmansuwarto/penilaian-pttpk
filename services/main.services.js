@@ -19,6 +19,11 @@ export const updateComment = ({ id, comment }) => {
         .then((res) => res?.data);
 };
 
+export const detailComment = (id) => {
+    console.log(id);
+    return fetcher.get(`/comments/${id}`).then((res) => res?.data);
+};
+
 export const getComments = ({ cursor = 0, sort = "terbaru" }) => {
     return fetcher
         .get(`/comments?cursor=${cursor}&sort=${sort}`)
@@ -157,3 +162,17 @@ export const downvotePost = ({ id, vlag }) =>
     fetcher
         .delete(`/discussions/posts/${id}/action-vote`, { vlag })
         .then((res) => res?.data);
+
+export const getNotifications = () => {
+    return fetcher.get(`/notifications-comments`).then((res) => res?.data);
+};
+
+export const readAllNotifications = () => {
+    return fetcher.put(`/notifications-comments`).then((res) => res?.data);
+};
+
+export const readNotificationById = (id) => {
+    return fetcher
+        .patch(`/notifications-comments/${id}`)
+        .then((res) => res?.data);
+};

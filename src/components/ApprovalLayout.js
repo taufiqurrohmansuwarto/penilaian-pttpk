@@ -56,9 +56,9 @@ const ApprovalLayout = ({ children, title = "" }) => {
     return (
         <ProLayout
             menuItemRender={menuItemRender}
-            collapsed
+            title="Pejabat Penilai"
+            // collapsed
             selectedKeys={[active]}
-            title="PTTPK"
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
             menuHeaderRender={(logo, title) => {
                 return <Link href="/">{logo}</Link>;
@@ -71,7 +71,7 @@ const ApprovalLayout = ({ children, title = "" }) => {
             fixSiderbar
             disableContentMargin
         >
-            <PageContainer title={title}>{children}</PageContainer>
+            {children}
         </ProLayout>
     );
 };

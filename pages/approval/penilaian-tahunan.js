@@ -1,6 +1,7 @@
 import ApprovalLayout from "../../src/components/ApprovalLayout";
 import moment from "moment";
 import {
+    Alert,
     Avatar,
     Button,
     Card,
@@ -21,6 +22,7 @@ import {
     approvePenilaianAkhir,
     getPenilaianAkhir
 } from "../../services/approval.service";
+import PageContainer from "../../src/components/PageContainer";
 
 //
 
@@ -190,19 +192,32 @@ function PenilaianTahunan({ data }) {
 
     return (
         <ApprovalLayout title="Daftar Pengajuan Penilaian Tahunan/Akhir">
-            <Card>
-                <DatePicker.YearPicker
-                    onChange={handleChange}
-                    allowClear={false}
-                    defaultValue={date}
-                />
-                <Skeleton loading={isLoading}>
-                    <TablePenilaianAkhir
-                        data={dataPenilaianUser}
-                        tahun={moment(date).format("YYYY")}
+            <PageContainer
+                title="Daftar Penilaian Tahunan"
+                subTitle="PTTPK"
+                content={
+                    <Alert
+                        type="info"
+                        message="Perhatian"
+                        showIcon
+                        description="Jika PTTPK dirasa sudah memilih anda sebagai atasan langsung akan tetapi tidak muncul, pastikan PTTPK yang bersangkutan mengaktifkan penilaiannya. Anda bisa memilih berdasarkan bulan dengan memilih Pilihan tanggal dibawah ini."
                     />
-                </Skeleton>
-            </Card>
+                }
+            >
+                <Card>
+                    <DatePicker.YearPicker
+                        onChange={handleChange}
+                        allowClear={false}
+                        defaultValue={date}
+                    />
+                    <Skeleton loading={isLoading}>
+                        <TablePenilaianAkhir
+                            data={dataPenilaianUser}
+                            tahun={moment(date).format("YYYY")}
+                        />
+                    </Skeleton>
+                </Card>
+            </PageContainer>
         </ApprovalLayout>
     );
 }

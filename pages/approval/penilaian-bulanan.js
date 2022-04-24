@@ -1,4 +1,6 @@
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import {
+    Alert,
     Avatar,
     Button,
     Card,
@@ -24,6 +26,7 @@ import {
     getPenilaianBulananApproval
 } from "../../services/approval.service";
 import ApprovalLayout from "../../src/components/ApprovalLayout";
+import PageContainer from "../../src/components/PageContainer";
 
 const FormApprovalModal = ({
     id,
@@ -274,15 +277,19 @@ function Penilaian({ data: query }) {
         {
             key: "sudah_verif",
             title: "Sudah Verif?",
-            render: (_, row) => <div>{JSON.stringify(row?.sudah_verif)}</div>
+            render: (_, row) => (
+                <div>
+                    {row?.sudah_verif ? <CheckOutlined /> : <CloseOutlined />}
+                </div>
+            )
         },
         {
             key: "detail",
-            title: "Nilai dan ACC",
+            title: "Aksi",
             render: (_, row) => (
                 <div>
                     <Button onClick={() => openModal(row)}>
-                        Nilai dan ACC
+                        Beri Nilai dan Verif
                     </Button>
                 </div>
             )
@@ -291,34 +298,47 @@ function Penilaian({ data: query }) {
 
     return (
         <ApprovalLayout title="Daftar Pengajuan Penilaian Bulanan">
-            <FormApprovalModal
-                visible={showModal}
-                onCancel={closeModal}
-                catatanAtasanLangsung={catatanAtasan}
-                idPtt={idPtt}
-                id={id}
-                bulan={moment(date).format("M")}
-                tahun={moment(date).format("YYYY")}
-            />
-            <Skeleton loading={!router?.isReady}>
-                <Card>
-                    <DatePicker.MonthPicker
-                        onChange={handleChange}
-                        allowClear={false}
-                        value={date}
+            <PageContainer
+                title="Daftar Penilaian Bulanan"
+                subTitle="PTTPK"
+                content={
+                    <Alert
+                        type="info"
+                        message="Perhatian"
+                        showIcon
+                        description="Jika PTTPK dirasa sudah memilih anda sebagai atasan langsung akan tetapi tidak muncul, pastikan PTTPK yang bersangkutan mengaktifkan penilaiannya. Anda bisa memilih berdasarkan bulan dengan memilih Pilihan tanggal dibawah ini."
                     />
-                    <Divider />
-                    <Table
-                        size="small"
-                        rowKey={(row) =>
-                            `${row?.id_penilaian}-${row?.bulan}-${row?.tahun}-${row?.custom_id_ptt}`
-                        }
-                        columns={columns}
-                        dataSource={dataPenilaianApproval}
-                        loading={loadingDataPenilaianApproval}
-                    />
-                </Card>
-            </Skeleton>
+                }
+            >
+                <FormApprovalModal
+                    visible={showModal}
+                    onCancel={closeModal}
+                    catatanAtasanLangsung={catatanAtasan}
+                    idPtt={idPtt}
+                    id={id}
+                    bulan={moment(date).format("M")}
+                    tahun={moment(date).format("YYYY")}
+                />
+                <Skeleton loading={!router?.isReady}>
+                    <Card>
+                        <DatePicker.MonthPicker
+                            onChange={handleChange}
+                            allowClear={false}
+                            value={date}
+                        />
+                        <Divider />
+                        <Table
+                            size="small"
+                            rowKey={(row) =>
+                                `${row?.id_penilaian}-${row?.bulan}-${row?.tahun}-${row?.custom_id_ptt}`
+                            }
+                            columns={columns}
+                            dataSource={dataPenilaianApproval}
+                            loading={loadingDataPenilaianApproval}
+                        />
+                    </Card>
+                </Skeleton>
+            </PageContainer>
         </ApprovalLayout>
     );
 }

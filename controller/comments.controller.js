@@ -108,11 +108,28 @@ const index = async (req, res) => {
 };
 
 // detail comments
-const get = async (req, res) => {};
+const get = async (req, res) => {
+    const { commentId } = req.query;
+    try {
+        const result = await prisma.comments.findMany({
+            where: {
+                id: commentId
+            },
+            include: {
+                children: true
+            }
+        });
+
+        res.json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
+};
 
 const create = async (req, res) => {
     const { body } = req;
-    const { customId, name: nama, userType, image } = req.user;
+    const { customId } = req.user;
 
     try {
         const data = {
@@ -124,6 +141,29 @@ const create = async (req, res) => {
         const result = await prisma.comments.create({
             data
         });
+
+        if (body?.parent_id !== null) {
+            //
+            const result = await prisma.comments.findUnique({
+                where: {
+                    id: body?.parent_id
+                }
+            });
+
+            // kalau sama dengan user jangan dikiri
+            if (customId !== result?.user_custom_id) {
+                await prisma.comments_notifications.create({
+                    data: {
+                        comment_id: body?.parent_id,
+                        sender: customId,
+                        receiver: result?.user_custom_id,
+                        type: "replied",
+                        message: body?.comment
+                    }
+                });
+            }
+        }
+
         res.json(result);
     } catch (error) {
         console.log(error);
