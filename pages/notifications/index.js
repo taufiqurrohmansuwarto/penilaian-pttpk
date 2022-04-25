@@ -150,8 +150,6 @@ function Notifications() {
                         </Skeleton>
                     </Col>
                 </Row>
-
-                <CardPostNew />
             </PageContainer>
         </Layout>
     );
