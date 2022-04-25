@@ -79,7 +79,7 @@ const CardPostNew = ({ data, user }) => {
     };
 
     return (
-        <Card style={{ marginBottom: 4 }} title="Diskusi Utama">
+        <Card style={{ marginBottom: 4 }}>
             <Comment
                 avatar={data?.user?.image}
                 author={data?.user?.username}

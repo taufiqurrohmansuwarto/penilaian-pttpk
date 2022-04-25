@@ -1,8 +1,5 @@
 import "@ant-design/pro-layout/dist/layout.css";
 import "antd/dist/antd.css";
-import "@fullcalendar/common/main.css";
-import "@fullcalendar/daygrid/main.css";
-import "@fullcalendar/timegrid/main.css";
 import { ConfigProvider, Spin } from "antd";
 import id from "antd/lib/locale/id_ID";
 import { SessionProvider, signIn, useSession } from "next-auth/react";

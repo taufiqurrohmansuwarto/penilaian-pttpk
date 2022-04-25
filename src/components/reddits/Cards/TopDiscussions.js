@@ -1,4 +1,4 @@
-import { Avatar, Card, List } from "antd";
+import { Avatar, Badge, Card, List } from "antd";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { dashboardDiscussions } from "../../../../services/main.services";
@@ -15,30 +15,32 @@ function TopDiscussions() {
     };
 
     return (
-        <Card size="small" title="Diskusi Paling Ramai" loading={isLoading}>
-            <List
-                dataSource={data}
-                loading={isLoading}
-                size="small"
-                rowKey={(row) => row?.id}
-                renderItem={(item) => (
-                    <List.Item>
-                        <List.Item.Meta
-                            avatar={<Avatar src={item?.user?.image} />}
-                            title={
-                                <div
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() => gotoDetail(item?.id)}
-                                >
-                                    {item?.title}
-                                </div>
-                            }
-                            description={`oleh ${item?.user?.username}`}
-                        />
-                    </List.Item>
-                )}
-            />
-        </Card>
+        <Badge.Ribbon text="Paling Ramai" color="red">
+            <Card size="small" title="Diskusi" loading={isLoading}>
+                <List
+                    dataSource={data}
+                    loading={isLoading}
+                    size="small"
+                    rowKey={(row) => row?.id}
+                    renderItem={(item) => (
+                        <List.Item>
+                            <List.Item.Meta
+                                avatar={<Avatar src={item?.user?.image} />}
+                                title={
+                                    <div
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => gotoDetail(item?.id)}
+                                    >
+                                        {item?.title}
+                                    </div>
+                                }
+                                description={`oleh ${item?.user?.username}`}
+                            />
+                        </List.Item>
+                    )}
+                />
+            </Card>
+        </Badge.Ribbon>
     );
 }
 

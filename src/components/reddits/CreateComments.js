@@ -1,16 +1,28 @@
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
+    EnterOutlined,
     SendOutlined
 } from "@ant-design/icons";
-import { Button, Card, Comment, Form, message, Space, Tag } from "antd";
+import {
+    Button,
+    Card,
+    Comment,
+    Form,
+    message,
+    Popconfirm,
+    Space,
+    Tag
+} from "antd";
 import moment from "moment";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import {
     createCommentByPost,
+    deletePost,
     downvotePost,
+    updatePost,
     uploads,
     upvotePost
 } from "../../../services/main.services";
@@ -42,6 +54,19 @@ const MyComment = ({ comment, user, id }) => {
     const [nestedComment, setNestedComment] = useState();
     const [nestedId, setNestedId] = useState();
 
+    const [editComment, setEditComment] = useState();
+    const [editId, setEditId] = useState();
+
+    const handleSetId = (comment) => {
+        setEditId(comment?.id);
+        setEditComment(comment?.content);
+    };
+
+    const handleCancelEdit = () => {
+        setEditId(null);
+        setEditComment();
+    };
+
     const queryClient = useQueryClient();
     const createCommentNestedComment = useMutation(
         (data) => createCommentByPost(data),
@@ -71,11 +96,32 @@ const MyComment = ({ comment, user, id }) => {
         }
     };
 
-    const upvoteMutation = useMutation((data) => upvotePost(data));
-    const downvoteMutation = useMutation((data) => downvotePost(data));
+    const removeMutation = useMutation((data) => deletePost(data), {
+        onSuccess: () => {
+            queryClient.invalidateQueries(["comments", id]);
+        }
+    });
 
-    const handleUpvote = () => {};
-    const handleDownvote = () => {};
+    const updateMutation = useMutation((data) => updatePost(data), {
+        onSuccess: () => {
+            queryClient.invalidateQueries(["comments", id]);
+            setEditId(null);
+        }
+    });
+
+    const handleRemove = (id) => {
+        removeMutation.mutate(id);
+    };
+
+    const handleUpdate = () => {
+        const currentData = {
+            id: editId,
+            data: {
+                content: editComment
+            }
+        };
+        updateMutation.mutate(currentData);
+    };
 
     return (
         <Comment
@@ -86,22 +132,61 @@ const MyComment = ({ comment, user, id }) => {
                         <span>{comment?.user?.username}</span>
                         {comment?.user_custom_id ===
                             comment?.parent_comments?.user_custom_id && (
-                            <Tag color="green">Pembuat Postingan</Tag>
+                            <Tag color="green">Kreator</Tag>
                         )}
                     </Space>
                 </div>
             }
-            datetime={moment(comment?.created_at).fromNow()}
+            datetime={
+                <>
+                    <Space>
+                        <div>{moment(comment?.created_at).fromNow()}</div>
+                        <div>{comment?.is_edited && <span>diedit</span>}</div>
+                    </Space>
+                </>
+            }
             actions={[
                 <span
                     style={{ cursor: "pointer" }}
                     onClick={() => handleShowEditor(comment?.id)}
                 >
-                    <span>BALAS</span>
-                </span>
+                    <span>Balas</span>
+                </span>,
+                <>
+                    {comment?.user_custom_id === user?.user?.id && (
+                        <span onClick={() => handleSetId(comment)}>Edit</span>
+                    )}
+                </>,
+                <>
+                    {comment?.user_custom_id === user?.user?.id && (
+                        <Popconfirm
+                            title="Apakah anda yakin ingin menghapus pesan?"
+                            onConfirm={() => handleRemove(comment?.id)}
+                        >
+                            <span>Hapus</span>
+                        </Popconfirm>
+                    )}
+                </>
             ]}
             content={
-                <div dangerouslySetInnerHTML={{ __html: comment?.content }} />
+                <>
+                    {editId === comment?.id ? (
+                        <Editor
+                            onCancel={handleCancelEdit}
+                            handleUpload={handleUpload}
+                            value={editComment}
+                            onChange={setEditComment}
+                            buttonText="Edit"
+                            onSubmit={handleUpdate}
+                        />
+                    ) : (
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: comment?.content
+                            }}
+                        />
+                    )}
+                </>
             }
         >
             {nestedId === comment?.id && (
@@ -114,7 +199,7 @@ const MyComment = ({ comment, user, id }) => {
                                 {comment?.user_custom_id ===
                                     comment?.parent_comments
                                         ?.user_custom_id && (
-                                    <Tag color="green">Pembuat Postingan</Tag>
+                                    <Tag color="green">Kreator</Tag>
                                 )}
                             </Space>
                         </div>
@@ -142,7 +227,7 @@ const Editor = ({
     value,
     onCancel,
     handleUpload,
-    buttonText = "Tambah Komentar"
+    buttonText = "Komentar"
 }) => (
     <div>
         <Form.Item>
@@ -171,6 +256,7 @@ const Editor = ({
                     loading={submitting}
                     onClick={onSubmit}
                     type="primary"
+                    icon={<SendOutlined />}
                 >
                     {buttonText}
                 </Button>

@@ -121,16 +121,14 @@ function Posts({ data, loading, isFetchingNextPage, user }) {
     };
 
     return (
-        <Card>
-            <List
-                loading={loading || isFetchingNextPage}
-                dataSource={data}
-                rowKey={(row) => row?.id}
-                renderItem={(item) => {
-                    return <CustomCard data={item} user={user} />;
-                }}
-            />
-        </Card>
+        <List
+            loading={loading || isFetchingNextPage}
+            dataSource={data}
+            rowKey={(row) => row?.id}
+            renderItem={(item) => {
+                return <CustomCard data={item} user={user} />;
+            }}
+        />
     );
 }
 

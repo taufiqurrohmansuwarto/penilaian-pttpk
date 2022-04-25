@@ -77,7 +77,7 @@ const Discussions = ({ data }) => {
                     </Button>
                 </Space>
 
-                <Row gutter={[8, 8]}>
+                <Row>
                     <Col span={17}>
                         <Card>
                             <span style={{ marginRight: 8 }}>
@@ -98,14 +98,18 @@ const Discussions = ({ data }) => {
                         <Skeleton loading={loadingDataPosts}>
                             {dataPosts?.pages?.map((page) => (
                                 <React.Fragment key={page?.nextCursor}>
-                                    <Posts
-                                        data={page?.data}
-                                        isFetchingNextPage={isFetchingNextPage}
-                                        loading={loadingDataPosts}
-                                        hasNextPage={hasNextPage}
-                                        fetchNextPage={fetchNextPage}
-                                        user={userData}
-                                    />
+                                    <Card>
+                                        <Posts
+                                            data={page?.data}
+                                            isFetchingNextPage={
+                                                isFetchingNextPage
+                                            }
+                                            loading={loadingDataPosts}
+                                            hasNextPage={hasNextPage}
+                                            fetchNextPage={fetchNextPage}
+                                            user={userData}
+                                        />
+                                    </Card>
                                 </React.Fragment>
                             ))}
                             {hasNextPage && (

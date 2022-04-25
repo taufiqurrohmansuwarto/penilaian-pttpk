@@ -111,8 +111,54 @@ const create = async (req, res) => {
     }
 };
 
-const update = async (req, res) => {};
-const remove = async (req, res) => {};
+// ini harus general
+const update = async (req, res) => {
+    const { customId } = req.user;
+    const { id } = req.query;
+    const body = req?.body;
+    // title, content
+    try {
+        const result = await prisma.discussions_posts.updateMany({
+            where: {
+                id,
+                user_custom_id: customId,
+                status: "active"
+            },
+            data: {
+                ...body,
+                is_edited: true,
+                updated_at: new Date()
+            }
+        });
+
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
+};
+const remove = async (req, res) => {
+    const { customId } = req.user;
+    const { id } = req.query;
+    // title, content
+    try {
+        await prisma.discussions_posts.updateMany({
+            where: {
+                id,
+                user_custom_id: customId,
+                status: "active"
+            },
+            data: {
+                content: "<i>pesan telah dihapus</i>",
+                updated_at: new Date()
+            }
+        });
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
+};
 
 const detail = async (req, res) => {
     const { id } = req.query;

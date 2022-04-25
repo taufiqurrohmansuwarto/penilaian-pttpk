@@ -182,3 +182,13 @@ export const dashboardDiscussions = (type) => {
         .get(`/discussions/dashboard?type=${type}`)
         .then((res) => res?.data);
 };
+
+export const deletePost = (id) => {
+    return fetcher.delete(`/discussions/posts/${id}`).then((res) => res?.data);
+};
+
+export const updatePost = ({ id, data }) => {
+    return fetcher
+        .patch(`/discussions/posts/${id}`, data)
+        .then((res) => res?.data);
+};

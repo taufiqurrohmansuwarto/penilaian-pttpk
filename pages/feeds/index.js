@@ -10,7 +10,7 @@ const Feeds = ({ data }) => {
         <Layout>
             <PageContainer subTitle="Feedback" fixedHeader>
                 <Row gutter={[16, 16]}>
-                    <Col span={14} offset={3}>
+                    <Col span={14} offset={2}>
                         <UserComments sort={data?.sort} />
                     </Col>
                     <Col span={7}>
