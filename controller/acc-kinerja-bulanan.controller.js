@@ -42,19 +42,24 @@ const requestPenilaianUser = async (req, res) => {
             }
         });
 
-        const result = await prisma.acc_kinerja_bulanan.findFirst({
-            where: {
-                // id_penilaian: penilaian?.id,
+        if (penilaian) {
+            const where = {
                 id_penilaian: penilaian?.id,
                 tahun: parseInt(tahun),
                 bulan: parseInt(bulan),
                 pegawai_id: customId
-            }
-        });
+            };
 
-        console.log(result);
+            console.log(where);
 
-        res.json(result);
+            const result = await prisma.acc_kinerja_bulanan.findFirst({
+                where
+            });
+
+            res.json(result);
+        } else {
+            res.status(404).json({ code: 404, message: "not found" });
+        }
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
