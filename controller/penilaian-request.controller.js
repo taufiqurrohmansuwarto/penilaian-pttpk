@@ -55,7 +55,7 @@ const kirimAtasan = async (req, res) => {
         if (!currentPenilaian) {
             res.status(404).json({ code: 404, message: "Not Found" });
         } else {
-            await prisma.acc_kinerja_bulanan.upsert({
+            const hasil = await prisma.acc_kinerja_bulanan.upsert({
                 where: {
                     id_penilaian_bulan_tahun: {
                         id_penilaian: currentPenilaian?.id,
@@ -84,7 +84,7 @@ const kirimAtasan = async (req, res) => {
                     atasan_langsung: currentPenilaian?.atasan_langsung
                 }
             });
-
+            console.log(hasil);
             res.json({ code: 200, message: "sukses" });
         }
     } catch (error) {

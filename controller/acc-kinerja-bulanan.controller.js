@@ -6,6 +6,7 @@ const kirimAtasan = async (req, res) => {
     const { bulan, tahun } = req.body;
 
     try {
+        console.log("test");
         const result = await prisma.penilaian.findFirst({
             where: {
                 aktif: true
@@ -20,6 +21,7 @@ const kirimAtasan = async (req, res) => {
                 bulan
             }
         });
+
         res.json({ code: 200, message: "success" });
     } catch (error) {
         console.log(error);

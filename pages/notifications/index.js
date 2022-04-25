@@ -20,6 +20,7 @@ import PageContainer from "../../src/components/PageContainer";
 import Layout from "../../src/components/Layout";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
+import CardPostNew from "../../src/components/reddits/Cards/CardPostNew";
 
 const CustomDescription = ({ item, handleReadById }) => {
     return (
@@ -149,6 +150,8 @@ function Notifications() {
                         </Skeleton>
                     </Col>
                 </Row>
+
+                <CardPostNew />
             </PageContainer>
         </Layout>
     );
