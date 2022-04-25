@@ -176,3 +176,9 @@ export const readNotificationById = (id) => {
         .patch(`/notifications-comments/${id}`)
         .then((res) => res?.data);
 };
+
+export const dashboardDiscussions = (type) => {
+    return fetcher
+        .get(`/discussions/dashboard?type=${type}`)
+        .then((res) => res?.data);
+};

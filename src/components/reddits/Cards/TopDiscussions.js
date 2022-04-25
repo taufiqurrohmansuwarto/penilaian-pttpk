@@ -3,19 +3,19 @@ import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { dashboardDiscussions } from "../../../../services/main.services";
 
-function TopCommunities() {
-    const { data, isLoading } = useQuery(["top-communities"], () =>
-        dashboardDiscussions("komunitas")
+function TopDiscussions() {
+    const { data, isLoading } = useQuery(["top-discussions"], () =>
+        dashboardDiscussions("ramai")
     );
 
     const router = useRouter();
 
     const gotoDetail = (id) => {
-        router.push(`/discussions/r/${id}`);
+        router.push(`/discussions/${id}/comments`);
     };
 
     return (
-        <Card size="small" title="Komunitas Paling Ramai" loading={isLoading}>
+        <Card size="small" title="Diskusi Paling Ramai" loading={isLoading}>
             <List
                 dataSource={data}
                 loading={isLoading}
@@ -24,15 +24,16 @@ function TopCommunities() {
                 renderItem={(item) => (
                     <List.Item>
                         <List.Item.Meta
-                            avatar={<Avatar />}
+                            avatar={<Avatar src={item?.user?.image} />}
                             title={
                                 <div
                                     style={{ cursor: "pointer" }}
-                                    onClick={() => gotoDetail(item?.title)}
+                                    onClick={() => gotoDetail(item?.id)}
                                 >
                                     {item?.title}
                                 </div>
                             }
+                            description={`oleh ${item?.user?.username}`}
                         />
                     </List.Item>
                 )}
@@ -41,4 +42,4 @@ function TopCommunities() {
     );
 }
 
-export default TopCommunities;
+export default TopDiscussions;
