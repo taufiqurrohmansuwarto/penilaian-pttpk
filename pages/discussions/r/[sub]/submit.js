@@ -1,4 +1,4 @@
-import { Card, message } from "antd";
+import { Card, Col, message, Row } from "antd";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
@@ -48,18 +48,25 @@ function SubRedditSubmit() {
     };
 
     return (
-        <Layout title={`Buat Postingan di Komunitasi ${query?.sub}`}>
-            <PageContainer title="Buat Postingan" content="Isikan postinganmu">
-                <Card>
-                    <Post
-                        loading={createMutation?.isLoading}
-                        title={title}
-                        onChangeTitle={onChangeTitle}
-                        description={description}
-                        onChangeDescription={onChange}
-                        handleSubmit={handleSubmit}
-                    />
-                </Card>
+        <Layout>
+            <PageContainer
+                title="Buat diskusi"
+                subTitle={`di komunitas ${router?.query?.sub}`}
+            >
+                <Row>
+                    <Col span={12} offset={6}>
+                        <Card title="Diskusi">
+                            <Post
+                                loading={createMutation?.isLoading}
+                                title={title}
+                                onChangeTitle={onChangeTitle}
+                                description={description}
+                                onChangeDescription={onChange}
+                                handleSubmit={handleSubmit}
+                            />
+                        </Card>
+                    </Col>
+                </Row>
             </PageContainer>
         </Layout>
     );

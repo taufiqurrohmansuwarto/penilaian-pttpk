@@ -93,21 +93,12 @@ const MyComment = ({ comment, user, id }) => {
             }
             datetime={moment(comment?.created_at).fromNow()}
             actions={[
-                <div style={{ cursor: "pointer", marginRight: 14 }}>
-                    <Space>
-                        <ArrowUpOutlined />
-                        <span>{comment?.votes}</span>
-                        <ArrowDownOutlined />
-                    </Space>
-                </div>,
-                <div
+                <span
                     style={{ cursor: "pointer" }}
                     onClick={() => handleShowEditor(comment?.id)}
                 >
-                    <Space>
-                        <span>BALAS</span>
-                    </Space>
-                </div>
+                    <span>BALAS</span>
+                </span>
             ]}
             content={
                 <div dangerouslySetInnerHTML={{ __html: comment?.content }} />

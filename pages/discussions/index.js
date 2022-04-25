@@ -1,4 +1,5 @@
-import { Button, Card, Col, Divider, Row, Skeleton } from "antd";
+import { TeamOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { Button, Card, Col, Divider, Row, Skeleton, Space } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -38,10 +39,6 @@ const Discussions = ({ data }) => {
         }
     );
 
-    const handleUpvote = (id) => {};
-
-    const hanldeDownvote = (id) => {};
-
     const handleChangeFilter = (checked, tag) => {
         if (checked) {
             setSelectedFilter(tag);
@@ -53,18 +50,35 @@ const Discussions = ({ data }) => {
         }
     };
 
+    const createPost = () => {
+        router.push("/discussions/submit");
+    };
+    const createCommunities = () => {
+        router.push("/discussions/komunitas/create");
+    };
+
     return (
         <Layout>
             <PageContainer
                 title="Diskusi"
-                content="Untuk forum dan diskusi"
+                subTitle="Untuk forum dan diskusi"
                 fixedHeader
             >
-                <Row gutter={32}>
-                    <Col span={6}>
-                        <ListSubscribes />
-                    </Col>
-                    <Col span={12}>
+                <Space style={{ marginBottom: 8 }}>
+                    <Button onClick={createPost} icon={<TeamOutlined />}>
+                        Diskusi
+                    </Button>
+                    <Button
+                        onClick={createCommunities}
+                        icon={<UsergroupAddOutlined />}
+                        type="primary"
+                    >
+                        Komunitas
+                    </Button>
+                </Space>
+
+                <Row gutter={[8, 8]}>
+                    <Col span={17}>
                         <Card>
                             <span style={{ marginRight: 8 }}>
                                 Urutkan berdasarkan :{" "}
@@ -81,7 +95,6 @@ const Discussions = ({ data }) => {
                                 </CheckableTag>
                             ))}
                         </Card>
-                        <Divider />
                         <Skeleton loading={loadingDataPosts}>
                             {dataPosts?.pages?.map((page) => (
                                 <React.Fragment key={page?.nextCursor}>
@@ -109,19 +122,6 @@ const Discussions = ({ data }) => {
                                 </Button>
                             )}
                         </Skeleton>
-                    </Col>
-                    <Col span={6}>
-                        <Row gutter={[8, 8]}>
-                            <Col span={24}>
-                                <CreatePostAndCommunities />
-                            </Col>
-                            <Col span={24}>
-                                <CardRules />
-                            </Col>
-                            <Col span={24}>
-                                <CardTop10 />
-                            </Col>
-                        </Row>
                     </Col>
                 </Row>
             </PageContainer>

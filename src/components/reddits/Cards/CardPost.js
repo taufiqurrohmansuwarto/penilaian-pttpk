@@ -92,23 +92,10 @@ const UpvoteDownvote = ({ data, votes, id }) => {
 };
 
 function CardPost({ data }) {
-    const router = useRouter();
-
-    const gotoLink = () => {
-        router?.push(`/discussions${data?.parent?.link}`);
-    };
-
     return (
         <Card
             style={{ marginBottom: 8 }}
             size="small"
-            // extra={[
-            //     <>
-            //         <Typography.Link onClick={gotoLink}>
-            //             #{data?.parent?.title}
-            //         </Typography.Link>
-            //     </>
-            // ]}
             title={
                 <>
                     <Row>
@@ -134,17 +121,6 @@ function CardPost({ data }) {
                             </div>
                         </Col>
                     </Row>
-                    {/* <div style={{ fontWeight: "normal", fontSize: 14 }}>
-                        <Space align="start">
-                            <Avatar size="default" src={data?.user?.image} />
-                            <Typography.Text>
-                                {data?.user?.username}
-                            </Typography.Text>
-                            <Typography.Text type="secondary">
-                                {moment(data?.created_at).fromNow()}
-                            </Typography.Text>
-                        </Space>
-                    </div> */}
                 </>
             }
             actions={[
@@ -156,34 +132,6 @@ function CardPost({ data }) {
                 </>
             ]}
         >
-            {/* <Card.Meta
-                avatar={
-                    <>
-                        <Space align="start">
-                            <div style={{ marginRight: 8 }}>
-                                <UpvoteDownvote
-                                    id={data?.id}
-                                    votes={data?.votes}
-                                    data={data}
-                                />
-                            </div>
-                        </Space>
-                    </>
-                }
-                title={data?.title}
-                description={
-                    <div
-                        dangerouslySetInnerHTML={{
-                            __html: data?.content
-                        }}
-                    />
-                }
-            />
-            <div
-                dangerouslySetInnerHTML={{
-                    __html: data?.content
-                }}
-            /> */}
             <div dangerouslySetInnerHTML={{ __html: data?.content }} />
         </Card>
     );

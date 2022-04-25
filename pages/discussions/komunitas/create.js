@@ -3,9 +3,11 @@ import { useId } from "@mantine/hooks";
 import {
     Button,
     Card,
+    Col,
     Form,
     Input,
     message,
+    Row,
     Select,
     Skeleton,
     Space
@@ -106,47 +108,51 @@ const CreateCommunities = () => {
         <Layout title="Buat Komunitas">
             <PageContainer
                 title="Buat Komunitas"
-                content="Ayo buat komunitas yang berguna untuk kita semua :)"
+                subTitle="Ayo buat komunitas yang berguna untuk kita semua :)"
             >
-                <Card>
-                    <Skeleton loading={loadingTopics}>
-                        <Form
-                            form={form}
-                            layout="vertical"
-                            onFinish={handleSubmit}
-                        >
-                            <Form.Item
-                                label="Judul"
-                                name="title"
-                                normalize={(e) => e?.replace(/\s/g, "")}
-                            >
-                                <Input />
-                            </Form.Item>
-                            <Form.Item label="Topik" name="topics">
-                                <Select showSearch mode="multiple">
-                                    {dataTopics?.map((t) => (
-                                        <Select.Option key={t?.topic}>
-                                            {t?.topic}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
-                            <Form.Item label="Deskripsi" name="content">
-                                <Input.TextArea />
-                            </Form.Item>
-                            <CreateRules />
-                            <Form.Item>
-                                <Button
-                                    loading={createMutation.isLoading}
-                                    htmlType="submit"
-                                    type="primary"
+                <Row>
+                    <Col span={12} offset={6}>
+                        <Card title="Komunitas">
+                            <Skeleton loading={loadingTopics}>
+                                <Form
+                                    form={form}
+                                    layout="vertical"
+                                    onFinish={handleSubmit}
                                 >
-                                    Submit
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    </Skeleton>
-                </Card>
+                                    <Form.Item
+                                        label="Judul"
+                                        name="title"
+                                        normalize={(e) => e?.replace(/\s/g, "")}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item label="Topik" name="topics">
+                                        <Select showSearch mode="multiple">
+                                            {dataTopics?.map((t) => (
+                                                <Select.Option key={t?.topic}>
+                                                    {t?.topic}
+                                                </Select.Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item label="Deskripsi" name="content">
+                                        <Input.TextArea />
+                                    </Form.Item>
+                                    {/* <CreateRules /> */}
+                                    <Form.Item>
+                                        <Button
+                                            loading={createMutation.isLoading}
+                                            htmlType="submit"
+                                            type="primary"
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+                            </Skeleton>
+                        </Card>
+                    </Col>
+                </Row>
             </PageContainer>
         </Layout>
     );

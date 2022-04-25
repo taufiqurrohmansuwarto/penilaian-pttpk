@@ -1,4 +1,5 @@
 import { Breadcrumb, Col, Row, Skeleton } from "antd";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -9,13 +10,12 @@ import {
 } from "../../../services/main.services";
 import Layout from "../../../src/components/Layout";
 import PageContainer from "../../../src/components/PageContainer";
-import CardCommunitiesDescription from "../../../src/components/reddits/Cards/CardCommunitiesDescription";
-import CardPost from "../../../src/components/reddits/Cards/CardPost";
-import CardRules from "../../../src/components/reddits/Cards/CardRules";
+import CardPostNew from "../../../src/components/reddits/Cards/CardPostNew";
 import CreateComments from "../../../src/components/reddits/CreateComments";
 
 function Comments() {
     const router = useRouter();
+    const { data: user, status } = useSession();
 
     const { data: dataComments, isLoading } = useQuery(
         ["comments", router?.query?.id],
@@ -51,33 +51,17 @@ function Comments() {
                 )}
             >
                 <Row gutter={[16, 16]}>
-                    <Col span={13} offset={4}>
-                        <Skeleton avatar loading={isLoadingPost}>
-                            <CardPost data={dataPost} />
+                    <Col span={16}>
+                        <Skeleton
+                            avatar
+                            loading={isLoadingPost || status === "loading"}
+                        >
+                            <CardPostNew user={user} data={dataPost} />
                         </Skeleton>
                         <CreateComments
                             data={dataComments}
                             id={router?.query?.id}
                         />
-                    </Col>
-                    <Col span={6}>
-                        <Row gutter={[8, 8]}>
-                            <Col span={24}>
-                                <Skeleton loading={isLoadingPost}>
-                                    <CardCommunitiesDescription
-                                        title={dataPost?.parent?.title}
-                                        description={dataPost?.parent?.content}
-                                    />
-                                </Skeleton>
-                            </Col>
-                            <Col span={24}>
-                                <Skeleton loading={isLoadingPost}>
-                                    <CardRules
-                                        rules={dataPost?.parent?.rules}
-                                    />
-                                </Skeleton>
-                            </Col>
-                        </Row>
                     </Col>
                 </Row>
             </PageContainer>

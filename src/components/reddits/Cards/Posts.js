@@ -3,186 +3,126 @@ import {
     ArrowUpOutlined,
     CommentOutlined
 } from "@ant-design/icons";
-import { Avatar, Card, List, Space, Typography } from "antd";
+import { Card, Comment, List, Typography } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useMutation, useQueryClient } from "react-query";
-import ReactShowMoreText from "react-show-more-text";
 import { downvotePost, upvotePost } from "../../../../services/main.services";
-
-const UpvoteDownvote = ({ id, votes, data, user }) => {
-    const queryClient = useQueryClient();
-
-    const upvoteColor = () => {
-        const result = data?.discussions_votes?.find(
-            (d) =>
-                d?.discussion_post_id === id &&
-                d?.user_custom_id === user?.user?.id
-        );
-        if (!result) {
-            return "gray";
-        } else {
-            if (result?.vlag === 1) {
-                return "blue";
-            }
-            if (result?.vlag === 0) {
-                return "gray";
-            }
-        }
-    };
-
-    const downvoteColor = () => {
-        const result = data?.discussions_votes?.find(
-            (d) =>
-                d?.discussion_post_id === id &&
-                d?.user_custom_id === user?.user?.id
-        );
-        if (!result) {
-            return "gray";
-        } else {
-            if (result?.vlag === -1) {
-                return "blue";
-            }
-            if (result?.vlag === 0) {
-                return "gray";
-            }
-        }
-    };
-
-    const upvoteMutation = useMutation((data) => upvotePost(data), {
-        onError: (e) => console.log(e),
-        onSuccess: () => {
-            queryClient.invalidateQueries("post-communities");
-            queryClient.invalidateQueries("posts");
-        }
-    });
-    const downvoteMutation = useMutation((data) => downvotePost(data), {
-        onError: (e) => console.log(e),
-        onSuccess: () => {
-            queryClient.invalidateQueries("post-communities");
-            queryClient.invalidateQueries("posts");
-        }
-    });
-
-    const handleUpvote = () => {
-        const data = { id };
-        upvoteMutation.mutate(data);
-    };
-
-    const handleDownvote = () => {
-        const data = { id };
-        downvoteMutation.mutate(data);
-    };
-
-    return (
-        <Space align="center" direction="vertical">
-            <ArrowUpOutlined
-                onClick={handleUpvote}
-                style={{ cursor: "pointer", color: upvoteColor() }}
-            />
-            {votes}
-            <ArrowDownOutlined
-                onClick={handleDownvote}
-                style={{ cursor: "pointer", color: downvoteColor() }}
-            />
-        </Space>
-    );
-};
 
 function Posts({ data, loading, isFetchingNextPage, user }) {
     const router = useRouter();
 
-    const Title = ({ title }) => {
-        return (
-            <>
-                <Typography.Paragraph>{title}</Typography.Paragraph>
-            </>
-        );
-    };
-
     const CustomCard = ({ data }) => {
-        const gotoLink = () => {
-            router?.push(`/discussions${data?.parent?.link}`);
-        };
-
         const gotoComments = (id) => {
             router?.push(`/discussions/${id}/comments`);
         };
 
+        const queryClient = useQueryClient();
+
+        const upvoteColor = (currentData, id) => {
+            const result = currentData?.discussions_votes?.find(
+                (d) =>
+                    d?.discussion_post_id === id &&
+                    d?.user_custom_id === user?.user?.id
+            );
+            if (!result) {
+                return "gray";
+            } else {
+                if (result?.vlag === 1) {
+                    return "blue";
+                }
+                if (result?.vlag === 0) {
+                    return "gray";
+                }
+            }
+        };
+
+        const downvoteColor = (currentData, id) => {
+            const result = currentData?.discussions_votes?.find(
+                (d) =>
+                    d?.discussion_post_id === id &&
+                    d?.user_custom_id === user?.user?.id
+            );
+            if (!result) {
+                return "gray";
+            } else {
+                if (result?.vlag === -1) {
+                    return "blue";
+                }
+                if (result?.vlag === 0) {
+                    return "gray";
+                }
+            }
+        };
+
+        const upvoteMutation = useMutation((data) => upvotePost(data), {
+            onError: (e) => console.log(e),
+            onSuccess: () => {
+                queryClient.invalidateQueries("post-communities");
+                queryClient.invalidateQueries("posts");
+            }
+        });
+        const downvoteMutation = useMutation((data) => downvotePost(data), {
+            onError: (e) => console.log(e),
+            onSuccess: () => {
+                queryClient.invalidateQueries("post-communities");
+                queryClient.invalidateQueries("posts");
+            }
+        });
+
+        const handleUpvote = (id) => {
+            const data = { id };
+            upvoteMutation.mutate(data);
+        };
+
+        const handleDownvote = (id) => {
+            const data = { id };
+            downvoteMutation.mutate(data);
+        };
+
         return (
-            <Card
-                size="small"
-                extra={[
+            <Comment
+                avatar={data?.user?.image}
+                author={data?.user?.username}
+                datetime={moment(data?.created_at).fromNow()}
+                content={
                     <>
-                        <Typography.Link onClick={gotoLink}>
-                            #{data?.parent?.title}
-                        </Typography.Link>
+                        <Typography.Title level={5} style={{ marginTop: 14 }}>
+                            {data?.title}
+                        </Typography.Title>
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: data?.content
+                            }}
+                        />
                     </>
-                ]}
-                title={
-                    <div style={{ fontWeight: "normal", fontSize: 14 }}>
-                        <Space align="start">
-                            <Avatar size="default" src={data?.user?.image} />
-                            <Typography.Text>
-                                {data?.user?.username}
-                            </Typography.Text>
-                            <Typography.Text type="secondary">
-                                {moment(data?.created_at).fromNow()}
-                            </Typography.Text>
-                        </Space>
-                    </div>
                 }
                 actions={[
-                    <>
-                        <Space onClick={() => gotoComments(data?.id)}>
-                            <span>
-                                {data?._count?.children_comments} komentar
-                            </span>
-                            <CommentOutlined />
-                        </Space>
-                    </>
+                    <span onClick={() => handleUpvote(data?.id)}>
+                        <ArrowUpOutlined
+                            style={{ color: upvoteColor(data, data?.id) }}
+                        />
+                    </span>,
+                    <span>{data?.votes}</span>,
+                    <span onClick={() => handleDownvote(data?.id)}>
+                        <ArrowDownOutlined
+                            style={{ color: downvoteColor(data, data?.id) }}
+                        />
+                    </span>,
+                    <span onClick={() => gotoComments(data?.id)}>
+                        <CommentOutlined />
+                        <span style={{ marginLeft: 4 }}>
+                            {data?._count?.children_comments} Komentar
+                        </span>
+                    </span>
                 ]}
-            >
-                <Card.Meta
-                    avatar={
-                        <>
-                            <Space align="start">
-                                <div style={{ marginRight: 8 }}>
-                                    <UpvoteDownvote
-                                        id={data?.id}
-                                        votes={data?.votes}
-                                        data={data}
-                                        user={user}
-                                        totalVotes={
-                                            data?.votes - data?.downvotes
-                                        }
-                                    />
-                                </div>
-                            </Space>
-                        </>
-                    }
-                    title={<Title title={data?.title} />}
-                    description={
-                        <ReactShowMoreText lines={10}>
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: data?.content
-                                }}
-                            />
-                        </ReactShowMoreText>
-                    }
-                />
-            </Card>
+            />
         );
     };
 
     return (
-        <div style={{ marginTop: 10 }}>
+        <Card>
             <List
-                grid={{
-                    column: 1,
-                    gutter: [10, 10]
-                }}
                 loading={loading || isFetchingNextPage}
                 dataSource={data}
                 rowKey={(row) => row?.id}
@@ -190,7 +130,7 @@ function Posts({ data, loading, isFetchingNextPage, user }) {
                     return <CustomCard data={item} user={user} />;
                 }}
             />
-        </div>
+        </Card>
     );
 }
 

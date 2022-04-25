@@ -1,4 +1,5 @@
 import { Button, Input } from "antd";
+import { uploads } from "../../../services/main.services";
 import RichTextEditor from "../RichTextEditor";
 
 const Post = ({
@@ -9,6 +10,17 @@ const Post = ({
     handleSubmit,
     loading
 }) => {
+    const handleUpload = async (file) => {
+        try {
+            const formData = new FormData();
+            formData.append("image", file);
+            const result = await uploads(formData);
+            return result;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <>
             <Input.TextArea
@@ -17,6 +29,7 @@ const Post = ({
                 onChange={onChangeTitle}
             />
             <RichTextEditor
+                onImageUpload={handleUpload}
                 value={description}
                 onChange={onChangeDescription}
                 placeholder="Deskripsi"

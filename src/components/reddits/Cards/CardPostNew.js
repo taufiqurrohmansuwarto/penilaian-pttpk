@@ -1,41 +1,122 @@
+import moment from "moment";
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
     CommentOutlined
 } from "@ant-design/icons";
-import { Comment, Typography } from "antd";
+import { Card, Comment, Typography } from "antd";
+import { useRouter } from "next/router";
+import { useMutation, useQueryClient } from "react-query";
+import { downvotePost, upvotePost } from "../../../../services/main.services";
 
-const data = {
-    avatar: "https://master.bkd.jatimprov.go.id/files_jatimprov/56543-file_foto-20190720-969-DSC_0443.JPG",
-    date: new Date(),
-    name: "Iput Taufiqurrohman Suwarto",
-    title: `<p>&nbsp;<strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&nbsp;</p>`
-};
+const CardPostNew = ({ data, user }) => {
+    const router = useRouter();
+    const gotoComments = (id) => {
+        router?.push(`/discussions/${id}/comments`);
+    };
 
-const CardPostNew = () => {
-    return (
-        <Comment
-            avatar={data?.avatar}
-            author={data?.name}
-            datetime={"2020-02-02"}
-            content={
-                <>
-                    <Typography.Title level={4}>Test</Typography.Title>
-                    <div dangerouslySetInnerHTML={{ __html: data?.title }} />
-                </>
+    const queryClient = useQueryClient();
+
+    const upvoteColor = (currentData, id) => {
+        const result = currentData?.discussions_votes?.find(
+            (d) =>
+                d?.discussion_post_id === id &&
+                d?.user_custom_id === user?.user?.id
+        );
+        if (!result) {
+            return "gray";
+        } else {
+            if (result?.vlag === 1) {
+                return "blue";
             }
-            actions={[
-                <span>
-                    <ArrowUpOutlined />
-                </span>,
-                <span>
-                    <ArrowDownOutlined />
-                </span>,
-                <span>
-                    <CommentOutlined />
-                </span>
-            ]}
-        />
+            if (result?.vlag === 0) {
+                return "gray";
+            }
+        }
+    };
+
+    const downvoteColor = (currentData, id) => {
+        const result = currentData?.discussions_votes?.find(
+            (d) =>
+                d?.discussion_post_id === id &&
+                d?.user_custom_id === user?.user?.id
+        );
+        if (!result) {
+            return "gray";
+        } else {
+            if (result?.vlag === -1) {
+                return "blue";
+            }
+            if (result?.vlag === 0) {
+                return "gray";
+            }
+        }
+    };
+
+    const upvoteMutation = useMutation((data) => upvotePost(data), {
+        onError: (e) => console.log(e),
+        onSuccess: () => {
+            queryClient.invalidateQueries("post-communities");
+            queryClient.invalidateQueries("posts");
+        }
+    });
+    const downvoteMutation = useMutation((data) => downvotePost(data), {
+        onError: (e) => console.log(e),
+        onSuccess: () => {
+            queryClient.invalidateQueries("post-communities");
+            queryClient.invalidateQueries("posts");
+        }
+    });
+
+    const handleUpvote = (id) => {
+        const data = { id };
+        upvoteMutation.mutate(data);
+    };
+
+    const handleDownvote = (id) => {
+        const data = { id };
+        downvoteMutation.mutate(data);
+    };
+
+    return (
+        <Card style={{ marginBottom: 4 }} title="Diskusi Utama">
+            <Comment
+                avatar={data?.user?.image}
+                author={data?.user?.username}
+                datetime={moment(data?.created_at).fromNow()}
+                content={
+                    <>
+                        <Typography.Title level={5} style={{ marginTop: 14 }}>
+                            {data?.title}
+                        </Typography.Title>
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: data?.content
+                            }}
+                        />
+                    </>
+                }
+                actions={[
+                    <span onClick={() => handleUpvote(data?.id)}>
+                        <ArrowUpOutlined
+                            style={{ color: upvoteColor(data, data?.id) }}
+                        />
+                    </span>,
+                    <span>{data?.votes}</span>,
+                    <span onClick={() => handleDownvote(data?.id)}>
+                        <ArrowDownOutlined
+                            style={{ color: downvoteColor(data, data?.id) }}
+                        />
+                    </span>,
+                    <span onClick={() => gotoComments(data?.id)}>
+                        <CommentOutlined />
+                        <span style={{ marginLeft: 4 }}>
+                            {data?._count?.children_comments} Komentar
+                        </span>
+                    </span>
+                ]}
+            />
+        </Card>
     );
 };
 
