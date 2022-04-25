@@ -44,12 +44,15 @@ const requestPenilaianUser = async (req, res) => {
 
         const result = await prisma.acc_kinerja_bulanan.findFirst({
             where: {
+                // id_penilaian: penilaian?.id,
                 id_penilaian: penilaian?.id,
                 tahun: parseInt(tahun),
                 bulan: parseInt(bulan),
                 pegawai_id: customId
             }
         });
+
+        console.log(result);
 
         res.json(result);
     } catch (error) {

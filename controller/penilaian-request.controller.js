@@ -84,7 +84,6 @@ const kirimAtasan = async (req, res) => {
                     atasan_langsung: currentPenilaian?.atasan_langsung
                 }
             });
-            console.log(hasil);
             res.json({ code: 200, message: "sukses" });
         }
     } catch (error) {
