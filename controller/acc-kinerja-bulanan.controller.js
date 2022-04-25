@@ -35,13 +35,14 @@ const requestPenilaianUser = async (req, res) => {
     const tahun =
         req.query?.tahun || parseInt(moment(new Date()).format("YYYY"));
 
-    console.log(bulan, tahun);
     try {
         const penilaian = await prisma.penilaian.findFirst({
             where: {
                 aktif: true
             }
         });
+
+        console.log({ id: penilaian?.id, tahun, bulan, customId });
 
         const result = await prisma.acc_kinerja_bulanan.findFirst({
             where: {
@@ -51,6 +52,8 @@ const requestPenilaianUser = async (req, res) => {
                 pegawai_id: customId
             }
         });
+
+        console.log(result);
 
         res.json(result);
     } catch (error) {
