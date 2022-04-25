@@ -294,8 +294,6 @@ const UpdateFormBulanan = ({ form, id, targets }) => {
 };
 
 const Penilaian = ({ tahun, bulan }) => {
-    useEffect(() => {}, [bulan, tahun]);
-
     const [visibleCreate, setVisibleCreate] = useState(false);
     const [visibleUpdate, setVisibleUpdate] = useState(false);
 
@@ -317,6 +315,8 @@ const Penilaian = ({ tahun, bulan }) => {
             enabled: !!bulan && !!tahun
         }
     );
+
+    useEffect(() => {}, [bulan, tahun]);
 
     const {
         data: dataTargetPenilaian,

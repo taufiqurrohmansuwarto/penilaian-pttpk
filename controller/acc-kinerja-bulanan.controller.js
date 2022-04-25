@@ -35,6 +35,7 @@ const requestPenilaianUser = async (req, res) => {
     const tahun =
         req.query?.tahun || parseInt(moment(new Date()).format("YYYY"));
 
+    console.log(bulan, tahun);
     try {
         const penilaian = await prisma.penilaian.findFirst({
             where: {
