@@ -14,21 +14,18 @@ export default function SignIn({ providers }) {
             }}
         >
             <Row align="middle">
+                <img src="pns.png" style={{ width: 300 }} alt="" />
                 <Col>
-                    <div>
-                        <h1 style={{ marginBottom: 0 }}>
-                            Seleksi Terbuka Pengisian Lowongan JPT Madya
-                        </h1>
-                    </div>
-                    <h2 style={{ marginBottom: 0 }}>
-                        Sekretaris Daerah Provinsi Jawa Timur
-                    </h2>
+                    <Typography.Title>Aplikasi ASN</Typography.Title>
+                    <Typography.Text type="secondary">
+                        Include Penilaian PTTPK
+                    </Typography.Text>
                     <Divider />
                     <Space direction="vertical">
                         {Object?.values(providers).map((provider) => (
                             <div key={provider.name}>
                                 <Button
-                                    //   shape="round"
+                                    shape="round"
                                     type="primary"
                                     onClick={() => signIn(provider.id)}
                                 >
@@ -37,23 +34,21 @@ export default function SignIn({ providers }) {
                             </div>
                         ))}
                     </Space>
+                    <Divider />
                     <div style={{ marginTop: 10 }}>
-                        <p>Version 0.0.1-a.1</p>
                         <Space>
+                            <Typography.Text type="secondary">
+                                Version 0.0.1-a.1
+                            </Typography.Text>
                             <img
                                 src="logobkd.jpg"
                                 alt=""
                                 style={{ width: 50 }}
                             />
-                            <img
-                                src="pemprov.png"
-                                alt=""
-                                style={{ width: 20 }}
-                            />
                         </Space>
                         <div>
                             <Typography.Text strong>
-                                @Copyright BKD Provinsi Jawa Timur 2022
+                                @ Copyright BKD Provinsi Jawa Timur 2022
                             </Typography.Text>
                         </div>
                     </div>
