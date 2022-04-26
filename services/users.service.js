@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const fetcher = axios.create({
-    baseURL: "/ptt-penilaian/api"
+    baseURL: "/pttpk-penilaian/api"
 });
 
 // tambahan

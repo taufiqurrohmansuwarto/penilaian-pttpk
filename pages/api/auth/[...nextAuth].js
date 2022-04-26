@@ -54,7 +54,7 @@ const upsert = async (currentUser) => {
 
 export default NextAuth({
     pages: {
-        signIn: "/ptt-penilaian/signin"
+        signIn: "/pttpk-penilaian/signin"
     },
     providers: [
         {

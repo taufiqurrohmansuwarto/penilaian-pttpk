@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const fetcher = axios.create({
-    baseURL: "/ptt-penilaian/api/fasilitator"
+    baseURL: "/pttpk-penilaian/api/fasilitator"
 });
 
 export const downloadPenilaianBulanan = ({ tahun, bulan }) => {
