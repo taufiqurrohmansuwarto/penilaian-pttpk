@@ -34,11 +34,10 @@ import {
     updateComment,
     uploads
 } from "../../services/main.services";
+import CustomRichTextEditor from "./CustomRichTextEditor";
 import RichTextEditor from "./RichTextEditor";
 
 moment.locale("id");
-
-const { TextArea } = Input;
 
 const filterValue = (commentId, userId, items) => {
     return items?.find(
@@ -187,11 +186,11 @@ const ChildrenComment = ({ data, handleRemove, handleUpdate, user }) => {
                                     content={
                                         <>
                                             {item?.id === editId ? (
-                                                <Editor
+                                                <CustomRichTextEditor
                                                     onCancel={onCancel}
-                                                    value={comment}
-                                                    onChange={setComment}
-                                                    onSubmit={async () => {
+                                                    text={comment}
+                                                    setText={setComment}
+                                                    handleSubmit={async () => {
                                                         await handleUpdate({
                                                             id: item?.id,
                                                             comment: comment
@@ -415,18 +414,18 @@ const ListComments = ({
                                 content={
                                     <>
                                         {editId === item?.id ? (
-                                            <Editor
+                                            <CustomRichTextEditor
                                                 buttonText="Edit"
-                                                value={editComment}
-                                                onSubmit={async () => {
+                                                text={editComment}
+                                                onCancel={handleCancelEdit}
+                                                setText={setEditComment}
+                                                handleSubmit={async () => {
                                                     await handleUpdate({
                                                         id: item?.id,
                                                         comment: editComment
                                                     });
                                                     setEditId(null);
                                                 }}
-                                                onCancel={handleCancelEdit}
-                                                onChange={setEditComment}
                                             />
                                         ) : (
                                             <div
@@ -460,14 +459,14 @@ const ListComments = ({
                                         author={user?.user?.name}
                                         avatar={user?.user?.image}
                                     >
-                                        <Editor
+                                        <CustomRichTextEditor
                                             buttonText="Balas"
-                                            value={comment}
-                                            onSubmit={() =>
+                                            text={comment}
+                                            setText={setComment}
+                                            onCancel={handleCancel}
+                                            handleSubmit={() =>
                                                 handleSubmit(item?.id)
                                             }
-                                            onCancel={handleCancel}
-                                            onChange={setComment}
                                         />
                                     </Comment>
                                 )}
@@ -603,13 +602,11 @@ const UserComments = ({ sort }) => {
                         avatar={userData?.user?.image}
                         content={
                             <>
-                                <Editor
+                                <CustomRichTextEditor
+                                    text={comment}
                                     main={true}
-                                    value={comment}
-                                    submitting={createCommentMutation.isLoading}
-                                    onChange={setComment}
-                                    handleUpload={handleUpload}
-                                    onSubmit={handleSubmit}
+                                    setText={setComment}
+                                    handleSubmit={handleSubmit}
                                 />
                             </>
                         }

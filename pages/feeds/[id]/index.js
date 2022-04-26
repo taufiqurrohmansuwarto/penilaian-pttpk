@@ -1,20 +1,24 @@
-import moment from "moment";
+import {
+    DislikeFilled,
+    DislikeOutlined,
+    LikeFilled,
+    LikeOutlined
+} from "@ant-design/icons";
 import {
     Avatar,
     Breadcrumb,
-    Button,
     Card,
     Col,
     Comment,
-    Form,
     List,
     message,
     Popconfirm,
     Row,
-    Skeleton,
-    Space
+    Skeleton
 } from "antd";
+import moment from "moment";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -24,19 +28,11 @@ import {
     dislikes,
     likes,
     removeComment,
-    updateComment,
-    uploads
+    updateComment
 } from "../../../services/main.services";
+import CustomRichTextEditor from "../../../src/components/CustomRichTextEditor";
 import Layout from "../../../src/components/Layout";
 import PageContainer from "../../../src/components/PageContainer";
-import RichTextEditor from "../../../src/components/RichTextEditor";
-import Link from "next/link";
-import {
-    DislikeFilled,
-    DislikeOutlined,
-    LikeFilled,
-    LikeOutlined
-} from "@ant-design/icons";
 
 const filterValue = (commentId, userId, items) => {
     return items?.find(
@@ -61,67 +57,6 @@ const hasDislike = (commentId, userId, items) => {
     )?.value;
 
     return dislikeValue === -1 ? true : false;
-};
-
-const Editor = ({
-    main,
-    onChange,
-    onSubmit,
-    submitting,
-    value,
-    onCancel,
-    buttonText = "Kirim",
-    placeholder = "Apa yang ingin anda sampaikan?"
-}) => {
-    const upload = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("image", file);
-            const result = await uploads(formData);
-            return result;
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    return (
-        <div>
-            <Form.Item>
-                <RichTextEditor
-                    onImageUpload={upload}
-                    style={{ minHeight: 180 }}
-                    labels={placeholder}
-                    radius="md"
-                    onChange={onChange}
-                    controls={[
-                        [
-                            "bold",
-                            "italic",
-                            "underline",
-                            "link",
-                            "orderedList",
-                            "unorderedList"
-                        ],
-                        ["alignCenter", "alignLeft", "alignRight"]
-                    ]}
-                    value={value}
-                />
-            </Form.Item>
-            <Form.Item>
-                <Space>
-                    <Button
-                        htmlType="submit"
-                        loading={submitting}
-                        onClick={onSubmit}
-                        type="primary"
-                    >
-                        {buttonText}
-                    </Button>
-                    {!main && <Button onClick={onCancel}>Batal</Button>}
-                </Space>
-            </Form.Item>
-        </div>
-    );
 };
 
 const ChildrenComponent = ({ data, handleRemove, handleUpdate, user }) => {
@@ -185,18 +120,18 @@ const ChildrenComponent = ({ data, handleRemove, handleUpdate, user }) => {
                                     content={
                                         <>
                                             {item?.id === editId ? (
-                                                <Editor
+                                                <CustomRichTextEditor
                                                     onCancel={onCancel}
-                                                    value={comment}
-                                                    onChange={setComment}
-                                                    onSubmit={async () => {
+                                                    text={comment}
+                                                    setText={setComment}
+                                                    buttonText="Edit"
+                                                    handleSubmit={async () => {
                                                         await handleUpdate({
                                                             id: item?.id,
                                                             comment: comment
                                                         });
                                                         setEditId(null);
                                                     }}
-                                                    buttonText="Edit"
                                                 />
                                             ) : (
                                                 <div
@@ -449,18 +384,18 @@ function DetailFeed() {
                                     content={
                                         <>
                                             {editId === data?.id ? (
-                                                <Editor
+                                                <CustomRichTextEditor
                                                     buttonText="Edit"
-                                                    value={editComment}
-                                                    onSubmit={async () => {
+                                                    text={editComment}
+                                                    onCancel={handleCancelEdit}
+                                                    setText={setEditComment}
+                                                    handleSubmit={async () => {
                                                         await handleUpdate({
                                                             id: data?.id,
                                                             comment: editComment
                                                         });
                                                         setEditId(null);
                                                     }}
-                                                    onCancel={handleCancelEdit}
-                                                    onChange={setEditComment}
                                                 />
                                             ) : (
                                                 <div
@@ -477,14 +412,14 @@ function DetailFeed() {
                                             author={dataUser?.user?.name}
                                             avatar={dataUser?.user?.image}
                                         >
-                                            <Editor
+                                            <CustomRichTextEditor
                                                 buttonText="Balas"
-                                                value={comment}
-                                                onSubmit={() =>
+                                                text={comment}
+                                                setText={setComment}
+                                                onCancel={handleCancel}
+                                                handleSubmit={() =>
                                                     handleSubmit(data?.id)
                                                 }
-                                                onCancel={handleCancel}
-                                                onChange={setComment}
                                             />
                                         </Comment>
                                     )}

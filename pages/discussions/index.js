@@ -1,5 +1,5 @@
-import { TeamOutlined, UsergroupAddOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Divider, Row, Skeleton, Space } from "antd";
+import { FileAddOutlined } from "@ant-design/icons";
+import { Button, Card, Col, Row, Skeleton, Space } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -8,10 +8,6 @@ import { useInfiniteQuery } from "react-query";
 import { getPosts } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
-import CardRules from "../../src/components/reddits/Cards/CardRules";
-import CardTop10 from "../../src/components/reddits/Cards/CardTop10";
-import CreatePostAndCommunities from "../../src/components/reddits/Cards/CreatePostAndCommunities";
-import ListSubscribes from "../../src/components/reddits/Cards/ListSubscribes";
 import Posts from "../../src/components/reddits/Cards/Posts";
 
 const Discussions = ({ data }) => {
@@ -65,15 +61,12 @@ const Discussions = ({ data }) => {
                 fixedHeader
             >
                 <Space style={{ marginBottom: 8 }}>
-                    <Button onClick={createPost} icon={<TeamOutlined />}>
-                        Diskusi
-                    </Button>
                     <Button
-                        onClick={createCommunities}
-                        icon={<UsergroupAddOutlined />}
+                        onClick={createPost}
                         type="primary"
+                        icon={<FileAddOutlined />}
                     >
-                        Komunitas
+                        Diskusi
                     </Button>
                 </Space>
 

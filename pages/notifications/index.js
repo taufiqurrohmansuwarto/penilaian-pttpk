@@ -1,4 +1,3 @@
-import moment from "moment";
 import {
     Avatar,
     Card,
@@ -10,25 +9,35 @@ import {
     Tag,
     Typography
 } from "antd";
-import React from "react";
+import moment from "moment";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
     getNotifications,
     readAllNotifications,
     readNotificationById
 } from "../../services/main.services";
-import PageContainer from "../../src/components/PageContainer";
 import Layout from "../../src/components/Layout";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useRouter } from "next/router";
-import CardPostNew from "../../src/components/reddits/Cards/CardPostNew";
+import PageContainer from "../../src/components/PageContainer";
 
-const CustomDescription = ({ item, handleReadById }) => {
+const CustomDescription = ({ item }) => {
+    let kata;
+
+    if (item?.type === "replied") {
+        kata = " mengomentari status anda";
+    }
+    if (item?.type === "replied-comment") {
+        kata = ` mengomentari status ${item?.comments?.user?.username}`;
+    }
+    if (item?.type === "mention") {
+        kata = ` memanggil anda`;
+    }
+
     return (
         <Typography.Text type="secondary">
             {item?.user_sender_notification?.username}
-            {item?.type === "replied"
-                ? " mengomentari status anda"
-                : ` mengomentari status ${item?.comments?.user?.username}`}{" "}
+            {kata}
         </Typography.Text>
     );
 };
@@ -127,6 +136,11 @@ function Notifications() {
 
     const handleReadAllNotificationById = async (id) => {
         await readNotificationByIdMutation.mutateAsync(id);
+    };
+
+    const [text, setText] = useState("");
+    const handleSubmit = () => {
+        console.log(text);
     };
 
     return (

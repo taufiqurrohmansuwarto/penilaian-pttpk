@@ -1,5 +1,6 @@
 import { uniq } from "lodash";
 import prisma from "../lib/prisma";
+import { parse } from "node-html-parser";
 
 const index = async (req, res) => {
     const { customId } = req.user;
@@ -151,6 +152,21 @@ const create = async (req, res) => {
             parent_id: body?.parent_id
         };
 
+        const root = parse(body?.comment);
+        const selectorMention = root
+            ?.querySelectorAll("span.mention")
+            ?.map((h) => h?._rawAttrs);
+
+        let list = [];
+
+        if (selectorMention?.length !== 0) {
+            list = selectorMention
+                ?.map((s) => s["data-id"])
+                ?.filter((x) => x !== customId);
+        }
+
+        const listMention = uniq(list);
+
         const result = await prisma.comments.create({
             data
         });
@@ -197,10 +213,37 @@ const create = async (req, res) => {
                         message: body?.comment
                     }));
 
+                    if (listMention?.length !== 0) {
+                        const data = listMention?.map((l) => ({
+                            comment_id: body?.parent_id,
+                            sender: customId,
+                            receiver: l,
+                            type: "mention"
+                        }));
+
+                        await prisma.comments_notifications.createMany({
+                            data
+                        });
+                    }
+
                     await prisma.comments_notifications.createMany({
                         data
                     });
                 }
+            }
+        } else {
+            // fuck you ngentod
+            if (listMention?.length !== 0) {
+                const data = listMention?.map((l) => ({
+                    comment_id: result?.id,
+                    sender: customId,
+                    receiver: l,
+                    type: "mention"
+                }));
+
+                await prisma.comments_notifications.createMany({
+                    data
+                });
             }
         }
 
@@ -216,8 +259,9 @@ const update = async (req, res) => {
     const { commentId } = req.query;
     const { customId } = req.user;
     const { comment } = req?.body;
+
     try {
-        await prisma.comments.updateMany({
+        const result = await prisma.comments.updateMany({
             where: {
                 id: commentId,
                 user_custom_id: customId
@@ -228,6 +272,55 @@ const update = async (req, res) => {
                 updated_at: new Date()
             }
         });
+
+        const root = parse(comment);
+        const selectorMention = root
+            ?.querySelectorAll("span.mention")
+            ?.map((h) => h?._rawAttrs);
+
+        let list = [];
+
+        if (selectorMention?.length !== 0) {
+            list = selectorMention
+                ?.map((s) => s["data-id"])
+                ?.filter((x) => x !== customId);
+        }
+
+        const listMention = uniq(list);
+        const hasil = await prisma.comments.findFirst({
+            where: {
+                id: commentId
+            }
+        });
+
+        if (hasil?.parent_id === null) {
+            if (listMention?.length !== 0) {
+                const data = listMention?.map((l) => ({
+                    comment_id: hasil?.id,
+                    sender: customId,
+                    receiver: l,
+                    type: "mention"
+                }));
+
+                await prisma.comments_notifications?.createMany({
+                    data
+                });
+            }
+        } else {
+            if (listMention?.length !== 0) {
+                const data = listMention?.map((l) => ({
+                    comment_id: hasil?.parent_id,
+                    sender: customId,
+                    receiver: l,
+                    type: "mention"
+                }));
+
+                await prisma.comments_notifications?.createMany({
+                    data
+                });
+            }
+        }
+
         res.json({ code: 200, message: "success" });
     } catch (error) {
         console.log(error);

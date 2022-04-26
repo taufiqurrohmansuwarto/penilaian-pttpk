@@ -192,3 +192,9 @@ export const updatePost = ({ id, data }) => {
         .patch(`/discussions/posts/${id}`, data)
         .then((res) => res?.data);
 };
+
+export const findUsers = (username) => {
+    return fetcher
+        .get(`/refs/users?username=${username}`)
+        .then((res) => res?.data);
+};
