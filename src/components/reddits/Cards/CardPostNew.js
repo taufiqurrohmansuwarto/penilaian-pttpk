@@ -57,14 +57,14 @@ const CardPostNew = ({ data, user }) => {
         onError: (e) => console.log(e),
         onSuccess: () => {
             queryClient.invalidateQueries("post-communities");
-            queryClient.invalidateQueries("posts");
+            queryClient.invalidateQueries("post");
         }
     });
     const downvoteMutation = useMutation((data) => downvotePost(data), {
         onError: (e) => console.log(e),
         onSuccess: () => {
             queryClient.invalidateQueries("post-communities");
-            queryClient.invalidateQueries("posts");
+            queryClient.invalidateQueries("post");
         }
     });
 

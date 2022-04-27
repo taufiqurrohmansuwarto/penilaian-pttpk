@@ -28,6 +28,16 @@ const index = async (req, res) => {
         query = { ...query, orderBy: { created_at: "desc" } };
     }
 
+    if (req?.query?.userId) {
+        query = {
+            ...query,
+            where: {
+                ...query?.where,
+                user_custom_id: req?.query?.userId
+            }
+        };
+    }
+
     if (sort === "vote") {
         query = { ...query, orderBy: { votes: "desc" } };
     }

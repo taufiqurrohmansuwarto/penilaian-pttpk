@@ -1,4 +1,4 @@
-import { Card, Col, Row } from "antd";
+import { Alert, Card, Col, Row } from "antd";
 import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
 import TopCommunities from "../../src/components/reddits/Cards/TopCommunities";
@@ -9,6 +9,16 @@ const Feeds = ({ data }) => {
     return (
         <Layout>
             <PageContainer subTitle="Feedback" fixedHeader>
+                <Row>
+                    <Col span={14} offset={2} style={{ marginBottom: 10 }}>
+                        <Alert
+                            type="info"
+                            showIcon
+                            message="Perhatian"
+                            description="Dikarenakan ada pergantian database maka penilaian dientri ulang kembali mulai bulan januari sampai maret"
+                        />
+                    </Col>
+                </Row>
                 <Row gutter={[16, 16]}>
                     <Col span={14} offset={2}>
                         <UserComments sort={data?.sort} />

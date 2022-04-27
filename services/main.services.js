@@ -69,9 +69,11 @@ export const getTopics = () => {
 };
 
 // posts
-export const getPosts = (sort = "terbaru", cursor = 0) => {
+export const getPosts = (sort = "terbaru", cursor = 0, userId = "") => {
     return fetcher
-        .get(`/discussions/posts?sort=${sort}&cursor=${cursor}`)
+        .get(
+            `/discussions/posts?sort=${sort}&cursor=${cursor}&userId=${userId}`
+        )
         .then((res) => res?.data);
 };
 
@@ -196,5 +198,17 @@ export const updatePost = ({ id, data }) => {
 export const findUsers = (username) => {
     return fetcher
         .get(`/refs/users?username=${username}`)
+        .then((res) => res?.data);
+};
+
+export const removePostByUser = (id) => {
+    return fetcher
+        .delete(`/discussions/posts/${id}/update-personal`)
+        .then((res) => res?.data);
+};
+
+export const updatePostByUser = ({ id, data }) => {
+    return fetcher
+        .patch(`/discussions/posts/${id}/update-personal`, data)
         .then((res) => res?.data);
 };

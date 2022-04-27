@@ -160,6 +160,46 @@ const remove = async (req, res) => {
     }
 };
 
+const removePostPersonal = async (req, res) => {
+    const { customId } = req.user;
+    const { id } = req.query;
+
+    try {
+        await prisma.discussions_posts.deleteMany({
+            where: {
+                id,
+                user_custom_id: customId,
+                status: "active",
+                type: "post"
+            }
+        });
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
+const updatePostPersonal = async (req, res) => {
+    const { customId } = req.user;
+    const { id } = req.query;
+    try {
+        await prisma.discussions_posts.updateMany({
+            where: {
+                id,
+                user_custom_id: customId,
+                status: "active",
+                type: "post"
+            },
+            data: req?.body
+        });
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(erorr);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
 const detail = async (req, res) => {
     const { id } = req.query;
 
@@ -199,5 +239,7 @@ module.exports = {
     create,
     update,
     remove,
-    detail
+    detail,
+    updatePostPersonal,
+    removePostPersonal
 };

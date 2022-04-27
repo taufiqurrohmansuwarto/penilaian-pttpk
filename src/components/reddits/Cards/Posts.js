@@ -1,7 +1,8 @@
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
-    CommentOutlined
+    CommentOutlined,
+    EditOutlined
 } from "@ant-design/icons";
 import { Card, Comment, List, Typography } from "antd";
 import moment from "moment";
@@ -9,7 +10,7 @@ import { useRouter } from "next/router";
 import { useMutation, useQueryClient } from "react-query";
 import { downvotePost, upvotePost } from "../../../../services/main.services";
 
-function Posts({ data, loading, isFetchingNextPage, user }) {
+function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
     const router = useRouter();
 
     const CustomCard = ({ data }) => {
@@ -114,7 +115,9 @@ function Posts({ data, loading, isFetchingNextPage, user }) {
                         <span style={{ marginLeft: 4 }}>
                             {data?._count?.children_comments} Komentar
                         </span>
-                    </span>
+                    </span>,
+                    <>{canEditRemove && <span>Edit</span>}</>,
+                    <>{canEditRemove && <span>Hapus</span>}</>
                 ]}
             />
         );

@@ -230,6 +230,42 @@ const create = async (req, res) => {
                         data
                     });
                 }
+            } else {
+                if (result?.children?.length !== -1) {
+                    const comment_owner = result?.user_custom_id;
+                    const commentator = req.user?.customId;
+
+                    const usersSender = result?.children
+                        .map((b) => b?.user_custom_id)
+                        ?.filter(
+                            (x) => x !== comment_owner && x !== commentator
+                        );
+
+                    const data = uniq(usersSender)?.map((user) => ({
+                        comment_id: body?.parent_id,
+                        sender: customId,
+                        receiver: user,
+                        type: "replied-comment",
+                        message: body?.comment
+                    }));
+
+                    if (listMention?.length !== -1) {
+                        const data = listMention?.map((l) => ({
+                            comment_id: body?.parent_id,
+                            sender: customId,
+                            receiver: l,
+                            type: "mention"
+                        }));
+
+                        await prisma.comments_notifications.createMany({
+                            data
+                        });
+                    }
+
+                    await prisma.comments_notifications.createMany({
+                        data
+                    });
+                }
             }
         } else {
             // fuck you ngentod
@@ -261,7 +297,7 @@ const update = async (req, res) => {
     const { comment } = req?.body;
 
     try {
-        const result = await prisma.comments.updateMany({
+        await prisma.comments.updateMany({
             where: {
                 id: commentId,
                 user_custom_id: customId

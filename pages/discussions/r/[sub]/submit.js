@@ -30,7 +30,7 @@ function SubRedditSubmit() {
         (data) => createPostByCommunities(data),
         {
             onSuccess: () => {
-                router.push(`/discussions/r/${query?.sub}`);
+                router.push(`/discussions`);
                 message.success("Sukses Membuat postingan");
             }
         }

@@ -1,5 +1,5 @@
 import { FileAddOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Row, Skeleton, Space } from "antd";
+import { Alert, Button, Card, Col, Row, Skeleton, Space } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -49,6 +49,7 @@ const Discussions = ({ data }) => {
     const createPost = () => {
         router.push("/discussions/submit");
     };
+
     const createCommunities = () => {
         router.push("/discussions/komunitas/create");
     };
@@ -60,6 +61,17 @@ const Discussions = ({ data }) => {
                 subTitle="Untuk forum dan diskusi"
                 fixedHeader
             >
+                <Row>
+                    <Col span={14} style={{ marginBottom: 10 }}>
+                        <Alert
+                            type="info"
+                            showIcon
+                            message="Perhatian"
+                            description="Minta tolong mungkin bisa dicoba untuk membuat diskusi baru. Mungkin sekedar sharing-sharing permasalahan di kepegawaian atau hal yang lain supaya aplikasi tidak membosankan. Ndak usah takut. Dan jangan lupa share ke temen2 ya kalau ada aplikasi ini. PNS dan PTTPK bisa masuk kok jadi bisa saling berinteraksi"
+                        />
+                    </Col>
+                </Row>
+
                 <Space style={{ marginBottom: 8 }}>
                     <Button
                         onClick={createPost}
@@ -93,6 +105,7 @@ const Discussions = ({ data }) => {
                                 <React.Fragment key={page?.nextCursor}>
                                     <Card>
                                         <Posts
+                                            canEditRemove={true}
                                             data={page?.data}
                                             isFetchingNextPage={
                                                 isFetchingNextPage

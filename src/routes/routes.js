@@ -1,7 +1,8 @@
 import {
     BellOutlined,
     CommentOutlined,
-    MessageOutlined
+    MessageOutlined,
+    UserOutlined
 } from "@ant-design/icons";
 
 export default {

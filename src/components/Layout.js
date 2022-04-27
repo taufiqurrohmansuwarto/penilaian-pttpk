@@ -1,4 +1,4 @@
-import { LogoutOutlined, ReadOutlined } from "@ant-design/icons";
+import { LogoutOutlined, ReadOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Menu, Space, Typography } from "antd";
 import { xorBy } from "lodash";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -20,8 +20,11 @@ const menuItemRender = (options, element) => {
     );
 };
 
-const menuUser = () => (
+const menuUser = (gotoAccount) => (
     <Menu>
+        <Menu.Item key="account" onClick={gotoAccount} icon={<UserOutlined />}>
+            Account
+        </Menu.Item>
         <Menu.Item key="logout" onClick={signOut} icon={<LogoutOutlined />}>
             Logout
         </Menu.Item>
@@ -35,6 +38,10 @@ const rightContentRender = (user) => {
         router.push(`/notifications`);
     };
 
+    const gotoAccount = () => {
+        router.push(`/account/${user?.id}`);
+    };
+
     return (
         <Space size="large">
             <Space
@@ -45,7 +52,7 @@ const rightContentRender = (user) => {
                 <BadgeNotifications />
             </Space>
 
-            <Dropdown overlay={menuUser()}>
+            <Dropdown overlay={menuUser(gotoAccount)}>
                 <Space align="center">
                     <Avatar
                         shape="square"
