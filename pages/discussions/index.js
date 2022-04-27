@@ -105,7 +105,6 @@ const Discussions = ({ data }) => {
                                 <React.Fragment key={page?.nextCursor}>
                                     <Card>
                                         <Posts
-                                            canEditRemove={true}
                                             data={page?.data}
                                             isFetchingNextPage={
                                                 isFetchingNextPage
