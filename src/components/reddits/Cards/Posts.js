@@ -4,11 +4,26 @@ import {
     CommentOutlined,
     EditOutlined
 } from "@ant-design/icons";
-import { Card, Comment, List, Typography } from "antd";
+import {
+    Card,
+    Comment,
+    Input,
+    List,
+    Modal,
+    Popconfirm,
+    Typography
+} from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { downvotePost, upvotePost } from "../../../../services/main.services";
+import {
+    downvotePost,
+    removePostByUser,
+    updatePostByUser,
+    upvotePost
+} from "../../../../services/main.services";
+import RichTextEditor from "../../RichTextEditor";
 
 function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
     const router = useRouter();
@@ -63,6 +78,7 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
                 queryClient.invalidateQueries("posts");
             }
         });
+
         const downvoteMutation = useMutation((data) => downvotePost(data), {
             onError: (e) => console.log(e),
             onSuccess: () => {
@@ -70,6 +86,24 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
                 queryClient.invalidateQueries("posts");
             }
         });
+
+        const removePostMutation = useMutation(
+            (data) => removePostByUser(data),
+            {
+                onSuccess: () => {
+                    queryClient.invalidateQueries("posts");
+                }
+            }
+        );
+
+        const updatePostMutation = useMutation(
+            (data) => updatePostByUser(data),
+            {
+                onSuccess: () => {
+                    queryClient.invalidateQueries("posts");
+                }
+            }
+        );
 
         const handleUpvote = (id) => {
             const data = { id };
@@ -81,45 +115,94 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
             downvoteMutation.mutate(data);
         };
 
+        const [showUpdate, setShowUpdate] = useState(false);
+        const [currentData, setCurrentData] = useState(null);
+
+        const [editTitle, setEditTitle] = useState();
+        const [editComment, setEditComment] = useState();
+
+        useEffect(() => {}, [currentData, showUpdate]);
+
+        const handleRemove = (id) => {
+            removePostMutation(id);
+        };
+
+        const openModal = (data) => {
+            setCurrentData(data);
+            setShowUpdate(true);
+        };
+
+        const onCancel = () => {
+            setCurrentData(null);
+            setShowUpdate(false);
+        };
+
         return (
-            <Comment
-                avatar={data?.user?.image}
-                author={data?.user?.username}
-                datetime={moment(data?.created_at).fromNow()}
-                content={
-                    <>
-                        <Typography.Title level={5} style={{ marginTop: 14 }}>
-                            {data?.title}
-                        </Typography.Title>
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: data?.content
-                            }}
-                        />
-                    </>
-                }
-                actions={[
-                    <span onClick={() => handleUpvote(data?.id)}>
-                        <ArrowUpOutlined
-                            style={{ color: upvoteColor(data, data?.id) }}
-                        />
-                    </span>,
-                    <span>{data?.votes}</span>,
-                    <span onClick={() => handleDownvote(data?.id)}>
-                        <ArrowDownOutlined
-                            style={{ color: downvoteColor(data, data?.id) }}
-                        />
-                    </span>,
-                    <span onClick={() => gotoComments(data?.id)}>
-                        <CommentOutlined />
-                        <span style={{ marginLeft: 4 }}>
-                            {data?._count?.children_comments} Komentar
-                        </span>
-                    </span>,
-                    <>{canEditRemove && <span>Edit</span>}</>,
-                    <>{canEditRemove && <span>Hapus</span>}</>
-                ]}
-            />
+            <>
+                <Modal
+                    title="Edit Diskusi"
+                    visible={showUpdate}
+                    onCancel={onCancel}
+                >
+                    <Input
+                        defaultValue={currentData?.title}
+                        value={editTitle}
+                    />
+                </Modal>
+                <Comment
+                    avatar={data?.user?.image}
+                    author={data?.user?.username}
+                    datetime={moment(data?.created_at).fromNow()}
+                    content={
+                        <>
+                            <Typography.Title
+                                level={5}
+                                style={{ marginTop: 14 }}
+                            >
+                                {data?.title}
+                            </Typography.Title>
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: data?.content
+                                }}
+                            />
+                        </>
+                    }
+                    actions={[
+                        <span onClick={() => handleUpvote(data?.id)}>
+                            <ArrowUpOutlined
+                                style={{ color: upvoteColor(data, data?.id) }}
+                            />
+                        </span>,
+                        <span>{data?.votes}</span>,
+                        <span onClick={() => handleDownvote(data?.id)}>
+                            <ArrowDownOutlined
+                                style={{ color: downvoteColor(data, data?.id) }}
+                            />
+                        </span>,
+                        <span onClick={() => gotoComments(data?.id)}>
+                            <CommentOutlined />
+                            <span style={{ marginLeft: 4 }}>
+                                {data?._count?.children_comments} Komentar
+                            </span>
+                        </span>,
+                        <>
+                            {canEditRemove && (
+                                <span onClick={() => openModal(data)}>
+                                    Edit
+                                </span>
+                            )}
+                        </>,
+                        <>
+                            {canEditRemove && (
+                                <Popconfirm title="Apakah anda yakin ingin menghapus diskusi yang telah anda buat?">
+                                    <span>Hapus</span>
+                                </Popconfirm>
+                            )}
+                        </>
+                    ]}
+                />
+            </>
         );
     };
 
