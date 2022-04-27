@@ -1,14 +1,13 @@
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
-    CommentOutlined,
-    EditOutlined
+    CommentOutlined
 } from "@ant-design/icons";
 import {
-    Card,
     Comment,
     Input,
     List,
+    message,
     Modal,
     Popconfirm,
     Typography
@@ -23,7 +22,7 @@ import {
     updatePostByUser,
     upvotePost
 } from "../../../../services/main.services";
-import RichTextEditor from "../../RichTextEditor";
+import RichTextEditorNew from "../../RichTextEditorNew";
 
 function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
     const router = useRouter();
@@ -92,7 +91,8 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
             {
                 onSuccess: () => {
                     queryClient.invalidateQueries("posts");
-                }
+                },
+                onError: () => message.error("Gagal")
             }
         );
 
@@ -124,11 +124,24 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
         useEffect(() => {}, [currentData, showUpdate]);
 
         const handleRemove = (id) => {
-            removePostMutation(id);
+            removePostMutation.mutate(id);
+        };
+
+        const handleUpdate = () => {
+            const values = {
+                id: currentData?.id,
+                data: {
+                    title: editTitle,
+                    content: editComment
+                }
+            };
+            updatePostMutation.mutate(values);
         };
 
         const openModal = (data) => {
             setCurrentData(data);
+            setEditComment(data?.content);
+            setEditTitle(data?.title);
             setShowUpdate(true);
         };
 
@@ -141,12 +154,20 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
             <>
                 <Modal
                     title="Edit Diskusi"
+                    width={800}
+                    centered
                     visible={showUpdate}
+                    confirmLoading={updatePostMutation.isLoading}
                     onCancel={onCancel}
+                    onOk={handleUpdate}
                 >
                     <Input
-                        defaultValue={currentData?.title}
                         value={editTitle}
+                        onChange={(e) => setEditTitle(e?.target?.value)}
+                    />
+                    <RichTextEditorNew
+                        text={editComment}
+                        setText={setEditComment}
                     />
                 </Modal>
                 <Comment
@@ -195,7 +216,12 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
                         </>,
                         <>
                             {canEditRemove && (
-                                <Popconfirm title="Apakah anda yakin ingin menghapus diskusi yang telah anda buat?">
+                                <Popconfirm
+                                    title="Apakah anda yakin ingin menghapus diskusi yang telah anda buat?"
+                                    onConfirm={() => {
+                                        handleRemove(data?.id);
+                                    }}
+                                >
                                     <span>Hapus</span>
                                 </Popconfirm>
                             )}

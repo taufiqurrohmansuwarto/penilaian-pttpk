@@ -165,12 +165,16 @@ const removePostPersonal = async (req, res) => {
     const { id } = req.query;
 
     try {
-        await prisma.discussions_posts.deleteMany({
+        await prisma.discussions_posts.updateMany({
             where: {
                 id,
                 user_custom_id: customId,
                 status: "active",
                 type: "post"
+            },
+            data: {
+                status: "nonactive",
+                deleted_at: new Date()
             }
         });
         res.json({ code: 200, message: "success" });
@@ -183,6 +187,7 @@ const removePostPersonal = async (req, res) => {
 const updatePostPersonal = async (req, res) => {
     const { customId } = req.user;
     const { id } = req.query;
+
     try {
         await prisma.discussions_posts.updateMany({
             where: {
@@ -191,7 +196,11 @@ const updatePostPersonal = async (req, res) => {
                 status: "active",
                 type: "post"
             },
-            data: req?.body
+            data: {
+                ...req?.body,
+                updated_at: new Date(),
+                is_edited: true
+            }
         });
         res.json({ code: 200, message: "success" });
     } catch (error) {
