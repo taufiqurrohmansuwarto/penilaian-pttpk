@@ -278,8 +278,8 @@ model discussions_posts {
   parent_comments    discussions_posts?  @relation("SubDiscussionsComments", fields: [post_id], references: [id], onDelete: Cascade)
   children_comments  discussions_posts[] @relation("SubDiscussionsComments")
   is_pin             Boolean             @default(false)
-  pin_user_custom_id String
-  pinned_by          users               @relation("user_pin", fields: [pin_user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  pin_user_custom_id String?
+  pinned_by          users?              @relation("user_pin", fields: [pin_user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
   image_list         Json?
   type               String?
