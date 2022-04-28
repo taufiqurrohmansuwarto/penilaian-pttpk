@@ -122,7 +122,7 @@ const changeRoutes = (user) => {
     });
 };
 
-const Layout = ({ children }) => {
+const Layout = ({ children, title = "" }) => {
     const { data } = useSession({
         required: true,
         onUnauthenticated: () => signIn()

@@ -10,6 +10,7 @@ import {
     message,
     Modal,
     Popconfirm,
+    Skeleton,
     Typography
 } from "antd";
 import moment from "moment";
@@ -234,11 +235,18 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
 
     return (
         <List
-            loading={loading || isFetchingNextPage}
             dataSource={data}
             rowKey={(row) => row?.id}
             renderItem={(item) => {
-                return <CustomCard data={item} user={user} />;
+                return (
+                    <Skeleton
+                        loading={loading || isFetchingNextPage}
+                        active
+                        avatar
+                    >
+                        <CustomCard data={item} user={user} />
+                    </Skeleton>
+                );
             }}
         />
     );

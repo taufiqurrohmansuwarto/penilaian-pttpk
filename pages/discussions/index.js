@@ -55,7 +55,7 @@ const Discussions = ({ data }) => {
     };
 
     return (
-        <Layout>
+        <Layout title="Discussions">
             <PageContainer
                 title="Diskusi"
                 subTitle="Untuk forum dan diskusi"
@@ -84,7 +84,7 @@ const Discussions = ({ data }) => {
 
                 <Row>
                     <Col span={18}>
-                        <Card>
+                        <Card style={{ marginBottom: 8 }}>
                             <span style={{ marginRight: 8 }}>
                                 Urutkan berdasarkan :{" "}
                             </span>
@@ -100,37 +100,33 @@ const Discussions = ({ data }) => {
                                 </CheckableTag>
                             ))}
                         </Card>
-                        <Skeleton loading={loadingDataPosts}>
-                            {dataPosts?.pages?.map((page) => (
-                                <React.Fragment key={page?.nextCursor}>
-                                    <Card>
-                                        <Posts
-                                            data={page?.data}
-                                            isFetchingNextPage={
-                                                isFetchingNextPage
-                                            }
-                                            loading={loadingDataPosts}
-                                            hasNextPage={hasNextPage}
-                                            fetchNextPage={fetchNextPage}
-                                            user={userData}
-                                        />
-                                    </Card>
-                                </React.Fragment>
-                            ))}
-                            {hasNextPage && (
-                                <Button
-                                    style={{
-                                        width: "100%",
-                                        marginTop: 10,
-                                        marginBottom: 10
-                                    }}
-                                    block
-                                    onClick={() => fetchNextPage()}
-                                >
-                                    Selanjutnya
-                                </Button>
-                            )}
-                        </Skeleton>
+                        {dataPosts?.pages?.map((page) => (
+                            <React.Fragment key={page?.nextCursor}>
+                                <Card>
+                                    <Posts
+                                        data={page?.data}
+                                        isFetchingNextPage={isFetchingNextPage}
+                                        loading={loadingDataPosts}
+                                        hasNextPage={hasNextPage}
+                                        fetchNextPage={fetchNextPage}
+                                        user={userData}
+                                    />
+                                </Card>
+                            </React.Fragment>
+                        ))}
+                        {hasNextPage && (
+                            <Button
+                                style={{
+                                    width: "100%",
+                                    marginTop: 10,
+                                    marginBottom: 10
+                                }}
+                                block
+                                onClick={() => fetchNextPage()}
+                            >
+                                Selanjutnya
+                            </Button>
+                        )}
                     </Col>
                 </Row>
             </PageContainer>

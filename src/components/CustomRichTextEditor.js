@@ -42,7 +42,8 @@ const CustomRichTextEditor = ({
                 value={text}
                 onChange={setText}
                 mentions={mentions}
-                style={{ minHeight: 240, marginTop: 8, marginBottom: 8 }}
+                controls={[["image", "video", "bold"]]}
+                style={{ minHeight: 200, marginTop: 8, marginBottom: 8 }}
             />
             <Space>
                 <Button

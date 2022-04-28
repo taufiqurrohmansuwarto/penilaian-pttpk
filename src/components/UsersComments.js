@@ -275,9 +275,8 @@ const ListComments = ({
                     itemLayout="horizontal"
                     dataSource={data}
                     rowKey={(row) => row?.id}
-                    loading={isLoading}
                     renderItem={(item) => (
-                        <li>
+                        <Skeleton loading={isLoading} active avatar>
                             <Comment
                                 actions={[
                                     <span
@@ -480,7 +479,7 @@ const ListComments = ({
                                     />
                                 ) : null}
                             </Comment>
-                        </li>
+                        </Skeleton>
                     )}
                 />
             ) : null}
@@ -602,58 +601,52 @@ const UserComments = ({ sort }) => {
                 </Card>
             </Badge.Ribbon>
 
-            <Skeleton loading={isLoadingComments}>
-                <>
-                    <Card style={{ marginTop: 8, marginBottom: 8 }}>
-                        <span style={{ marginRight: 8 }}>
-                            Urutkan berdasarkan :{" "}
-                        </span>
-                        {filter?.map((f) => (
-                            <CheckableTag
-                                key={f}
-                                checked={selectedFilter === f}
-                                onChange={(checked) =>
-                                    handleChangeFilter(checked, f)
-                                }
-                            >
-                                {f}
-                            </CheckableTag>
-                        ))}
-                    </Card>
-                </>
+            <>
+                <Card style={{ marginTop: 8, marginBottom: 8 }}>
+                    <span style={{ marginRight: 8 }}>
+                        Urutkan berdasarkan :{" "}
+                    </span>
+                    {filter?.map((f) => (
+                        <CheckableTag
+                            key={f}
+                            checked={selectedFilter === f}
+                            onChange={(checked) =>
+                                handleChangeFilter(checked, f)
+                            }
+                        >
+                            {f}
+                        </CheckableTag>
+                    ))}
+                </Card>
+            </>
 
-                {dataComments?.pages?.map((page) => (
-                    <React.Fragment key={page?.nextCursor}>
-                        <Card>
-                            <ListComments
-                                user={userData}
-                                data={page?.data}
-                                mutation={createCommentMutation}
-                                handleLike={handleLike}
-                                handleDislike={handleDislike}
-                                handleRemove={handleRemove}
-                                handleUpdate={handleUpdate}
-                                isLoading={
-                                    isLoadingComments || isFetchingNextPage
-                                }
-                            />
-                        </Card>
-                    </React.Fragment>
-                ))}
-                {hasNextPage && (
-                    <div
-                        style={{
-                            textAlign: "center",
-                            marginTop: 4,
-                            marginBottom: 4
-                        }}
-                    >
-                        <Button onClick={() => fetchNextPage()}>
-                            Selanjutnya
-                        </Button>
-                    </div>
-                )}
-            </Skeleton>
+            {dataComments?.pages?.map((page) => (
+                <React.Fragment key={page?.nextCursor}>
+                    <Card>
+                        <ListComments
+                            user={userData}
+                            data={page?.data}
+                            mutation={createCommentMutation}
+                            handleLike={handleLike}
+                            handleDislike={handleDislike}
+                            handleRemove={handleRemove}
+                            handleUpdate={handleUpdate}
+                            isLoading={isLoadingComments || isFetchingNextPage}
+                        />
+                    </Card>
+                </React.Fragment>
+            ))}
+            {hasNextPage && (
+                <div
+                    style={{
+                        textAlign: "center",
+                        marginTop: 4,
+                        marginBottom: 4
+                    }}
+                >
+                    <Button onClick={() => fetchNextPage()}>Selanjutnya</Button>
+                </div>
+            )}
         </>
     );
 };

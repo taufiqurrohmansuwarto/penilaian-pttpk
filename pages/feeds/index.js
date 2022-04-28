@@ -7,10 +7,10 @@ import UserComments from "../../src/components/UsersComments";
 
 const Feeds = ({ data }) => {
     return (
-        <Layout>
-            <PageContainer subTitle="Feedback" fixedHeader>
+        <Layout title="Feeds">
+            <PageContainer title="Apps" subTitle="Feedback" fixedHeader>
                 <Row>
-                    <Col span={14} offset={2} style={{ marginBottom: 10 }}>
+                    <Col span={12} offset={3} style={{ marginBottom: 10 }}>
                         <Alert
                             type="info"
                             showIcon
@@ -20,7 +20,7 @@ const Feeds = ({ data }) => {
                     </Col>
                 </Row>
                 <Row gutter={[16, 16]}>
-                    <Col span={16} offset={2}>
+                    <Col span={12} offset={3}>
                         <UserComments sort={data?.sort} />
                     </Col>
                     <Col span={6}>

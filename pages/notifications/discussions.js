@@ -31,7 +31,7 @@ const ListNotif = ({
         router.push(
             `/discussions/${id}/comments?target=${item?.discussion_post_id}`
         );
-        await handleReadAllNotificationById(item?.discussion?.id);
+        await handleReadAllNotificationById(item?.id);
     };
 
     return (
