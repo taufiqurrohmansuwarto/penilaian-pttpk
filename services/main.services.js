@@ -193,8 +193,17 @@ export const readNotificationDiscussionById = (id) => {
         .patch(`/notifications-discussions/${id}`)
         .then((res) => res?.data);
 };
-
 // end of discussions notif
+
+// subscribes
+export const subscribeDiscussion = (id) => {
+    return fetcher.put(`/discussions/posts/${id}/request?type=subscribe`);
+};
+
+// save
+export const saveDiscussion = (id) => {
+    return fetcher.put(`/discussions/posts/${id}/request?type=save`);
+};
 
 export const dashboardDiscussions = (type) => {
     return fetcher

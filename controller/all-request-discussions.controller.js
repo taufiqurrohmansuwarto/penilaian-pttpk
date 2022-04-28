@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
             }
         }
 
-        if (type === "subscribes") {
+        if (type === "subscribe") {
             // check first if there is some data then it should be deleted
             const result = await prisma.discussions_subscribes.findUnique({
                 where: {
