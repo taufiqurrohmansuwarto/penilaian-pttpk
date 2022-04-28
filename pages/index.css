@@ -1,0 +1,9 @@
+
+.blinking {
+    animation: mymove 0.5s infinite alternate;
+}
+
+@keyframes mymove {
+    from {opacity:0;}
+    to {opacity: 1;}
+}

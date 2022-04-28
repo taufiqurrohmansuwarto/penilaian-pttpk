@@ -11,7 +11,7 @@ import {
 } from "antd";
 import moment from "moment";
 import { useSession } from "next-auth/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import {
     createCommentByPost,
@@ -21,7 +21,7 @@ import {
 } from "../../../services/main.services";
 import RichTextEditor from "../RichTextEditor";
 
-const MyComment = ({ comment, user, id, ref }) => {
+const MyComment = ({ comment, user, id, target, targetRef }) => {
     const handleUpload = async (file) => {
         try {
             const formData = new FormData();
@@ -36,7 +36,6 @@ const MyComment = ({ comment, user, id, ref }) => {
     const nestedComments = (comment?.children || []).map((comment) => {
         return (
             <MyComment
-                ref={ref}
                 comment={comment}
                 id={id}
                 key={comment?.id}
@@ -118,7 +117,10 @@ const MyComment = ({ comment, user, id, ref }) => {
     };
 
     return (
-        <div ref={ref}>
+        <div
+            ref={target === comment?.id ? targetRef : null}
+            className={target === comment?.id ? "blinking" : null}
+        >
             <Comment
                 avatar={comment?.user?.image}
                 author={
@@ -266,7 +268,7 @@ const Editor = ({
     </div>
 );
 
-function CreateComments({ data, id }) {
+function CreateComments({ data, id, target, targetRef }) {
     const { data: dataUser } = useSession();
     const [comment, setComment] = useState();
 
@@ -278,6 +280,7 @@ function CreateComments({ data, id }) {
                 queryClient.invalidateQueries(["comments", id]);
                 queryClient.invalidateQueries(["post", id]);
                 setComment("");
+                message.success("Sukses berkomentar");
             },
             onError: (e) => message.error("Error")
         }
@@ -306,12 +309,6 @@ function CreateComments({ data, id }) {
         }
     };
 
-    const myRef = useRef([]);
-
-    const handleClick = () => {
-        myRef.current?.["cl2ijfdtj21650wuo1entq5x3"]?.scrollIntoView();
-    };
-
     return (
         <Card>
             <Comment
@@ -330,7 +327,8 @@ function CreateComments({ data, id }) {
             {/* <Button onClick={handleClick}>test</Button> */}
             {data?.map((d) => (
                 <MyComment
-                    ref={(el) => (myRef.current[d.id] = el)}
+                    target={target}
+                    targetRef={targetRef}
                     user={dataUser}
                     id={id}
                     comment={d}

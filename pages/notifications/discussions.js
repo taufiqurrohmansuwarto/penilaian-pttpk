@@ -28,10 +28,10 @@ const ListNotif = ({
 
     const gotoDetail = async (item) => {
         const id = item?.discussion?.parent_comments?.id;
-        router.push(`/discussions/${id}/comments`);
-        await handleReadAllNotificationById(
-            item?.discussion?.parent_comments?.id
+        router.push(
+            `/discussions/${id}/comments?target=${item?.discussion_post_id}`
         );
+        await handleReadAllNotificationById(item?.discussion?.id);
     };
 
     return (

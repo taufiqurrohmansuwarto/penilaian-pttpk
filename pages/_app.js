@@ -5,6 +5,7 @@ import id from "antd/lib/locale/id_ID";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import "./index.css";
 
 export default function MyApp({
     Component,
