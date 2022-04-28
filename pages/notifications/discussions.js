@@ -27,9 +27,11 @@ const ListNotif = ({
     const router = useRouter();
 
     const gotoDetail = async (item) => {
-        const id = item?.discussion?.parent?.id;
+        const id = item?.discussion?.parent_comments?.id;
         router.push(`/discussions/${id}/comments`);
-        await handleReadAllNotificationById(item?.parent_comments?.id);
+        await handleReadAllNotificationById(
+            item?.discussion?.parent_comments?.id
+        );
     };
 
     return (
