@@ -184,8 +184,8 @@ export const getNotificationDiscussions = () => {
     return fetcher.get(`/notifications-discussions`).then((res) => res?.data);
 };
 
-export const getReadAllNotificationDiscussions = () => {
-    return fetcher.put(`notifications-discussions`).then((res) => res?.data);
+export const readAllNotificationDiscussions = () => {
+    return fetcher.put(`/notifications-discussions`).then((res) => res?.data);
 };
 
 export const readNotificationDiscussionById = (id) => {

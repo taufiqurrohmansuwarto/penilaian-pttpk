@@ -44,7 +44,7 @@ const create = async (req, res) => {
     const { id } = req.query;
 
     try {
-        await prisma.discussions_posts.create({
+        const hasil = await prisma.discussions_posts.create({
             data: {
                 parent_id: body?.parent_id,
                 content: body?.comment,
@@ -54,6 +54,33 @@ const create = async (req, res) => {
                 user_custom_id: customId
             }
         });
+
+        const result = await prisma.discussions_subscribes.findMany({
+            where: {
+                discussion_post_id: id,
+                NOT: {
+                    user_custom_id: customId
+                }
+            },
+            select: {
+                user_custom_id: true
+            }
+        });
+
+        const senderId = req?.user?.customId;
+
+        if (result?.length !== 0) {
+            const data = result?.map((x) => ({
+                sender: senderId,
+                receiver: x?.user_custom_id,
+                discussion_post_id: hasil?.id
+            }));
+
+            await prisma.discussions_notifications.createMany({
+                data
+            });
+        }
+
         res.json({ code: 200, message: "success" });
     } catch (error) {
         console.log(error);

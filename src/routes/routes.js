@@ -16,11 +16,11 @@ export default {
             path: "/discussions",
             name: " Diskusi",
             icon: <CommentOutlined />
-        },
-        {
-            path: "/notifications",
-            name: " Notifikasi",
-            icon: <BellOutlined />
         }
+        // {
+        //     path: "/notifications/feedbacks",
+        //     name: " Notifikasi",
+        //     icon: <BellOutlined />
+        // }
     ]
 };

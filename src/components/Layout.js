@@ -36,7 +36,11 @@ const rightContentRender = (user) => {
     const router = useRouter();
 
     const gotoNotificationPage = () => {
-        router.push(`/notifications`);
+        router.push(`/notifications/feedbacks`);
+    };
+
+    const gotoNotificationDiscussions = () => {
+        router.push(`/notifications/discussions`);
     };
 
     const gotoAccount = () => {
@@ -45,7 +49,11 @@ const rightContentRender = (user) => {
 
     return (
         <Space size="large">
-            <Space align="center" style={{ cursor: "pointer" }}>
+            <Space
+                align="center"
+                style={{ cursor: "pointer" }}
+                onClick={gotoNotificationDiscussions}
+            >
                 <BadgeNotificationForum />
             </Space>
 

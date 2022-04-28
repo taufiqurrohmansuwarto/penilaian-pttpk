@@ -9,7 +9,12 @@ const index = async (req, res) => {
             },
             include: {
                 user_receiver_notification: true,
-                user_sender_notification: true
+                user_sender_notification: true,
+                discussion: {
+                    include: {
+                        parent: true
+                    }
+                }
             },
             take: 25,
             orderBy: {

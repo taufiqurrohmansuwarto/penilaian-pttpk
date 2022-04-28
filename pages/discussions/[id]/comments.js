@@ -1,4 +1,4 @@
-import { Breadcrumb, Col, Row, Skeleton } from "antd";
+import { Breadcrumb, Card, Col, Row, Skeleton } from "antd";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -12,6 +12,7 @@ import Layout from "../../../src/components/Layout";
 import PageContainer from "../../../src/components/PageContainer";
 import CardPostNew from "../../../src/components/reddits/Cards/CardPostNew";
 import CreateComments from "../../../src/components/reddits/CreateComments";
+import SubscribePost from "../../../src/components/SubscribePost";
 
 function Comments() {
     const router = useRouter();
@@ -62,6 +63,9 @@ function Comments() {
                             data={dataComments}
                             id={router?.query?.id}
                         />
+                    </Col>
+                    <Col span={6}>
+                        <SubscribePost data={dataPost} id={router?.query?.id} />
                     </Col>
                 </Row>
             </PageContainer>
