@@ -33,6 +33,7 @@ model users {
   discussions_saves                  discussions_saves[]
   discussions_notifications_sender   discussions_notifications[] @relation("user_sender_discussion")
   discussions_notifications_receiver discussions_notifications[] @relation("user_receiver_discussion")
+  discussions_posts_pinned_by        discussions_posts[]         @relation("user_pin")
 }
 
 model acc_kinerja_bulanan {
@@ -273,9 +274,12 @@ model discussions_posts {
   children       discussions_posts[] @relation("SubDiscussionsPosts")
 
 
-  post_id           String?
-  parent_comments   discussions_posts?  @relation("SubDiscussionsComments", fields: [post_id], references: [id], onDelete: Cascade)
-  children_comments discussions_posts[] @relation("SubDiscussionsComments")
+  post_id            String?
+  parent_comments    discussions_posts?  @relation("SubDiscussionsComments", fields: [post_id], references: [id], onDelete: Cascade)
+  children_comments  discussions_posts[] @relation("SubDiscussionsComments")
+  is_pin             Boolean             @default(false)
+  pin_user_custom_id String
+  pinned_by          users               @relation("user_pin", fields: [pin_user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
   image_list         Json?
   type               String?
