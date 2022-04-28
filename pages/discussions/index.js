@@ -83,7 +83,7 @@ const Discussions = ({ data }) => {
                 </Space>
 
                 <Row>
-                    <Col span={17}>
+                    <Col span={18}>
                         <Card>
                             <span style={{ marginRight: 8 }}>
                                 Urutkan berdasarkan :{" "}

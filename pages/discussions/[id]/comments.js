@@ -51,7 +51,7 @@ function Comments() {
                 )}
             >
                 <Row gutter={[16, 16]}>
-                    <Col span={16}>
+                    <Col span={18}>
                         <Skeleton
                             avatar
                             loading={isLoadingPost || status === "loading"}

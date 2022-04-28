@@ -9,26 +9,30 @@ datasource db {
 }
 
 model users {
-  custom_id                        String                     @id
-  username                         String?
-  image                            String?
-  id                               String?
-  from                             String?
-  role                             String?
-  group                            String?
-  employee_number                  String?
-  discussions_posts                discussions_posts[]
-  discussions_votes                discussions_votes[]
-  discussions_rights_user          discussions_rights[]       @relation("user")
-  discussions_rights_user_assigned discussions_rights[]       @relation("assigned_user")
-  feedbacks                        feedbacks[]
-  discussions_posts_joined         discussions_posts_joined[]
-  acc_kinerja_bulanan_pegawai      acc_kinerja_bulanan[]      @relation("acc_pegawai")
-  penilaian                        penilaian[]
-  comments_notifications_sender    comments_notifications[]   @relation("user_sender")
-  comments_notifications_receiver  comments_notifications[]   @relation("user_receiver")
-  comments                         comments[]
-  comments_likes                   comments_likes[]           @relation("user_like")
+  custom_id                          String                      @id
+  username                           String?
+  image                              String?
+  id                                 String?
+  from                               String?
+  role                               String?
+  group                              String?
+  employee_number                    String?
+  discussions_posts                  discussions_posts[]
+  discussions_votes                  discussions_votes[]
+  discussions_rights_user            discussions_rights[]        @relation("user")
+  discussions_rights_user_assigned   discussions_rights[]        @relation("assigned_user")
+  feedbacks                          feedbacks[]
+  discussions_posts_joined           discussions_posts_joined[]
+  acc_kinerja_bulanan_pegawai        acc_kinerja_bulanan[]       @relation("acc_pegawai")
+  penilaian                          penilaian[]
+  comments_notifications_sender      comments_notifications[]    @relation("user_sender")
+  comments_notifications_receiver    comments_notifications[]    @relation("user_receiver")
+  comments                           comments[]
+  comments_likes                     comments_likes[]            @relation("user_like")
+  discussions_subscribes             discussions_subscribes[]
+  discussions_saves                  discussions_saves[]
+  discussions_notifications_sender   discussions_notifications[] @relation("user_sender_discussion")
+  discussions_notifications_receiver discussions_notifications[] @relation("user_receiver_discussion")
 }
 
 model acc_kinerja_bulanan {
@@ -286,9 +290,12 @@ model discussions_posts {
   discussions_ranks  discussions_ranks[]
   discussions_rights discussions_rights[]
 
-  user                     users                      @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
-  discussions_posts_joined discussions_posts_joined[]
-  discussions_posts_topics discussions_posts_topics[]
+  user                      users                       @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  discussions_posts_joined  discussions_posts_joined[]
+  discussions_posts_topics  discussions_posts_topics[]
+  discussions_subscribes    discussions_subscribes[]
+  discussions_saves         discussions_saves[]
+  discussions_notifications discussions_notifications[]
 }
 
 model topics {
@@ -316,6 +323,41 @@ model discussions_votes {
   user              users             @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([discussion_post_id, user_custom_id])
+}
+
+model discussions_subscribes {
+  discussion_post_id String
+  user_custom_id     String
+  created_at         DateTime @default(now())
+
+  discussion discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user       users             @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([discussion_post_id, user_custom_id])
+}
+
+model discussions_saves {
+  discussion_post_id String
+  user_custom_id     String
+  created_at         DateTime @default(now())
+
+  discussion discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user       users             @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([discussion_post_id, user_custom_id])
+}
+
+model discussions_notifications {
+  id                 String   @id @default(cuid())
+  discussion_post_id String
+  sender             String?
+  receiver           String?
+  is_read            Boolean  @default(false)
+  created_at         DateTime @default(now())
+
+  discussion                 discussions_posts @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_sender_notification   users?            @relation("user_sender_discussion", fields: [sender], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  user_receiver_notification users?            @relation("user_receiver_discussion", fields: [receiver], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model discussions_ranks {

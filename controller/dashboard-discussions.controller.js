@@ -5,6 +5,9 @@ const index = async (req, res) => {
         const type = req?.query?.type || "teratas";
 
         let query = {
+            where: {
+                status: "active"
+            },
             take: 5
         };
 
@@ -12,6 +15,7 @@ const index = async (req, res) => {
             query = {
                 ...query,
                 where: {
+                    ...query.where,
                     type: "post"
                 },
                 orderBy: {
@@ -24,6 +28,7 @@ const index = async (req, res) => {
             query = {
                 ...query,
                 where: {
+                    ...query?.where,
                     type: "post"
                 },
                 include: {
@@ -41,10 +46,16 @@ const index = async (req, res) => {
             query = {
                 ...query,
                 where: {
+                    ...query.where,
                     type: "subreddit"
                 },
                 include: {
-                    user: true
+                    user: true,
+                    children: {
+                        where: {
+                            status: "active"
+                        }
+                    }
                 },
                 orderBy: {
                     children: {
