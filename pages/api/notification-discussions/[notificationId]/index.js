@@ -1,6 +1,9 @@
 import nc from "next-connect";
-import { patch } from "../../../../controller/notification-comment.controller";
+import {
+    patch,
+    put
+} from "../../../../controller/notification-discussions.controller";
 import auth from "../../../../middleware/auth";
 const handler = nc();
 
-export default handler.use(auth).patch(patch);
+export default handler.use(auth).patch(patch).put(put);

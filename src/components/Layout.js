@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import routes from "../routes/routes";
+import BadgeNotificationForum from "./BadgeNotificationForum";
 import BadgeNotifications from "./BadgeNotifications";
 
 const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
@@ -44,6 +45,10 @@ const rightContentRender = (user) => {
 
     return (
         <Space size="large">
+            <Space align="center" style={{ cursor: "pointer" }}>
+                <BadgeNotificationForum />
+            </Space>
+
             <Space
                 align="center"
                 style={{ cursor: "pointer" }}

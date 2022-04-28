@@ -41,7 +41,6 @@ const CustomRichTextEditor = ({
                 onImageUpload={handleUpload}
                 value={text}
                 onChange={setText}
-                placeholder="Deskripsi"
                 mentions={mentions}
                 style={{ minHeight: 240, marginTop: 8, marginBottom: 8 }}
             />

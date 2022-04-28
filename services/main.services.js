@@ -179,6 +179,23 @@ export const readNotificationById = (id) => {
         .then((res) => res?.data);
 };
 
+// discussions-notifications
+export const getNotificationDiscussions = () => {
+    return fetcher.get(`/notifications-discussions`).then((res) => res?.data);
+};
+
+export const getReadAllNotificationDiscussions = () => {
+    return fetcher.put(`notifications-discussions`).then((res) => res?.data);
+};
+
+export const readNotificationDiscussionById = (id) => {
+    return fetcher
+        .patch(`/notifications-discussions/${id}`)
+        .then((res) => res?.data);
+};
+
+// end of discussions notif
+
 export const dashboardDiscussions = (type) => {
     return fetcher
         .get(`/discussions/dashboard?type=${type}`)
