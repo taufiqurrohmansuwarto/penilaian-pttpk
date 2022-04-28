@@ -70,12 +70,14 @@ function Comments() {
                         >
                             <CardPostNew user={user} data={dataPost} />
                         </Skeleton>
-                        <CreateComments
-                            data={dataComments}
-                            id={router?.query?.id}
-                            target={router?.query?.target}
-                            targetRef={targetRef}
-                        />
+                        <Skeleton loading={isLoading} active avatar>
+                            <CreateComments
+                                data={dataComments}
+                                id={router?.query?.id}
+                                target={router?.query?.target}
+                                targetRef={targetRef}
+                            />
+                        </Skeleton>
                     </Col>
                     <Col span={6}>
                         <SubscribePost data={dataPost} id={router?.query?.id} />
