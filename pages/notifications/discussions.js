@@ -14,7 +14,7 @@ const CustomDescription = ({ item }) => {
     return (
         <Typography.Text type="secondary">
             {item?.user_sender_notification?.username} mengomentari di diskusi{" "}
-            {item?.discussion?.parent?.title}
+            {item?.discussion?.parent_comments?.title}
         </Typography.Text>
     );
 };
@@ -29,7 +29,7 @@ const ListNotif = ({
     const gotoDetail = async (item) => {
         const id = item?.discussion?.parent?.id;
         router.push(`/discussions/${id}/comments`);
-        await handleReadAllNotificationById(item?.id);
+        await handleReadAllNotificationById(item?.parent_comments?.id);
     };
 
     return (

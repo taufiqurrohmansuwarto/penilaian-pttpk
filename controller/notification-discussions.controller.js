@@ -12,7 +12,7 @@ const index = async (req, res) => {
                 user_sender_notification: true,
                 discussion: {
                     include: {
-                        parent: true
+                        parent_comments: true
                     }
                 }
             },

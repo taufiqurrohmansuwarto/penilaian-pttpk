@@ -490,7 +490,7 @@ const ListComments = ({
 
 // todo implement likes, filter
 const UserComments = ({ sort }) => {
-    const filter = ["like", "terbaru", "popular", "me"];
+    const filter = ["terbaru", "like", "popular", "me"];
     const router = useRouter();
 
     const [selectedFilter, setSelectedFilter] = useState(sort);
@@ -530,18 +530,6 @@ const UserComments = ({ sort }) => {
     });
 
     useEffect(() => {}, [sort]);
-
-    // for rte
-    const handleUpload = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("image", file);
-            const result = await uploads(formData);
-            return result;
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     const handleSubmit = () => {
         const data = { comment, parent_id: null };

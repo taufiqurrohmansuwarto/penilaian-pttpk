@@ -13,12 +13,12 @@ function NotificationLayout({ children, activeKey }) {
             subTitle="Aplikasi"
             tabList={[
                 {
-                    tab: "Feedback",
-                    key: "feedbacks"
-                },
-                {
                     tab: "Diskusi",
                     key: "discussions"
+                },
+                {
+                    tab: "Feedback",
+                    key: "feedbacks"
                 }
             ]}
             tabProps={{

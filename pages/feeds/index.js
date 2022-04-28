@@ -40,7 +40,7 @@ const Feeds = ({ data }) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-    const sort = ctx?.query?.sort || "like";
+    const sort = ctx?.query?.sort || "terbaru";
     return {
         props: {
             data: {

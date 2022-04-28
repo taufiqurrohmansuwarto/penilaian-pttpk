@@ -1,9 +1,4 @@
-import {
-    ArrowDownOutlined,
-    ArrowUpOutlined,
-    EnterOutlined,
-    SendOutlined
-} from "@ant-design/icons";
+import { SendOutlined } from "@ant-design/icons";
 import {
     Button,
     Card,
@@ -16,19 +11,17 @@ import {
 } from "antd";
 import moment from "moment";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import {
     createCommentByPost,
     deletePost,
-    downvotePost,
     updatePost,
-    uploads,
-    upvotePost
+    uploads
 } from "../../../services/main.services";
 import RichTextEditor from "../RichTextEditor";
 
-const MyComment = ({ comment, user, id }) => {
+const MyComment = ({ comment, user, id, ref }) => {
     const handleUpload = async (file) => {
         try {
             const formData = new FormData();
@@ -43,6 +36,7 @@ const MyComment = ({ comment, user, id }) => {
     const nestedComments = (comment?.children || []).map((comment) => {
         return (
             <MyComment
+                ref={ref}
                 comment={comment}
                 id={id}
                 key={comment?.id}
@@ -124,98 +118,104 @@ const MyComment = ({ comment, user, id }) => {
     };
 
     return (
-        <Comment
-            avatar={comment?.user?.image}
-            author={
-                <div>
-                    <Space>
-                        <span>{comment?.user?.username}</span>
-                        {comment?.user_custom_id ===
-                            comment?.parent_comments?.user_custom_id && (
-                            <Tag color="green">Kreator</Tag>
+        <div ref={ref}>
+            <Comment
+                avatar={comment?.user?.image}
+                author={
+                    <div>
+                        <Space>
+                            <span>{comment?.user?.username}</span>
+                            {comment?.user_custom_id ===
+                                comment?.parent_comments?.user_custom_id && (
+                                <Tag color="green">Kreator</Tag>
+                            )}
+                        </Space>
+                    </div>
+                }
+                datetime={
+                    <>
+                        <Space>
+                            <div>{moment(comment?.created_at).fromNow()}</div>
+                            <div>
+                                {comment?.is_edited && <span>diedit</span>}
+                            </div>
+                        </Space>
+                    </>
+                }
+                actions={[
+                    <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleShowEditor(comment?.id)}
+                    >
+                        <span>Balas</span>
+                    </span>,
+                    <>
+                        {comment?.user_custom_id === user?.user?.id && (
+                            <span onClick={() => handleSetId(comment)}>
+                                Edit
+                            </span>
                         )}
-                    </Space>
-                </div>
-            }
-            datetime={
-                <>
-                    <Space>
-                        <div>{moment(comment?.created_at).fromNow()}</div>
-                        <div>{comment?.is_edited && <span>diedit</span>}</div>
-                    </Space>
-                </>
-            }
-            actions={[
-                <span
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleShowEditor(comment?.id)}
-                >
-                    <span>Balas</span>
-                </span>,
-                <>
-                    {comment?.user_custom_id === user?.user?.id && (
-                        <span onClick={() => handleSetId(comment)}>Edit</span>
-                    )}
-                </>,
-                <>
-                    {comment?.user_custom_id === user?.user?.id && (
-                        <Popconfirm
-                            title="Apakah anda yakin ingin menghapus pesan?"
-                            onConfirm={() => handleRemove(comment?.id)}
-                        >
-                            <span>Hapus</span>
-                        </Popconfirm>
-                    )}
-                </>
-            ]}
-            content={
-                <>
-                    {editId === comment?.id ? (
+                    </>,
+                    <>
+                        {comment?.user_custom_id === user?.user?.id && (
+                            <Popconfirm
+                                title="Apakah anda yakin ingin menghapus pesan?"
+                                onConfirm={() => handleRemove(comment?.id)}
+                            >
+                                <span>Hapus</span>
+                            </Popconfirm>
+                        )}
+                    </>
+                ]}
+                content={
+                    <>
+                        {editId === comment?.id ? (
+                            <Editor
+                                onCancel={handleCancelEdit}
+                                handleUpload={handleUpload}
+                                value={editComment}
+                                onChange={setEditComment}
+                                buttonText="Edit"
+                                onSubmit={handleUpdate}
+                            />
+                        ) : (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: comment?.content
+                                }}
+                            />
+                        )}
+                    </>
+                }
+            >
+                {nestedId === comment?.id && (
+                    <Comment
+                        avatar={user?.user?.image}
+                        author={
+                            <div>
+                                <Space>
+                                    <span>{user?.user?.name}</span>
+                                    {comment?.user_custom_id ===
+                                        comment?.parent_comments
+                                            ?.user_custom_id && (
+                                        <Tag color="green">Kreator</Tag>
+                                    )}
+                                </Space>
+                            </div>
+                        }
+                    >
                         <Editor
-                            onCancel={handleCancelEdit}
+                            onCancel={handleCancel}
                             handleUpload={handleUpload}
-                            value={editComment}
-                            onChange={setEditComment}
-                            buttonText="Edit"
-                            onSubmit={handleUpdate}
+                            value={nestedComment}
+                            onChange={setNestedComment}
+                            onSubmit={() => handleSubmitNested(comment?.id)}
                         />
-                    ) : (
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: comment?.content
-                            }}
-                        />
-                    )}
-                </>
-            }
-        >
-            {nestedId === comment?.id && (
-                <Comment
-                    avatar={user?.user?.image}
-                    author={
-                        <div>
-                            <Space>
-                                <span>{user?.user?.name}</span>
-                                {comment?.user_custom_id ===
-                                    comment?.parent_comments
-                                        ?.user_custom_id && (
-                                    <Tag color="green">Kreator</Tag>
-                                )}
-                            </Space>
-                        </div>
-                    }
-                >
-                    <Editor
-                        onCancel={handleCancel}
-                        handleUpload={handleUpload}
-                        value={nestedComment}
-                        onChange={setNestedComment}
-                        onSubmit={() => handleSubmitNested(comment?.id)}
-                    />
-                </Comment>
-            )}
-            <>{nestedComments}</>
-        </Comment>
+                    </Comment>
+                )}
+                <>{nestedComments}</>
+            </Comment>
+        </div>
     );
 };
 
@@ -284,7 +284,9 @@ function CreateComments({ data, id }) {
     );
 
     const handleSubmit = () => {
-        if (!comment) {
+        const hasil = comment.replace(/<(.|\n)*?>/g, "").trim();
+
+        if (hasil?.length === 0) {
             return;
         } else {
             const data = { comment, parent_id: id };
@@ -304,6 +306,12 @@ function CreateComments({ data, id }) {
         }
     };
 
+    const myRef = useRef([]);
+
+    const handleClick = () => {
+        myRef.current?.["cl2ijfdtj21650wuo1entq5x3"]?.scrollIntoView();
+    };
+
     return (
         <Card>
             <Comment
@@ -319,8 +327,15 @@ function CreateComments({ data, id }) {
                     />
                 }
             />
+            {/* <Button onClick={handleClick}>test</Button> */}
             {data?.map((d) => (
-                <MyComment user={dataUser} id={id} comment={d} key={d.id} />
+                <MyComment
+                    ref={(el) => (myRef.current[d.id] = el)}
+                    user={dataUser}
+                    id={id}
+                    comment={d}
+                    key={d.id}
+                />
             ))}
         </Card>
     );
