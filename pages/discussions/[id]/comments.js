@@ -38,9 +38,11 @@ function Comments() {
     const { targetRef, scrollIntoView } = useScrollIntoView({ offset: 100 });
 
     useEffect(() => {
-        scrollIntoView({
-            alignment: "center"
-        });
+        if (!isLoading && router?.isReady) {
+            scrollIntoView({
+                alignment: "center"
+            });
+        }
     }, [isLoading, dataComments]);
 
     return (
