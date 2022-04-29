@@ -4,7 +4,7 @@ import React from "react";
 function ParticipantsDiscussion({ users }) {
     return (
         <Card title="Comment Participants">
-            <Avatar.Group>
+            <Avatar.Group maxCount={5}>
                 {users?.map((user) => {
                     return (
                         <Tooltip
