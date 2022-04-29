@@ -1,9 +1,8 @@
-import { useScrollIntoView } from "@mantine/hooks";
-import { Breadcrumb, Card, Col, Row, Skeleton } from "antd";
+import { Breadcrumb, Col, Row, Skeleton } from "antd";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import { useQuery } from "react-query";
 import {
     getCommentsByPost,
@@ -11,6 +10,7 @@ import {
 } from "../../../services/main.services";
 import Layout from "../../../src/components/Layout";
 import PageContainer from "../../../src/components/PageContainer";
+import ParticipantsDiscussion from "../../../src/components/ParticipantsDiscussion";
 import CardPostNew from "../../../src/components/reddits/Cards/CardPostNew";
 import CreateComments from "../../../src/components/reddits/CreateComments";
 import SubscribePost from "../../../src/components/SubscribePost";
@@ -20,8 +20,8 @@ function Comments() {
     const { data: user, status } = useSession();
 
     const { data: dataComments, isLoading } = useQuery(
-        ["comments", router?.query?.id],
-        () => getCommentsByPost(router?.query?.id),
+        ["comments", router?.query?.id, router?.query?.target],
+        () => getCommentsByPost(router?.query?.id, router?.query?.target),
         {
             enabled: !!router?.query?.id
         }
@@ -34,16 +34,6 @@ function Comments() {
             enabled: !!router?.query?.id
         }
     );
-
-    const { targetRef, scrollIntoView } = useScrollIntoView({ offset: 100 });
-
-    useEffect(() => {
-        if (!isLoading && router?.isReady) {
-            scrollIntoView({
-                alignment: "center"
-            });
-        }
-    }, [isLoading, dataComments]);
 
     return (
         <Layout>
@@ -74,13 +64,25 @@ function Comments() {
                             <CreateComments
                                 data={dataComments}
                                 id={router?.query?.id}
-                                target={router?.query?.target}
-                                targetRef={targetRef}
                             />
                         </Skeleton>
                     </Col>
                     <Col span={6}>
-                        <SubscribePost data={dataPost} id={router?.query?.id} />
+                        <Row gutter={[8, 8]}>
+                            <Col span={24}>
+                                <SubscribePost
+                                    data={dataPost}
+                                    id={router?.query?.id}
+                                />
+                            </Col>
+                            <Col span={24}>
+                                {dataComments?.participants?.length ? (
+                                    <ParticipantsDiscussion
+                                        users={dataComments?.participants}
+                                    />
+                                ) : null}
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
             </PageContainer>

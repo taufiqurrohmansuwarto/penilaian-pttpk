@@ -1,4 +1,8 @@
-import { SendOutlined } from "@ant-design/icons";
+import {
+    BackwardOutlined,
+    SendOutlined,
+    UndoOutlined
+} from "@ant-design/icons";
 import {
     Button,
     Card,
@@ -7,11 +11,13 @@ import {
     message,
     Popconfirm,
     Space,
-    Tag
+    Tag,
+    Typography
 } from "antd";
 import moment from "moment";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import {
     createCommentByPost,
@@ -21,7 +27,7 @@ import {
 } from "../../../services/main.services";
 import RichTextEditor from "../RichTextEditor";
 
-const MyComment = ({ comment, user, id, target, targetRef }) => {
+const MyComment = ({ comment, user, id }) => {
     const handleUpload = async (file) => {
         try {
             const formData = new FormData();
@@ -117,107 +123,98 @@ const MyComment = ({ comment, user, id, target, targetRef }) => {
     };
 
     return (
-        <div
-            ref={target === comment?.id ? targetRef : null}
-            className={target === comment?.id ? "blinking" : null}
-        >
-            <Comment
-                avatar={comment?.user?.image}
-                author={
-                    <div>
-                        <Space>
-                            <span>{comment?.user?.username}</span>
-                            {comment?.user_custom_id ===
-                                comment?.parent_comments?.user_custom_id && (
-                                <Tag color="green">Kreator</Tag>
-                            )}
-                        </Space>
-                    </div>
-                }
-                datetime={
-                    <>
-                        <Space>
-                            <div>{moment(comment?.created_at).fromNow()}</div>
-                            <div>
-                                {comment?.is_edited && <span>diedit</span>}
-                            </div>
-                        </Space>
-                    </>
-                }
-                actions={[
-                    <span
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleShowEditor(comment?.id)}
-                    >
-                        <span>Balas</span>
-                    </span>,
-                    <>
-                        {comment?.user_custom_id === user?.user?.id && (
-                            <span onClick={() => handleSetId(comment)}>
-                                Edit
-                            </span>
+        <Comment
+            avatar={comment?.user?.image}
+            author={
+                <div>
+                    <Space>
+                        <span>{comment?.user?.username}</span>
+                        {comment?.user_custom_id ===
+                            comment?.parent_comments?.user_custom_id && (
+                            <Tag color="green">Kreator</Tag>
                         )}
-                    </>,
-                    <>
-                        {comment?.user_custom_id === user?.user?.id && (
-                            <Popconfirm
-                                title="Apakah anda yakin ingin menghapus pesan?"
-                                onConfirm={() => handleRemove(comment?.id)}
-                            >
-                                <span>Hapus</span>
-                            </Popconfirm>
-                        )}
-                    </>
-                ]}
-                content={
-                    <>
-                        {editId === comment?.id ? (
-                            <Editor
-                                onCancel={handleCancelEdit}
-                                handleUpload={handleUpload}
-                                value={editComment}
-                                onChange={setEditComment}
-                                buttonText="Edit"
-                                onSubmit={handleUpdate}
-                            />
-                        ) : (
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: comment?.content
-                                }}
-                            />
-                        )}
-                    </>
-                }
-            >
-                {nestedId === comment?.id && (
-                    <Comment
-                        avatar={user?.user?.image}
-                        author={
-                            <div>
-                                <Space>
-                                    <span>{user?.user?.name}</span>
-                                    {comment?.user_custom_id ===
-                                        comment?.parent_comments
-                                            ?.user_custom_id && (
-                                        <Tag color="green">Kreator</Tag>
-                                    )}
-                                </Space>
-                            </div>
-                        }
-                    >
+                    </Space>
+                </div>
+            }
+            datetime={
+                <>
+                    <Space>
+                        <div>{moment(comment?.created_at).fromNow()}</div>
+                        <div>{comment?.is_edited && <span>diedit</span>}</div>
+                    </Space>
+                </>
+            }
+            actions={[
+                <span
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleShowEditor(comment?.id)}
+                >
+                    <span>Balas</span>
+                </span>,
+                <>
+                    {comment?.user_custom_id === user?.user?.id && (
+                        <span onClick={() => handleSetId(comment)}>Edit</span>
+                    )}
+                </>,
+                <>
+                    {comment?.user_custom_id === user?.user?.id && (
+                        <Popconfirm
+                            title="Apakah anda yakin ingin menghapus pesan?"
+                            onConfirm={() => handleRemove(comment?.id)}
+                        >
+                            <span>Hapus</span>
+                        </Popconfirm>
+                    )}
+                </>
+            ]}
+            content={
+                <>
+                    {editId === comment?.id ? (
                         <Editor
-                            onCancel={handleCancel}
+                            onCancel={handleCancelEdit}
                             handleUpload={handleUpload}
-                            value={nestedComment}
-                            onChange={setNestedComment}
-                            onSubmit={() => handleSubmitNested(comment?.id)}
+                            value={editComment}
+                            onChange={setEditComment}
+                            buttonText="Edit"
+                            onSubmit={handleUpdate}
                         />
-                    </Comment>
-                )}
-                <>{nestedComments}</>
-            </Comment>
-        </div>
+                    ) : (
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: comment?.content
+                            }}
+                        />
+                    )}
+                </>
+            }
+        >
+            {nestedId === comment?.id && (
+                <Comment
+                    avatar={user?.user?.image}
+                    author={
+                        <div>
+                            <Space>
+                                <span>{user?.user?.name}</span>
+                                {comment?.user_custom_id ===
+                                    comment?.parent_comments
+                                        ?.user_custom_id && (
+                                    <Tag color="green">Kreator</Tag>
+                                )}
+                            </Space>
+                        </div>
+                    }
+                >
+                    <Editor
+                        onCancel={handleCancel}
+                        handleUpload={handleUpload}
+                        value={nestedComment}
+                        onChange={setNestedComment}
+                        onSubmit={() => handleSubmitNested(comment?.id)}
+                    />
+                </Comment>
+            )}
+            <>{nestedComments}</>
+        </Comment>
     );
 };
 
@@ -235,7 +232,7 @@ const Editor = ({
         <Form.Item>
             <RichTextEditor
                 onImageUpload={handleUpload}
-                style={{ minHeight: 250 }}
+                style={{ minHeight: 180 }}
                 onChange={onChange}
                 controls={[
                     [
@@ -268,7 +265,7 @@ const Editor = ({
     </div>
 );
 
-function CreateComments({ data, id, target, targetRef }) {
+function CreateComments({ data, id }) {
     const { data: dataUser } = useSession();
     const [comment, setComment] = useState();
 
@@ -309,31 +306,37 @@ function CreateComments({ data, id, target, targetRef }) {
         }
     };
 
+    const router = useRouter();
+
     return (
         <Card>
-            <Comment
-                avatar={dataUser?.user?.image}
-                content={
-                    <Editor
-                        main={true}
-                        value={comment}
-                        onChange={setComment}
-                        submitting={createCommentsInPost?.isLoading}
-                        onSubmit={handleSubmit}
-                        handleUpload={handleUpload}
-                    />
-                }
-            />
-            {/* <Button onClick={handleClick}>test</Button> */}
-            {data?.map((d) => (
-                <MyComment
-                    target={target}
-                    targetRef={targetRef}
-                    user={dataUser}
-                    id={id}
-                    comment={d}
-                    key={d.id}
+            {!router?.query?.target ? (
+                <Comment
+                    avatar={dataUser?.user?.image}
+                    content={
+                        <Editor
+                            main={true}
+                            value={comment}
+                            onChange={setComment}
+                            submitting={createCommentsInPost?.isLoading}
+                            onSubmit={handleSubmit}
+                            handleUpload={handleUpload}
+                        />
+                    }
                 />
+            ) : (
+                <Typography.Link
+                    onClick={() =>
+                        router?.push(
+                            `/discussions/${router?.query?.id}/comments`
+                        )
+                    }
+                >
+                    Tampilkan semua komentar
+                </Typography.Link>
+            )}
+            {data?.result?.map((d) => (
+                <MyComment user={dataUser} id={id} comment={d} key={d.id} />
             ))}
         </Card>
     );

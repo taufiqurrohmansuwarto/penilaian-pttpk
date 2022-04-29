@@ -117,9 +117,9 @@ export const createPostByCommunities = ({ title, data }) => {
         .then((res) => res?.data);
 };
 
-export const getCommentsByPost = (id) => {
+export const getCommentsByPost = (id, target) => {
     return fetcher
-        .get(`/discussions/posts/${id}/comments`)
+        .get(`/discussions/posts/${id}/comments?target=${target}`)
         .then((res) => res?.data);
 };
 

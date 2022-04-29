@@ -138,11 +138,6 @@ function Notifications() {
         await readNotificationByIdMutation.mutateAsync(id);
     };
 
-    const [text, setText] = useState("");
-    const handleSubmit = () => {
-        console.log(text);
-    };
-
     return (
         <Layout>
             <PageContainer

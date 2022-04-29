@@ -1,31 +1,63 @@
 const { default: prisma } = require("../lib/prisma");
 const arrayToTree = require("array-to-tree");
+const flatten = require("../utils/flatten-tree");
+const rootParent = require("../utils/check-parent");
+const { isEmpty } = require("lodash");
 
 const index = async (req, res) => {
     const { id } = req.query;
+
+    let query = {
+        where: {
+            post_id: id,
+            type: "comment",
+            status: "active"
+        },
+        include: {
+            user: true,
+            parent_comments: {
+                select: {
+                    user_custom_id: true
+                }
+            }
+        },
+        orderBy: {
+            created_at: "desc"
+        }
+    };
+
     try {
-        const result = await prisma.discussions_posts.findMany({
+        const result = await prisma.discussions_posts.findMany(query);
+
+        const user = await prisma.discussions_posts.findMany({
+            distinct: ["user_custom_id"],
             where: {
                 post_id: id,
                 type: "comment",
                 status: "active"
             },
-            include: {
-                user: true,
-                parent_comments: {
+            select: {
+                user: {
                     select: {
-                        user_custom_id: true
+                        username: true,
+                        custom_id: true,
+                        image: true
                     }
                 }
-            },
-            orderBy: {
-                created_at: "asc"
             }
         });
 
         const hasil = arrayToTree(result);
-        res.json(hasil);
+        if (req?.query?.target === "undefined" || !req?.query?.target) {
+            res.json({ result: hasil, participants: user });
+        } else {
+            const myHasil = flatten(hasil, "children");
+            const root = rootParent(req?.query?.target, myHasil);
+            const currentHasil = hasil?.filter((h) => h?.id === root);
+            res.json({ result: currentHasil, participants: user });
+        }
     } catch (error) {
+        console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
