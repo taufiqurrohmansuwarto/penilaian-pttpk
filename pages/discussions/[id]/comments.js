@@ -36,63 +36,65 @@ function Comments() {
     );
 
     return (
-        <Layout>
-            <PageContainer
-                title="Komentar"
-                subTitle="Diskusi"
-                fixedHeader
-                breadcrumbRender={() => (
-                    <Breadcrumb>
-                        <Breadcrumb.Item>
-                            <Link href="/discussions">
-                                <a>Diskusi</a>
-                            </Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>Komentar</Breadcrumb.Item>
-                    </Breadcrumb>
-                )}
-            >
-                <Row gutter={[16, 16]}>
-                    <Col span={18}>
-                        <Skeleton
-                            avatar
-                            loading={isLoadingPost || status === "loading"}
-                        >
-                            <CardPostNew user={user} data={dataPost} />
-                        </Skeleton>
-                        <Skeleton loading={isLoading} active avatar>
-                            <CreateComments
-                                data={dataComments}
+        <PageContainer
+            title="Komentar"
+            subTitle="Diskusi"
+            fixedHeader
+            breadcrumbRender={() => (
+                <Breadcrumb>
+                    <Breadcrumb.Item>
+                        <Link href="/discussions">
+                            <a>Diskusi</a>
+                        </Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>Komentar</Breadcrumb.Item>
+                </Breadcrumb>
+            )}
+        >
+            <Row gutter={[16, 16]}>
+                <Col lg={{ span: 18 }} xs={{ span: 24 }}>
+                    <Skeleton
+                        avatar
+                        loading={isLoadingPost || status === "loading"}
+                    >
+                        <CardPostNew user={user} data={dataPost} />
+                    </Skeleton>
+                    <Skeleton loading={isLoading} active avatar>
+                        <CreateComments
+                            data={dataComments}
+                            id={router?.query?.id}
+                        />
+                    </Skeleton>
+                </Col>
+                <Col lg={{ span: 6 }}>
+                    <Row gutter={[8, 8]}>
+                        <Col lg={{ span: 24 }} xs={{ span: 24 }}>
+                            <SubscribePost
+                                data={dataPost}
                                 id={router?.query?.id}
                             />
-                        </Skeleton>
-                    </Col>
-                    <Col span={6}>
-                        <Row gutter={[8, 8]}>
-                            <Col span={24}>
-                                <SubscribePost
-                                    data={dataPost}
-                                    id={router?.query?.id}
+                        </Col>
+                        <Col lg={{ span: 24 }} xs={{ span: 24 }}>
+                            {dataComments?.participants?.length ? (
+                                <ParticipantsDiscussion
+                                    users={dataComments?.participants}
                                 />
-                            </Col>
-                            <Col span={24}>
-                                {dataComments?.participants?.length ? (
-                                    <ParticipantsDiscussion
-                                        users={dataComments?.participants}
-                                    />
-                                ) : null}
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            </PageContainer>
-        </Layout>
+                            ) : null}
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+        </PageContainer>
     );
 }
 
-Comments.auth = {
+Comments.Auth = {
     roles: ["USER", "FASILITATOR"],
     groups: ["MASTER", "PTTPK"]
+};
+
+Comments.getLayout = function getLayout(page) {
+    return <Layout>{page}</Layout>;
 };
 
 export default Comments;

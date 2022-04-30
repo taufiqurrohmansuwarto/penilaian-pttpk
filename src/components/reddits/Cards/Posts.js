@@ -4,6 +4,7 @@ import {
     CommentOutlined
 } from "@ant-design/icons";
 import {
+    Card,
     Comment,
     Input,
     List,
@@ -236,16 +237,20 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
     return (
         <List
             dataSource={data}
+            itemLayout="horizontal"
+            grid={{ column: 1, gutter: [8, 8] }}
             rowKey={(row) => row?.id}
             renderItem={(item) => {
                 return (
-                    <Skeleton
-                        loading={loading || isFetchingNextPage}
-                        active
-                        avatar
-                    >
-                        <CustomCard data={item} user={user} />
-                    </Skeleton>
+                    <Card>
+                        <Skeleton
+                            loading={loading || isFetchingNextPage}
+                            active
+                            avatar
+                        >
+                            <CustomCard data={item} user={user} />
+                        </Skeleton>
+                    </Card>
                 );
             }}
         />

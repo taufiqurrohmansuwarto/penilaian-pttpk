@@ -12,6 +12,7 @@ export default function MyApp({
     pageProps: { session, ...pageProps }
 }) {
     const [queryClient] = useState(() => new QueryClient());
+    const getLayout = Component.getLayout || ((page) => page);
 
     return (
         <SessionProvider
@@ -27,7 +28,7 @@ export default function MyApp({
                                 roles={Component?.Auth?.roles}
                                 groups={Component?.Auth?.groups}
                             >
-                                <Component {...pageProps} />
+                                {getLayout(<Component {...pageProps} />)}
                             </Auth>
                         ) : (
                             <Component {...pageProps} />

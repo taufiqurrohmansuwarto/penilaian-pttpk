@@ -1,5 +1,5 @@
 import { LogoutOutlined, ReadOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Dropdown, Menu, Space, Typography } from "antd";
+import { Avatar, Dropdown, Menu, Space, Tooltip, Typography } from "antd";
 import { xorBy } from "lodash";
 import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
@@ -68,12 +68,12 @@ const rightContentRender = (user) => {
             <Dropdown overlay={menuUser(gotoAccount)}>
                 <Space align="center">
                     <Avatar
-                        shape="square"
+                        // shape="square"
                         size="small"
                         style={{ cursor: "pointer" }}
                         src={user?.image}
                     />
-                    <Typography.Text strong>{user?.name}</Typography.Text>
+                    {/* <Typography.Text strong>{user?.name}</Typography.Text> */}
                 </Space>
             </Dropdown>
         </Space>
@@ -122,7 +122,7 @@ const changeRoutes = (user) => {
     });
 };
 
-const Layout = ({ children, title = "" }) => {
+const Layout = ({ children }) => {
     const { data } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
@@ -148,12 +148,12 @@ const Layout = ({ children, title = "" }) => {
             fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}
-            theme="light"
-            // collapsed
+            theme="dark"
             rightContentRender={() => rightContentRender(data?.user)}
-            collapsedButtonRender={false}
+            // collapsedButtonRender={false}
+
             navTheme="dark"
-            style={{ minHeight: "100vh" }}
+            // style={{ minHeight: "100vh" }}
             fixSiderbar
             disableContentMargin
         >

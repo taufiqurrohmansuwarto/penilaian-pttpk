@@ -1,5 +1,5 @@
 import { NotificationOutlined } from "@ant-design/icons";
-import { Badge } from "antd";
+import { Badge, Tooltip } from "antd";
 import { useQuery } from "react-query";
 import { getNotificationDiscussions } from "../../services/main.services";
 
@@ -9,9 +9,11 @@ function BadgeNotificationForum() {
     );
 
     return (
-        <Badge dot={data?.total !== 0}>
-            <NotificationOutlined />
-        </Badge>
+        <Tooltip title="Notifikasi Diskusi">
+            <Badge dot={data?.total !== 0}>
+                <NotificationOutlined />
+            </Badge>
+        </Tooltip>
     );
 }
 

@@ -1,41 +1,35 @@
-import { Alert, Card, Col, Row } from "antd";
+import { Alert, Col, Row } from "antd";
 import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
-import TopCommunities from "../../src/components/reddits/Cards/TopCommunities";
 import TopDiscussions from "../../src/components/reddits/Cards/TopDiscussions";
 import UserComments from "../../src/components/UsersComments";
 
 const Feeds = ({ data }) => {
     return (
-        <Layout title="Feeds">
-            <PageContainer title="Apps" subTitle="Feedback" fixedHeader>
-                <Row>
-                    <Col span={12} offset={3} style={{ marginBottom: 10 }}>
-                        <Alert
-                            type="info"
-                            showIcon
-                            message="Perhatian"
-                            description="Dikarenakan ada pergantian database maka penilaian dientri ulang kembali mulai bulan januari sampai maret"
-                        />
-                    </Col>
-                </Row>
-                <Row gutter={[16, 16]}>
-                    <Col span={12} offset={3}>
-                        <UserComments sort={data?.sort} />
-                    </Col>
-                    <Col span={6}>
-                        <Row gutter={[16, 16]}>
-                            <Col span={24}>
-                                <TopDiscussions />
-                            </Col>
-                            <Col span={24}>
-                                <TopCommunities />
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            </PageContainer>
-        </Layout>
+        <PageContainer title="Apps" subTitle="Feedback">
+            <Row>
+                <Col lg={24} xs={24} style={{ marginBottom: 10 }}>
+                    <Alert
+                        type="info"
+                        showIcon
+                        message="Perhatian"
+                        description="Dikarenakan ada pergantian database maka penilaian dientri ulang kembali mulai bulan januari sampai maret"
+                    />
+                </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+                <Col lg={18} xs={24}>
+                    <UserComments sort={data?.sort} />
+                </Col>
+                <Col lg={6} xs={24}>
+                    <Row gutter={[16, 16]}>
+                        <Col span={24}>
+                            <TopDiscussions />
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+        </PageContainer>
     );
 };
 
@@ -50,9 +44,13 @@ export const getServerSideProps = async (ctx) => {
     };
 };
 
-Feeds.auth = {
+Feeds.Auth = {
     roles: ["USER", "FASILITATOR"],
     groups: ["PTTPK", "MASTER"]
+};
+
+Feeds.getLayout = function getLayout(page) {
+    return <Layout>{page}</Layout>;
 };
 
 export default Feeds;
