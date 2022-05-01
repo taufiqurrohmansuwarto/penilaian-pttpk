@@ -56,7 +56,6 @@ const UserLayout = ({ children, title = "", content = null }) => {
     return (
         <ProLayout
             menuItemRender={menuItemRender}
-            // collapsed
             selectedKeys={[active]}
             title="PTTPK"
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
@@ -65,9 +64,8 @@ const UserLayout = ({ children, title = "", content = null }) => {
             }}
             rightContentRender={() => rightContentRender(data?.user)}
             route={userRoute}
-            collapsedButtonRender={false}
             navTheme="dark"
-            style={{ minHeight: "100vh" }}
+            fixedHeader
             fixSiderbar
             disableContentMargin
         >

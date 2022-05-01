@@ -297,56 +297,58 @@ function Penilaian({ data: query }) {
     ];
 
     return (
-        <ApprovalLayout title="Daftar Pengajuan Penilaian Bulanan">
-            <PageContainer
-                title="Daftar Penilaian Bulanan"
-                subTitle="PTTPK"
-                content={
-                    <Alert
-                        type="info"
-                        message="Perhatian"
-                        showIcon
-                        description="Jika PTTPK dirasa sudah memilih anda sebagai atasan langsung akan tetapi tidak muncul, pastikan PTTPK yang bersangkutan mengaktifkan penilaiannya. Anda bisa memilih berdasarkan bulan dengan memilih Pilihan tanggal dibawah ini."
-                    />
-                }
-            >
-                <FormApprovalModal
-                    visible={showModal}
-                    onCancel={closeModal}
-                    catatanAtasanLangsung={catatanAtasan}
-                    idPtt={idPtt}
-                    id={id}
-                    bulan={moment(date).format("M")}
-                    tahun={moment(date).format("YYYY")}
+        <PageContainer
+            title="Daftar Penilaian Bulanan"
+            subTitle="PTTPK"
+            content={
+                <Alert
+                    type="info"
+                    message="Perhatian"
+                    showIcon
+                    description="Jika PTTPK dirasa sudah memilih anda sebagai atasan langsung akan tetapi tidak muncul, pastikan PTTPK yang bersangkutan mengaktifkan penilaiannya. Anda bisa memilih berdasarkan bulan dengan memilih Pilihan tanggal dibawah ini."
                 />
-                <Skeleton loading={!router?.isReady}>
-                    <Card>
-                        <DatePicker.MonthPicker
-                            onChange={handleChange}
-                            allowClear={false}
-                            value={date}
-                        />
-                        <Divider />
-                        <Table
-                            size="small"
-                            rowKey={(row) =>
-                                `${row?.id_penilaian}-${row?.bulan}-${row?.tahun}-${row?.custom_id_ptt}`
-                            }
-                            columns={columns}
-                            dataSource={dataPenilaianApproval}
-                            loading={loadingDataPenilaianApproval}
-                            pagination={false}
-                        />
-                    </Card>
-                </Skeleton>
-            </PageContainer>
-        </ApprovalLayout>
+            }
+        >
+            <FormApprovalModal
+                visible={showModal}
+                onCancel={closeModal}
+                catatanAtasanLangsung={catatanAtasan}
+                idPtt={idPtt}
+                id={id}
+                bulan={moment(date).format("M")}
+                tahun={moment(date).format("YYYY")}
+            />
+            <Skeleton loading={!router?.isReady}>
+                <Card>
+                    <DatePicker.MonthPicker
+                        onChange={handleChange}
+                        allowClear={false}
+                        value={date}
+                    />
+                    <Divider />
+                    <Table
+                        size="small"
+                        rowKey={(row) =>
+                            `${row?.id_penilaian}-${row?.bulan}-${row?.tahun}-${row?.custom_id_ptt}`
+                        }
+                        columns={columns}
+                        dataSource={dataPenilaianApproval}
+                        loading={loadingDataPenilaianApproval}
+                        pagination={false}
+                    />
+                </Card>
+            </Skeleton>
+        </PageContainer>
     );
 }
 
 Penilaian.Auth = {
     roles: ["USER"],
     groups: ["MASTER"]
+};
+
+Penilaian.getLayout = function getLayout(page) {
+    return <ApprovalLayout>{page}</ApprovalLayout>;
 };
 
 export const getServerSideProps = async (ctx) => {

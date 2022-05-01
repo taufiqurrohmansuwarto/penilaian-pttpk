@@ -57,7 +57,6 @@ const ApprovalLayout = ({ children, title = "" }) => {
         <ProLayout
             menuItemRender={menuItemRender}
             title="Pejabat Penilai"
-            // collapsed
             selectedKeys={[active]}
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
             menuHeaderRender={(logo, title) => {
@@ -65,10 +64,9 @@ const ApprovalLayout = ({ children, title = "" }) => {
             }}
             rightContentRender={() => rightContentRender(data?.user)}
             route={approvalRoute}
-            collapsedButtonRender={false}
             navTheme="dark"
-            style={{ minHeight: "100vh" }}
             fixSiderbar
+            fixedHeader
             disableContentMargin
         >
             {children}

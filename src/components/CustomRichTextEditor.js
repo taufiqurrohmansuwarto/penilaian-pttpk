@@ -35,14 +35,23 @@ const CustomRichTextEditor = ({
         []
     );
 
+    const modules = useMemo(
+        () => ({
+            history: { delay: 2500, userOnly: true }
+            // syntax: true
+        }),
+        []
+    );
+
     return (
         <>
             <RichTextEditor
                 onImageUpload={handleUpload}
+                modules={modules}
                 value={text}
                 onChange={setText}
                 mentions={mentions}
-                controls={[["image", "video", "bold"]]}
+                controls={[["image", "video", "bold", "italic"]]}
                 style={{ minHeight: 200, marginTop: 8, marginBottom: 8 }}
             />
             <Space>

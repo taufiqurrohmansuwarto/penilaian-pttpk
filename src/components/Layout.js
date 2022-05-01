@@ -150,10 +150,7 @@ const Layout = ({ children }) => {
             menuItemRender={menuItemRender}
             theme="dark"
             rightContentRender={() => rightContentRender(data?.user)}
-            // collapsedButtonRender={false}
-
             navTheme="dark"
-            // style={{ minHeight: "100vh" }}
             fixSiderbar
             disableContentMargin
         >

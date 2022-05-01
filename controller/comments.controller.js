@@ -2,6 +2,35 @@ import { uniq } from "lodash";
 import prisma from "../lib/prisma";
 import { parse } from "node-html-parser";
 
+const serialize = (result) => {
+    if (!result?.length) {
+        return [];
+    } else {
+        return result?.map((d) => {
+            let currentComment;
+            const currentRoot = parse(d?.comment);
+
+            if (!currentRoot?.querySelector("img")) {
+                currentComment = d?.comment;
+            } else {
+                currentRoot?.querySelectorAll("img").forEach((d) => {
+                    d.setAttribute(
+                        "style",
+                        `width: auto;max-width: 200px;max-height: 200px;height:auto;`
+                    );
+                });
+
+                currentComment = currentRoot?.toString();
+            }
+
+            return {
+                ...d,
+                comment: currentComment
+            };
+        });
+    }
+};
+
 const index = async (req, res) => {
     const { customId } = req.user;
     const cursor = req?.query?.cursor;
@@ -102,7 +131,7 @@ const index = async (req, res) => {
                 ? null
                 : result[result?.length - 1]?.id || null;
 
-        res.json({ data: result, nextCursor });
+        res.json({ data: serialize(result), nextCursor });
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
@@ -145,14 +174,30 @@ const create = async (req, res) => {
     const { body } = req;
     const { customId } = req.user;
 
+    let comment;
+    const root = parse(body?.comment);
+    const currentRoot = parse(body?.comment);
+
+    if (!currentRoot?.querySelector("img")) {
+        comment = body?.comment;
+    } else {
+        currentRoot?.querySelectorAll("img").forEach((d) => {
+            d.setAttribute(
+                "style",
+                `width: auto;max-width: 200px;max-height: 200px;height:auto;`
+            );
+        });
+
+        comment = currentRoot?.toString();
+    }
+
     try {
         const data = {
             user_custom_id: customId,
-            comment: body?.comment,
+            comment,
             parent_id: body?.parent_id
         };
 
-        const root = parse(body?.comment);
         const selectorMention = root
             ?.querySelectorAll("span.mention")
             ?.map((h) => h?._rawAttrs);
@@ -193,8 +238,7 @@ const create = async (req, res) => {
                         comment_id: body?.parent_id,
                         sender: customId,
                         receiver: result?.user_custom_id,
-                        type: "replied",
-                        message: body?.comment
+                        type: "replied"
                     }
                 });
 
@@ -209,8 +253,7 @@ const create = async (req, res) => {
                         comment_id: body?.parent_id,
                         sender: customId,
                         receiver: user,
-                        type: "replied-comment",
-                        message: body?.comment
+                        type: "replied-comment"
                     }));
 
                     if (listMention?.length !== 0) {
@@ -245,8 +288,7 @@ const create = async (req, res) => {
                         comment_id: body?.parent_id,
                         sender: customId,
                         receiver: user,
-                        type: "replied-comment",
-                        message: body?.comment
+                        type: "replied-comment"
                     }));
 
                     if (listMention?.length !== -1) {
@@ -296,6 +338,22 @@ const update = async (req, res) => {
     const { customId } = req.user;
     const { comment } = req?.body;
 
+    let currentComment;
+    const currentRoot = parse(comment);
+
+    if (!currentRoot?.querySelector("img")) {
+        currentComment = comment;
+    } else {
+        currentRoot?.querySelectorAll("img").forEach((d) => {
+            d.setAttribute(
+                "style",
+                `width: auto;max-width: 200px;max-height: 200px;height:auto;`
+            );
+        });
+
+        currentComment = currentRoot?.toString();
+    }
+
     try {
         await prisma.comments.updateMany({
             where: {
@@ -303,7 +361,7 @@ const update = async (req, res) => {
                 user_custom_id: customId
             },
             data: {
-                comment,
+                comment: currentComment,
                 is_edited: true,
                 updated_at: new Date()
             }

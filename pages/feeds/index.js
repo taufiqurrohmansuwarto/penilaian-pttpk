@@ -18,10 +18,10 @@ const Feeds = ({ data }) => {
                 </Col>
             </Row>
             <Row gutter={[16, 16]}>
-                <Col lg={18} xs={24}>
+                <Col lg={{ span: 12, offset: 4 }} xs={{ span: 24 }}>
                     <UserComments sort={data?.sort} />
                 </Col>
-                <Col lg={6} xs={24}>
+                <Col lg={{ span: 6 }} xs={{ span: 24 }}>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
                             <TopDiscussions />

@@ -193,41 +193,43 @@ function PenilaianTahunan({ data }) {
     };
 
     return (
-        <ApprovalLayout title="Daftar Pengajuan Penilaian Tahunan/Akhir">
-            <PageContainer
-                title="Daftar Penilaian Tahunan"
-                subTitle="PTTPK"
-                content={
-                    <Alert
-                        type="info"
-                        message="Perhatian"
-                        showIcon
-                        description="Jika PTTPK dirasa sudah memilih anda sebagai atasan langsung akan tetapi tidak muncul, pastikan PTTPK yang bersangkutan mengaktifkan penilaiannya. Anda bisa memilih berdasarkan bulan dengan memilih Pilihan tanggal dibawah ini."
+        <PageContainer
+            title="Daftar Penilaian Tahunan"
+            subTitle="PTTPK"
+            content={
+                <Alert
+                    type="info"
+                    message="Perhatian"
+                    showIcon
+                    description="Jika PTTPK dirasa sudah memilih anda sebagai atasan langsung akan tetapi tidak muncul, pastikan PTTPK yang bersangkutan mengaktifkan penilaiannya. Anda bisa memilih berdasarkan bulan dengan memilih Pilihan tanggal dibawah ini."
+                />
+            }
+        >
+            <Card>
+                <DatePicker.YearPicker
+                    onChange={handleChange}
+                    allowClear={false}
+                    defaultValue={date}
+                />
+                <Divider />
+                <Skeleton loading={isLoading}>
+                    <TablePenilaianAkhir
+                        data={dataPenilaianUser}
+                        tahun={moment(date).format("YYYY")}
                     />
-                }
-            >
-                <Card>
-                    <DatePicker.YearPicker
-                        onChange={handleChange}
-                        allowClear={false}
-                        defaultValue={date}
-                    />
-                    <Divider />
-                    <Skeleton loading={isLoading}>
-                        <TablePenilaianAkhir
-                            data={dataPenilaianUser}
-                            tahun={moment(date).format("YYYY")}
-                        />
-                    </Skeleton>
-                </Card>
-            </PageContainer>
-        </ApprovalLayout>
+                </Skeleton>
+            </Card>
+        </PageContainer>
     );
 }
 
 PenilaianTahunan.Auth = {
     roles: ["USER"],
     groups: ["MASTER"]
+};
+
+PenilaianTahunan.getLayout = function getLayout(page) {
+    return <ApprovalLayout>{page}</ApprovalLayout>;
 };
 
 export const getServerSideProps = async (ctx) => {
