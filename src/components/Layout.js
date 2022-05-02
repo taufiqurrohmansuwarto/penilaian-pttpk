@@ -152,7 +152,7 @@ const Layout = ({ children }) => {
             rightContentRender={() => rightContentRender(data?.user)}
             navTheme="dark"
             fixSiderbar
-            disableContentMargin
+            // disableContentMargin
         >
             {children}
         </ProLayout>

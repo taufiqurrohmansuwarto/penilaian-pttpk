@@ -1,5 +1,6 @@
 import { Button, Col, Divider, Row, Space, Typography } from "antd";
 import { getProviders, signIn } from "next-auth/react";
+import MComment from "../src/components/semantic/MComment";
 
 export default function SignIn({ providers }) {
     return (
@@ -8,7 +9,6 @@ export default function SignIn({ providers }) {
             align="middle"
             justify="center"
         >
-            {/* <Col></Col> */}
             <Col flex>
                 <Space direction="vertical" align="center">
                     <Typography.Title>Aplikasi ASN</Typography.Title>

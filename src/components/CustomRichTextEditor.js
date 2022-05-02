@@ -1,4 +1,5 @@
-import { Button, Space } from "antd";
+import { Avatar, Button, Divider, Space } from "antd";
+import { transform } from "lodash";
 import { useMemo } from "react";
 import { findUsers, uploads } from "../../services/main.services";
 import RichTextEditor from "./RichTextEditor";
@@ -10,7 +11,8 @@ const CustomRichTextEditor = ({
     submitting,
     buttonText = "Submit",
     main,
-    onCancel
+    onCancel,
+    placeholder = ""
 }) => {
     const handleUpload = async (file) => {
         try {
@@ -45,15 +47,40 @@ const CustomRichTextEditor = ({
 
     return (
         <>
-            <RichTextEditor
-                onImageUpload={handleUpload}
-                modules={modules}
-                value={text}
-                onChange={setText}
-                mentions={mentions}
-                controls={[["image", "video", "bold", "italic"]]}
-                style={{ minHeight: 200, marginTop: 8, marginBottom: 8 }}
-            />
+            <div>
+                <RichTextEditor
+                    styles={{
+                        root: {
+                            padding: 0,
+                            margin: 0,
+                            minHeight: "10px !important",
+                            width: "100%",
+                            marginBottom: 14
+                        }
+                    }}
+                    sx={(theme) => ({
+                        // backgroundColor: theme.colors.gray[0],
+                        "&:hover": {
+                            borderColor: theme.colors.indigo
+                        }
+                    })}
+                    placeholder={placeholder}
+                    onImageUpload={handleUpload}
+                    value={text}
+                    onChange={setText}
+                    mentions={mentions}
+                    controls={[
+                        [
+                            "image",
+                            "video",
+                            "link",
+                            "unorderedList",
+                            "orderedList"
+                        ]
+                    ]}
+                    radius={10}
+                />
+            </div>
             <Space>
                 <Button
                     type="primary"

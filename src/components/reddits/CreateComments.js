@@ -1,8 +1,4 @@
-import {
-    BackwardOutlined,
-    SendOutlined,
-    UndoOutlined
-} from "@ant-design/icons";
+import { SendOutlined } from "@ant-design/icons";
 import {
     Button,
     Card,
@@ -17,7 +13,7 @@ import {
 import moment from "moment";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import {
     createCommentByPost,
@@ -65,7 +61,7 @@ const MyComment = ({ comment, user, id }) => {
         setEditId(null);
         setEditComment();
     };
-
+    0;
     const queryClient = useQueryClient();
     const createCommentNestedComment = useMutation(
         (data) => createCommentByPost(data),

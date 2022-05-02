@@ -1,21 +1,12 @@
 import {
-    DislikeFilled,
-    DislikeOutlined,
-    LikeFilled,
-    LikeOutlined
-} from "@ant-design/icons";
-import {
     Avatar,
-    Badge,
     Button,
-    Card,
     Comment,
+    Divider,
     Form,
-    Input,
     List,
     message,
     Popconfirm,
-    Skeleton,
     Space
 } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
@@ -36,6 +27,7 @@ import {
 } from "../../services/main.services";
 import CustomRichTextEditor from "./CustomRichTextEditor";
 import RichTextEditor from "./RichTextEditor";
+import MComment from "./semantic/MComment";
 
 moment.locale("id");
 
@@ -138,6 +130,7 @@ const ChildrenComment = ({ data, handleRemove, handleUpdate, user }) => {
             {data?.length > 0 ? (
                 <List
                     itemLayout="horizontal"
+                    size="small"
                     header={`${data?.length} balasan`}
                     dataSource={data}
                     rowKey={(row) => row?.id}
@@ -274,226 +267,10 @@ const ListComments = ({
                 <List
                     itemLayout="horizontal"
                     dataSource={data}
-                    size="large"
-                    grid={{ column: 1, gutter: [8, 8] }}
+                    size="small"
+                    loading={isLoading}
                     rowKey={(row) => row?.id}
-                    renderItem={(item) => (
-                        <Card>
-                            <Skeleton loading={isLoading} active avatar>
-                                <Comment
-                                    actions={[
-                                        <span
-                                            onClick={() => {
-                                                const value = filterValue(
-                                                    item?.id,
-                                                    user?.user?.id,
-                                                    item?.comments_likes
-                                                );
-                                                handleLike({
-                                                    commentId: item?.id,
-                                                    value
-                                                });
-                                            }}
-                                        >
-                                            {hasLike(
-                                                item?.id,
-                                                user?.user?.id,
-                                                item?.comments_likes
-                                            ) ? (
-                                                <>
-                                                    <LikeFilled />
-                                                    <span
-                                                        style={{
-                                                            paddingLeft: 8
-                                                        }}
-                                                    >
-                                                        {item?.likes}
-                                                    </span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <LikeOutlined />
-                                                    <span
-                                                        style={{
-                                                            paddingLeft: 8
-                                                        }}
-                                                    >
-                                                        {item?.likes}
-                                                    </span>
-                                                </>
-                                            )}
-                                        </span>,
-
-                                        <span
-                                            onClick={() => {
-                                                const value = filterValue(
-                                                    item?.id,
-                                                    user?.user?.id,
-                                                    item?.comments_likes
-                                                );
-                                                handleDislike({
-                                                    commentId: item?.id,
-                                                    value
-                                                });
-                                            }}
-                                        >
-                                            {hasDislike(
-                                                item?.id,
-                                                user?.user?.id,
-                                                item?.comments_likes
-                                            ) ? (
-                                                <>
-                                                    <DislikeFilled />
-                                                    <span
-                                                        style={{
-                                                            paddingLeft: 8
-                                                        }}
-                                                    >
-                                                        {item?.dislikes}
-                                                    </span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <DislikeOutlined />
-                                                    <span
-                                                        style={{
-                                                            paddingLeft: 8
-                                                        }}
-                                                    >
-                                                        {item?.dislikes}
-                                                    </span>
-                                                </>
-                                            )}
-                                        </span>,
-
-                                        <span
-                                            onClick={() =>
-                                                handleShowEditor(item?.id)
-                                            }
-                                            style={{ fontWeight: "bold" }}
-                                        >
-                                            Balas
-                                        </span>,
-                                        <>
-                                            {item?.children?.length ? (
-                                                <span
-                                                    onClick={() =>
-                                                        toggleChildrenComment(
-                                                            item?.id
-                                                        )
-                                                    }
-                                                    style={{ color: "blue" }}
-                                                >
-                                                    {visibleChildrenComment ===
-                                                    item?.id
-                                                        ? "Tutup"
-                                                        : "Buka"}{" "}
-                                                    {item?.children?.length}{" "}
-                                                    balasan
-                                                </span>
-                                            ) : null}
-                                        </>,
-                                        <>
-                                            {item?.user_custom_id ===
-                                                user?.user?.id && (
-                                                <Popconfirm
-                                                    title="Apakah anda yakin ingin menghapus komentar?"
-                                                    onConfirm={() =>
-                                                        handleRemove(item?.id)
-                                                    }
-                                                >
-                                                    <span>Hapus</span>
-                                                </Popconfirm>
-                                            )}
-                                        </>,
-                                        <>
-                                            {item?.user_custom_id ===
-                                                user?.user?.id && (
-                                                <span
-                                                    onClick={() => {
-                                                        setEditId(item?.id);
-                                                        setEditComment(
-                                                            item?.comment
-                                                        );
-                                                    }}
-                                                >
-                                                    Edit
-                                                </span>
-                                            )}
-                                        </>
-                                    ]}
-                                    content={
-                                        <>
-                                            {editId === item?.id ? (
-                                                <CustomRichTextEditor
-                                                    buttonText="Edit"
-                                                    text={editComment}
-                                                    onCancel={handleCancelEdit}
-                                                    setText={setEditComment}
-                                                    handleSubmit={async () => {
-                                                        await handleUpdate({
-                                                            id: item?.id,
-                                                            comment: editComment
-                                                        });
-                                                        setEditId(null);
-                                                    }}
-                                                />
-                                            ) : (
-                                                <div
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: item?.comment
-                                                    }}
-                                                />
-                                            )}
-                                        </>
-                                    }
-                                    datetime={
-                                        <div>
-                                            {moment(item?.created_at).fromNow()}
-                                            <span style={{ marginLeft: 8 }}>
-                                                {item?.is_edited
-                                                    ? "(diedit)"
-                                                    : null}
-                                            </span>
-                                        </div>
-                                    }
-                                    author={item?.user?.username}
-                                    avatar={
-                                        <Avatar
-                                            shape="square"
-                                            src={item?.user?.image}
-                                        />
-                                    }
-                                >
-                                    {id === item?.id && (
-                                        <Comment
-                                            author={user?.user?.name}
-                                            avatar={user?.user?.image}
-                                        >
-                                            <CustomRichTextEditor
-                                                buttonText="Balas"
-                                                text={comment}
-                                                setText={setComment}
-                                                onCancel={handleCancel}
-                                                handleSubmit={() =>
-                                                    handleSubmit(item?.id)
-                                                }
-                                            />
-                                        </Comment>
-                                    )}
-                                    {visibleChildrenComment === item?.id ? (
-                                        <ChildrenComment
-                                            show={show}
-                                            data={item?.children}
-                                            handleRemove={handleRemove}
-                                            user={user}
-                                            handleUpdate={handleUpdate}
-                                        />
-                                    ) : null}
-                                </Comment>
-                            </Skeleton>
-                        </Card>
-                    )}
+                    renderItem={(item) => <MComment data={item} />}
                 />
             ) : null}
         </div>
@@ -593,44 +370,31 @@ const UserComments = ({ sort }) => {
 
     return (
         <>
-            <Badge.Ribbon text="Status" color="green">
-                <Card>
-                    <Card.Meta
-                        description={`Apa yang ingin anda sampaikan hari ini ?`}
-                    />
-                    <Comment
-                        avatar={userData?.user?.image}
-                        author={userData?.user?.name}
-                        content={
-                            <>
-                                <CustomRichTextEditor
-                                    text={comment}
-                                    main={true}
-                                    setText={setComment}
-                                    handleSubmit={handleSubmit}
-                                />
-                            </>
-                        }
-                    />
-                </Card>
-            </Badge.Ribbon>
-
-            <>
-                <Card style={{ marginTop: 8, marginBottom: 8 }}>
-                    {filter?.map((f) => (
-                        <CheckableTag
-                            key={f}
-                            checked={selectedFilter === f}
-                            onChange={(checked) =>
-                                handleChangeFilter(checked, f)
-                            }
-                        >
-                            {f}
-                        </CheckableTag>
-                    ))}
-                </Card>
-            </>
-
+            <Comment
+                avatar={userData?.user?.image}
+                content={
+                    <>
+                        <CustomRichTextEditor
+                            placeholder="Apa yang ingin kamu sampaikan??"
+                            text={comment}
+                            main={true}
+                            setText={setComment}
+                            handleSubmit={handleSubmit}
+                        />
+                    </>
+                }
+            />
+            <Divider />
+            {filter?.map((f) => (
+                <CheckableTag
+                    key={f}
+                    checked={selectedFilter === f}
+                    onChange={(checked) => handleChangeFilter(checked, f)}
+                >
+                    {f}
+                </CheckableTag>
+            ))}
+            <Divider />
             {dataComments?.pages?.map((page) => (
                 <React.Fragment key={page?.nextCursor}>
                     <ListComments

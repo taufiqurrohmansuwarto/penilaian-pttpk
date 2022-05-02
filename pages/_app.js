@@ -6,13 +6,17 @@ import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import "./index.css";
+import "semantic-ui-css/semantic.min.css";
+import useScrollRestoration from "../src/hooks/useScrollRestoration";
 
 export default function MyApp({
     Component,
-    pageProps: { session, ...pageProps }
+    pageProps: { session, ...pageProps },
+    router
 }) {
     const [queryClient] = useState(() => new QueryClient());
     const getLayout = Component.getLayout || ((page) => page);
+    useScrollRestoration(router);
 
     return (
         <SessionProvider
