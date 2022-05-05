@@ -31,6 +31,7 @@ function MComment({
     comment,
     isLike,
     totalLikes,
+    sort,
     totalComments
 }) {
     const router = useRouter();
@@ -43,8 +44,34 @@ function MComment({
     };
 
     const { mutate: likeMutate } = useMutation((data) => likes(data), {
-        onSuccess: () => {
-            queryClient.invalidateQueries(["comments"]);
+        onSuccess: (hasil) => {
+            queryClient.setQueryData(["comments", "detail", hasil?.id], hasil);
+            queryClient.setQueryData(
+                ["comments", "filter", sort],
+                (previous) => {
+                    const kumat = previous?.pages?.map((p) => {
+                        const data = p?.data?.map((x) =>
+                            x.id === hasil?.id ? hasil : x
+                        );
+                        const nextCursor = p?.nextCursor;
+
+                        return {
+                            data,
+                            nextCursor
+                        };
+                    });
+
+                    return {
+                        ...previous,
+                        pages: kumat
+                    };
+                }
+            );
+
+            queryClient.invalidateQueries({
+                queryKey: ["comments", "filter"],
+                refetchActive: false
+            });
         }
     });
 

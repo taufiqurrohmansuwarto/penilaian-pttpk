@@ -36,7 +36,7 @@ const index = async (req, res) => {
     const cursor = req?.query?.cursor;
     const sort = req?.query?.sort || "terbaru";
 
-    const take = 50;
+    const take = 10;
 
     let query = {
         take,
@@ -476,6 +476,27 @@ const likes = async (req, res) => {
                     comment_id: commentId
                 }
             });
+
+            const result = await prisma.comments.findUnique({
+                where: {
+                    id: commentId
+                },
+                include: {
+                    user: true,
+                    comments_likes: {
+                        where: {
+                            user_custom_id: customId
+                        }
+                    },
+                    _count: {
+                        select: {
+                            children: true,
+                            comments_likes: true
+                        }
+                    }
+                }
+            });
+            res.json(result);
         } else {
             await prisma.comments_likes.delete({
                 where: {
@@ -485,10 +506,30 @@ const likes = async (req, res) => {
                     }
                 }
             });
-        }
 
-        res.json({ code: 200, message: "success" });
+            const result = await prisma.comments.findUnique({
+                where: {
+                    id: commentId
+                },
+                include: {
+                    user: true,
+                    comments_likes: {
+                        where: {
+                            user_custom_id: customId
+                        }
+                    },
+                    _count: {
+                        select: {
+                            children: true,
+                            comments_likes: true
+                        }
+                    }
+                }
+            });
+            res.json(result);
+        }
     } catch (error) {
+        console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };

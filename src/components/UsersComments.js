@@ -7,7 +7,8 @@ import {
     List,
     message,
     Popconfirm,
-    Space
+    Space,
+    Spin
 } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 import moment from "moment";
@@ -15,6 +16,7 @@ import "moment/locale/id";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import {
     createComments,
@@ -215,17 +217,7 @@ const ChildrenComment = ({ data, handleRemove, handleUpdate, user }) => {
     );
 };
 
-const ListComments = ({
-    data,
-    isLoading,
-    user,
-    mutation,
-    show = true,
-    handleLike,
-    handleDislike,
-    handleRemove,
-    handleUpdate
-}) => {
+const ListComments = ({ data, user, mutation, sort }) => {
     const [id, setId] = useState(null);
     const [editId, setEditId] = useState(null);
 
@@ -272,6 +264,7 @@ const ListComments = ({
                     rowKey={(row) => row?.id}
                     renderItem={(item) => (
                         <MComment
+                            sort={sort}
                             id={item?.id}
                             key={item?.id}
                             image={item?.user?.image}
@@ -308,14 +301,15 @@ const UserComments = ({ sort }) => {
         fetchNextPage,
         hasNextPage
     } = useInfiniteQuery(
-        ["comments", sort],
+        ["comments", "filter", sort],
         ({ pageParam }) => {
             return getComments({ cursor: pageParam, sort });
         },
         {
             getNextPageParam: (pageParams) =>
                 pageParams?.nextCursor ?? undefined,
-            enabled: !!sort
+            enabled: !!sort,
+            refetchOnWindowFocus: false
         }
     );
 
@@ -409,32 +403,29 @@ const UserComments = ({ sort }) => {
                 </CheckableTag>
             ))}
             <Divider />
-            <MListLoading loading={isFetchingNextPage || isFetching}>
+            <MListLoading loading={isFetching}>
                 {dataComments?.pages?.map((page) => (
                     <React.Fragment key={page?.nextCursor}>
-                        <ListComments
-                            user={userData}
-                            data={page?.data}
-                            mutation={createCommentMutation}
-                            handleLike={handleLike}
-                            handleDislike={handleDislike}
-                            handleRemove={handleRemove}
-                            handleUpdate={handleUpdate}
-                        />
+                        <InfiniteScroll
+                            next={fetchNextPage}
+                            hasMore={hasNextPage}
+                            loader={isFetchingNextPage ? <Spin /> : null}
+                            dataLength={page?.data?.length}
+                        >
+                            <ListComments
+                                sort={sort}
+                                user={userData}
+                                data={page?.data}
+                                mutation={createCommentMutation}
+                                handleLike={handleLike}
+                                handleDislike={handleDislike}
+                                handleRemove={handleRemove}
+                                handleUpdate={handleUpdate}
+                            />
+                        </InfiniteScroll>
                     </React.Fragment>
                 ))}
             </MListLoading>
-            {hasNextPage && (
-                <div
-                    style={{
-                        textAlign: "center",
-                        marginTop: 4,
-                        marginBottom: 4
-                    }}
-                >
-                    <Button onClick={() => fetchNextPage()}>Selanjutnya</Button>
-                </div>
-            )}
         </>
     );
 };
