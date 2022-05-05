@@ -28,6 +28,7 @@ import {
 import CustomRichTextEditor from "./CustomRichTextEditor";
 import RichTextEditor from "./RichTextEditor";
 import MComment from "./semantic/MComment";
+import MListLoading from "./semantic/MListLoading";
 
 moment.locale("id");
 
@@ -268,9 +269,21 @@ const ListComments = ({
                     itemLayout="horizontal"
                     dataSource={data}
                     size="small"
-                    loading={isLoading}
                     rowKey={(row) => row?.id}
-                    renderItem={(item) => <MComment data={item} />}
+                    renderItem={(item) => (
+                        <MComment
+                            id={item?.id}
+                            key={item?.id}
+                            image={item?.user?.image}
+                            comment={item?.comment}
+                            hasAction={item?.user?.custom_id === user?.user?.id}
+                            totalComments={item?._count?.children}
+                            totalLikes={item?._count?.comments_likes}
+                            isLike={item?.comments_likes?.length}
+                            date={item?.created_at}
+                            username={item?.user?.username}
+                        />
+                    )}
                 />
             ) : null}
         </div>
@@ -291,6 +304,7 @@ const UserComments = ({ sort }) => {
         data: dataComments,
         isLoading: isLoadingComments,
         isFetchingNextPage,
+        isFetching,
         fetchNextPage,
         hasNextPage
     } = useInfiniteQuery(
@@ -395,20 +409,21 @@ const UserComments = ({ sort }) => {
                 </CheckableTag>
             ))}
             <Divider />
-            {dataComments?.pages?.map((page) => (
-                <React.Fragment key={page?.nextCursor}>
-                    <ListComments
-                        user={userData}
-                        data={page?.data}
-                        mutation={createCommentMutation}
-                        handleLike={handleLike}
-                        handleDislike={handleDislike}
-                        handleRemove={handleRemove}
-                        handleUpdate={handleUpdate}
-                        isLoading={isLoadingComments || isFetchingNextPage}
-                    />
-                </React.Fragment>
-            ))}
+            <MListLoading loading={isFetchingNextPage || isFetching}>
+                {dataComments?.pages?.map((page) => (
+                    <React.Fragment key={page?.nextCursor}>
+                        <ListComments
+                            user={userData}
+                            data={page?.data}
+                            mutation={createCommentMutation}
+                            handleLike={handleLike}
+                            handleDislike={handleDislike}
+                            handleRemove={handleRemove}
+                            handleUpdate={handleUpdate}
+                        />
+                    </React.Fragment>
+                ))}
+            </MListLoading>
             {hasNextPage && (
                 <div
                     style={{

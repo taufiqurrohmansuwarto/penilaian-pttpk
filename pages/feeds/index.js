@@ -1,4 +1,4 @@
-import { Alert, Card, Col, Row } from "antd";
+import { Alert, BackTop, Card, Col, Row } from "antd";
 import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
 import TopDiscussions from "../../src/components/reddits/Cards/TopDiscussions";
@@ -18,12 +18,13 @@ const Feeds = ({ data }) => {
                 </Col>
             </Row>
             <Row gutter={[16, 16]}>
-                <Col lg={{ span: 12, offset: 4 }} xs={{ span: 24 }}>
+                <Col lg={{ span: 10, offset: 7 }} xs={{ span: 24 }}>
                     <Card>
                         <UserComments sort={data?.sort} />
+                        <BackTop />
                     </Card>
                 </Col>
-                <Col lg={{ span: 6 }} xs={{ span: 24 }}>
+                <Col lg={{ span: 7 }} xs={{ span: 24 }}>
                     <Row gutter={[16, 16]}>
                         <Col span={24}>
                             <TopDiscussions />

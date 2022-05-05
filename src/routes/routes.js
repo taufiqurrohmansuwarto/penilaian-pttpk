@@ -1,5 +1,4 @@
 import {
-    BellOutlined,
     CommentOutlined,
     MessageOutlined,
     UserOutlined
@@ -7,6 +6,7 @@ import {
 
 export default {
     routes: [
+        {},
         {
             path: "/feeds",
             name: " Feedback",
@@ -17,10 +17,5 @@ export default {
             name: " Diskusi",
             icon: <CommentOutlined />
         }
-        // {
-        //     path: "/notifications/feedbacks",
-        //     name: " Notifikasi",
-        //     icon: <BellOutlined />
-        // }
     ]
 };

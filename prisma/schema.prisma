@@ -168,7 +168,6 @@ model comments {
 model comments_likes {
   comment_id     String
   user_custom_id String
-  value          Int?
   comments       comments? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
   users          users     @relation("user_like", fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 

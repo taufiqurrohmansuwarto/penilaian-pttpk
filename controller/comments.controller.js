@@ -44,22 +44,16 @@ const index = async (req, res) => {
             parent_id: null
         },
         include: {
+            user: true,
             comments_likes: {
-                include: {
-                    users: {
-                        select: {
-                            username: true
-                        }
-                    }
+                where: {
+                    user_custom_id: customId
                 }
             },
-            user: true,
-            children: {
-                orderBy: {
-                    created_at: "asc"
-                },
-                include: {
-                    user: true
+            _count: {
+                select: {
+                    children: true,
+                    comments_likes: true
                 }
             }
         }
@@ -131,7 +125,8 @@ const index = async (req, res) => {
                 ? null
                 : result[result?.length - 1]?.id || null;
 
-        res.json({ data: serialize(result), nextCursor });
+        const data = serialize(result);
+        res.json({ data, nextCursor });
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
@@ -463,18 +458,9 @@ const remove = async (req, res) => {
 const likes = async (req, res) => {
     const { customId } = req.user;
     const { commentId } = req.query;
-    const { value } = req.body;
 
     try {
-        const upsert = await prisma.comments_likes.upsert({
-            create: {
-                user_custom_id: customId,
-                comment_id: commentId,
-                value: 1
-            },
-            update: {
-                value: value === 1 ? 0 : 1
-            },
+        const result = await prisma.comments_likes.findUnique({
             where: {
                 comment_id_user_custom_id: {
                     comment_id: commentId,
@@ -483,36 +469,27 @@ const likes = async (req, res) => {
             }
         });
 
-        const hasil = await prisma.comments.findUnique({
-            where: {
-                id: commentId
-            },
-            select: {
-                dislikes: true
-            }
-        });
-
-        const flag = upsert?.value === 1 ? "increment" : "decrement";
-
-        await prisma.comments.update({
-            where: {
-                id: commentId
-            },
-            data: {
-                likes: {
-                    [flag]: 1
-                },
-                dislikes: {
-                    decrement:
-                        upsert?.value === 1 && hasil?.dislikes > 0 ? 1 : 0
+        if (!result) {
+            await prisma.comments_likes.create({
+                data: {
+                    user_custom_id: customId,
+                    comment_id: commentId
                 }
-            }
-        });
+            });
+        } else {
+            await prisma.comments_likes.delete({
+                where: {
+                    comment_id_user_custom_id: {
+                        comment_id: commentId,
+                        user_custom_id: customId
+                    }
+                }
+            });
+        }
 
         res.json({ code: 200, message: "success" });
     } catch (error) {
-        console.log(error);
-        res.json({ code: 400, message: "Internal Server Error" });
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };
 

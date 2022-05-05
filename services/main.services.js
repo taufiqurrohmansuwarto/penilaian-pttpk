@@ -30,10 +30,8 @@ export const getComments = ({ cursor = 0, sort = "terbaru" }) => {
         .then((res) => res?.data);
 };
 
-export const likes = ({ commentId, value }) =>
-    fetcher
-        .put(`/comments/${commentId}/votes`, { value })
-        .then((res) => res?.data);
+export const likes = (commentId) =>
+    fetcher.put(`/comments/${commentId}/votes`).then((res) => res?.data);
 
 export const dislikes = ({ commentId, value }) =>
     fetcher
