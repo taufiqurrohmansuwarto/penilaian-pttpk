@@ -39,7 +39,7 @@ const findUsers = async (req, res) => {
             results = result?.map((r) => ({
                 id: r?.custom_id,
                 value: r?.username,
-                link: "http://google.com"
+                link: `http://bkd.jatimprov.go.id`
             }));
         }
         res.json(results);

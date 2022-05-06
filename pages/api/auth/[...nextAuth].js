@@ -70,6 +70,9 @@ export default NextAuth({
                     prompt: "login"
                 }
             },
+            httpOptions: {
+                timeout: 10000
+            },
             idToken: true,
             checks: ["pkce", "state"],
             profile: async (profile, token) => {

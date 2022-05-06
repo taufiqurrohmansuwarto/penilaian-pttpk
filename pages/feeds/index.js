@@ -7,16 +7,6 @@ import UserComments from "../../src/components/UsersComments";
 const Feeds = ({ data }) => {
     return (
         <PageContainer title="Apps" subTitle="Feedback">
-            <Row>
-                <Col lg={24} xs={24} style={{ marginBottom: 10 }}>
-                    <Alert
-                        type="info"
-                        showIcon
-                        message="Perhatian"
-                        description="Dikarenakan ada pergantian database maka penilaian dientri ulang kembali mulai bulan januari sampai maret"
-                    />
-                </Col>
-            </Row>
             <Row gutter={[16, 16]}>
                 <Col lg={{ span: 10, offset: 7 }} xs={{ span: 24 }}>
                     <Card>

@@ -1,22 +1,23 @@
 import "@ant-design/pro-layout/dist/layout.css";
-import "antd/dist/antd.css";
 import { ConfigProvider, Spin } from "antd";
+import "antd/dist/antd.css";
 import id from "antd/lib/locale/id_ID";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
-import "./index.css";
 import "semantic-ui-css/semantic.min.css";
-import useScrollRestoration from "../src/hooks/useScrollRestoration";
+import "./index.css";
+import { RouterScrollProvider } from "@moxy/next-router-scroll";
+import { MantineProvider } from "@mantine/core";
 
 export default function MyApp({
     Component,
     pageProps: { session, ...pageProps },
     router
 }) {
+    // useScrollRestoration(router);
     const [queryClient] = useState(() => new QueryClient());
     const getLayout = Component.getLayout || ((page) => page);
-    useScrollRestoration(router);
 
     return (
         <SessionProvider
@@ -26,18 +27,31 @@ export default function MyApp({
         >
             <QueryClientProvider client={queryClient}>
                 <ConfigProvider locale={id}>
-                    <Hydrate state={pageProps?.dehydrateState}>
-                        {Component.Auth ? (
-                            <Auth
-                                roles={Component?.Auth?.roles}
-                                groups={Component?.Auth?.groups}
-                            >
-                                {getLayout(<Component {...pageProps} />)}
-                            </Auth>
-                        ) : (
-                            <Component {...pageProps} />
-                        )}
-                    </Hydrate>
+                    <MantineProvider
+                        withGlobalStyles
+                        withNormalizeCSS
+                        theme={{
+                            /** Put your mantine theme override here */
+                            colorScheme: "light"
+                        }}
+                    >
+                        <Hydrate state={pageProps?.dehydrateState}>
+                            <RouterScrollProvider disableNextLinkScroll={false}>
+                                {Component.Auth ? (
+                                    <Auth
+                                        roles={Component?.Auth?.roles}
+                                        groups={Component?.Auth?.groups}
+                                    >
+                                        {getLayout(
+                                            <Component {...pageProps} />
+                                        )}
+                                    </Auth>
+                                ) : (
+                                    <Component {...pageProps} />
+                                )}
+                            </RouterScrollProvider>
+                        </Hydrate>
+                    </MantineProvider>
                 </ConfigProvider>
             </QueryClientProvider>
         </SessionProvider>

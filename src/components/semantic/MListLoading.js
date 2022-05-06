@@ -8,9 +8,14 @@ function MListLoading({ children, loading }) {
     return (
         <List
             dataSource={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]}
-            renderItem={(item) => (
+            renderItem={() => (
                 <List.Item>
-                    <Skeleton avatar title={false} loading={loading}></Skeleton>
+                    <Skeleton
+                        avatar
+                        active
+                        title={false}
+                        loading={loading}
+                    ></Skeleton>
                 </List.Item>
             )}
         />

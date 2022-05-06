@@ -31,6 +31,9 @@ const serialize = (result) => {
     }
 };
 
+// wait until some working shit, because prisma dont do any shit with count 'where'
+const serialie = (result) => {};
+
 const index = async (req, res) => {
     const { customId } = req.user;
     const cursor = req?.query?.cursor;
@@ -41,10 +44,16 @@ const index = async (req, res) => {
     let query = {
         take,
         where: {
-            parent_id: null
+            parent_id: null,
+            is_deleted: null
         },
         include: {
             user: true,
+            children: {
+                where: {
+                    is_deleted: null
+                }
+            },
             comments_likes: {
                 where: {
                     user_custom_id: customId
@@ -52,7 +61,6 @@ const index = async (req, res) => {
             },
             _count: {
                 select: {
-                    children: true,
                     comments_likes: true
                 }
             }
@@ -98,7 +106,9 @@ const index = async (req, res) => {
         query = {
             ...query,
             orderBy: {
-                likes: "desc"
+                comments_likes: {
+                    _count: "desc"
+                }
             }
         };
     }
@@ -126,7 +136,29 @@ const index = async (req, res) => {
                 : result[result?.length - 1]?.id || null;
 
         const data = serialize(result);
-        res.json({ data, nextCursor });
+        const id = data?.map((d) => d?.id);
+
+        // get the count cause prisma cant do count with where
+        const allCount = await Promise.all(
+            id?.map(async (x) => {
+                return await prisma.comments.count({
+                    where: {
+                        parent_id: x,
+                        is_deleted: null
+                    }
+                });
+            })
+        );
+
+        const newData = data?.map((d, i) => ({
+            ...d,
+            _count: {
+                ...d?._count,
+                children: allCount[i]
+            }
+        }));
+
+        res.json({ data: newData, nextCursor });
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
@@ -136,29 +168,51 @@ const index = async (req, res) => {
 // detail comments
 const get = async (req, res) => {
     const { commentId } = req.query;
+    const { customId } = req?.user;
+
     try {
         const result = await prisma.comments.findFirst({
             where: {
-                id: commentId
+                id: commentId,
+                is_deleted: null
             },
             include: {
-                comments_likes: true,
-                children: {
-                    include: {
-                        user: true
-                    },
-                    orderBy: {
-                        created_at: "asc"
+                user: true,
+                comments_likes: {
+                    where: {
+                        user_custom_id: customId
                     }
                 },
-                user: true
-            },
-            orderBy: {
-                created_at: "desc"
+                children: {
+                    orderBy: {
+                        created_at: "asc"
+                    },
+                    where: {
+                        is_deleted: null
+                    },
+                    include: {
+                        user: true
+                    }
+                },
+                _count: {
+                    select: {
+                        comments_likes: true
+                    }
+                }
             }
         });
 
-        res.json(result);
+        const childrenCount = await prisma.comments.count({
+            where: {
+                parent_id: commentId,
+                is_deleted: null
+            }
+        });
+
+        res.json({
+            ...result,
+            _count: { ...result?._count, children: childrenCount }
+        });
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
@@ -320,7 +374,28 @@ const create = async (req, res) => {
             }
         }
 
-        res.json(result);
+        // get the last fucking id
+        const hasil = await prisma.comments.findUnique({
+            where: {
+                id: result?.id
+            },
+            include: {
+                user: true,
+                comments_likes: {
+                    where: {
+                        user_custom_id: customId
+                    }
+                },
+                _count: {
+                    select: {
+                        children: true,
+                        comments_likes: true
+                    }
+                }
+            }
+        });
+
+        res.json(hasil);
     } catch (error) {
         console.log(error);
         res.json({ code: 400, message: "Internal Server Error" });
@@ -410,7 +485,47 @@ const update = async (req, res) => {
             }
         }
 
-        res.json({ code: 200, message: "success" });
+        const result = await prisma.comments.findUnique({
+            where: {
+                id: commentId
+            },
+            include: {
+                user: true,
+                comments_likes: {
+                    where: {
+                        user_custom_id: customId
+                    }
+                },
+                children: {
+                    orderBy: {
+                        created_at: "asc"
+                    },
+                    where: {
+                        is_deleted: null
+                    },
+                    include: {
+                        user: true
+                    }
+                },
+                _count: {
+                    select: {
+                        comments_likes: true
+                    }
+                }
+            }
+        });
+
+        const childrenCount = await prisma.comments.count({
+            where: {
+                parent_id: commentId,
+                is_deleted: null
+            }
+        });
+
+        res.json({
+            ...result,
+            _count: { ...result?._count, children: childrenCount }
+        });
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
@@ -421,34 +536,17 @@ const remove = async (req, res) => {
     const { commentId } = req.query;
     const { customId } = req.user;
     try {
-        const result = await prisma.comments.findUnique({
+        await prisma.comments.updateMany({
             where: {
-                id: commentId
+                id: commentId,
+                user_custom_id: customId,
+                is_deleted: null
             },
-            include: {
-                children: true
+            data: {
+                is_deleted: new Date()
             }
         });
-
-        if (result?.parent_id === null && result?.children?.length !== 0) {
-            await prisma.comments.update({
-                where: {
-                    id: commentId
-                },
-                data: {
-                    comment: "<i>Pesan telah dihapus</i>"
-                }
-            });
-        } else {
-            await prisma.comments.deleteMany({
-                where: {
-                    user_custom_id: customId,
-                    id: commentId
-                }
-            });
-        }
-
-        res.json({ code: 200, message: "success" });
+        res.json(commentId);
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });

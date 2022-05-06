@@ -1,18 +1,5 @@
-import {
-    Avatar,
-    Button,
-    Comment,
-    Divider,
-    Form,
-    List,
-    message,
-    Popconfirm,
-    Space,
-    Spin
-} from "antd";
+import { Comment, Divider, List, message, Spin } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
-import moment from "moment";
-import "moment/locale/id";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -24,236 +11,13 @@ import {
     getComments,
     likes,
     removeComment,
-    updateComment,
-    uploads
+    updateComment
 } from "../../services/main.services";
 import CustomRichTextEditor from "./CustomRichTextEditor";
-import RichTextEditor from "./RichTextEditor";
 import MComment from "./semantic/MComment";
 import MListLoading from "./semantic/MListLoading";
 
-moment.locale("id");
-
-const filterValue = (commentId, userId, items) => {
-    return items?.find(
-        (item) =>
-            item?.comment_id === commentId && item?.user_custom_id === userId
-    )?.value;
-};
-
-const hasLike = (commentId, userId, items) => {
-    const likeValue = items?.find(
-        (item) =>
-            item?.comment_id === commentId && item?.user_custom_id === userId
-    )?.value;
-
-    return likeValue === 1 ? true : false;
-};
-
-const hasDislike = (commentId, userId, items) => {
-    const dislikeValue = items?.find(
-        (item) =>
-            item?.comment_id === commentId && item?.user_custom_id === userId
-    )?.value;
-
-    return dislikeValue === -1 ? true : false;
-};
-
-const Editor = ({
-    main,
-    onChange,
-    onSubmit,
-    submitting,
-    value,
-    onCancel,
-    handleUpload,
-    buttonText = "Kirim",
-    placeholder = "Apa yang ingin anda sampaikan?"
-}) => {
-    const upload = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("image", file);
-            const result = await uploads(formData);
-            return result;
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    return (
-        <div>
-            <Form.Item>
-                <RichTextEditor
-                    onImageUpload={upload}
-                    style={{ minHeight: 180 }}
-                    labels={placeholder}
-                    radius="md"
-                    onChange={onChange}
-                    controls={[
-                        [
-                            "bold",
-                            "italic",
-                            "underline",
-                            "link",
-                            "orderedList",
-                            "unorderedList"
-                        ],
-                        ["alignCenter", "alignLeft", "alignRight"]
-                    ]}
-                    value={value}
-                />
-            </Form.Item>
-            <Form.Item>
-                <Space>
-                    <Button
-                        htmlType="submit"
-                        loading={submitting}
-                        onClick={onSubmit}
-                        type="primary"
-                    >
-                        {buttonText}
-                    </Button>
-                    {!main && <Button onClick={onCancel}>Batal</Button>}
-                </Space>
-            </Form.Item>
-        </div>
-    );
-};
-const ChildrenComment = ({ data, handleRemove, handleUpdate, user }) => {
-    const [editId, setEditId] = useState();
-    const [comment, setComment] = useState();
-
-    const onCancel = () => {
-        setEditId(null);
-    };
-
-    return (
-        <div>
-            {data?.length > 0 ? (
-                <List
-                    itemLayout="horizontal"
-                    size="small"
-                    header={`${data?.length} balasan`}
-                    dataSource={data}
-                    rowKey={(row) => row?.id}
-                    renderItem={(item) => {
-                        return (
-                            <li>
-                                <Comment
-                                    avatar={
-                                        <Avatar
-                                            shape="square"
-                                            src={item?.user?.image}
-                                        />
-                                    }
-                                    actions={[
-                                        <>
-                                            {user?.user?.id ===
-                                                item?.user_custom_id && (
-                                                <span
-                                                    onClick={() => {
-                                                        setEditId(item?.id);
-                                                        setComment(
-                                                            item?.comment
-                                                        );
-                                                    }}
-                                                >
-                                                    Edit
-                                                </span>
-                                            )}
-                                        </>,
-
-                                        <>
-                                            {user?.user?.id ===
-                                                item?.user_custom_id && (
-                                                <Popconfirm
-                                                    title="Apakah anda yakin ingin menghapus"
-                                                    onConfirm={() =>
-                                                        handleRemove(item?.id)
-                                                    }
-                                                >
-                                                    <span>Hapus</span>
-                                                </Popconfirm>
-                                            )}
-                                        </>
-                                    ]}
-                                    author={item?.user?.username}
-                                    content={
-                                        <>
-                                            {item?.id === editId ? (
-                                                <CustomRichTextEditor
-                                                    onCancel={onCancel}
-                                                    text={comment}
-                                                    setText={setComment}
-                                                    handleSubmit={async () => {
-                                                        await handleUpdate({
-                                                            id: item?.id,
-                                                            comment: comment
-                                                        });
-                                                        setEditId(null);
-                                                    }}
-                                                    buttonText="Edit"
-                                                />
-                                            ) : (
-                                                <div
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: item?.comment
-                                                    }}
-                                                />
-                                            )}
-                                        </>
-                                    }
-                                    datetime={moment(
-                                        item?.created_at
-                                    ).fromNow()}
-                                />
-                            </li>
-                        );
-                    }}
-                />
-            ) : null}
-        </div>
-    );
-};
-
-const ListComments = ({ data, user, mutation, sort }) => {
-    const [id, setId] = useState(null);
-    const [editId, setEditId] = useState(null);
-
-    const handleShowEditor = (currentId) => {
-        setId(currentId);
-        setComment("");
-    };
-
-    const [comment, setComment] = useState("");
-    const [editComment, setEditComment] = useState("");
-
-    const handleSubmit = async (id) => {
-        const data = { parent_id: id, comment };
-        if (!comment) {
-            return;
-        } else {
-            await mutation.mutateAsync(data);
-            setComment("");
-            setId(null);
-            setVisibleChildrenComment(id);
-        }
-    };
-
-    const handleCancel = () => setId(null);
-    const handleCancelEdit = () => setEditId(null);
-
-    const [visibleChildrenComment, setVisibleChildrenComment] = useState(null);
-
-    const toggleChildrenComment = (id) => {
-        if (visibleChildrenComment === id) {
-            setVisibleChildrenComment(null);
-        } else {
-            setVisibleChildrenComment(id);
-        }
-    };
-
+const ListComments = ({ data, user, sort }) => {
     return (
         <div>
             {data?.length ? (
@@ -263,19 +27,23 @@ const ListComments = ({ data, user, mutation, sort }) => {
                     size="small"
                     rowKey={(row) => row?.id}
                     renderItem={(item) => (
-                        <MComment
-                            sort={sort}
-                            id={item?.id}
-                            key={item?.id}
-                            image={item?.user?.image}
-                            comment={item?.comment}
-                            hasAction={item?.user?.custom_id === user?.user?.id}
-                            totalComments={item?._count?.children}
-                            totalLikes={item?._count?.comments_likes}
-                            isLike={item?.comments_likes?.length}
-                            date={item?.created_at}
-                            username={item?.user?.username}
-                        />
+                        <List.Item>
+                            <MComment
+                                sort={sort}
+                                id={item?.id}
+                                key={item?.id}
+                                image={item?.user?.image}
+                                comment={item?.comment}
+                                hasAction={
+                                    item?.user?.custom_id === user?.user?.id
+                                }
+                                totalComments={item?._count?.children}
+                                totalLikes={item?._count?.comments_likes}
+                                isLike={!!item?.comments_likes?.length}
+                                date={item?.created_at}
+                                username={item?.user?.username}
+                            />
+                        </List.Item>
                     )}
                 />
             ) : null}
@@ -308,18 +76,43 @@ const UserComments = ({ sort }) => {
         {
             getNextPageParam: (pageParams) =>
                 pageParams?.nextCursor ?? undefined,
-            enabled: !!sort,
-            refetchOnWindowFocus: false
+            enabled: !!sort
         }
     );
 
     const queryClient = useQueryClient();
 
     const createCommentMutation = useMutation((data) => createComments(data), {
-        onSuccess: () => {
-            message.success("Berhasil");
+        onSuccess: (result) => {
+            queryClient.setQueryData(
+                ["comments", "filter", sort],
+                (previous) => {
+                    const kumat = previous?.pages?.map((p) => {
+                        const data = [result, ...p?.data];
+                        console.log(data);
+                        const nextCursor = p?.nextCursor;
+
+                        const hasil = { data, nextCursor };
+
+                        return hasil;
+                    });
+
+                    return {
+                        ...previous,
+                        pages: kumat
+                    };
+                }
+            );
+
+            queryClient.invalidateQueries({
+                queryKey: ["comments", "filter"],
+                refetchActive: false
+            });
+
             setComment("");
-            queryClient.invalidateQueries("comments");
+            // console.log(hasil);
+            message.success("Berhasil");
+            // queryClient.invalidateQueries("comments");
         },
         onError: (e) => {
             console.log(e);

@@ -37,14 +37,6 @@ const CustomRichTextEditor = ({
         []
     );
 
-    const modules = useMemo(
-        () => ({
-            history: { delay: 2500, userOnly: true }
-            // syntax: true
-        }),
-        []
-    );
-
     return (
         <>
             <div>
@@ -59,7 +51,6 @@ const CustomRichTextEditor = ({
                         }
                     }}
                     sx={(theme) => ({
-                        // backgroundColor: theme.colors.gray[0],
                         "&:hover": {
                             borderColor: theme.colors.indigo
                         }

@@ -19,6 +19,9 @@ function getBasePath() {
 }
 
 module.exports = withAntdLess({
+    experimental: {
+        scrollRestoration: true
+    },
     basePath: "/pttpk-penilaian",
     publicRuntimeConfig: {
         basePath: getBasePath()
