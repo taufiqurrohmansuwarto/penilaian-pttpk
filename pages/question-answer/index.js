@@ -3,7 +3,7 @@ import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
 
 function QuestionAnswer() {
-    return <PageContainer title="Question Answer"></PageContainer>;
+    return <PageContainer title="Tanya Jawab"></PageContainer>;
 }
 
 QuestionAnswer.Auth = {

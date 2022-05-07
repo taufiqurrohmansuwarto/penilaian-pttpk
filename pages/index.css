@@ -10,3 +10,24 @@
     from {opacity:0;}
     to {opacity: 1;}
 }
+
+.doodle { 
+    position: relative; 
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url('/public/pns.png');
+    background-size: cover;
+}
+
+.doodle::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: rgba(0,0,0,0.25);
+}

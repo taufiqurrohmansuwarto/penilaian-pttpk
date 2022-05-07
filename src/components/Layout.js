@@ -144,7 +144,7 @@ const Layout = ({ children }) => {
                     }
                 }
             }}
-            title="Apps"
+            title="BKD JATIM"
             fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}

@@ -65,7 +65,6 @@ const UserComments = ({ sort }) => {
     const { data: userData } = useSession();
     const {
         data: dataComments,
-        isLoading: isLoadingComments,
         isFetchingNextPage,
         isFetching,
         fetchNextPage,
@@ -112,9 +111,7 @@ const UserComments = ({ sort }) => {
             });
 
             setComment("");
-            // console.log(hasil);
             message.success("Berhasil");
-            // queryClient.invalidateQueries("comments");
         },
         onError: (e) => {
             console.log(e);

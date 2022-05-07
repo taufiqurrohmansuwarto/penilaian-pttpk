@@ -1,6 +1,7 @@
 import { SendOutlined } from "@ant-design/icons";
 import { Alert } from "@mantine/core";
 import {
+    BackTop,
     Button,
     Card,
     Comment,
@@ -309,7 +310,9 @@ function CreateComments({ data, id }) {
                         icon={<Icon name="announcement" />}
                         title="Ingat"
                     >
-                        Berkomentar lah dengan sopan dan baik
+                        Berkomentar lah dengan sopan dan baik. Anda bisa
+                        memantau diskusi dengan cara mengklik tombol
+                        berlangganan di samping
                     </Alert>
                     <Comment
                         avatar={dataUser?.user?.image}
@@ -340,7 +343,9 @@ function CreateComments({ data, id }) {
                 </Typography.Link>
             )}
             {data?.result?.map((d) => (
-                <MyComment user={dataUser} id={id} comment={d} key={d.id} />
+                <>
+                    <MyComment user={dataUser} id={id} comment={d} key={d.id} />
+                </>
             ))}
         </Card>
     );

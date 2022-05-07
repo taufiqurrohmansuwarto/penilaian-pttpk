@@ -1,4 +1,4 @@
-import { Breadcrumb, Col, Row, Skeleton } from "antd";
+import { BackTop, Breadcrumb, Col, Row, Skeleton } from "antd";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -64,6 +64,7 @@ function Comments() {
                             data={dataComments}
                             id={router?.query?.id}
                         />
+                        <BackTop />
                     </Skeleton>
                 </Col>
                 <Col lg={{ span: 6 }}>

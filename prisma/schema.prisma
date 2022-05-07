@@ -34,6 +34,9 @@ model users {
   discussions_notifications_sender   discussions_notifications[] @relation("user_sender_discussion")
   discussions_notifications_receiver discussions_notifications[] @relation("user_receiver_discussion")
   discussions_posts_pinned_by        discussions_posts[]         @relation("user_pin")
+  discussions_pollings               discussions_pollings[]
+  messages                           messages[]
+  users_messages_mapped              users_messages_mapped[]
 }
 
 model acc_kinerja_bulanan {
@@ -269,6 +272,7 @@ model discussions_posts {
   link           String?
   user_custom_id String
   status         String?
+  conclusion     String?
   parent         discussions_posts?  @relation("SubDiscussionsPosts", fields: [parent_id], references: [id], onDelete: Cascade)
   children       discussions_posts[] @relation("SubDiscussionsPosts")
 
@@ -299,6 +303,7 @@ model discussions_posts {
   discussions_subscribes    discussions_subscribes[]
   discussions_saves         discussions_saves[]
   discussions_notifications discussions_notifications[]
+  discussions_pollings      discussions_pollings[]
 }
 
 model topics {
@@ -315,6 +320,63 @@ model discussions_posts_topics {
 
 
   @@id([discussion_id, id_topic])
+}
+
+// polling
+model discussions_pollings {
+  id             String   @id @default(cuid())
+  discussion_id  String?
+  user_custom_id String?
+  question       String?
+  due_date       DateTime @default(now()) @db.Date
+
+  created_at DateTime? @default(now()) @db.Timestamp
+
+  discussion discussions_posts? @relation(fields: [discussion_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user       users?             @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model discussions_pollings_answers {
+  id         String @id @default(cuid())
+  polling_id String
+  answer     String
+}
+
+model discussions_pollings_votes {
+  polling_id     String
+  user_custom_id String
+
+  @@id([polling_id, user_custom_id])
+}
+
+// japri
+model messages {
+  id                    String                  @id @default(cuid())
+  subject               String?
+  body                  String?
+  date                  DateTime                @default(now()) @db.Date
+  user_custom_id        String?
+  author                users?                  @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  users_messages_mapped users_messages_mapped[]
+}
+
+model message_placeholders {
+  id                    String                  @id @default(cuid())
+  placeholder           String?
+  users_messages_mapped users_messages_mapped[]
+}
+
+model users_messages_mapped {
+  id             String  @id @default(cuid())
+  message_id     String?
+  user_custom_id String?
+  placeholder_id String?
+  is_read        Boolean @default(false)
+  is_starred     Boolean @default(false)
+
+  message     messages?             @relation(fields: [message_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  placeholder message_placeholders? @relation(fields: [placeholder_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user        users?                @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model discussions_votes {

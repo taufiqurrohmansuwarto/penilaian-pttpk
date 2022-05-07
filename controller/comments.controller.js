@@ -31,15 +31,12 @@ const serialize = (result) => {
     }
 };
 
-// wait until some working shit, because prisma dont do any shit with count 'where'
-const serialie = (result) => {};
-
 const index = async (req, res) => {
     const { customId } = req.user;
     const cursor = req?.query?.cursor;
     const sort = req?.query?.sort || "terbaru";
 
-    const take = 10;
+    const take = 50;
 
     let query = {
         take,
