@@ -1,5 +1,7 @@
-import { Button, Card } from "antd";
+import { Button } from "@mantine/core";
+import { Card } from "antd";
 import { useMutation, useQueryClient } from "react-query";
+import { Icon } from "semantic-ui-react";
 import { subscribeDiscussion } from "../../services/main.services";
 
 function SubscribePost({ data, id }) {
@@ -16,11 +18,22 @@ function SubscribePost({ data, id }) {
 
     return (
         <Card>
-            {/* {JSON.stringify(id)} */}
-            <Button onClick={handleSubscribe} type="primary">
+            <Button
+                variant="default"
+                onClick={handleSubscribe}
+                leftIcon={
+                    <Icon
+                        name={
+                            data?.discussions_subscribes?.length
+                                ? "bell slash outline"
+                                : "bell outline"
+                        }
+                    />
+                }
+            >
                 {data?.discussions_subscribes?.length
-                    ? "Unsubscribe"
-                    : "Subscribe"}
+                    ? "Batal Berlangganan"
+                    : "Berlangganan"}
             </Button>
             <p>
                 {data?.discussions_subscribes?.length

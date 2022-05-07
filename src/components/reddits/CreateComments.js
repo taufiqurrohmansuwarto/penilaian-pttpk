@@ -1,8 +1,10 @@
 import { SendOutlined } from "@ant-design/icons";
+import { Alert } from "@mantine/core";
 import {
     Button,
     Card,
     Comment,
+    Divider,
     Form,
     message,
     Popconfirm,
@@ -15,13 +17,16 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { Icon } from "semantic-ui-react";
 import {
     createCommentByPost,
     deletePost,
     updatePost,
     uploads
 } from "../../../services/main.services";
+import CustomRichTextEditor from "../CustomRichTextEditor";
 import RichTextEditor from "../RichTextEditor";
+import RichTextEditorNew from "../RichTextEditorNew";
 
 const MyComment = ({ comment, user, id }) => {
     const handleUpload = async (file) => {
@@ -61,7 +66,7 @@ const MyComment = ({ comment, user, id }) => {
         setEditId(null);
         setEditComment();
     };
-    0;
+
     const queryClient = useQueryClient();
     const createCommentNestedComment = useMutation(
         (data) => createCommentByPost(data),
@@ -135,8 +140,12 @@ const MyComment = ({ comment, user, id }) => {
             datetime={
                 <>
                     <Space>
-                        <div>{moment(comment?.created_at).fromNow()}</div>
-                        <div>{comment?.is_edited && <span>diedit</span>}</div>
+                        <div>
+                            &#x2022; {moment(comment?.created_at).fromNow()}
+                        </div>
+                        <div>
+                            {comment?.is_edited && <span>&#x2022; diedit</span>}
+                        </div>
                     </Space>
                 </>
             }
@@ -166,13 +175,12 @@ const MyComment = ({ comment, user, id }) => {
             content={
                 <>
                     {editId === comment?.id ? (
-                        <Editor
-                            onCancel={handleCancelEdit}
-                            handleUpload={handleUpload}
-                            value={editComment}
-                            onChange={setEditComment}
+                        <CustomRichTextEditor
+                            handleSubmit={handleUpdate}
+                            text={editComment}
+                            setText={setEditComment}
                             buttonText="Edit"
-                            onSubmit={handleUpdate}
+                            onCancel={handleCancelEdit}
                         />
                     ) : (
                         <div
@@ -200,12 +208,11 @@ const MyComment = ({ comment, user, id }) => {
                         </div>
                     }
                 >
-                    <Editor
+                    <CustomRichTextEditor
                         onCancel={handleCancel}
-                        handleUpload={handleUpload}
-                        value={nestedComment}
-                        onChange={setNestedComment}
-                        onSubmit={() => handleSubmitNested(comment?.id)}
+                        handleSubmit={() => handleSubmitNested(comment?.id)}
+                        text={nestedComment}
+                        setText={setNestedComment}
                     />
                 </Comment>
             )}
@@ -275,7 +282,7 @@ function CreateComments({ data, id }) {
                 setComment("");
                 message.success("Sukses berkomentar");
             },
-            onError: (e) => message.error("Error")
+            onError: () => message.error("Error")
         }
     );
 
@@ -291,35 +298,36 @@ function CreateComments({ data, id }) {
         }
     };
 
-    const handleUpload = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("image", file);
-            const result = await uploads(formData);
-            return result;
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     const router = useRouter();
 
     return (
         <Card>
             {!router?.query?.target ? (
-                <Comment
-                    avatar={dataUser?.user?.image}
-                    content={
-                        <Editor
-                            main={true}
-                            value={comment}
-                            onChange={setComment}
-                            submitting={createCommentsInPost?.isLoading}
-                            onSubmit={handleSubmit}
-                            handleUpload={handleUpload}
-                        />
-                    }
-                />
+                <>
+                    <Alert
+                        color="yellow"
+                        icon={<Icon name="announcement" />}
+                        title="Ingat"
+                    >
+                        Berkomentar lah dengan sopan dan baik
+                    </Alert>
+                    <Comment
+                        avatar={dataUser?.user?.image}
+                        content={
+                            <>
+                                <CustomRichTextEditor
+                                    main
+                                    text={comment}
+                                    buttonText="Submit Komentar"
+                                    setText={setComment}
+                                    handleSubmit={handleSubmit}
+                                    placeholder="Mau komentar apa?"
+                                />
+                            </>
+                        }
+                    />
+                    <Divider />
+                </>
             ) : (
                 <Typography.Link
                     onClick={() =>

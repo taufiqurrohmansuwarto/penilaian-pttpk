@@ -254,11 +254,14 @@ function Posts({ data, user, canEditRemove }) {
             rowKey={(row) => row?.id}
             renderItem={(item) => {
                 return (
-                    <List.Item>
-                        <Paper p="lg" radius="sm" shadow="xs">
-                            <CustomCard data={item} user={user} />
-                        </Paper>
-                    </List.Item>
+                    <Paper
+                        p="lg"
+                        style={{ marginTop: 10 }}
+                        radius="xs"
+                        shadow="md"
+                    >
+                        <CustomCard data={item} user={user} />
+                    </Paper>
                 );
             }}
         />

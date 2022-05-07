@@ -3,7 +3,7 @@ import React from "react";
 
 function ParticipantsDiscussion({ users }) {
     return (
-        <Card title="Comment Participants">
+        <Card title="Peserta Diskusi">
             <Avatar.Group maxCount={5}>
                 {users?.map((user) => {
                     return (

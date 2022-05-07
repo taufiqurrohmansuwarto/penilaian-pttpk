@@ -1,5 +1,5 @@
-import { Avatar, Button, Divider, Space } from "antd";
-import { transform } from "lodash";
+import { Button } from "@mantine/core";
+import { Space } from "antd";
 import { useMemo } from "react";
 import { findUsers, uploads } from "../../services/main.services";
 import RichTextEditor from "./RichTextEditor";
@@ -10,7 +10,7 @@ const CustomRichTextEditor = ({
     handleSubmit,
     submitting,
     buttonText = "Submit",
-    main,
+    main = false,
     onCancel,
     placeholder = ""
 }) => {
@@ -73,14 +73,14 @@ const CustomRichTextEditor = ({
                 />
             </div>
             <Space>
-                <Button
-                    type="primary"
-                    loading={submitting}
-                    onClick={handleSubmit}
-                >
+                <Button color="grape" onClick={handleSubmit}>
                     {buttonText}
                 </Button>
-                {!main && <Button onClick={onCancel}>Batal</Button>}
+                {!main && (
+                    <Button variant="outline" onClick={onCancel}>
+                        Batal
+                    </Button>
+                )}
             </Space>
         </>
     );

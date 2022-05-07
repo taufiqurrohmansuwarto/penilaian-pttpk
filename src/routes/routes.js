@@ -1,16 +1,20 @@
 import {
     CommentOutlined,
-    MessageOutlined,
-    UserOutlined
+    ShareAltOutlined,
+    TeamOutlined
 } from "@ant-design/icons";
 
 export default {
     routes: [
-        {},
         {
             path: "/feeds",
-            name: " Feedback",
-            icon: <MessageOutlined />
+            name: " Beranda",
+            icon: <ShareAltOutlined />
+        },
+        {
+            path: "/question-answer",
+            name: " Tanya Jawab",
+            icon: <TeamOutlined />
         },
         {
             path: "/discussions",

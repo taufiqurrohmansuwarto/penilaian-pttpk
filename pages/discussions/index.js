@@ -1,4 +1,4 @@
-import { AlertOutlined, FileAddOutlined } from "@ant-design/icons";
+import { FileAddOutlined } from "@ant-design/icons";
 import { Alert, Button } from "@mantine/core";
 import { BackTop, Card, Col, Row, Spin } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useInfiniteQuery } from "react-query";
+import { Icon } from "semantic-ui-react";
 import { getPosts } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
@@ -63,7 +64,7 @@ const Discussions = ({ data }) => {
                         color="green"
                         variant="filled"
                         style={{ marginBottom: 8 }}
-                        icon={<AlertOutlined />}
+                        icon={<Icon name="announcement" />}
                     >
                         Gunakan forum diskusi untuk mendiskusikan sesuatu. Kalau
                         suka diupvote (tekan tombol naik)

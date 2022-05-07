@@ -8,6 +8,8 @@ import { Card, Comment, Typography } from "antd";
 import { useRouter } from "next/router";
 import { useMutation, useQueryClient } from "react-query";
 import { downvotePost, upvotePost } from "../../../../services/main.services";
+import "moment/locale/id";
+moment.locale("id");
 
 const CardPostNew = ({ data, user }) => {
     const router = useRouter();
@@ -83,10 +85,10 @@ const CardPostNew = ({ data, user }) => {
             <Comment
                 avatar={data?.user?.image}
                 author={data?.user?.username}
-                datetime={moment(data?.created_at).fromNow()}
+                datetime={<>&#x2022; {moment(data?.created_at).fromNow()}</>}
                 content={
                     <>
-                        <Typography.Title level={5} style={{ marginTop: 14 }}>
+                        <Typography.Title level={5}>
                             {data?.title}
                         </Typography.Title>
                         <div

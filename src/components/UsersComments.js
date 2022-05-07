@@ -1,3 +1,4 @@
+import { Alert } from "@mantine/core";
 import { Comment, Divider, List, message, Spin } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 import { useSession } from "next-auth/react";
@@ -5,6 +6,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
+import { Antenna } from "tabler-icons-react";
 import {
     createComments,
     dislikes,
@@ -171,12 +173,16 @@ const UserComments = ({ sort }) => {
 
     return (
         <>
+            <Alert my="xs" title="Perhatian" icon={<Antenna />} color="yellow">
+                Kamu bisa memention orang dengan menambahkan @ di kotak komentar
+            </Alert>
+
             <Comment
                 avatar={userData?.user?.image}
                 content={
                     <>
                         <CustomRichTextEditor
-                            placeholder="Apa yang ingin kamu sampaikan??"
+                            placeholder="Apa yang ingin kamu tanyakan atau bagikan??"
                             text={comment}
                             main={true}
                             setText={setComment}
