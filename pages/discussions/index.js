@@ -1,14 +1,17 @@
-import { FileAddOutlined } from "@ant-design/icons";
-import { Alert, Button, Card, Col, Row, Skeleton, Space } from "antd";
+import { AlertOutlined, FileAddOutlined } from "@ant-design/icons";
+import { Alert, Button } from "@mantine/core";
+import { BackTop, Card, Col, Row, Spin } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useInfiniteQuery } from "react-query";
 import { getPosts } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
 import Posts from "../../src/components/reddits/Cards/Posts";
+import MListLoading from "../../src/components/semantic/MListLoading";
 
 const Discussions = ({ data }) => {
     const filter = ["terbaru", "vote", "populer"];
@@ -23,7 +26,8 @@ const Discussions = ({ data }) => {
         isLoading: loadingDataPosts,
         isFetchingNextPage,
         fetchNextPage,
-        hasNextPage
+        hasNextPage,
+        isFetching
     } = useInfiniteQuery(
         ["posts", selectedFilter],
         ({ pageParam }) => {
@@ -50,36 +54,32 @@ const Discussions = ({ data }) => {
         router.push("/discussions/submit");
     };
 
-    const createCommunities = () => {
-        router.push("/discussions/komunitas/create");
-    };
-
     return (
         <PageContainer title="Diskusi" subTitle="Untuk forum dan diskusi">
             <Row>
-                <Col lg={{ span: 18 }} xs={24} style={{ marginBottom: 10 }}>
+                <Col lg={{ span: 10, offset: 6 }} xs={{ span: 24 }}>
                     <Alert
-                        type="info"
-                        showIcon
-                        message="Perhatian"
-                        description="Minta tolong mungkin bisa dicoba untuk membuat diskusi baru. Mungkin sekedar sharing-sharing permasalahan di kepegawaian atau hal yang lain supaya aplikasi tidak membosankan. Ndak usah takut. Dan jangan lupa share ke temen2 ya kalau ada aplikasi ini. PNS dan PTTPK bisa masuk kok jadi bisa saling berinteraksi"
-                    />
-                </Col>
-            </Row>
+                        title="Perhatian"
+                        color="green"
+                        variant="filled"
+                        style={{ marginBottom: 8 }}
+                        icon={<AlertOutlined />}
+                    >
+                        Gunakan forum diskusi untuk mendiskusikan sesuatu. Kalau
+                        suka diupvote (tekan tombol naik)
+                    </Alert>
+                    <Button
+                        onClick={createPost}
+                        variant="white"
+                        leftIcon={<FileAddOutlined />}
+                    >
+                        Buat Diskusi
+                    </Button>
 
-            <Space style={{ marginBottom: 8 }}>
-                <Button
-                    onClick={createPost}
-                    type="primary"
-                    icon={<FileAddOutlined />}
-                >
-                    Diskusi
-                </Button>
-            </Space>
-
-            <Row>
-                <Col lg={18} xs={24}>
-                    <Card size="small" style={{ marginBottom: 8 }}>
+                    <Card
+                        size="small"
+                        style={{ marginBottom: 8, marginTop: 8 }}
+                    >
                         {filter?.map((f) => (
                             <CheckableTag
                                 key={f}
@@ -92,31 +92,30 @@ const Discussions = ({ data }) => {
                             </CheckableTag>
                         ))}
                     </Card>
-                    {dataPosts?.pages?.map((page) => (
-                        <React.Fragment key={page?.nextCursor}>
-                            <Posts
-                                data={page?.data}
-                                isFetchingNextPage={isFetchingNextPage}
-                                loading={loadingDataPosts}
-                                hasNextPage={hasNextPage}
-                                fetchNextPage={fetchNextPage}
-                                user={userData}
-                            />
-                        </React.Fragment>
-                    ))}
-                    {hasNextPage && (
-                        <Button
-                            style={{
-                                width: "100%",
-                                marginTop: 10,
-                                marginBottom: 10
-                            }}
-                            block
-                            onClick={() => fetchNextPage()}
-                        >
-                            Selanjutnya
-                        </Button>
-                    )}
+                    <MListLoading loading={isFetching}>
+                        {dataPosts?.pages?.map((page) => (
+                            <React.Fragment key={page?.nextCursor}>
+                                <InfiniteScroll
+                                    next={fetchNextPage}
+                                    hasMore={hasNextPage}
+                                    loader={
+                                        isFetchingNextPage ? <Spin /> : null
+                                    }
+                                    dataLength={page?.data?.length}
+                                >
+                                    <Posts
+                                        data={page?.data}
+                                        isFetchingNextPage={isFetchingNextPage}
+                                        loading={loadingDataPosts}
+                                        hasNextPage={hasNextPage}
+                                        fetchNextPage={fetchNextPage}
+                                        user={userData}
+                                    />
+                                </InfiniteScroll>
+                            </React.Fragment>
+                        ))}
+                    </MListLoading>
+                    <BackTop />
                 </Col>
             </Row>
         </PageContainer>

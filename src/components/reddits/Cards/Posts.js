@@ -1,8 +1,10 @@
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
-    CommentOutlined
+    CommentOutlined,
+    SaveOutlined
 } from "@ant-design/icons";
+import { Paper, Spoiler } from "@mantine/core";
 import {
     Card,
     Comment,
@@ -26,7 +28,7 @@ import {
 } from "../../../../services/main.services";
 import RichTextEditorNew from "../../RichTextEditorNew";
 
-function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
+function Posts({ data, user, canEditRemove }) {
     const router = useRouter();
 
     const CustomCard = ({ data }) => {
@@ -175,20 +177,26 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
                 <Comment
                     avatar={data?.user?.image}
                     author={data?.user?.username}
-                    datetime={moment(data?.created_at).fromNow()}
+                    datetime={
+                        <>&#x2022; {moment(data?.created_at).fromNow()}</>
+                    }
                     content={
                         <>
-                            <Typography.Title
-                                level={5}
-                                style={{ marginTop: 14 }}
-                            >
+                            <Typography.Title level={5}>
                                 {data?.title}
                             </Typography.Title>
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: data?.content
-                                }}
-                            />
+                            <Spoiler
+                                maxHeight={120}
+                                showLabel="Show more"
+                                hideLabel="Hide"
+                                transitionDuration={0}
+                            >
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: data?.content
+                                    }}
+                                />
+                            </Spoiler>
                         </>
                     }
                     actions={[
@@ -208,6 +216,10 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
                             <span style={{ marginLeft: 4 }}>
                                 {data?._count?.children_comments} Komentar
                             </span>
+                        </span>,
+                        <span>
+                            <SaveOutlined />
+                            <span style={{ marginLeft: 4 }}>Simpan</span>
                         </span>,
                         <>
                             {canEditRemove && (
@@ -238,19 +250,15 @@ function Posts({ data, loading, isFetchingNextPage, user, canEditRemove }) {
         <List
             dataSource={data}
             itemLayout="horizontal"
-            grid={{ column: 1, gutter: [8, 8] }}
+            grid={{ column: 1 }}
             rowKey={(row) => row?.id}
             renderItem={(item) => {
                 return (
-                    <Card>
-                        <Skeleton
-                            loading={loading || isFetchingNextPage}
-                            active
-                            avatar
-                        >
+                    <List.Item>
+                        <Paper p="lg" radius="sm" shadow="xs">
                             <CustomCard data={item} user={user} />
-                        </Skeleton>
-                    </Card>
+                        </Paper>
+                    </List.Item>
                 );
             }}
         />
