@@ -1,5 +1,6 @@
 import {
     CommentOutlined,
+    MailOutlined,
     ShareAltOutlined,
     TeamOutlined
 } from "@ant-design/icons";
@@ -12,14 +13,19 @@ export default {
             icon: <ShareAltOutlined />
         },
         {
+            path: "/discussions",
+            name: " Diskusi",
+            icon: <CommentOutlined />
+        },
+        {
             path: "/question-answer",
             name: " Tanya Jawab",
             icon: <TeamOutlined />
         },
         {
-            path: "/discussions",
-            name: " Diskusi",
-            icon: <CommentOutlined />
+            path: "/mails/inbox",
+            name: " Pesan",
+            icon: <MailOutlined />
         }
     ]
 };

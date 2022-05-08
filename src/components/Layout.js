@@ -1,6 +1,11 @@
-import { LogoutOutlined, ReadOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Dropdown, Menu, Space, Tooltip, Typography } from "antd";
-import { xorBy } from "lodash";
+import {
+    LogoutOutlined,
+    ReadOutlined,
+    UserOutlined,
+    VerifiedOutlined
+} from "@ant-design/icons";
+import { Avatar, Dropdown, Menu, Space } from "antd";
+import { uniqBy } from "lodash";
 import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -84,9 +89,11 @@ const changeRoutes = (user) => {
     return new Promise((resolve, reject) => {
         const role = user?.role;
         const group = user?.group;
+        const id = user?.id;
         const userPtt = role === "USER" && group === "PTTPK";
         const userMaster = role === "USER" && group === "MASTER";
         const userPttFasilitator = role === "FASILITATOR" && group === "PTTPK";
+        const isAdmin = id === "master|56543";
 
         const userMasterRoutes = [
             {
@@ -112,17 +119,40 @@ const changeRoutes = (user) => {
             }
         ];
 
+        const adminRoutes = [
+            {
+                path: "/admin/dashboard",
+                name: " Admin",
+                icon: <VerifiedOutlined />
+            }
+        ];
+
+        let currentRoutes = routes?.routes;
+
         if (userMaster) {
-            resolve(xorBy(routes?.routes, userMasterRoutes, "name"));
-        } else if (userPtt) {
-            resolve(xorBy(routes?.routes, userPttpkRoutes, "name"));
-        } else if (userPttFasilitator) {
-            resolve(xorBy(routes?.routes, fasilitatorRoutes, "name"));
+            currentRoutes.push(...userMasterRoutes);
+            // resolve(xorBy(routes?.routes, userMasterRoutes, "name"));
         }
+        if (userPtt) {
+            currentRoutes.push(...userPttpkRoutes);
+            // resolve(xorBy(routes?.routes, userPttpkRoutes, "name"));
+        }
+        if (userPttFasilitator) {
+            currentRoutes.push(...fasilitatorRoutes);
+            // resolve(xorBy(routes?.routes, fasilitatorRoutes, "name"));
+        }
+        if (isAdmin) {
+            currentRoutes.push(...adminRoutes);
+            // resolve(xorBy(routes?.routes), adminRoutes, "name");
+        }
+
+        // console.log(routes);
+
+        resolve(uniqBy(currentRoutes, "path"));
     });
 };
 
-const Layout = ({ children }) => {
+const Layout = ({ children, disableContentMargin = false }) => {
     const { data } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
@@ -152,7 +182,7 @@ const Layout = ({ children }) => {
             rightContentRender={() => rightContentRender(data?.user)}
             navTheme="dark"
             fixSiderbar
-            // disableContentMargin
+            disableContentMargin={disableContentMargin}
         >
             {children}
         </ProLayout>

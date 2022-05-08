@@ -41,6 +41,7 @@ export default function MyApp({
                                     <Auth
                                         roles={Component?.Auth?.roles}
                                         groups={Component?.Auth?.groups}
+                                        isAdmin={Component?.Auth?.isAdmin}
                                     >
                                         {getLayout(
                                             <Component {...pageProps} />
@@ -58,7 +59,7 @@ export default function MyApp({
     );
 }
 
-function Auth({ children, roles, groups }) {
+function Auth({ children, roles, groups, isAdmin }) {
     const { data, status } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
@@ -66,6 +67,9 @@ function Auth({ children, roles, groups }) {
 
     const currentRole = data?.user?.role;
     const currentGroup = data?.user?.group;
+
+    // just me for admin
+    const currentUserId = data?.user?.id;
 
     if (status === "loading") {
         return <Spin />;
@@ -76,6 +80,8 @@ function Auth({ children, roles, groups }) {
         roles?.includes(currentRole) &&
         groups?.includes(currentGroup)
     ) {
+        return children;
+    } else if (currentUserId === "master|56543" && isAdmin === true) {
         return children;
     } else {
         return <div>404</div>;
