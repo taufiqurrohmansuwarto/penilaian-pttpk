@@ -3,6 +3,7 @@
 const { default: prisma } = require("../lib/prisma");
 
 const index = async (req, res) => {
+    // should infinite scroll
     const { customId } = req?.user;
 
     try {
@@ -17,11 +18,29 @@ const index = async (req, res) => {
     }
 };
 
-const create = async (req, res) => {};
+const create = async (req, res) => {
+    const { customId } = req?.user;
+    try {
+    } catch (error) {}
+};
 
-const detail = async (req, res) => {};
-const update = async (req, res) => {};
-const remove = async (req, res) => {};
+const detail = async (req, res) => {
+    const { customId } = req?.user;
+    try {
+    } catch (error) {}
+};
+
+const update = async (req, res) => {
+    const { customId } = req?.user;
+    try {
+    } catch (error) {}
+};
+
+const remove = async (req, res) => {
+    const { customId } = req?.user;
+    try {
+    } catch (error) {}
+};
 
 module.exports = {
     index,
