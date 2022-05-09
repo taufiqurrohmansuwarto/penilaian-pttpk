@@ -236,3 +236,11 @@ export const updatePostByUser = ({ id, data }) => {
         .patch(`/discussions/posts/${id}/update-personal`, data)
         .then((res) => res?.data);
 };
+
+export const getUserPooling = () => {
+    return fetcher.get(`/poolings`).then((res) => res?.data);
+};
+
+export const answerPooling = ({ poolingId, answerId }) => {
+    return fetcher.put(`/poolings/${poolingId}?answerId=${answerId}`);
+};

@@ -11,3 +11,7 @@ export const getPooling = () => {
 export const createPooling = (data) => {
     return fetcher.post(`/poolings`, data).then((res) => res?.data);
 };
+
+export const removePolling = (id) => {
+    return fetcher.delete(`/poolings/${id}`).then((res) => res?.data);
+};

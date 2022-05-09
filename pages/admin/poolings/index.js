@@ -1,7 +1,7 @@
-import { Button } from "antd";
+import { Button, Skeleton } from "antd";
 import { useRouter } from "next/router";
-import { useQuery } from "react-query";
-import { getPooling } from "../../../services/admin.service";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { getPooling, removePolling } from "../../../services/admin.service";
 import AdminLayout from "../../../src/components/AdminLayout";
 import PageContainer from "../../../src/components/PageContainer";
 
@@ -11,10 +11,29 @@ function Poolings() {
 
     const gotoCreate = () => router.push("/admin/poolings/create");
 
+    const queryClient = useQueryClient();
+
+    const { mutate: remove } = useMutation((data) => removePolling(data), {
+        onSuccess: () => queryClient.invalidateQueries(["poolings"])
+    });
+
+    const handleRemove = (id) => {
+        remove(id);
+    };
+
     return (
         <PageContainer title="Pooling" subTitle="Poolingku">
-            <Button onClick={gotoCreate}>Goto Create</Button>
-            <div>{JSON.stringify(data)}</div>
+            <Skeleton loading={isLoading}>
+                <Button onClick={gotoCreate}>Goto Create</Button>
+                {data?.map((d) => (
+                    <div key={d?.id}>
+                        {JSON.stringify(d)}
+                        <Button onClick={() => handleRemove(d?.id)}>
+                            Hapus
+                        </Button>
+                    </div>
+                ))}
+            </Skeleton>
         </PageContainer>
     );
 }

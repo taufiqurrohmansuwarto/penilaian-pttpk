@@ -63,28 +63,39 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-    } catch (j) {}
+    } catch (error) {}
 };
 
 const remove = async (req, res) => {
+    const { poolingId } = req?.query;
     try {
-    } catch (j) {}
+        await prisma.poolings.delete({
+            where: {
+                id: poolingId
+            }
+        });
+        res.json({ code: 200, message: "sukses" });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
 };
 
 const answer = async (req, res) => {
-    const { answerId } = req?.query;
+    const { poolingId, answerId } = req?.query;
     const { customId } = req?.user;
     try {
         await prisma.pollings_user_answer.upsert({
             where: {
-                pooling_answer_id_user_custom_id: {
-                    user_custom_id: customId,
-                    pooling_answer_id: poolingId
+                pooling_id_user_custom_id: {
+                    pooling_id: poolingId,
+                    user_custom_id: customId
                 }
             },
             create: {
-                user_custom_id: customId,
-                pooling_answer_id: answerId
+                pooling_answer_id: answerId,
+                pooling_id: poolingId,
+                user_custom_id: customId
             },
             update: {
                 pooling_answer_id: answerId
@@ -103,7 +114,26 @@ const getQuestion = async (req, res) => {
         const result = await prisma.poolings.findMany({
             where: {
                 due_date: {
-                    lte: new Date()
+                    gte: new Date()
+                }
+            },
+            include: {
+                pollings_user_answer: {
+                    where: {
+                        user_custom_id: req?.user?.customId
+                    }
+                },
+                poolings_answers: {
+                    orderBy: {
+                        id: "asc"
+                    },
+                    include: {
+                        _count: {
+                            select: {
+                                pollings_user_answer: true
+                            }
+                        }
+                    }
                 }
             }
         });

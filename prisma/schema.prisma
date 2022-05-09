@@ -40,6 +40,7 @@ model users {
   messages                           messages[]
   users_messages_mapped              users_messages_mapped[]
   poolings                           poolings[]
+  pollings_user_answer               pollings_user_answer[]
 }
 
 model acc_kinerja_bulanan {
@@ -472,22 +473,29 @@ model poolings {
   user_custom_id String?
   created_at     DateTime  @default(now()) @db.Timestamp()
 
-  user             users?             @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
-  poolings_answers poolings_answers[]
+  user                 users?                 @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  poolings_answers     poolings_answers[]
+  pollings_user_answer pollings_user_answer[]
 }
 
 model poolings_answers {
-  id         String   @id @default(cuid())
-  pooling_id String
-  answer     String?
-  pooling    poolings @relation(fields: [pooling_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id                   String                 @id @default(cuid())
+  pooling_id           String
+  answer               String?
+  pooling              poolings               @relation(fields: [pooling_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  pollings_user_answer pollings_user_answer[]
 }
 
 model pollings_user_answer {
   pooling_answer_id String
+  pooling_id        String
   user_custom_id    String
 
-  @@id([pooling_answer_id, user_custom_id])
+  user           users            @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  pooling_answer poolings_answers @relation(fields: [pooling_answer_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  pooling        poolings         @relation(fields: [pooling_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([pooling_id, user_custom_id])
 }
 
 enum Status {
