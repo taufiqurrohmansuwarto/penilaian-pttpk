@@ -131,22 +131,16 @@ const changeRoutes = (user) => {
 
         if (userMaster) {
             currentRoutes.push(...userMasterRoutes);
-            // resolve(xorBy(routes?.routes, userMasterRoutes, "name"));
         }
         if (userPtt) {
             currentRoutes.push(...userPttpkRoutes);
-            // resolve(xorBy(routes?.routes, userPttpkRoutes, "name"));
         }
         if (userPttFasilitator) {
             currentRoutes.push(...fasilitatorRoutes);
-            // resolve(xorBy(routes?.routes, fasilitatorRoutes, "name"));
         }
         if (isAdmin) {
             currentRoutes.push(...adminRoutes);
-            // resolve(xorBy(routes?.routes), adminRoutes, "name");
         }
-
-        // console.log(routes);
 
         resolve(uniqBy(currentRoutes, "path"));
     });
