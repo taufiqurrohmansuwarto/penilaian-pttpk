@@ -160,7 +160,7 @@ const requestUpvote = async (id, userCustomid) => {
 const upvote = async (req, res) => {
     const { id } = req.query;
     const { customId } = req.user;
-    // const { vlag } = req.body;
+
     try {
         // await requestUpvote(id, customId, vlag);
 
@@ -204,6 +204,26 @@ const upvote = async (req, res) => {
             });
         }
 
+        const sum = await prisma.discussions_votes.aggregate({
+            _sum: {
+                vlag: true
+            },
+            where: {
+                discussion_post_id: id
+            }
+        });
+
+        const totalVotes = sum?._sum?.vlag === null ? 0 : sum?._sum?.vlag;
+
+        await prisma.discussions_posts.update({
+            where: {
+                id
+            },
+            data: {
+                votes: totalVotes
+            }
+        });
+
         res.json({ code: 200, message: "success" });
     } catch (error) {
         console.log(error);
@@ -214,7 +234,6 @@ const upvote = async (req, res) => {
 const downvote = async (req, res) => {
     const { id } = req.query;
     const { customId } = req.user;
-    const { vlag } = req.body;
     try {
         // await requestDownvote(id, customId, vlag);
 
@@ -257,6 +276,26 @@ const downvote = async (req, res) => {
                 }
             });
         }
+
+        const sum = await prisma.discussions_votes.aggregate({
+            _sum: {
+                vlag: true
+            },
+            where: {
+                discussion_post_id: id
+            }
+        });
+
+        const totalVotes = sum?._sum?.vlag === null ? 0 : sum?._sum?.vlag;
+
+        await prisma.discussions_posts.update({
+            where: {
+                id
+            },
+            data: {
+                votes: totalVotes
+            }
+        });
 
         res.json({ code: 200, message: "success" });
     } catch (error) {

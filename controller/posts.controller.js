@@ -81,19 +81,13 @@ const index = async (req, res) => {
 
     try {
         const result = await prisma.discussions_posts.findMany(query);
-        const sumVlag = await prisma.discussions_votes.groupBy({
-            by: ["discussion_post_id"],
-            _sum: {
-                vlag: true
-            }
-        });
 
         const nextCursor =
             result?.length < take
                 ? null
                 : result[result?.length - 1]?.id || null;
 
-        res.json({ data: serializeData(result, sumVlag), nextCursor });
+        res.json({ data: result, nextCursor });
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
