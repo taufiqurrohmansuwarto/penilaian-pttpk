@@ -31,6 +31,7 @@
         "next-plugin-antd-less": "^1.8.0",
         "next-transpile-modules": "^9.0.0",
         "node-html-parser": "^5.3.3",
+        "nodemailer": "^6.7.5",
         "pdfmake": "^0.2.5",
         "prisma": "^3.13.0",
         "react": "^17.0.2",

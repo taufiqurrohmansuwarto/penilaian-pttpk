@@ -4,7 +4,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import userRoute from "../routes/user.route";
+import adminRoute from "../routes/admin.route";
 
 const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
     ssr: false
@@ -37,7 +37,7 @@ const rightContentRender = (user) => {
     );
 };
 
-const UserLayout = ({ children, title = "", content = null }) => {
+const AdminLayout = ({ children }) => {
     const { data } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
@@ -56,7 +56,7 @@ const UserLayout = ({ children, title = "", content = null }) => {
                 return <Link href="/">{logo}</Link>;
             }}
             rightContentRender={() => rightContentRender(data?.user)}
-            route={userRoute}
+            route={adminRoute}
             navTheme="dark"
             fixedHeader
             fixSiderbar
@@ -67,4 +67,4 @@ const UserLayout = ({ children, title = "", content = null }) => {
     );
 };
 
-export default UserLayout;
+export default AdminLayout;

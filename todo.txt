@@ -93,3 +93,5 @@ penilaian approval
 
 1. NOTIFICATIONs
 
+1. create some internal trigger and external trigger
+2. tambahkan keterangan untuk penilaian dari atasan
