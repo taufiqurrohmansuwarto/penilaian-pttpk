@@ -160,9 +160,50 @@ const requestUpvote = async (id, userCustomid) => {
 const upvote = async (req, res) => {
     const { id } = req.query;
     const { customId } = req.user;
-    const { vlag } = req.body;
+    // const { vlag } = req.body;
     try {
-        await requestUpvote(id, customId, vlag);
+        // await requestUpvote(id, customId, vlag);
+
+        const result = await prisma.discussions_votes.findUnique({
+            where: {
+                discussion_post_id_user_custom_id: {
+                    discussion_post_id: id,
+                    user_custom_id: customId
+                }
+            }
+        });
+
+        if (!result) {
+            await prisma.discussions_votes.create({
+                data: {
+                    discussion_post_id: id,
+                    user_custom_id: customId,
+                    vlag: 1
+                }
+            });
+        } else if (result?.vlag === 1) {
+            await prisma.discussions_votes.delete({
+                where: {
+                    discussion_post_id_user_custom_id: {
+                        discussion_post_id: id,
+                        user_custom_id: customId
+                    }
+                }
+            });
+        } else {
+            await prisma.discussions_votes.update({
+                where: {
+                    discussion_post_id_user_custom_id: {
+                        discussion_post_id: id,
+                        user_custom_id: customId
+                    }
+                },
+                data: {
+                    vlag: 1
+                }
+            });
+        }
+
         res.json({ code: 200, message: "success" });
     } catch (error) {
         console.log(error);
@@ -175,7 +216,48 @@ const downvote = async (req, res) => {
     const { customId } = req.user;
     const { vlag } = req.body;
     try {
-        await requestDownvote(id, customId, vlag);
+        // await requestDownvote(id, customId, vlag);
+
+        const result = await prisma.discussions_votes.findUnique({
+            where: {
+                discussion_post_id_user_custom_id: {
+                    discussion_post_id: id,
+                    user_custom_id: customId
+                }
+            }
+        });
+
+        if (!result) {
+            await prisma.discussions_votes.create({
+                data: {
+                    discussion_post_id: id,
+                    user_custom_id: customId,
+                    vlag: -1
+                }
+            });
+        } else if (result?.vlag === -1) {
+            await prisma.discussions_votes.delete({
+                where: {
+                    discussion_post_id_user_custom_id: {
+                        discussion_post_id: id,
+                        user_custom_id: customId
+                    }
+                }
+            });
+        } else {
+            await prisma.discussions_votes.update({
+                where: {
+                    discussion_post_id_user_custom_id: {
+                        discussion_post_id: id,
+                        user_custom_id: customId
+                    }
+                },
+                data: {
+                    vlag: -1
+                }
+            });
+        }
+
         res.json({ code: 200, message: "success" });
     } catch (error) {
         console.log(error);

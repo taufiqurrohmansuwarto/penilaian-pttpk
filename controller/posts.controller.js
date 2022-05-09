@@ -1,5 +1,19 @@
 const { default: prisma } = require("../lib/prisma");
 
+const serialize = (data, arrSum) => {
+    const id = data?.id;
+    const result = arrSum?.find((arr) => arr?.discussion_post_id === id);
+
+    return {
+        ...data,
+        votes: result ? result?._sum?.vlag : 0
+    };
+};
+
+const serializeData = (data, arrSum) => {
+    return data?.map((d) => serialize(d, arrSum));
+};
+
 const index = async (req, res) => {
     // should be there sort
     const sort = req.query?.sort || "terbaru";
@@ -67,12 +81,19 @@ const index = async (req, res) => {
 
     try {
         const result = await prisma.discussions_posts.findMany(query);
+        const sumVlag = await prisma.discussions_votes.groupBy({
+            by: ["discussion_post_id"],
+            _sum: {
+                vlag: true
+            }
+        });
+
         const nextCursor =
             result?.length < take
                 ? null
                 : result[result?.length - 1]?.id || null;
 
-        res.json({ data: result, nextCursor });
+        res.json({ data: serializeData(result, sumVlag), nextCursor });
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
