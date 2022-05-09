@@ -77,16 +77,16 @@ function Posts({ data, user, canEditRemove }) {
         const upvoteMutation = useMutation((data) => upvotePost(data), {
             onError: (e) => console.log(e),
             onSuccess: () => {
-                queryClient.invalidateQueries("post-communities");
-                queryClient.invalidateQueries("posts");
+                queryClient.invalidateQueries(["post-communities"]);
+                queryClient.invalidateQueries(["posts"]);
             }
         });
 
         const downvoteMutation = useMutation((data) => downvotePost(data), {
             onError: (e) => console.log(e),
             onSuccess: () => {
-                queryClient.invalidateQueries("post-communities");
-                queryClient.invalidateQueries("posts");
+                queryClient.invalidateQueries(["post-communities"]);
+                queryClient.invalidateQueries(["posts"]);
             }
         });
 
@@ -94,7 +94,7 @@ function Posts({ data, user, canEditRemove }) {
             (data) => removePostByUser(data),
             {
                 onSuccess: () => {
-                    queryClient.invalidateQueries("posts");
+                    queryClient.invalidateQueries(["posts"]);
                 },
                 onError: () => message.error("Gagal")
             }
@@ -104,7 +104,7 @@ function Posts({ data, user, canEditRemove }) {
             (data) => updatePostByUser(data),
             {
                 onSuccess: () => {
-                    queryClient.invalidateQueries("posts");
+                    queryClient.invalidateQueries(["posts"]);
                 }
             }
         );

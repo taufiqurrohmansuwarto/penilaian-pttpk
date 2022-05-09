@@ -18,6 +18,8 @@ const pttpkFasilitatorClientSecret = process.env.PTTPKFASILITATOR_SECRET;
 const pttpkFasilitatorWellKnown = process.env.PTTPKFASILITATOR_WELLKNOWN;
 const pttpkFasilitatorScope = process.env.PTTPKFASILITATOR_SCOPE;
 
+import moment from "moment";
+
 const upsert = async (currentUser) => {
     try {
         const [from, currentId] = currentUser?.id?.split("|");
@@ -34,7 +36,10 @@ const upsert = async (currentUser) => {
                 image: currentUser?.image,
                 id: currentId,
                 username: currentUser?.name,
-                employee_number: currentUser?.employee_number
+                employee_number: currentUser?.employee_number,
+                email: currentUser?.email,
+                birthdate: new Date(currentUser?.birthdate),
+                last_login: new Date()
             },
             update: {
                 from,
@@ -44,7 +49,10 @@ const upsert = async (currentUser) => {
                 image: currentUser?.image,
                 id: currentId,
                 username: currentUser?.name,
-                employee_number: currentUser?.employee_number
+                employee_number: currentUser?.employee_number,
+                email: currentUser?.email,
+                birthdate: new Date(currentUser?.birthdate),
+                last_login: new Date()
             }
         });
     } catch (error) {
@@ -86,6 +94,8 @@ export default NextAuth({
                     email: profile.email,
                     image: profile.picture,
                     employee_number: employee_number || "",
+                    birthdate: profile?.birthdate || null,
+                    email: profile?.email || null,
                     role,
                     group
                 };
@@ -122,7 +132,9 @@ export default NextAuth({
                     image: profile.picture,
                     employee_number: employee_number || "",
                     role,
-                    group
+                    group,
+                    birthdate: profile?.birthdate || null,
+                    email: profile?.email || null
                 };
 
                 await upsert(currentUser);
@@ -159,6 +171,8 @@ export default NextAuth({
                         email: profile.email,
                         image: profile.picture,
                         employee_number: employee_number || "",
+                        birthdate: profile?.birthdate || null,
+                        email: profile?.email || null,
                         role,
                         group
                     };

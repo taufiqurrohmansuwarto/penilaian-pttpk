@@ -56,7 +56,11 @@ const Discussions = ({ data }) => {
     };
 
     return (
-        <PageContainer title="Diskusi" subTitle="Untuk forum dan diskusi">
+        <PageContainer
+            style={{ minHeight: "100vh" }}
+            title="Diskusi"
+            subTitle="Untuk forum dan diskusi"
+        >
             <Row>
                 <Col lg={{ span: 10, offset: 6 }} xs={{ span: 24 }}>
                     <Alert

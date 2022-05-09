@@ -1,9 +1,14 @@
 import React from "react";
 import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
+import QCard from "../../src/components/QuestionAnswer/QCard";
 
 function QuestionAnswer() {
-    return <PageContainer title="Tanya Jawab"></PageContainer>;
+    return (
+        <PageContainer style={{ minHeight: "100vh" }} title="Tanya Jawab">
+            <QCard />
+        </PageContainer>
+    );
 }
 
 QuestionAnswer.Auth = {

@@ -18,7 +18,8 @@ model users {
   group                              String?
   employee_number                    String?
   birthdate                          DateTime?                   @db.Date
-  last_login                         DateTime?                   @db.Date
+  last_login                         DateTime?                   @db.Timestamp()
+  email                              String?
   discussions_posts                  discussions_posts[]
   discussions_votes                  discussions_votes[]
   discussions_rights_user            discussions_rights[]        @relation("user")
