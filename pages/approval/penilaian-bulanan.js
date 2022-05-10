@@ -6,7 +6,6 @@ import {
     Card,
     DatePicker,
     Divider,
-    Form,
     Input,
     InputNumber,
     message,
@@ -27,6 +26,7 @@ import {
 } from "../../services/approval.service";
 import ApprovalLayout from "../../src/components/ApprovalLayout";
 import PageContainer from "../../src/components/PageContainer";
+import { Alert as MantineAlert } from "@mantine/core";
 
 const FormApprovalModal = ({
     id,
@@ -167,6 +167,15 @@ const FormApprovalModal = ({
             width={900}
             onOk={handleSubmit}
         >
+            <MantineAlert
+                color="yellow"
+                style={{ marginBottom: 8 }}
+                title="Petunjuk"
+            >
+                Anda bisa memakai Nilai random dibawah ini untuk mempercepat
+                pengisian kualitas PTTPK. Misal ingin menilai PTTPK dengan range
+                nilai 88 sampai 90.
+            </MantineAlert>
             <Space>
                 <InputNumber
                     min={0}
@@ -182,7 +191,9 @@ const FormApprovalModal = ({
                     defaultValue={0}
                     onChange={handleChangeHighValue}
                 />
-                <Button onClick={handleSetRandomValue}>Set Range Nilai</Button>
+                <Button onClick={handleSetRandomValue}>
+                    Buat Nilai Random
+                </Button>
             </Space>
             <Divider />
             <Table
@@ -299,6 +310,7 @@ function Penilaian({ data: query }) {
     return (
         <PageContainer
             title="Daftar Penilaian Bulanan"
+            style={{ minHeight: "95vh" }}
             subTitle="PTTPK"
             content={
                 <Alert
