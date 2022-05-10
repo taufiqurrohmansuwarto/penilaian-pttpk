@@ -32,19 +32,18 @@ const listPenilianBulanan = async (req, res) => {
                 bulan,
                 tahun,
                 penilaian: {
-                    aktif: true,
-                    kinerja_bulanan: {
-                        every: {
-                            bulan,
-                            tahun
-                        }
-                    }
+                    aktif: true
                 }
             },
             include: {
                 penilaian: {
                     include: {
-                        kinerja_bulanan: true
+                        kinerja_bulanan: {
+                            where: {
+                                tahun,
+                                bulan
+                            }
+                        }
                     }
                 }
             }
