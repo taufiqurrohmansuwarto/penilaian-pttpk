@@ -31,7 +31,6 @@ const listPenilianBulanan = async (req, res) => {
             where: {
                 bulan,
                 tahun,
-                sudah_verif: true,
                 penilaian: {
                     aktif: true
                 }
