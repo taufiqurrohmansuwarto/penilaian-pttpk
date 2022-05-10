@@ -13,11 +13,13 @@ const MyNavbar = () => {
 
     return (
         <Navbar height="95vh" p="xs" width={{ base: 300 }}>
-            <Navbar.Section mt="xs">
-                <Brand />
-            </Navbar.Section>
             <Navbar.Section>
-                <Button size="sm" leftIcon={<News />} onClick={gotoCreate}>
+                <Button
+                    mt="xs"
+                    size="sm"
+                    leftIcon={<News />}
+                    onClick={gotoCreate}
+                >
                     Create
                 </Button>
             </Navbar.Section>

@@ -136,7 +136,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                             onClick={handleKirimAtasan}
                             icon={<SendOutlined />}
                         >
-                            Atasan
+                            Kirim pekerjaan ke penilai
                         </Button>
                     </Space>
                 ) : (

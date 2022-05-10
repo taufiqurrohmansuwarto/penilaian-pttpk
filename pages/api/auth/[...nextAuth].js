@@ -64,7 +64,7 @@ export default NextAuth({
     },
     providers: [
         {
-            name: "SIMASTER",
+            name: "E-MASTER",
             id: "master",
             type: "oauth",
             wellKnown: masterWellKnown,

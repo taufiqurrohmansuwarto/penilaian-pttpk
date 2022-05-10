@@ -1,4 +1,4 @@
-import { Button, Group, Paper } from "@mantine/core";
+import { Button, Group, Paper, Text } from "@mantine/core";
 import { Col, Divider, Row, Space, Typography } from "antd";
 import { getProviders, signIn } from "next-auth/react";
 import { Login } from "tabler-icons-react";
@@ -16,6 +16,18 @@ export default function SignIn({ providers }) {
             >
                 <Col>
                     <Paper p="xl" shadow="xl" style={{ width: 400 }}>
+                        <Group position="apart">
+                            <img
+                                src="pemprov.png"
+                                alt=""
+                                style={{ width: 30 }}
+                            />
+                            <img
+                                src="logobkd.jpg"
+                                alt=""
+                                style={{ width: 50 }}
+                            />
+                        </Group>
                         <Group position="center">
                             <Space direction="vertical" align="center">
                                 <Typography.Title>
@@ -42,27 +54,15 @@ export default function SignIn({ providers }) {
                                             leftIcon={<Login />}
                                             onClick={() => signIn(provider.id)}
                                         >
-                                            Masuk dengan {provider.name}
+                                            Masuk dengan akun {provider.name}
                                         </Button>
                                     </div>
                                 ))}
                             </Space>
                             <Divider />
-                            <div style={{ marginTop: 10 }}>
-                                <Typography.Text type="secondary">
-                                    Version 0.0.1-a.1
-                                </Typography.Text>
-                                <img
-                                    src="logobkd.jpg"
-                                    alt=""
-                                    style={{ width: 30 }}
-                                />
-                                <div>
-                                    <Typography.Text strong>
-                                        @ Copyright BKD Provinsi Jawa Timur 2022
-                                    </Typography.Text>
-                                </div>
-                            </div>
+                            <Text size="xs">
+                                @ Copyright BKD Provinsi Jawa Timur 2022
+                            </Text>
                         </Group>
                     </Paper>
                 </Col>

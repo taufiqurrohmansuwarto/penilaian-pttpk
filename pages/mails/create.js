@@ -1,5 +1,5 @@
 import { useDebouncedValue } from "@mantine/hooks";
-import { Button, Form, Input, Select, Spin } from "antd";
+import { Button, Form, Input, PageHeader, Select, Spin } from "antd";
 import { isEmpty } from "lodash";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
@@ -51,7 +51,13 @@ const EmailForm = () => {
 };
 
 function Create() {
-    return <EmailForm />;
+    return (
+        <>
+            <PageHeader title="test" subTitle="test" />
+            <div>hello world</div>
+            <EmailForm />
+        </>
+    );
 }
 
 Create.getLayout = function getLayout(page) {
