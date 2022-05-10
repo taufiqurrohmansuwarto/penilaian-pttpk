@@ -1,6 +1,6 @@
 import React from "react";
-import Layout from "../../src/components/Layout";
-import PageContainer from "../../src/components/PageContainer";
+import Layout from "../../../src/components/Layout";
+import PageContainer from "../../../src/components/PageContainer";
 
 function Profile() {
     return (
