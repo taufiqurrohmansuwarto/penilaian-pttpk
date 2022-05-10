@@ -28,7 +28,7 @@ import {
 } from "../../../../services/main.services";
 import RichTextEditorNew from "../../RichTextEditorNew";
 
-function Posts({ data, user, canEditRemove }) {
+function Posts({ data, user, canEditRemove, sort }) {
     const router = useRouter();
 
     const CustomCard = ({ data }) => {
@@ -74,19 +74,66 @@ function Posts({ data, user, canEditRemove }) {
             }
         };
 
+        // must be change
         const upvoteMutation = useMutation((data) => upvotePost(data), {
             onError: (e) => console.log(e),
-            onSuccess: () => {
-                queryClient.invalidateQueries(["post-communities"]);
-                queryClient.invalidateQueries(["posts"]);
+            onSuccess: (result) => {
+                queryClient.setQueryData(
+                    ["posts", "filter", sort],
+                    (previous) => {
+                        const kumat = previous?.pages?.map((p) => {
+                            const data = p?.data?.map((x) =>
+                                x?.id === result?.id ? result : x
+                            );
+                            const nextCursor = p?.nextCursor;
+
+                            const hasil = { data, nextCursor };
+
+                            return hasil;
+                        });
+
+                        return {
+                            ...previous,
+                            pages: kumat
+                        };
+                    }
+                );
+
+                queryClient.invalidateQueries({
+                    queryKey: ["posts", "filter"],
+                    refetchActive: false
+                });
             }
         });
 
         const downvoteMutation = useMutation((data) => downvotePost(data), {
             onError: (e) => console.log(e),
-            onSuccess: () => {
-                queryClient.invalidateQueries(["post-communities"]);
-                queryClient.invalidateQueries(["posts"]);
+            onSuccess: (result) => {
+                queryClient.setQueryData(
+                    ["posts", "filter", sort],
+                    (previous) => {
+                        const kumat = previous?.pages?.map((p) => {
+                            const data = p?.data?.map((x) =>
+                                x?.id === result?.id ? result : x
+                            );
+                            const nextCursor = p?.nextCursor;
+
+                            const hasil = { data, nextCursor };
+
+                            return hasil;
+                        });
+
+                        return {
+                            ...previous,
+                            pages: kumat
+                        };
+                    }
+                );
+
+                queryClient.invalidateQueries({
+                    queryKey: ["posts", "filter"],
+                    refetchActive: false
+                });
             }
         });
 

@@ -18,8 +18,6 @@ const pttpkFasilitatorClientSecret = process.env.PTTPKFASILITATOR_SECRET;
 const pttpkFasilitatorWellKnown = process.env.PTTPKFASILITATOR_WELLKNOWN;
 const pttpkFasilitatorScope = process.env.PTTPKFASILITATOR_SCOPE;
 
-import moment from "moment";
-
 const upsert = async (currentUser) => {
     try {
         const [from, currentId] = currentUser?.id?.split("|");

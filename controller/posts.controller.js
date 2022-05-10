@@ -1,19 +1,5 @@
 const { default: prisma } = require("../lib/prisma");
 
-const serialize = (data, arrSum) => {
-    const id = data?.id;
-    const result = arrSum?.find((arr) => arr?.discussion_post_id === id);
-
-    return {
-        ...data,
-        votes: result ? result?._sum?.vlag : 0
-    };
-};
-
-const serializeData = (data, arrSum) => {
-    return data?.map((d) => serialize(d, arrSum));
-};
-
 const index = async (req, res) => {
     // should be there sort
     const sort = req.query?.sort || "terbaru";
@@ -29,7 +15,11 @@ const index = async (req, res) => {
         include: {
             parent: true,
             user: true,
-            discussions_votes: true,
+            discussions_votes: {
+                where: {
+                    user_custom_id: req?.user?.customId
+                }
+            },
             _count: {
                 select: {
                     children_comments: true

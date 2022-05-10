@@ -24,13 +24,12 @@ const Discussions = ({ data }) => {
 
     const {
         data: dataPosts,
-        isLoading: loadingDataPosts,
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
         isFetching
     } = useInfiniteQuery(
-        ["posts", selectedFilter],
+        ["posts", "filter", selectedFilter],
         ({ pageParam }) => {
             return getPosts(selectedFilter, pageParam);
         },
@@ -109,11 +108,9 @@ const Discussions = ({ data }) => {
                                     dataLength={page?.data?.length}
                                 >
                                     <Posts
+                                        sort={selectedFilter}
+                                        canEditRemove={false}
                                         data={page?.data}
-                                        isFetchingNextPage={isFetchingNextPage}
-                                        loading={loadingDataPosts}
-                                        hasNextPage={hasNextPage}
-                                        fetchNextPage={fetchNextPage}
                                         user={userData}
                                     />
                                 </InfiniteScroll>
