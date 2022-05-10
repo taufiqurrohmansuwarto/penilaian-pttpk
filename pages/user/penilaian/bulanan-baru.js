@@ -618,7 +618,7 @@ const BulananBaru = ({ data }) => {
                                 "DD-MM-YYYY"
                             )}
                         </Descriptions.Item>
-                        <Descriptions.Item label="Atasan Langsung (Subordinator)">
+                        <Descriptions.Item label="Penilai">
                             {dataPenilaianAktif?.atasan_langsung?.label[0]}
                         </Descriptions.Item>
                         <Descriptions.Item label="Unit Kerja">

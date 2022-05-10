@@ -177,7 +177,7 @@ const DetailPenilaian = () => {
                         {moment(data?.awal_periode).format("DD-MM-YYYY")} s/d{" "}
                         {moment(data?.akhir_periode).format("DD-MM-YYYY")}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Atasan Langsung (Subordinator)">
+                    <Descriptions.Item label="Penilai">
                         {data?.atasan_langsung?.label[0]}
                     </Descriptions.Item>
                     <Descriptions.Item label="Unit Kerja">

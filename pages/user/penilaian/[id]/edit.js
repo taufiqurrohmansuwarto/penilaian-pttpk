@@ -114,7 +114,7 @@ const EditFormPenilaian = ({
                 </Form.Item>
                 <FormPegawaiPNS
                     name="atasan_langsung"
-                    label="Atasan Langsung (Subordinator)"
+                    label="Penilai"
                     help="Ketik NIP untuk mencari PNS"
                     rules={[{ required: true, message: "tidak boleh kosong" }]}
                 />

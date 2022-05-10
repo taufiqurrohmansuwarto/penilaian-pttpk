@@ -183,7 +183,7 @@ const CreatePenilaian = () => {
                                 <InputNumber />
                             </Form.Item>
                             <FormPegawaiPNS
-                                label="Atasan Langsung (Subordinator)"
+                                label="Penilai"
                                 name="atasan_langsung"
                             />
                             <FormPegawaiPNS

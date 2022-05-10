@@ -11,6 +11,11 @@ export default {
             path: "/admin/poolings",
             name: " Pooling",
             icon: <DatabaseOutlined />
+        },
+        {
+            path: "/admin/referensi",
+            name: " Referensi",
+            icon: <DatabaseOutlined />
         }
     ]
 };
