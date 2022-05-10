@@ -98,6 +98,7 @@ const create = async (req, res) => {
                 parent_id: parentId
             }
         });
+
         res.json({ code: 200, message: "success" });
     } catch (error) {
         console.log(error);

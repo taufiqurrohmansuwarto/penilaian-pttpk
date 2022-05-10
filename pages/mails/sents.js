@@ -1,10 +1,15 @@
 import { Button, Typography } from "antd";
 import React from "react";
+import { useQuery } from "react-query";
+import { getMail } from "../../services/main.services";
 import MailLayout from "../../src/components/CustomLayout/MaiLayout";
 import Layout from "../../src/components/Layout";
 
 function Sents() {
-    return <Button type="primary">Hello</Button>;
+    const { data, isLoading } = useQuery(["mails", "sent"], () =>
+        getMail("sent")
+    );
+    return <div>{JSON.stringify(data)}</div>;
 }
 
 Sents.getLayout = function getLayout(page) {

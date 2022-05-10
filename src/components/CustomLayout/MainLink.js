@@ -47,26 +47,20 @@ const data = [
     {
         icon: <Inbox size={16} />,
         color: "blue",
-        label: "Inbox",
+        label: "Kotak Masuk",
         routes: "/mails/inbox"
     },
     {
         icon: <Send size={16} />,
         color: "teal",
-        label: "Sent",
+        label: "Terkirim",
         routes: "/mails/sents"
     },
     {
         icon: <Star size={16} />,
         color: "violet",
-        label: "Starred",
+        label: "Terbintang",
         routes: "/mails/starred"
-    },
-    {
-        icon: <Mailbox size={16} />,
-        color: "grape",
-        label: "All Mail",
-        routes: "/mails/all"
     }
 ];
 

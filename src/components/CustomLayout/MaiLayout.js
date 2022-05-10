@@ -1,7 +1,6 @@
 import { AppShell, Button, Navbar } from "@mantine/core";
 import { useRouter } from "next/router";
-import { News } from "tabler-icons-react";
-import { Brand } from "./Brand";
+import { Message2 } from "tabler-icons-react";
 import { MainLinks } from "./MainLink";
 
 const MyNavbar = () => {
@@ -17,10 +16,10 @@ const MyNavbar = () => {
                 <Button
                     mt="xs"
                     size="sm"
-                    leftIcon={<News />}
+                    leftIcon={<Message2 />}
                     onClick={gotoCreate}
                 >
-                    Create
+                    Buat Pesan
                 </Button>
             </Navbar.Section>
             <Navbar.Section grow mt="md">

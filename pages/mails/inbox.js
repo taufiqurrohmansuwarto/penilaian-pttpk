@@ -1,9 +1,15 @@
 import React from "react";
+import { useQuery } from "react-query";
+import { getMail } from "../../services/main.services";
 import MailLayout from "../../src/components/CustomLayout/MaiLayout";
 import Layout from "../../src/components/Layout";
 
 function Mails() {
-    return <div>test</div>;
+    const { data, isLoading } = useQuery(["mails", "inbox"], () =>
+        getMail("inbox")
+    );
+
+    return <div>{JSON.stringify(data)}</div>;
 }
 
 Mails.getLayout = function getLayout(page) {

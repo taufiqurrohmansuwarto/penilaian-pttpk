@@ -1,13 +1,13 @@
 import { useDebouncedValue } from "@mantine/hooks";
-import { Button, Form, Input, PageHeader, Select, Spin } from "antd";
-import { isEmpty } from "lodash";
+import { Button, Form, Input, message, Select, Spin } from "antd";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
-import { findUsers } from "../../services/main.services";
+import { useMutation, useQuery } from "react-query";
+import { findUsers, sendingEmail } from "../../services/main.services";
 import MailLayout from "../../src/components/CustomLayout/MaiLayout";
 import Layout from "../../src/components/Layout";
 
 const EmailForm = () => {
+    const [form] = Form.useForm();
     const [nama, setNama] = useState("");
     const [debounceNama] = useDebouncedValue(nama, 500);
 
@@ -20,11 +20,30 @@ const EmailForm = () => {
         }
     );
 
-    const [form] = Form.useForm();
+    const { mutate: sendMail } = useMutation((data) => sendingEmail(data), {
+        onSuccess: () => {
+            message.success("berhasil");
+            form.resetFields();
+        },
+        onError: () => message.error("gagal")
+    });
+
+    const handleFinish = (values) => {
+        sendMail(values);
+    };
 
     return (
-        <Form form={form}>
-            <Form.Item>
+        <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleFinish}
+            requiredMark={false}
+        >
+            <Form.Item
+                name="receiver"
+                label="Kirim ke"
+                rules={[{ required: true, message: "Tidak boleh kosong" }]}
+            >
                 <Select
                     showSearch
                     showArrow={false}
@@ -42,7 +61,20 @@ const EmailForm = () => {
                     ))}
                 </Select>
             </Form.Item>
-            <Form.Item></Form.Item>
+            <Form.Item
+                name="subject"
+                label="Subyek"
+                rules={[{ required: true, message: "Tidak boleh kosong" }]}
+            >
+                <Input />
+            </Form.Item>
+            <Form.Item
+                name="message"
+                label="Pesan"
+                rules={[{ required: true, message: "Tidak boleh kosong" }]}
+            >
+                <Input.TextArea />
+            </Form.Item>
             <Form.Item>
                 <Button htmlType="submit">Submit</Button>
             </Form.Item>
@@ -53,8 +85,6 @@ const EmailForm = () => {
 function Create() {
     return (
         <>
-            <PageHeader title="test" subTitle="test" />
-            <div>hello world</div>
             <EmailForm />
         </>
     );

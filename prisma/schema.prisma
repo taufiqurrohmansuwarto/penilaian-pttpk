@@ -37,11 +37,18 @@ model users {
   discussions_notifications_sender   discussions_notifications[] @relation("user_sender_discussion")
   discussions_notifications_receiver discussions_notifications[] @relation("user_receiver_discussion")
   discussions_posts_pinned_by        discussions_posts[]         @relation("user_pin")
-  discussions_pollings               discussions_pollings[]
-  messages                           messages[]
-  users_messages_mapped              users_messages_mapped[]
-  poolings                           poolings[]
-  pollings_user_answer               pollings_user_answer[]
+
+  // user_activties
+
+
+
+  discussions_pollings     discussions_pollings[]
+  messages                 messages[]
+  users_messages_mapped    users_messages_mapped[]
+  poolings                 poolings[]
+  pollings_user_answer     pollings_user_answer[]
+  user_activities_sender   user_activities[]       @relation("user_activity_sender")
+  user_activities_receiver user_activities[]       @relation("user_activity_receiver")
 }
 
 model acc_kinerja_bulanan {
@@ -171,6 +178,7 @@ model comments {
   comments_mentioned     comments_mentioned[]
   comments_notifications comments_notifications[]
   comments_likes         comments_likes[]
+  user_activities        user_activities[]
 }
 
 model comments_likes {
@@ -309,6 +317,7 @@ model discussions_posts {
   discussions_saves         discussions_saves[]
   discussions_notifications discussions_notifications[]
   discussions_pollings      discussions_pollings[]
+  user_activities           user_activities[]
 }
 
 model topics {
@@ -366,8 +375,7 @@ model messages {
 }
 
 model message_placeholders {
-  id                    String                  @id @default(cuid())
-  placeholder           String?
+  placeholder           String                  @id
   users_messages_mapped users_messages_mapped[]
 }
 
@@ -380,7 +388,7 @@ model users_messages_mapped {
   is_starred     Boolean @default(false)
 
   message     messages?             @relation(fields: [message_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  placeholder message_placeholders? @relation(fields: [placeholder_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  placeholder message_placeholders? @relation(fields: [placeholder_id], references: [placeholder], onDelete: Cascade, onUpdate: Cascade)
   user        users?                @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 }
 
@@ -497,6 +505,32 @@ model pollings_user_answer {
   pooling        poolings         @relation(fields: [pooling_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([pooling_id, user_custom_id])
+}
+
+model user_activities {
+  id                 String   @id @default(cuid())
+  discussion_post_id String?
+  comment_id         String?
+  type               String?
+  message            String?
+  created_at         DateTime @default(now())
+  sender_custom_id   String?
+  receiver_custom_id String?
+
+  discussion discussions_posts? @relation(fields: [discussion_post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  comment    comments?          @relation(fields: [comment_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sender     users?             @relation("user_activity_sender", fields: [sender_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  receiver   users?             @relation("user_activity_receiver", fields: [receiver_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+
+}
+
+model user_activities_likes {
+  user_activity_id String
+  user_custom_id   String
+  created_at       DateTime @default(now())
+
+
+  @@id([user_activity_id, user_custom_id])
 }
 
 enum Status {

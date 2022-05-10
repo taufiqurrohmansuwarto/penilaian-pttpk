@@ -244,3 +244,18 @@ export const getUserPooling = () => {
 export const answerPooling = ({ poolingId, answerId }) => {
     return fetcher.put(`/poolings/${poolingId}?answerId=${answerId}`);
 };
+
+// mail
+export const sendingEmail = (data) => {
+    return fetcher.post(`/mails`, data).then((res) => res?.data);
+};
+
+export const getMail = (type = "inbox") => {
+    return fetcher.get(`/mails?type=${type}`).then((res) => res?.data);
+};
+
+export const getActivities = (cursor = 0) => {
+    return fetcher
+        .get(`/user-activities?cursor=${cursor}`)
+        .then((res) => res?.data);
+};

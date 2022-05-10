@@ -1,6 +1,7 @@
 import { uniq } from "lodash";
 import prisma from "../lib/prisma";
 import { parse } from "node-html-parser";
+import { createActivity } from "../utils/user-activity";
 
 const serialize = (result) => {
     if (!result?.length) {
@@ -378,6 +379,7 @@ const create = async (req, res) => {
             },
             include: {
                 user: true,
+                parent: true,
                 comments_likes: {
                     where: {
                         user_custom_id: customId
@@ -391,6 +393,18 @@ const create = async (req, res) => {
                 }
             }
         });
+
+        // fucking activities
+        if (hasil.parent_id === null) {
+            await createActivity("postinganBaru", hasil.id, customId);
+        } else {
+            await createActivity(
+                "balasanPostingan",
+                hasil?.id,
+                customId,
+                hasil?.parent?.user_custom_id
+            );
+        }
 
         res.json(hasil);
     } catch (error) {

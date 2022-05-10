@@ -2,7 +2,7 @@ const { default: prisma } = require("../lib/prisma");
 const arrayToTree = require("array-to-tree");
 const flatten = require("../utils/flatten-tree");
 const rootParent = require("../utils/check-parent");
-const { isEmpty } = require("lodash");
+const { createActivity } = require("../utils/user-activity");
 
 const index = async (req, res) => {
     const { id } = req.query;
@@ -111,6 +111,31 @@ const create = async (req, res) => {
             await prisma.discussions_notifications.createMany({
                 data
             });
+        }
+
+        // cari hasil dari create
+        const hasilKu = await prisma.discussions_posts.findUnique({
+            where: {
+                id: hasil?.id
+            },
+            include: {
+                parent: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        });
+
+        if (hasilKu.parent.type === "post") {
+            await createActivity("komentarDiskusiBaru", hasilKu.id, customId);
+        } else if (hasilKu.parent.type === "comment") {
+            await createActivity(
+                "balasanKomentarDiskusi",
+                hasilKu.id,
+                customId,
+                hasilKu.parent.user_custom_id
+            );
         }
 
         res.json({ code: 200, message: "success" });

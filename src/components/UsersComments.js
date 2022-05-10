@@ -90,7 +90,6 @@ const UserComments = ({ sort }) => {
                 (previous) => {
                     const kumat = previous?.pages?.map((p) => {
                         const data = [result, ...p?.data];
-                        console.log(data);
                         const nextCursor = p?.nextCursor;
 
                         const hasil = { data, nextCursor };

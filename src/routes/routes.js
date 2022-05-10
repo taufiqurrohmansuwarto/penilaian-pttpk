@@ -2,7 +2,8 @@ import {
     CommentOutlined,
     MailOutlined,
     ShareAltOutlined,
-    TeamOutlined
+    TeamOutlined,
+    UserSwitchOutlined
 } from "@ant-design/icons";
 
 export default {
@@ -11,6 +12,11 @@ export default {
             path: "/feeds",
             name: " Beranda",
             icon: <ShareAltOutlined />
+        },
+        {
+            path: "/activities",
+            name: " Aktivitas",
+            icon: <UserSwitchOutlined />
         },
         {
             path: "/discussions",

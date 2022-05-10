@@ -4,7 +4,7 @@ import {
     CommentOutlined,
     SaveOutlined
 } from "@ant-design/icons";
-import { Paper, Spoiler } from "@mantine/core";
+import { Group, Paper, Spoiler } from "@mantine/core";
 import {
     Card,
     Comment,
