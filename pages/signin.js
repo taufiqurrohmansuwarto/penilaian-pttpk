@@ -15,7 +15,7 @@ export default function SignIn({ providers }) {
                 justify="center"
             >
                 <Col>
-                    <Paper p="xl" shadow="xl" style={{ width: 400 }}>
+                    <Paper p="xl" shadow="xl" style={{ width: 400 }} withBorder>
                         <Group position="apart">
                             <img
                                 src="pemprov.png"
@@ -36,7 +36,7 @@ export default function SignIn({ providers }) {
                                 <div>
                                     <img
                                         src="pns.png"
-                                        style={{ width: 200 }}
+                                        style={{ width: 170 }}
                                         alt=""
                                     />
                                 </div>
