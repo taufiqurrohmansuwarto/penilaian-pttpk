@@ -533,6 +533,15 @@ model user_activities_likes {
   @@id([user_activity_id, user_custom_id])
 }
 
+model announcements {
+  id             String   @id @default(cuid())
+  title          String?
+  description    String?
+  due_date       DateTime @db.Date
+  user_custom_id String?
+  created_at     DateTime @default(now())
+}
+
 enum Status {
   dikerjakan
   diajukan
