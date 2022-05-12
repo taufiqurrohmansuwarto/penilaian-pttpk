@@ -16,6 +16,12 @@ function QCard() {
     return (
         <div style={{ width: 480, margin: "auto" }}>
             <Card shadow="lg" p="lg">
+                <Group position="apart" mb="md">
+                    <Text weight={500}>Norway Fjord Adventures</Text>
+                    <Badge color="pink" variant="light">
+                        On Sale
+                    </Badge>
+                </Group>
                 <Card.Section>
                     <Image src="doodle.png" height={180} alt="norway" />
                 </Card.Section>

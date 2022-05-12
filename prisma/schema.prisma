@@ -47,8 +47,12 @@ model users {
   users_messages_mapped    users_messages_mapped[]
   poolings                 poolings[]
   pollings_user_answer     pollings_user_answer[]
-  user_activities_sender   user_activities[]       @relation("user_activity_sender")
-  user_activities_receiver user_activities[]       @relation("user_activity_receiver")
+  user_activities_sender   user_activities[]        @relation("user_activity_sender")
+  user_activities_receiver user_activities[]        @relation("user_activity_receiver")
+  hjoin_works              hjoin_works[]
+  hjoin_users_works_help   hjoin_users_works_help[]
+  hjoin_works_likes        hjoin_works_likes[]
+  hjoin_works_comments     hjoin_works_comments[]
 }
 
 model acc_kinerja_bulanan {
@@ -540,6 +544,63 @@ model announcements {
   due_date       DateTime @db.Date
   user_custom_id String?
   created_at     DateTime @default(now())
+}
+
+// hjoin
+model hjoin_actions {
+  label       String        @id
+  hjoin_works hjoin_works[]
+}
+
+model hjoin_works {
+  id             String   @id @default(cuid())
+  action_id      String?
+  caption        String?
+  location       String
+  created_at     DateTime @default(now()) @db.Timestamp()
+  updated_at     DateTime @db.Timestamp()
+  deleted_at     DateTime @db.Timestamp()
+  deleted_by     String?
+  user_custom_id String?
+
+  action                 hjoin_actions?           @relation(fields: [action_id], references: [label], onDelete: Cascade, onUpdate: Cascade)
+  user                   users?                   @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  hjoin_users_works_help hjoin_users_works_help[]
+  hjoin_works_likes      hjoin_works_likes[]
+  hjoin_works_comments   hjoin_works_comments[]
+}
+
+model hjoin_users_works_help {
+  work_id        String
+  user_custom_id String
+  status         String?
+
+  work hjoin_works @relation(fields: [work_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user users       @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([work_id, user_custom_id])
+}
+
+model hjoin_works_likes {
+  work_id        String
+  user_custom_id String
+
+  work hjoin_works @relation(fields: [work_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user users       @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([work_id, user_custom_id])
+}
+
+model hjoin_works_comments {
+  id             String       @id @default(cuid())
+  work_id        String?
+  user_custom_id String?
+  message        String?
+  work           hjoin_works? @relation(fields: [work_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user           users?       @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  created_at     DateTime     @default(now()) @db.Timestamp()
+  updated_at     DateTime     @db.Timestamp()
+  deleted_at     DateTime     @db.Timestamp()
 }
 
 enum Status {

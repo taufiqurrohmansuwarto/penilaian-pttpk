@@ -50,6 +50,7 @@ export default function SignIn({ providers }) {
                                     <div key={provider.name}>
                                         <Button
                                             variant="filled"
+                                            fullWidth
                                             color="yellow"
                                             leftIcon={<Login />}
                                             onClick={() => signIn(provider.id)}
