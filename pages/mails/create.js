@@ -76,7 +76,7 @@ const EmailForm = () => {
                 label="Pesan"
                 rules={[{ required: true, message: "Tidak boleh kosong" }]}
             >
-                <Input.TextArea rows={6} />
+                <Input.TextArea rows={10} />
             </Form.Item>
             <Form.Item>
                 <Button

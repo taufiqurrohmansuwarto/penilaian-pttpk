@@ -1,5 +1,6 @@
-import { Avatar, Card, List } from "antd";
+import { Avatar, Card, List, Typography } from "antd";
 import moment from "moment";
+import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "react-query";
 import { getMail } from "../../../services/main.services";
@@ -11,8 +12,10 @@ function Sents() {
         getMail("sent")
     );
 
+    const router = useRouter();
+
     const gotoDetail = (id) => {
-        router.push("/mails/sents/", id);
+        router.push(`/mails/sents/${id}`);
     };
 
     return (
@@ -21,19 +24,36 @@ function Sents() {
                 dataSource={data}
                 loading={isLoading}
                 key="id"
+                size="small"
                 itemLayout="horizontal"
                 renderItem={(item) => {
                     return (
                         <List.Item
                             actions={[
                                 <span>{moment(item?.data).format("lll")}</span>,
-                                <a onClick={() => gotoDetail(id)}>lihat</a>
+                                <a onClick={() => gotoDetail(item?.id)}>
+                                    lihat
+                                </a>
                             ]}
                         >
                             <List.Item.Meta
-                                avatar={<Avatar src={item?.author?.image} />}
-                                title={item?.author?.username}
-                                description={item?.body}
+                                avatar={
+                                    <Avatar
+                                        src={
+                                            item?.users_messages_mapped[0]?.user
+                                                ?.image
+                                        }
+                                    />
+                                }
+                                title={
+                                    item?.users_messages_mapped[0]?.user
+                                        ?.username
+                                }
+                                description={
+                                    <Typography.Paragraph ellipsis={true}>
+                                        {item?.body}
+                                    </Typography.Paragraph>
+                                }
                             />
                         </List.Item>
                     );

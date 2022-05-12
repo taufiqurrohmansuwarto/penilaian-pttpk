@@ -114,14 +114,16 @@ const detail = async (req, res) => {
             }
         });
 
-        await prisma.users_messages_mapped.update({
+        await prisma.users_messages_mapped.updateMany({
             where: {
-                id: mailId
+                message_id: mailId,
+                placeholder_id: "inbox"
             },
             data: {
                 is_read: true
             }
         });
+
         res.json(result);
     } catch (error) {
         console.log(error);

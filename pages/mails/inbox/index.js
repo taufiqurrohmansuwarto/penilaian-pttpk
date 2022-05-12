@@ -1,16 +1,21 @@
-import { Avatar, List, Card } from "antd";
+import { Avatar, Card, List, Typography } from "antd";
+import moment from "moment";
+import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "react-query";
-import moment from "moment";
 import { getMail } from "../../../services/main.services";
-import Layout from "../../../src/components/Layout";
 import MailLayout from "../../../src/components/CustomLayout/MaiLayout";
-import { Star } from "tabler-icons-react";
-
+import Layout from "../../../src/components/Layout";
 function Mails() {
     const { data, isLoading } = useQuery(["mails", "inbox"], () =>
         getMail("inbox")
     );
+
+    const router = useRouter();
+
+    const gotoDetail = (id) => {
+        router.push(`/mails/inbox/${id}`);
+    };
 
     return (
         <Card title="Inbox">
@@ -18,20 +23,26 @@ function Mails() {
                 dataSource={data}
                 loading={isLoading}
                 key="id"
+                size="small"
                 itemLayout="horizontal"
                 renderItem={(item) => {
                     return (
                         <List.Item
                             actions={[
                                 <span>{moment(item?.data).format("lll")}</span>,
-                                <span>Lihat</span>,
-                                <Star />
+                                <a onClick={() => gotoDetail(item?.id)}>
+                                    lihat
+                                </a>
                             ]}
                         >
                             <List.Item.Meta
                                 avatar={<Avatar src={item?.author?.image} />}
                                 title={item?.author?.username}
-                                description={item?.body}
+                                description={
+                                    <Typography.Paragraph ellipsis={true}>
+                                        {item?.body}
+                                    </Typography.Paragraph>
+                                }
                             />
                         </List.Item>
                     );
