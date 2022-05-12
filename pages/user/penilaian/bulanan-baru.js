@@ -601,60 +601,29 @@ const BulananBaru = ({ data }) => {
     };
 
     return (
-        <UserLayout
+        <PageContainer
             title="Penilaian Bulanan"
+            subTitle="PTTPK"
             content={
-                <Skeleton loading={isLoadingPenilaianAktif}>
-                    <Descriptions size="small">
-                        <Descriptions.Item label="Tahun">
-                            {dataPenilaianAktif?.tahun}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Periode">
-                            {moment(dataPenilaianAktif?.awal_periode).format(
-                                "DD-MM-YYYY"
-                            )}{" "}
-                            s/d{" "}
-                            {moment(dataPenilaianAktif?.akhir_periode).format(
-                                "DD-MM-YYYY"
-                            )}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Penilai">
-                            {dataPenilaianAktif?.atasan_langsung?.label[0]}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Unit Kerja">
-                            {dataPenilaianAktif?.skpd?.detail}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Jabatan">
-                            {dataPenilaianAktif?.jabatan?.nama}
-                        </Descriptions.Item>
-                    </Descriptions>
-                </Skeleton>
+                <Alert
+                    type="warning"
+                    message="Info"
+                    showIcon
+                    description="Untuk dapat mencetak penilaian bulanan, pastikan atasan langsung anda (PNS) masuk pada aplikasi dan menilai kinerja bulanan anda."
+                />
             }
         >
-            <PageContainer
-                title="Penilaian Bulanan"
-                subTitle="PTTPK"
-                content={
-                    <Alert
-                        type="warning"
-                        message="Info"
-                        showIcon
-                        description="Untuk dapat mencetak penilaian bulanan, pastikan atasan langsung anda (PNS) masuk pada aplikasi dan menilai kinerja bulanan anda."
+            <Card>
+                <Form.Item label="Bulan">
+                    <DatePicker.MonthPicker
+                        defaultValue={moment(`${tahun}-${bulan}`)}
+                        onChange={handleChange}
                     />
-                }
-            >
-                <Card>
-                    <Form.Item label="Bulan">
-                        <DatePicker.MonthPicker
-                            defaultValue={moment(`${tahun}-${bulan}`)}
-                            onChange={handleChange}
-                        />
-                    </Form.Item>
-                    <Divider />
-                    <Penilaian tahun={tahun} bulan={bulan} />
-                </Card>
-            </PageContainer>
-        </UserLayout>
+                </Form.Item>
+                <Divider />
+                <Penilaian tahun={tahun} bulan={bulan} />
+            </Card>
+        </PageContainer>
     );
 };
 
@@ -674,9 +643,13 @@ export const getServerSideProps = async (ctx) => {
     };
 };
 
+BulananBaru.getLayout = function getLayout(page) {
+    return <UserLayout title="Penilaian Bulanan">{page}</UserLayout>;
+};
+
 BulananBaru.Auth = {
-    groups: ["PTTPK"],
-    roles: ["USER"]
+    roles: ["USER"],
+    groups: ["PTTPK"]
 };
 
 export default BulananBaru;

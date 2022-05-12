@@ -1,15 +1,15 @@
 import { useDebouncedValue } from "@mantine/hooks";
 import { Checkbox, DatePicker, Form, Input, Modal, Select, Spin } from "antd";
 import FileSaver from "file-saver";
-import moment from "moment";
 import { isEmpty } from "lodash";
+import moment from "moment";
+import "moment/locale/id";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import {
     cariPegawaiPNS,
     cetakPenilaianBulanan
 } from "../../services/users.service";
-import "moment/locale/id";
 moment.locale("id");
 
 function FormCetakModal({ visible, onCancel, form, bulan, tahun, onClose }) {
@@ -59,12 +59,13 @@ function FormCetakModal({ visible, onCancel, form, bulan, tahun, onClose }) {
                 jabatan_penandatangan
             };
 
-            //     harus mengirim data
+            //harus mengirim data
             const hasil = await cetakPenilaianBulanan({
                 bulan,
                 tahun,
                 data
             });
+
             await FileSaver.saveAs(hasil, "bulanan.pdf");
             onClose();
         } catch (error) {

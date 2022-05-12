@@ -127,39 +127,41 @@ const Penilaian = () => {
     ];
 
     return (
-        <UserLayout title="Penilaian">
-            <PageContainer
-                title="Daftar Penilaian"
-                subTitle="PTTPK"
-                content={<PeringatanPenilaian />}
-            >
-                <Card>
-                    <Divider />
-                    <Table
-                        title={() => (
-                            <Button
-                                icon={<FileAddOutlined />}
-                                type="primary"
-                                onClick={createPenilaian}
-                            >
-                                Penilaian
-                            </Button>
-                        )}
-                        loading={isLoading}
-                        columns={columns}
-                        rowKey={(row) => row?.id}
-                        dataSource={data}
-                        pagination={false}
-                    />
-                </Card>
-            </PageContainer>
-        </UserLayout>
+        <PageContainer
+            title="Daftar Penilaian"
+            subTitle="PTTPK"
+            content={<PeringatanPenilaian />}
+        >
+            <Card>
+                <Divider />
+                <Table
+                    title={() => (
+                        <Button
+                            icon={<FileAddOutlined />}
+                            type="primary"
+                            onClick={createPenilaian}
+                        >
+                            Penilaian
+                        </Button>
+                    )}
+                    loading={isLoading}
+                    columns={columns}
+                    rowKey={(row) => row?.id}
+                    dataSource={data}
+                    pagination={false}
+                />
+            </Card>
+        </PageContainer>
     );
 };
 
 Penilaian.Auth = {
     roles: ["USER"],
     groups: ["PTTPK"]
+};
+
+Penilaian.getLayout = function getLayout(page) {
+    return <UserLayout title="Penilaian">{page}</UserLayout>;
 };
 
 export default Penilaian;

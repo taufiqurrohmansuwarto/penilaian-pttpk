@@ -32,6 +32,8 @@ const cetakPenilaianBulananUser = async (req, res) => {
     const queryTahun = req.query?.tahun || moment(new Date()).format("YYYY");
     const { body } = req;
 
+    console.log("query", { queryBulan, queryTahun });
+
     const bulan = parseInt(queryBulan);
     const tahun = parseInt(queryTahun);
 

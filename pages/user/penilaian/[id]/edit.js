@@ -271,41 +271,43 @@ const TargetTahunan = () => {
     };
 
     return (
-        <UserLayout title="Update Penilaian">
-            <PageContainer
-                title="Edit Penilaian"
-                subTitle="PTTPK"
-                breadcrumbRender={() => (
-                    <Breadcrumb>
-                        <Breadcrumb.Item>
-                            <Link href="/user/penilaian">
-                                <a>Penilaian</a>
-                            </Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>Edit Penilaian</Breadcrumb.Item>
-                    </Breadcrumb>
-                )}
+        <PageContainer
+            title="Edit Penilaian"
+            subTitle="PTTPK"
+            breadcrumbRender={() => (
+                <Breadcrumb>
+                    <Breadcrumb.Item>
+                        <Link href="/user/penilaian">
+                            <a>Penilaian</a>
+                        </Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>Edit Penilaian</Breadcrumb.Item>
+                </Breadcrumb>
+            )}
+        >
+            <Skeleton
+                loading={isLoading || isLoadingDataJabatan || isLoadingUnor}
             >
-                <Skeleton
-                    loading={isLoading || isLoadingDataJabatan || isLoadingUnor}
-                >
-                    <EditFormPenilaian
-                        form={form}
-                        data={data}
-                        loading={updatePenilaianMutation?.isLoading}
-                        dataJabatan={dataJabatan}
-                        dataUnor={dataUnor}
-                        handleSubmit={handleSubmit}
-                    />
-                </Skeleton>
-            </PageContainer>
-        </UserLayout>
+                <EditFormPenilaian
+                    form={form}
+                    data={data}
+                    loading={updatePenilaianMutation?.isLoading}
+                    dataJabatan={dataJabatan}
+                    dataUnor={dataUnor}
+                    handleSubmit={handleSubmit}
+                />
+            </Skeleton>
+        </PageContainer>
     );
 };
 
 TargetTahunan.Auth = {
     roles: ["USER"],
     groups: ["PTTPK"]
+};
+
+TargetTahunan.getLayout = function getLayout(page) {
+    return <UserLayout title="Update Penilaian">{page}</UserLayout>;
 };
 
 export default TargetTahunan;

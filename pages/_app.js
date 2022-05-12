@@ -12,8 +12,7 @@ import { MantineProvider } from "@mantine/core";
 
 export default function MyApp({
     Component,
-    pageProps: { session, ...pageProps },
-    router
+    pageProps: { session, ...pageProps }
 }) {
     // useScrollRestoration(router);
     const [queryClient] = useState(() => new QueryClient());

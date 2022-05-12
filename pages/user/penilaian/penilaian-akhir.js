@@ -328,61 +328,68 @@ function PenilaianAkhir() {
     };
 
     return (
-        <UserLayout title="Penilaian Akhir">
-            <PageContainer
-                title="Penilaian Akhir"
-                subTitle="PTTPK"
-                fixedHeader
-                content={
-                    <Alert
-                        type="warning"
-                        showIcon
-                        message="Perhatian"
-                        description="Untuk dapat mencetak penilaian tahunan/akhir. Pastikan kembali atasan langsung anda masuk pada aplikasi dan menilai penilaian akhir tahunan anda. Perlu diingat, Capaian pada penilaian akhir merupakan pekerjaan bulanan yang sudah dinilai dan diacc atasan langsung"
-                    />
-                }
-            >
-                <Skeleton loading={isLoadingDataPenilaianAktif}>
-                    <FormCetakPenilaianAkhir
-                        visible={visible}
-                        onCancel={handleCancelModal}
-                    />
-                    <div style={{ marginBottom: 8 }}>
-                        Status : {dataPenilaianAktif?.status?.toUpperCase()}
-                    </div>
-                    <Space>
-                        {dataPenilaianAktif?.status === "dikerjakan" ? (
-                            <Button onClick={handleKirimAtasan}>
-                                Kirim Atasan
+        <PageContainer
+            title="Penilaian Akhir"
+            subTitle="PTTPK"
+            fixedHeader
+            content={
+                <Alert
+                    type="warning"
+                    showIcon
+                    message="Perhatian"
+                    description="Untuk dapat mencetak penilaian tahunan/akhir. Pastikan kembali atasan langsung anda masuk pada aplikasi dan menilai penilaian akhir tahunan anda. Perlu diingat, Capaian pada penilaian akhir merupakan pekerjaan bulanan yang sudah dinilai dan diacc atasan langsung"
+                />
+            }
+        >
+            <Skeleton loading={isLoadingDataPenilaianAktif}>
+                <FormCetakPenilaianAkhir
+                    visible={visible}
+                    onCancel={handleCancelModal}
+                />
+                <div style={{ marginBottom: 8 }}>
+                    Status : {dataPenilaianAktif?.status?.toUpperCase()}
+                </div>
+                <Space>
+                    {dataPenilaianAktif?.status === "dikerjakan" ? (
+                        <Button onClick={handleKirimAtasan}>
+                            Kirim Atasan
+                        </Button>
+                    ) : (
+                        <Space>
+                            <Button onClick={handleBatalKirimAtasan}>
+                                Batal Kirim
                             </Button>
-                        ) : (
-                            <Space>
-                                <Button onClick={handleBatalKirimAtasan}>
-                                    Batal Kirim
-                                </Button>
-                                <Button
-                                    onClick={cetakPenilaianAkhir}
-                                    disabled={
-                                        dataPenilaianAktif?.status !== "diverif"
-                                    }
-                                >
-                                    Cetak
-                                </Button>
-                            </Space>
-                        )}
-                    </Space>
-                    <Divider />
-                    <DataTargetPenilaian
-                        data={dataPenilaianAktif?.target_penilaian}
-                    />
-                    <DataPekerjaanTambahan
-                        penilaianId={dataPenilaianAktif?.id}
-                        status={dataPenilaianAktif?.status}
-                    />
-                </Skeleton>
-            </PageContainer>
-        </UserLayout>
+                            <Button
+                                onClick={cetakPenilaianAkhir}
+                                disabled={
+                                    dataPenilaianAktif?.status !== "diverif"
+                                }
+                            >
+                                Cetak
+                            </Button>
+                        </Space>
+                    )}
+                </Space>
+                <Divider />
+                <DataTargetPenilaian
+                    data={dataPenilaianAktif?.target_penilaian}
+                />
+                <DataPekerjaanTambahan
+                    penilaianId={dataPenilaianAktif?.id}
+                    status={dataPenilaianAktif?.status}
+                />
+            </Skeleton>
+        </PageContainer>
     );
 }
+
+PenilaianAkhir.Auth = {
+    roles: ["USER"],
+    groups: ["PTTPK"]
+};
+
+PenilaianAkhir.getLayout = function getLayout(page) {
+    return <UserLayout title="Penilaian Akhir">{page}</UserLayout>;
+};
 
 export default PenilaianAkhir;
