@@ -1,5 +1,5 @@
 import { useDebouncedValue } from "@mantine/hooks";
-import { Button, Form, Input, message, Select, Spin } from "antd";
+import { Button, Card, Form, Input, message, Select, Spin } from "antd";
 import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { findUsers, sendingEmail } from "../../services/main.services";
@@ -20,13 +20,16 @@ const EmailForm = () => {
         }
     );
 
-    const { mutate: sendMail } = useMutation((data) => sendingEmail(data), {
-        onSuccess: () => {
-            message.success("berhasil");
-            form.resetFields();
-        },
-        onError: () => message.error("gagal")
-    });
+    const { mutate: sendMail, isLoading: sendMailLoading } = useMutation(
+        (data) => sendingEmail(data),
+        {
+            onSuccess: () => {
+                message.success("berhasil");
+                form.resetFields();
+            },
+            onError: () => message.error("gagal")
+        }
+    );
 
     const handleFinish = (values) => {
         sendMail(values);
@@ -73,10 +76,16 @@ const EmailForm = () => {
                 label="Pesan"
                 rules={[{ required: true, message: "Tidak boleh kosong" }]}
             >
-                <Input.TextArea />
+                <Input.TextArea rows={6} />
             </Form.Item>
             <Form.Item>
-                <Button htmlType="submit">Submit</Button>
+                <Button
+                    loading={sendMailLoading}
+                    type="primary"
+                    htmlType="submit"
+                >
+                    Submit
+                </Button>
             </Form.Item>
         </Form>
     );
@@ -84,9 +93,9 @@ const EmailForm = () => {
 
 function Create() {
     return (
-        <>
+        <Card title="Pesan Baru">
             <EmailForm />
-        </>
+        </Card>
     );
 }
 

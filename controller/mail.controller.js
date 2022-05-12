@@ -19,9 +19,13 @@ const index = async (req, res) => {
             }
         },
         include: {
+            author: true,
             users_messages_mapped: {
                 where: {
                     placeholder_id: "inbox"
+                },
+                include: {
+                    user: true
                 }
             }
         }
@@ -32,9 +36,13 @@ const index = async (req, res) => {
             user_custom_id: customId
         },
         include: {
+            author: true,
             users_messages_mapped: {
                 where: {
                     placeholder_id: "sent"
+                },
+                include: {
+                    user: true
                 }
             }
         }
@@ -45,8 +53,6 @@ const index = async (req, res) => {
     } else if (type === "sent") {
         query = querySent;
     }
-
-    console.log(type);
 
     try {
         const result = await prisma.messages.findMany(query);
@@ -92,9 +98,35 @@ const create = async (req, res) => {
 };
 
 const detail = async (req, res) => {
-    const { customId } = req?.user;
+    const { mailId } = req?.query;
+
     try {
-    } catch (error) {}
+        const result = await prisma.messages.findUnique({
+            where: {
+                id: mailId
+            },
+            include: {
+                users_messages_mapped: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        });
+
+        await prisma.users_messages_mapped.update({
+            where: {
+                id: mailId
+            },
+            data: {
+                is_read: true
+            }
+        });
+        res.json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
 };
 
 const update = async (req, res) => {

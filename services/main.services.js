@@ -254,6 +254,10 @@ export const getMail = (type = "inbox") => {
     return fetcher.get(`/mails?type=${type}`).then((res) => res?.data);
 };
 
+export const readMail = (id) => {
+    return fetcher.get(`/mails/${id}`).then((res) => res?.data);
+};
+
 export const getActivities = (cursor = 0) => {
     return fetcher
         .get(`/user-activities?cursor=${cursor}`)

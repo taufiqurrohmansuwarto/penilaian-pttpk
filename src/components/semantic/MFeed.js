@@ -23,11 +23,6 @@ const TypeFeed = ({
                         <a>postingan baru</a>
                     </Link>
                 </Feed.Summary>
-                <Feed.Extra text>
-                    <div
-                        dangerouslySetInnerHTML={{ __html: comment?.comment }}
-                    />
-                </Feed.Extra>
             </>
         );
     } else if (type === "balasanPostingan") {
@@ -42,11 +37,6 @@ const TypeFeed = ({
                     </Link>{" "}
                     <a>{receiver?.username}</a>
                 </Feed.Summary>
-                <Feed.Extra text>
-                    <div
-                        dangerouslySetInnerHTML={{ __html: comment?.comment }}
-                    />
-                </Feed.Extra>
             </>
         );
     } else if (type === "komentarDiskusiBaru") {
@@ -62,13 +52,6 @@ const TypeFeed = ({
                         <a>{disccussion?.parent?.title}</a>
                     </Link>{" "}
                 </Feed.Summary>
-                <Feed.Extra text>
-                    <div
-                        dangerouslySetInnerHTML={{
-                            __html: disccussion?.content
-                        }}
-                    />
-                </Feed.Extra>
             </>
         );
     } else if (type === "balasanKomentarDiskusi") {
@@ -84,13 +67,6 @@ const TypeFeed = ({
                         <a>{disccussion?.parent_comments?.title}</a>
                     </Link>
                 </Feed.Summary>
-                <Feed.Extra text>
-                    <div
-                        dangerouslySetInnerHTML={{
-                            __html: disccussion?.content
-                        }}
-                    />
-                </Feed.Extra>
             </>
         );
     } else {

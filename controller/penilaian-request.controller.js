@@ -16,8 +16,8 @@ const batalKirimTransaction = async (
                 id_penilaian: penilaianId,
                 bulan,
                 tahun,
-                pegawai_id: userCustomId,
-                id_atasan_langsung: nipAtasanLangsung
+                pegawai_id: userCustomId
+                // id_atasan_langsung: nipAtasanLangsung
             }
         });
         await prisma.kinerja_bulanan.updateMany({
