@@ -10,6 +10,10 @@ export default class _Document extends Document {
         return (
             <Html>
                 <Head />
+                {/* <meta
+                    http-equiv="Content-Security-Policy"
+                    content="upgrade-insecure-requests"
+                ></meta> */}
                 <body>
                     <Main />
                     <NextScript />
