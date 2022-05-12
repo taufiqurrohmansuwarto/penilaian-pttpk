@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { readMail } from "../../../services/main.services";
 
-function Detail({ data }) {
+function Detail() {
     const router = useRouter();
 
     const { data, isLoading } = useQuery(
