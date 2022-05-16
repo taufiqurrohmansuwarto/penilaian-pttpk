@@ -1,16 +1,18 @@
 import {
+    InteractionOutlined,
     LogoutOutlined,
     ReadOutlined,
     UserOutlined,
     VerifiedOutlined
 } from "@ant-design/icons";
-import { Avatar, Dropdown, Menu, Space } from "antd";
+import { Avatar, Dropdown, Menu, Space, Tooltip } from "antd";
 import { uniqBy } from "lodash";
 import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import routes from "../routes/routes";
+import BadgeMail from "./BadgeMail";
 import BadgeNotificationForum from "./BadgeNotificationForum";
 import BadgeNotifications from "./BadgeNotifications";
 
@@ -52,8 +54,25 @@ const rightContentRender = (user) => {
         router.push(`/account/${user?.id}`);
     };
 
+    const goMails = () => {
+        router.push("/mails/inbox");
+    };
+
+    const gotoAktivitas = () => {
+        router.push("/activities");
+    };
+
     return (
         <Space size="large">
+            <Space
+                align="center"
+                style={{ cursor: "pointer" }}
+                onClick={gotoAktivitas}
+            >
+                <Tooltip title="Aktivitas">
+                    <InteractionOutlined />
+                </Tooltip>
+            </Space>
             <Space
                 align="center"
                 style={{ cursor: "pointer" }}
@@ -68,6 +87,14 @@ const rightContentRender = (user) => {
                 onClick={gotoNotificationPage}
             >
                 <BadgeNotifications />
+            </Space>
+
+            <Space
+                align="center"
+                style={{ cursor: "pointer" }}
+                onClick={goMails}
+            >
+                <BadgeMail />
             </Space>
 
             <Dropdown overlay={menuUser(gotoAccount)}>

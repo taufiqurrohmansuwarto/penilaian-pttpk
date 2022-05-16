@@ -53,6 +53,7 @@ model users {
   hjoin_users_works_help   hjoin_users_works_help[]
   hjoin_works_likes        hjoin_works_likes[]
   hjoin_works_comments     hjoin_works_comments[]
+  hjoin_users_works_same   hjoin_users_works_same[]
 }
 
 model acc_kinerja_bulanan {
@@ -555,8 +556,10 @@ model hjoin_actions {
 model hjoin_works {
   id             String   @id @default(cuid())
   action_id      String?
+  title          String?
   caption        String?
-  location       String
+  location       String?
+  image          String?
   created_at     DateTime @default(now()) @db.Timestamp()
   updated_at     DateTime @db.Timestamp()
   deleted_at     DateTime @db.Timestamp()
@@ -568,6 +571,7 @@ model hjoin_works {
   hjoin_users_works_help hjoin_users_works_help[]
   hjoin_works_likes      hjoin_works_likes[]
   hjoin_works_comments   hjoin_works_comments[]
+  hjoin_users_works_same hjoin_users_works_same[]
 }
 
 model hjoin_users_works_help {
@@ -578,6 +582,15 @@ model hjoin_users_works_help {
   work hjoin_works @relation(fields: [work_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user users       @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
 
+  @@id([work_id, user_custom_id])
+}
+
+model hjoin_users_works_same {
+  work_id        String
+  user_custom_id String
+
+  work hjoin_works @relation(fields: [work_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user users       @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
   @@id([work_id, user_custom_id])
 }
 
@@ -592,15 +605,18 @@ model hjoin_works_likes {
 }
 
 model hjoin_works_comments {
-  id             String       @id @default(cuid())
-  work_id        String?
-  user_custom_id String?
-  message        String?
-  work           hjoin_works? @relation(fields: [work_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  user           users?       @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
-  created_at     DateTime     @default(now()) @db.Timestamp()
-  updated_at     DateTime     @db.Timestamp()
-  deleted_at     DateTime     @db.Timestamp()
+  id                String                 @id @default(cuid())
+  work_id           String?
+  user_custom_id    String?
+  parent_id         String?
+  parent_comments   hjoin_works_comments?  @relation("hjoinWorksSubComments", fields: [parent_id], references: [id], onDelete: Cascade)
+  children_comments hjoin_works_comments[] @relation("hjoinWorksSubComments")
+  message           String?
+  work              hjoin_works?           @relation(fields: [work_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user              users?                 @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  created_at        DateTime               @default(now()) @db.Timestamp()
+  updated_at        DateTime               @db.Timestamp()
+  deleted_at        DateTime               @db.Timestamp()
 }
 
 enum Status {
