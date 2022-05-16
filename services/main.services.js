@@ -263,3 +263,15 @@ export const getActivities = (cursor = 0) => {
         .get(`/user-activities?cursor=${cursor}`)
         .then((res) => res?.data);
 };
+
+export const getHJoins = (cursor = 0) => {
+    return fetcher.get(`/hjoins?cursor=${cursor}`).then((res) => res?.data);
+};
+
+export const createHJoins = (data) => {
+    return fetcher.post(`/hjoins`, data, {
+        headers: {
+            "Content-Type": "multipart/formData"
+        }
+    });
+};
