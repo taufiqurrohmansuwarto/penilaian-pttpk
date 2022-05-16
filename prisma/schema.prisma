@@ -565,6 +565,9 @@ model hjoin_works {
   deleted_at     DateTime @db.Timestamp()
   deleted_by     String?
   user_custom_id String?
+  total_likes    Int      @default(0)
+  total_links    Int      @default(0)
+  total_follows  Int      @default(0)
 
   action                 hjoin_actions?           @relation(fields: [action_id], references: [label], onDelete: Cascade, onUpdate: Cascade)
   user                   users?                   @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
