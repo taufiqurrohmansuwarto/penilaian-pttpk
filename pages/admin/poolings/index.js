@@ -52,7 +52,13 @@ function Poolings() {
             key: "action",
             render: (_, row) => (
                 <Space>
-                    <Button>Edit</Button>
+                    <Button
+                        onClick={() =>
+                            router.push(`/admin/poolings/${row?.id}`)
+                        }
+                    >
+                        Edit
+                    </Button>
                     <Button color="red" onClick={() => handleRemove(row?.id)}>
                         Hapus
                     </Button>
