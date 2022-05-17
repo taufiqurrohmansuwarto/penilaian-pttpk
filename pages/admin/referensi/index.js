@@ -3,7 +3,7 @@ import AdminLayout from "../../../src/components/AdminLayout";
 import PageContainer from "../../../src/components/PageContainer";
 
 function Referensi() {
-    return <PageContainer>test</PageContainer>;
+    return <PageContainer style={{ minHeight: "95vh" }}>test</PageContainer>;
 }
 
 Referensi.Auth = {
