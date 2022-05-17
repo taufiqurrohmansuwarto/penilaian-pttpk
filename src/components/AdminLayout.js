@@ -55,6 +55,7 @@ const AdminLayout = ({ children }) => {
             menuHeaderRender={(logo, title) => {
                 return <Link href="/">{logo}</Link>;
             }}
+            collapsed
             rightContentRender={() => rightContentRender(data?.user)}
             route={adminRoute}
             navTheme="dark"

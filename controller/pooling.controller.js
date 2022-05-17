@@ -7,7 +7,19 @@ const index = async (req, res) => {
                 user_custom_id: req?.user?.customId
             },
             include: {
-                poolings_answers: true
+                poolings_answers: true,
+                poolings_answers: {
+                    orderBy: {
+                        id: "asc"
+                    },
+                    include: {
+                        _count: {
+                            select: {
+                                pollings_user_answer: true
+                            }
+                        }
+                    }
+                }
             }
         });
 
@@ -27,6 +39,21 @@ const get = async (req, res) => {
             where: {
                 user_custom_id: customId,
                 id: poolingId
+            },
+            include: {
+                poolings_answers: true,
+                poolings_answers: {
+                    orderBy: {
+                        id: "asc"
+                    },
+                    include: {
+                        _count: {
+                            select: {
+                                pollings_user_answer: true
+                            }
+                        }
+                    }
+                }
             }
         });
         res.json(result);

@@ -3,9 +3,10 @@ import PageContainer from "../../src/components/PageContainer";
 
 function Dashboard() {
     return (
-        <PageContainer>
-            <div>hello world</div>
-        </PageContainer>
+        <PageContainer
+            title="Hello mofo"
+            style={{ minHeight: "95vh" }}
+        ></PageContainer>
     );
 }
 

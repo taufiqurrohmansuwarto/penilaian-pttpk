@@ -8,6 +8,10 @@ export const getPooling = () => {
     return fetcher.get(`/poolings`).then((res) => res?.data);
 };
 
+export const detailPooling = (id) => {
+    return fetcher.get(`/poolings/${id}`).then((res) => res?.data);
+};
+
 export const createPooling = (data) => {
     return fetcher.post(`/poolings`, data).then((res) => res?.data);
 };

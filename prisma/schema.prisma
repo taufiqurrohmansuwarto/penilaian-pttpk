@@ -542,7 +542,6 @@ model announcements {
   id             String   @id @default(cuid())
   title          String?
   description    String?
-  due_date       DateTime @db.Date
   user_custom_id String?
   created_at     DateTime @default(now())
 }

@@ -9,7 +9,7 @@ const dataPenilaian = async (req, res) => {
     const queryBulan = req?.query?.bulan || bulan;
     const queryTahun = req?.query?.tahun || tahun;
 
-    const limit = req.query?.limit || 50;
+    const limit = req.query?.limit || 200;
     const offset = req.query?.offset || 0;
 
     try {

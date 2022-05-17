@@ -133,7 +133,7 @@ const MyComment = ({ comment, user, id }) => {
                         <span>{comment?.user?.username}</span>
                         {comment?.user_custom_id ===
                             comment?.parent_comments?.user_custom_id && (
-                            <Tag color="green">Kreator</Tag>
+                            <Tag color="green">Pembuat Diskusi</Tag>
                         )}
                     </Space>
                 </div>
@@ -203,7 +203,7 @@ const MyComment = ({ comment, user, id }) => {
                                 {comment?.user_custom_id ===
                                     comment?.parent_comments
                                         ?.user_custom_id && (
-                                    <Tag color="green">Kreator</Tag>
+                                    <Tag color="green">Pembuat Diskusi</Tag>
                                 )}
                             </Space>
                         </div>

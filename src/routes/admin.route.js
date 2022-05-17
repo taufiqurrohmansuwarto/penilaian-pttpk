@@ -1,4 +1,9 @@
-import { DashboardOutlined, DatabaseOutlined } from "@ant-design/icons";
+import {
+    DashboardOutlined,
+    FieldTimeOutlined,
+    LineChartOutlined,
+    UserOutlined
+} from "@ant-design/icons";
 
 export default {
     routes: [
@@ -10,12 +15,17 @@ export default {
         {
             path: "/admin/poolings",
             name: " Pooling",
-            icon: <DatabaseOutlined />
+            icon: <LineChartOutlined />
+        },
+        {
+            path: "/admin/announcements",
+            name: " Pengumuman",
+            icon: <FieldTimeOutlined />
         },
         {
             path: "/admin/referensi",
             name: " Referensi",
-            icon: <DatabaseOutlined />
+            icon: <UserOutlined />
         }
     ]
 };

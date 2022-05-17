@@ -1,5 +1,5 @@
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Space, Form, Input, message } from "antd";
+import { Button, DatePicker, Space, Form, Input, message, Card } from "antd";
 import AdminLayout from "../../../src/components/AdminLayout";
 import PageContainer from "../../../src/components/PageContainer";
 import moment from "moment";
@@ -20,62 +20,74 @@ function Create() {
         const { due_date, ...data } = values;
         const newDueDate = moment(due_date).format();
         const dataSend = { ...data, due_date: newDueDate };
-        // console.log(dataSend);
         create(dataSend);
     };
 
     return (
-        <PageContainer title="Pooling" subTitle="Poolingku">
-            <Form form={form} onFinish={handleSubmit}>
-                <Form.Item name="title">
-                    <Input />
-                </Form.Item>
-                <Form.Item name="due_date">
-                    <DatePicker />
-                </Form.Item>
-                <Form.List name="poolings_answers">
-                    {(fields, { add, remove }) => (
-                        <>
-                            {fields.map(({ key, name, ...restField }) => (
-                                <Space
-                                    key={key}
-                                    style={{ display: "flex", marginBottom: 8 }}
-                                    align="baseline"
-                                >
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, "answer"]}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: "Missing jawaban"
-                                            }
-                                        ]}
+        <PageContainer
+            title="Pooling"
+            subTitle="Poolingku"
+            style={{ minHeight: "95vh" }}
+            onBack={() => router?.back()}
+        >
+            <Card>
+                <Form form={form} onFinish={handleSubmit} layout="vertical">
+                    <Form.Item name="title" label="Judul Pooling">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="due_date" label="Sampai Tanggal">
+                        <DatePicker />
+                    </Form.Item>
+                    <Form.List name="poolings_answers">
+                        {(fields, { add, remove }) => (
+                            <>
+                                {fields.map(({ key, name, ...restField }) => (
+                                    <Space
+                                        key={key}
+                                        style={{
+                                            display: "flex",
+                                            marginBottom: 8
+                                        }}
+                                        align="baseline"
                                     >
-                                        <Input placeholder="Jawaban" />
-                                    </Form.Item>
-                                    <MinusCircleOutlined
-                                        onClick={() => remove(name)}
-                                    />
-                                </Space>
-                            ))}
-                            <Form.Item>
-                                <Button
-                                    type="dashed"
-                                    onClick={() => add()}
-                                    block
-                                    icon={<PlusOutlined />}
-                                >
-                                    Add field
-                                </Button>
-                            </Form.Item>
-                        </>
-                    )}
-                </Form.List>
-                <Form.Item>
-                    <Button htmlType="submit">Submit</Button>
-                </Form.Item>
-            </Form>
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, "answer"]}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: "Missing jawaban"
+                                                }
+                                            ]}
+                                            label="Jawaban"
+                                        >
+                                            <Input />
+                                        </Form.Item>
+                                        <MinusCircleOutlined
+                                            onClick={() => remove(name)}
+                                        />
+                                    </Space>
+                                ))}
+                                <Form.Item>
+                                    <Button
+                                        type="dashed"
+                                        onClick={() => add()}
+                                        block
+                                        icon={<PlusOutlined />}
+                                    >
+                                        Tambah Jawaban
+                                    </Button>
+                                </Form.Item>
+                            </>
+                        )}
+                    </Form.List>
+                    <Form.Item>
+                        <Button htmlType="submit" type="primary">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Card>
         </PageContainer>
     );
 }
