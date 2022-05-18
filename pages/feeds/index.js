@@ -42,7 +42,7 @@ export const getServerSideProps = async (ctx) => {
 };
 
 Feeds.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["PTTPK", "MASTER"]
 };
 

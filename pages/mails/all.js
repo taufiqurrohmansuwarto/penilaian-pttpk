@@ -16,7 +16,7 @@ All.getLayout = function getLayout(page) {
 };
 
 All.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["PTTPK", "MASTER"]
 };
 

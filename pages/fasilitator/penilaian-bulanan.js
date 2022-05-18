@@ -75,7 +75,7 @@ function PenilaianBulanan({ data }) {
 }
 
 PenilaianBulanan.Auth = {
-    roles: ["FASILITATOR"],
+    roles: ["FASILITATOR", "ADMIN"],
     groups: ["PTTPK"]
 };
 

@@ -134,7 +134,7 @@ function Discussions() {
 }
 
 Discussions.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["MASTER", "PTTPK"]
 };
 

@@ -136,7 +136,7 @@ export const getServerSideProps = async (ctx) => {
 };
 
 Discussions.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["MASTER", "PTTPK"]
 };
 

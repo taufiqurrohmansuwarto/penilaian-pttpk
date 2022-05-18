@@ -153,7 +153,7 @@ export const getServerSideProps = async (ctx) => {
 };
 
 RedditSubmit.auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["MASTER", "PTTPK"]
 };
 

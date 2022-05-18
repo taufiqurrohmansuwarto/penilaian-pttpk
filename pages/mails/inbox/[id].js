@@ -21,7 +21,7 @@ DetailInbox.getLayout = function getLayout(page) {
 };
 
 DetailInbox.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["PTTPK", "MASTER"]
 };
 

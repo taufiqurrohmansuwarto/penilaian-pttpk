@@ -72,7 +72,7 @@ Sents.getLayout = function getLayout(page) {
 };
 
 Sents.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["PTTPK", "MASTER"]
 };
 

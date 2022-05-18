@@ -21,7 +21,7 @@ DetailMailSents.getLayout = function getLayout(page) {
 };
 
 DetailMailSents.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["PTTPK", "MASTER"]
 };
 
