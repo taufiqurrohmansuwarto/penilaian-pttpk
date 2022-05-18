@@ -8,7 +8,6 @@ const index = async (req, res) => {
     const type = req?.query?.type || "inbox";
 
     // default inbox
-
     let query;
     const queryInbox = {
         where: {
@@ -28,6 +27,9 @@ const index = async (req, res) => {
                     user: true
                 }
             }
+        },
+        orderBy: {
+            date: "desc"
         }
     };
 
@@ -45,6 +47,9 @@ const index = async (req, res) => {
                     user: true
                 }
             }
+        },
+        orderBy: {
+            date: "desc"
         }
     };
 
@@ -55,8 +60,19 @@ const index = async (req, res) => {
     }
 
     try {
-        const result = await prisma.messages.findMany(query);
-        res.json(result);
+        if (type === "count") {
+            const result = await prisma.users_messages_mapped.count({
+                where: {
+                    user_custom_id: customId,
+                    is_read: false,
+                    placeholder: "inbox"
+                }
+            });
+            res.json(result);
+        } else {
+            const result = await prisma.messages.findMany(query);
+            res.json(result);
+        }
     } catch (error) {
         console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
@@ -131,6 +147,7 @@ const detail = async (req, res) => {
     }
 };
 
+// update the motherfucker
 const update = async (req, res) => {
     const { customId } = req?.user;
     try {

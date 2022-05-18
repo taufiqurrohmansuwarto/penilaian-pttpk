@@ -188,7 +188,8 @@ const Layout = ({ children, disableContentMargin = false }) => {
         <ProLayout
             splitMenus
             mode="horizontal"
-            layout="mix"
+            layout="top"
+            headerTheme="light"
             menu={{
                 defaultOpenAll: false,
                 request: async () => {
@@ -200,14 +201,14 @@ const Layout = ({ children, disableContentMargin = false }) => {
                     }
                 }
             }}
-            title="BKD JATIM"
-            layout="top"
+            title={false}
+            logo={null}
             fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}
-            theme="dark"
+            theme="light"
             rightContentRender={() => rightContentRender(data?.user)}
-            navTheme="dark"
+            navTheme="light"
             fixSiderbar
             disableContentMargin={disableContentMargin}
         >

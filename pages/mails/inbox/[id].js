@@ -6,7 +6,7 @@ import Detail from "../../../src/components/MailComponents/Detail";
 
 function DetailInbox() {
     return (
-        <Card title="Detail Inbox">
+        <Card title="Detail Kotak Masuk">
             <Detail />
         </Card>
     );

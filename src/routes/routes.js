@@ -15,11 +15,11 @@ export default {
             path: "/discussions",
             name: " Diskusi",
             icon: <CommentOutlined />
-        },
-        {
-            path: "/question-answer",
-            name: " Hari ini",
-            icon: <TeamOutlined />
         }
+        // {
+        //     path: "/question-answer",
+        //     name: " Hari ini",
+        //     icon: <TeamOutlined />
+        // }
     ]
 };

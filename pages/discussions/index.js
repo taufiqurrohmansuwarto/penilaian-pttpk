@@ -61,7 +61,7 @@ const Discussions = ({ data }) => {
             subTitle="Untuk forum dan diskusi"
         >
             <Row>
-                <Col lg={{ span: 10, offset: 6 }} xs={{ span: 24 }}>
+                <Col lg={{ span: 12, offset: 6 }} xs={{ span: 24 }}>
                     <Alert
                         title="Perhatian"
                         color="green"
