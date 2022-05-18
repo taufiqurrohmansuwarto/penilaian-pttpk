@@ -35,6 +35,7 @@ const ListComments = ({ data, user, sort }) => {
                                 id={item?.id}
                                 key={item?.id}
                                 image={item?.user?.image}
+                                userId={item?.user?.custom_id}
                                 comment={item?.comment}
                                 hasAction={
                                     item?.user?.custom_id === user?.user?.id
@@ -180,7 +181,7 @@ const UserComments = ({ sort }) => {
                 content={
                     <>
                         <CustomRichTextEditor
-                            placeholder="Apa yang ingin kamu tanyakan atau bagikan??"
+                            placeholder="Apa yang ingin kamu bagikan hari ini??"
                             text={comment}
                             main={true}
                             setText={setComment}

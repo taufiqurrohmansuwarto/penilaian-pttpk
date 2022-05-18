@@ -125,7 +125,7 @@ const changeRoutes = (user) => {
         const userMasterRoutes = [
             {
                 path: "/approval/dashboard",
-                name: " Penilaian PTTPK",
+                name: " Penilaian PTT-PK",
                 icon: <ReadOutlined />
             }
         ];
@@ -133,7 +133,7 @@ const changeRoutes = (user) => {
         const userPttpkRoutes = [
             {
                 path: "/user/dashboard",
-                name: " Penilaian PTTPK",
+                name: " Penilaian PTT-PK",
                 icon: <ReadOutlined />
             }
         ];
@@ -141,7 +141,7 @@ const changeRoutes = (user) => {
         const fasilitatorRoutes = [
             {
                 path: "/fasilitator/dashboard",
-                name: " Penilaian PTTPK",
+                name: " Penilaian PTT-PK",
                 icon: <ReadOutlined />
             }
         ];
@@ -184,6 +184,9 @@ const Layout = ({ children, disableContentMargin = false }) => {
 
     return (
         <ProLayout
+            splitMenus
+            mode="horizontal"
+            layout="mix"
             menu={{
                 defaultOpenAll: false,
                 request: async () => {
@@ -196,7 +199,6 @@ const Layout = ({ children, disableContentMargin = false }) => {
                 }
             }}
             title="BKD JATIM"
-            fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}
             theme="dark"

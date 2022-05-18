@@ -8,7 +8,7 @@ export default {
     routes: [
         {
             path: "/feeds",
-            name: " Beranda",
+            name: " Berbagi",
             icon: <ShareAltOutlined />
         },
         {
@@ -18,7 +18,7 @@ export default {
         },
         {
             path: "/question-answer",
-            name: " Tanya Jawab",
+            name: " Hari ini",
             icon: <TeamOutlined />
         }
     ]

@@ -22,6 +22,7 @@ const SubComment = ({ subComment }) => {
 
     const [idEditSubComment, setIdEditSubComment] = useState(null);
     const [textEditSubComment, setTextEditSubComment] = useState(null);
+    const router = useRouter();
 
     const queryClient = useQueryClient();
     const { mutate: addSubComment } = useMutation(
@@ -114,7 +115,14 @@ const SubComment = ({ subComment }) => {
                         <>
                             <Comment.Avatar src={comment?.user?.image} />
                             <Comment.Content>
-                                <Comment.Author as="a">
+                                <Comment.Author
+                                    as="a"
+                                    onClick={() =>
+                                        router?.push(
+                                            `/profile/user/${comment?.user?.custom_id}`
+                                        )
+                                    }
+                                >
                                     {capitalCase(comment?.user?.username)}
                                 </Comment.Author>
                                 <Comment.Metadata>
@@ -198,7 +206,8 @@ function MCommentDetail({
     isLike,
     totalLikes,
     user,
-    subComment
+    subComment,
+    userId
 }) {
     const router = useRouter();
     const queryClient = useQueryClient();
@@ -296,7 +305,12 @@ function MCommentDetail({
                         <>
                             <Comment.Avatar src={image} />
                             <Comment.Content>
-                                <Comment.Author as="a">
+                                <Comment.Author
+                                    as="a"
+                                    onClick={() =>
+                                        router.push(`/profile/user/${userId}`)
+                                    }
+                                >
                                     {capitalCase(username)}
                                 </Comment.Author>
                                 <Comment.Metadata>

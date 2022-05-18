@@ -8,13 +8,7 @@ function HJoinCreate() {
     const [form] = Form.useForm();
 
     return (
-        <Form form={form}>
-            <Form.Item label="Judul">
-                <Input />
-            </Form.Item>
-            <Form.Item label="Deskripsi">
-                <Input.TextArea />
-            </Form.Item>
+        <Form form={form} layout="vertical">
             <Form.Item label="Lokasi">
                 <AutoComplete
                     options={options}
@@ -25,11 +19,18 @@ function HJoinCreate() {
                     }
                 />
             </Form.Item>
+
+            <Form.Item label="Judul">
+                <Input />
+            </Form.Item>
+            <Form.Item label="Deskripsi">
+                <Input.TextArea />
+            </Form.Item>
             <Form.Item label="Kategori">
                 <Select></Select>
             </Form.Item>
             <Form.Item label="Gambar">
-                <Upload.Dragger>
+                <Upload.Dragger accept="image/*">
                     <p>
                         <InboxOutlined />
                     </p>

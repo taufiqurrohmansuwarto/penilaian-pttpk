@@ -275,3 +275,8 @@ export const createHJoins = (data) => {
         }
     });
 };
+
+// profile
+export const getProfile = (id) => {
+    return fetcher.get(`/profile?id=${id}`).then((res) => res?.data);
+};

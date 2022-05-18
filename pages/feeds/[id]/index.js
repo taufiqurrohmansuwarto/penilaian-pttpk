@@ -30,6 +30,7 @@ function DetailFeed() {
                 router.back();
                 history.scrollRestoration = "manual";
             }}
+            style={{ minHeight: "90vh" }}
             breadcrumbRender={() => (
                 <Breadcrumb>
                     <Breadcrumb.Item>
@@ -57,6 +58,7 @@ function DetailFeed() {
                                         }
                                         isLike={!!data?.comments_likes?.length}
                                         image={data?.user?.image}
+                                        userId={data?.user?.custom_id}
                                         user={data?.user}
                                         username={data?.user?.username}
                                         hasAction={

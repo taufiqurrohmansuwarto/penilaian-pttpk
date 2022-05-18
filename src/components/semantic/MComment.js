@@ -41,6 +41,7 @@ function MComment({
     comment,
     isLike,
     totalLikes,
+    userId,
     sort,
     totalComments
 }) {
@@ -195,7 +196,12 @@ function MComment({
                     <>
                         <Comment.Avatar src={image} />
                         <Comment.Content>
-                            <Comment.Author as="a">
+                            <Comment.Author
+                                as="a"
+                                onClick={() =>
+                                    router?.push(`/profile/user/${userId}`)
+                                }
+                            >
                                 {capitalCase(username)}
                             </Comment.Author>
                             <Comment.Metadata>
