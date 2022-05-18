@@ -138,7 +138,7 @@ const SubCategories = ({ data }) => {
 };
 
 SubCategories.auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["PTTPK", "MASTER"]
 };
 

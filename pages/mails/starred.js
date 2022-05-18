@@ -15,7 +15,7 @@ Starred.getLayout = function getLayout(page) {
 };
 
 Starred.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["PTTPK", "MASTER"]
 };
 

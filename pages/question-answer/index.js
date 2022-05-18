@@ -14,7 +14,7 @@ function QuestionAnswer() {
 }
 
 QuestionAnswer.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["PTTPK", "MASTER"]
 };
 

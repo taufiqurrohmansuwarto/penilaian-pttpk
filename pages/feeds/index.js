@@ -6,24 +6,26 @@ import UserComments from "../../src/components/UsersComments";
 
 const Feeds = ({ data }) => {
     return (
-        <Row gutter={[16, 16]}>
-            <Col lg={{ span: 10, offset: 7 }} xs={{ span: 24 }}>
-                <Card>
-                    <UserComments sort={data?.sort} />
-                    <BackTop />
-                </Card>
-            </Col>
-            <Col lg={{ span: 7 }} xs={{ span: 24 }}>
-                <Row gutter={[16, 16]}>
-                    <Col span={24}>
-                        <TopDiscussions />
-                    </Col>
-                    <Col span={24}>
-                        <PoolingsCard />
-                    </Col>
-                </Row>
-            </Col>
-        </Row>
+        <PageContainer title="Beranda" subTitle="Feedback">
+            <Row gutter={[16, 16]}>
+                <Col lg={{ span: 11, offset: 6 }} xs={{ span: 24 }}>
+                    <Card>
+                        <UserComments sort={data?.sort} />
+                        <BackTop />
+                    </Card>
+                </Col>
+                <Col lg={{ span: 7 }} xs={{ span: 24 }}>
+                    <Row gutter={[16, 16]}>
+                        <Col span={24}>
+                            <TopDiscussions />
+                        </Col>
+                        <Col span={24}>
+                            <PoolingsCard />
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+        </PageContainer>
     );
 };
 
@@ -39,7 +41,7 @@ export const getServerSideProps = async (ctx) => {
 };
 
 Feeds.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["PTTPK", "MASTER"]
 };
 

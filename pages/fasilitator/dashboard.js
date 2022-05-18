@@ -13,7 +13,7 @@ const Dashboard = () => {
 };
 
 Dashboard.Auth = {
-    roles: ["FASILITATOR"],
+    roles: ["FASILITATOR", "ADMIN"],
     groups: ["PTTPK"]
 };
 

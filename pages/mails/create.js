@@ -108,7 +108,7 @@ Create.getLayout = function getLayout(page) {
 };
 
 Create.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["PTTPK", "MASTER"]
 };
 

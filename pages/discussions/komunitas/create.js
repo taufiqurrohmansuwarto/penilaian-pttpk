@@ -159,7 +159,7 @@ const CreateCommunities = () => {
 };
 
 CreateCommunities.auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["MASTER", "PTTPK"]
 };
 

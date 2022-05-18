@@ -168,4 +168,9 @@ function DataSatuanKinerja() {
     );
 }
 
+DataSatuanKinerja.Auth = {
+    roles: ["FASILITATOR", "ADMIN"],
+    groups: ["PTTPK"]
+};
+
 export default DataSatuanKinerja;
