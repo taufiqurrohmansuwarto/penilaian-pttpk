@@ -92,7 +92,9 @@ const changeRoutes = (user) => {
         const id = user?.id;
         const userPtt = role === "USER" && group === "PTTPK";
         const userMaster = role === "USER" && group === "MASTER";
-        const userPttFasilitator = role === "FASILITATOR" && group === "PTTPK";
+        const userPttFasilitator =
+            (role === "FASILITATOR" && group === "PTTPK") ||
+            (role === "ADMIN" && group === "PTTPK");
         const isAdmin = id === "master|56543";
 
         const userMasterRoutes = [
