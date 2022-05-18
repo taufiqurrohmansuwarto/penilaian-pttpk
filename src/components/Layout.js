@@ -169,6 +169,7 @@ const Layout = ({ children, disableContentMargin = false }) => {
                 }
             }}
             title="BKD JATIM"
+            layout="top"
             fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}

@@ -9,7 +9,7 @@ const Feeds = ({ data }) => {
     return (
         <PageContainer title="Beranda" subTitle="Feedback">
             <Row gutter={[16, 16]}>
-                <Col lg={{ span: 10, offset: 7 }} xs={{ span: 24 }}>
+                <Col lg={{ span: 11, offset: 6 }} xs={{ span: 24 }}>
                     <Card>
                         <UserComments sort={data?.sort} />
                         <BackTop />
