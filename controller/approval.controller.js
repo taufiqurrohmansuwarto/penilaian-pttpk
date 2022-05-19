@@ -1,5 +1,6 @@
 import moment from "moment";
 import prisma from "../lib/prisma";
+import { sendEmail } from "../utils/trigger";
 
 const dataPenilaian = async (req, res) => {
     const bulan = moment(new Date()).format("M");
@@ -110,6 +111,19 @@ const approvePenilaianBulanan = async (req, res) => {
                 }
             })
         ]);
+
+        const currentUser = await prisma.users.findUnique({
+            where: {
+                custom_id: id_ptt
+            }
+        });
+
+        if (currentUser && currentUser?.email) {
+            await sendEmail(
+                currentUser?.email,
+                `Penilaian Bulan ${bulan} tahun ${tahun} telah dinilai dan di acc atasan anda`
+            );
+        }
 
         // ini harus diupdate
 

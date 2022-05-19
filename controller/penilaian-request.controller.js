@@ -1,5 +1,6 @@
 const { default: prisma } = require("../lib/prisma");
 import moment from "moment";
+import { sendEmail } from "../utils/trigger";
 
 // jadi ketika batal kirim maka nilai nya direset kembali menjadi 0 dan di acc kinerja bulanan dihapus
 const batalKirimTransaction = async (
@@ -53,9 +54,12 @@ const kirimAtasan = async (req, res) => {
         });
 
         if (!currentPenilaian) {
-            res.status(404).json({ code: 404, message: "Not Found" });
+            res.status(404).json({
+                code: 404,
+                message: "Tidak ada penilaian yang aktif"
+            });
         } else {
-            const hasil = await prisma.acc_kinerja_bulanan.upsert({
+            await prisma.acc_kinerja_bulanan.upsert({
                 where: {
                     id_penilaian_bulan_tahun: {
                         id_penilaian: currentPenilaian?.id,
@@ -84,6 +88,26 @@ const kirimAtasan = async (req, res) => {
                     atasan_langsung: currentPenilaian?.atasan_langsung
                 }
             });
+
+            // send to user
+            const penilai = await prisma.users.findUnique({
+                where: {
+                    custom_id: currentPenilaian?.id_atasan_langsung
+                }
+            });
+
+            const currentUser = await prisma.users.findUnique({
+                where: {
+                    custom_id: customId
+                }
+            });
+
+            if (penilai && currentUser) {
+                const to = penilai?.email;
+                const text = `PTTPK atas nama ${currentUser?.username} telah mengirimkan penilaian bulanan, bulan ${bulan} tahun ${tahun} ke anda. Mohon segera dilakukan ACC.`;
+                await sendEmail(to, text);
+            }
+
             res.json({ code: 200, message: "sukses" });
         }
     } catch (error) {
