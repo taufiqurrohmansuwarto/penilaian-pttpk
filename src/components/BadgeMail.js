@@ -3,7 +3,7 @@ import { Badge } from "antd";
 import { useQuery } from "react-query";
 
 function BadgeMail() {
-    const { data, isLoading } = useQuery(["mails-count-notification"]);
+    // const { data, isLoading } = useQuery(["mails-count-notification"]);
 
     return (
         <Badge size="small" dot={1}>

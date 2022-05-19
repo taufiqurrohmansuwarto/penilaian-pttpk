@@ -1,11 +1,10 @@
-import { Button } from "@mantine/core";
 import { Skeleton } from "antd";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { readMail } from "../../../services/main.services";
 
-function Detail({ type = "inbox" }) {
+function Detail() {
     const router = useRouter();
 
     const { data, isLoading } = useQuery(
@@ -21,9 +20,7 @@ function Detail({ type = "inbox" }) {
     return (
         <Skeleton loading={isLoading}>
             <div></div>
-            <div>{data?.body}</div>
-
-            <Button>Balas</Button>
+            <div>Pesan : {data?.body}</div>
         </Skeleton>
     );
 }

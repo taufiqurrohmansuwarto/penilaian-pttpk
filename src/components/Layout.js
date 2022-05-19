@@ -201,14 +201,14 @@ const Layout = ({ children, disableContentMargin = false }) => {
                     }
                 }
             }}
-            title={false}
-            logo={null}
+            title={"Apps"}
+            // logo={null}
             fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}
-            theme="light"
+            theme="dark"
             rightContentRender={() => rightContentRender(data?.user)}
-            navTheme="light"
+            navTheme="dark"
             fixSiderbar
             disableContentMargin={disableContentMargin}
         >

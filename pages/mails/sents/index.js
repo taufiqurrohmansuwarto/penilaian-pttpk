@@ -17,7 +17,7 @@ const MailTable = ({ data, loading }) => {
 
     const columns = [
         {
-            title: "Dari",
+            title: "Ke",
             dataIndex: "name",
             width: 250,
             render: (_, row) => (
@@ -26,6 +26,7 @@ const MailTable = ({ data, loading }) => {
                 </Typography.Text>
             )
         },
+        { title: "Subyek", dataIndex: "subject", key: "subject" },
         {
             title: "Pesan",
             dataIndex: "body",
@@ -36,7 +37,7 @@ const MailTable = ({ data, loading }) => {
             )
         },
         {
-            title: "Waktu",
+            title: "Tgl. Kirim",
             dataIndex: "waktu",
             width: 150,
             render: (_, row) => (

@@ -3,8 +3,8 @@ import { Form, Input, Modal, Space, Table, Typography } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
-import { getMail } from "../../../services/main.services";
+import { useMutation, useQuery } from "react-query";
+import { getMail, sendingEmail } from "../../../services/main.services";
 import MailLayout from "../../../src/components/CustomLayout/MaiLayout";
 import Layout from "../../../src/components/Layout";
 import { capitalCase } from "../../../utils/utility";
@@ -12,13 +12,44 @@ import { capitalCase } from "../../../utils/utility";
 const FormModal = ({ userData, visibility, closeModal }) => {
     const [form] = Form.useForm();
 
+    const router = useRouter();
+
+    const { mutate: send, isLoading: sendMailLoading } = useMutation(
+        (data) => sendingEmail(data),
+        {
+            onSuccess: () => {
+                router.push("/mails/sents");
+            }
+        }
+    );
+
+    const onOk = async () => {
+        const result = await form.validateFields();
+        const { author, subject } = userData;
+
+        const data = {
+            message: result?.message,
+            subject,
+            receiver: author?.custom_id
+        };
+
+        send(data);
+    };
+
     return (
         <Modal
             title="Balas Pesan"
             visible={visibility}
             destroyOnClose
             onCancel={closeModal}
+            onOk={onOk}
+            confirmLoading={sendMailLoading}
+            width={800}
         >
+            <div style={{ marginBottom: 10 }}>
+                Ke : {userData?.author?.username}
+            </div>
+            <div style={{ marginBottom: 8 }}>Subyek : {userData?.subject}</div>
             <Form form={form}>
                 <Form.Item
                     name="message"
@@ -63,6 +94,7 @@ const MailTable = ({ data, loading }) => {
                 </Typography.Text>
             )
         },
+        { title: "Subyek", dataIndex: "subject", key: "subject" },
         {
             title: "Pesan",
             dataIndex: "body",
