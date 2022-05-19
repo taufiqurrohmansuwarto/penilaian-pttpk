@@ -1,8 +1,17 @@
-import { Button, Group, Paper, Text } from "@mantine/core";
-import { Col, Divider, Row, Space, Typography } from "antd";
+import {
+    Button,
+    Group,
+    Paper,
+    Text,
+    Title,
+    Space as SpaceMantine
+} from "@mantine/core";
+import { Col, Divider, Row, Space } from "antd";
 import { getProviders, signIn } from "next-auth/react";
+import Link from "next/link";
 import { Login } from "tabler-icons-react";
 
+/** @param {import('next').InferGetServerSidePropsType<typeof getServerSideProps> } props */
 export default function SignIn({ providers }) {
     return (
         <div style={{ backgroundImage: `url(doodle-new.png)` }}>
@@ -30,19 +39,15 @@ export default function SignIn({ providers }) {
                         </Group>
                         <Group position="center">
                             <Space direction="vertical" align="center">
-                                <Typography.Title>
-                                    Aplikasi ASN
-                                </Typography.Title>
+                                <Title>Aplikasi</Title>
                                 <div>
                                     <img
                                         src="pns.png"
-                                        style={{ width: 170 }}
+                                        style={{ width: 150 }}
                                         alt=""
                                     />
                                 </div>
-                                <Typography.Text type="secondary">
-                                    Include Penilaian PTTPK
-                                </Typography.Text>
+                                <Text size="sm">Penilaian PTTPK</Text>
                             </Space>
                             <Divider />
                             <Space direction="vertical">
@@ -61,10 +66,16 @@ export default function SignIn({ providers }) {
                                 ))}
                             </Space>
                             <Divider />
+
                             <Text size="xs">
                                 @ Copyright BKD Provinsi Jawa Timur 2022
                             </Text>
                         </Group>
+                        <Text align="center" size="xs">
+                            <Link href="/changelog">
+                                <a>Changelog 0.0.a</a>
+                            </Link>
+                        </Text>
                     </Paper>
                 </Col>
             </Row>

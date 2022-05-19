@@ -58,7 +58,8 @@ function PoolingsCard() {
                     loading={isLoading}
                     title={
                         <Alert title="Voting" icon={<Speakerphone />}>
-                            Coba bantu voting ya bapak-ibu ❤
+                            Dengan voting kamu bisa membantu developer
+                            menjadikan aplikasi lebih baik
                         </Alert>
                     }
                 >

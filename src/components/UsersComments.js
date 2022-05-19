@@ -172,7 +172,8 @@ const UserComments = ({ sort }) => {
         <>
             <Alert my="xs" title="Perhatian" icon={<Antenna />} color="yellow">
                 Kamu bisa memention orang dengan menambahkan @ di kotak
-                komentar.
+                komentar. Kalau sungkan bertanya di depan umum bisa japri saya
+                lewat email di pojok kanan atas.
             </Alert>
 
             <Comment

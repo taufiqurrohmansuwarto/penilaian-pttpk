@@ -1,0 +1,49 @@
+import { Button, Container, Divider, List, ThemeIcon } from "@mantine/core";
+import React from "react";
+import { CircleCheck } from "tabler-icons-react";
+import Link from "next/link";
+
+function Changelog() {
+    return (
+        <Container py={2}>
+            <Link href="/">
+                <Button>Kembali</Button>
+            </Link>
+            <Divider
+                my="xs"
+                label="Versi 0.0.a 19 Mei 2022"
+                labelPosition="center"
+            />
+            <List
+                spacing="xs"
+                size="sm"
+                center
+                icon={
+                    <ThemeIcon color="teal" size={24} radius="xl">
+                        <CircleCheck size={16} />
+                    </ThemeIcon>
+                }
+            >
+                <List.Item>
+                    Penambahan fitur pesan (pojok kanan atas) sudah bisa dipake
+                    meskipun gratul-gratul
+                </List.Item>
+                <List.Item>
+                    Penambahan fitur notifikasi email pada saat PTT-PK melakukan
+                    kirim pekerjaan dan pns melakukan verifikasi penilaian
+                    PTT-PK
+                </List.Item>
+                <List.Item>
+                    Gambar-gambar dikompres biar agak cepetan dikit pas load
+                </List.Item>
+                <List.Item>Poles dikit halaman signin</List.Item>
+                <List.Item>
+                    Detail Changelog ditulis di page baru biar user tau apa yang
+                    baru dan fix (Sekalian skp saya biar mudah h3h3h3h3).
+                </List.Item>
+            </List>
+        </Container>
+    );
+}
+
+export default Changelog;
