@@ -73,7 +73,7 @@ export default function SignIn({ providers }) {
                         </Group>
                         <Text align="center" size="xs">
                             <Link href="/changelog">
-                                <a>Changelog 0.0.a</a>
+                                <a>Changelog 0.0.b</a>
                             </Link>
                         </Text>
                     </Paper>
