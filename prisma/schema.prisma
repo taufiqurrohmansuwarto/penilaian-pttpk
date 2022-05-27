@@ -9,17 +9,19 @@ datasource db {
 }
 
 model users {
-  custom_id                          String                      @id
-  username                           String?
-  image                              String?
-  id                                 String?
-  from                               String?
-  role                               String?
-  group                              String?
-  employee_number                    String?
-  birthdate                          DateTime?                   @db.Date
-  last_login                         DateTime?                   @db.Timestamp()
-  email                              String?
+  custom_id       String    @id
+  username        String?
+  image           String?
+  id              String?
+  from            String?
+  role            String?
+  group           String?
+  employee_number String?
+  birthdate       DateTime? @db.Date
+  last_login      DateTime? @db.Timestamp()
+  email           String?
+  organization    String?
+
   discussions_posts                  discussions_posts[]
   discussions_votes                  discussions_votes[]
   discussions_rights_user            discussions_rights[]        @relation("user")
