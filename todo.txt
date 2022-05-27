@@ -1,9 +1,1 @@
-1. selesaikan trigger
-2. selesaikan email
-3. buat profile
-4. design database seperti quora
-5. buat pengumuman
-
-
-icon
-handrock
+1. perbaiki email

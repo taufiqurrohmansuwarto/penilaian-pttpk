@@ -7,7 +7,7 @@
     },
     "dependencies": {
         "@ant-design/icons": "^4.7.0",
-        "@ant-design/pro-layout": "^6.38.0",
+        "@ant-design/pro-layout": "^7.0.1-beta.17",
         "@babel/preset-react": "^7.16.7",
         "@babel/runtime": "^7.17.8",
         "@mantine/core": "^4.2.2",
@@ -16,7 +16,7 @@
         "@mantine/rte": "^4.2.2",
         "@moxy/next-router-scroll": "^2.2.0",
         "@prisma/client": "^3.14.0",
-        "antd": "^4.20.2",
+        "antd": "^4.20.6",
         "array-to-tree": "^3.3.2",
         "axios": "^0.27.2",
         "exceljs": "^4.3.0",

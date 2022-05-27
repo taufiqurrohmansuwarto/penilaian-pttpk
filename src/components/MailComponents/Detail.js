@@ -3,8 +3,9 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { readMail } from "../../../services/main.services";
+import moment from "moment";
 
-function Detail() {
+function Detail({ inbox = false }) {
     const router = useRouter();
 
     const { data, isLoading } = useQuery(
@@ -19,8 +20,9 @@ function Detail() {
 
     return (
         <Skeleton loading={isLoading}>
-            <div></div>
-            <div>Pesan : {data?.body}</div>
+            <div>Pesan: </div>
+            {moment(data?.date).format("lll")}
+            <div dangerouslySetInnerHTML={{ __html: data?.body }} />
         </Skeleton>
     );
 }

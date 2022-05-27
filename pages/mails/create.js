@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "react-query";
 import { findUsers, sendingEmail } from "../../services/main.services";
 import MailLayout from "../../src/components/CustomLayout/MaiLayout";
 import Layout from "../../src/components/Layout";
+import RichTextEditor from "../../src/components/RichTextEditor";
 
 const EmailForm = () => {
     const [form] = Form.useForm();
@@ -32,7 +33,14 @@ const EmailForm = () => {
     );
 
     const handleFinish = (values) => {
-        sendMail(values);
+        const { message } = values;
+
+        const result = message.replace(/<(.|\n)*?>/g, "").trim();
+        if (!result) {
+            return;
+        } else {
+            sendMail(values);
+        }
     };
 
     return (
@@ -76,7 +84,7 @@ const EmailForm = () => {
                 label="Pesan"
                 rules={[{ required: true, message: "Tidak boleh kosong" }]}
             >
-                <Input.TextArea rows={10} />
+                <RichTextEditor />
             </Form.Item>
             <Form.Item>
                 <Button

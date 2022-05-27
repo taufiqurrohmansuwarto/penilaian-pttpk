@@ -131,12 +131,14 @@ model penilaian {
 }
 
 model tugas_tambahan {
-  id           String     @id @default(cuid())
-  title        String
-  penilaian_id String?
-  created_at   DateTime?  @default(now()) @db.Timestamp(6)
-  updated_at   DateTime?  @db.Timestamp(6)
-  penilaian    penilaian? @relation(fields: [penilaian_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id              String     @id @default(cuid())
+  title           String
+  penilaian_id    String?
+  mulai_pekerjaan DateTime?  @db.Date
+  akhir_pekerjaan DateTime?  @db.Date
+  created_at      DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at      DateTime?  @db.Timestamp(6)
+  penilaian       penilaian? @relation(fields: [penilaian_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model ref_satuan_kinerja {
@@ -373,7 +375,7 @@ model messages {
   id                    String                  @id @default(cuid())
   subject               String?
   body                  String?
-  date                  DateTime                @default(now()) @db.Date
+  date                  DateTime?               @default(now()) @db.Timestamp()
   user_custom_id        String?
   author                users?                  @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
   users_messages_mapped users_messages_mapped[]

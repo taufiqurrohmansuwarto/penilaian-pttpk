@@ -39,39 +39,31 @@ const CustomRichTextEditor = ({
 
     return (
         <>
-            <div>
-                <RichTextEditor
-                    styles={{
-                        root: {
-                            padding: 0,
-                            margin: 0,
-                            minHeight: "10px !important",
-                            width: "100%",
-                            marginBottom: 14
-                        }
-                    }}
-                    sx={(theme) => ({
-                        "&:hover": {
-                            borderColor: theme.colors.indigo
-                        }
-                    })}
-                    placeholder={placeholder}
-                    onImageUpload={handleUpload}
-                    value={text}
-                    onChange={setText}
-                    mentions={mentions}
-                    controls={[
-                        [
-                            "image",
-                            "video",
-                            "link",
-                            "unorderedList",
-                            "orderedList"
-                        ]
-                    ]}
-                    radius={10}
-                />
-            </div>
+            <RichTextEditor
+                styles={{
+                    root: {
+                        padding: 0,
+                        margin: 0,
+                        minHeight: "10px !important",
+                        width: "100%",
+                        marginBottom: 14
+                    }
+                }}
+                sx={(theme) => ({
+                    "&:hover": {
+                        borderColor: theme.colors.indigo
+                    }
+                })}
+                placeholder={placeholder}
+                onImageUpload={handleUpload}
+                value={text}
+                onChange={setText}
+                mentions={mentions}
+                controls={[
+                    ["image", "video", "link", "unorderedList", "orderedList"]
+                ]}
+                radius={10}
+            />
             <Space>
                 <Button color="grape" onClick={handleSubmit}>
                     {buttonText}
