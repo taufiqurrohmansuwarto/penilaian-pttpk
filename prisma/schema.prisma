@@ -56,6 +56,7 @@ model users {
   hjoin_works_likes        hjoin_works_likes[]
   hjoin_works_comments     hjoin_works_comments[]
   hjoin_users_works_same   hjoin_users_works_same[]
+  chats                    chats[]
 }
 
 model acc_kinerja_bulanan {
@@ -625,6 +626,24 @@ model hjoin_works_comments {
   created_at        DateTime               @default(now()) @db.Timestamp()
   updated_at        DateTime               @db.Timestamp()
   deleted_at        DateTime               @db.Timestamp()
+}
+
+model groups_chats {
+  id        String   @id @default(cuid())
+  name      String?
+  is_active Boolean? @default(true)
+  chats     chats[]
+}
+
+model chats {
+  id             String        @id @default(cuid())
+  message        String?
+  user_custom_id String?
+  group_id       String?
+  group          groups_chats? @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user           users?        @relation(fields: [user_custom_id], references: [custom_id], onDelete: Cascade, onUpdate: Cascade)
+  deleted_at     DateTime?     @db.Timestamp()
+  created_at     DateTime      @default(now()) @db.Timestamp()
 }
 
 enum Status {

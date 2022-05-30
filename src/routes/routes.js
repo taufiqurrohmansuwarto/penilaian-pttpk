@@ -1,6 +1,7 @@
 import {
     CommentOutlined,
     FundViewOutlined,
+    MessageOutlined,
     ShareAltOutlined,
     TeamOutlined
 } from "@ant-design/icons";
@@ -14,8 +15,13 @@ export default {
         },
         {
             path: "/discussions",
-            name: " Diskusi",
+            name: " Forum",
             icon: <CommentOutlined />
+        },
+        {
+            path: "/online-chat",
+            name: " Online Chat",
+            icon: <MessageOutlined />
         },
         {
             path: "/tutorial",

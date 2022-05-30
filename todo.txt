@@ -1,2 +1,7 @@
 1. perbaiki email
 2. tambahkan diservice perangkat daerah di pns atau ptt ambil 3 digit saja
+
+
+asumsi
+
+orang akan lebih memakai aplikasi jika mereka dapat berinteraksi secara langsung melalui media chat

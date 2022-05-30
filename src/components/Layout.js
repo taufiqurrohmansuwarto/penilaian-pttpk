@@ -186,8 +186,8 @@ const Layout = ({ children, disableContentMargin = false }) => {
 
     return (
         <ProLayout
-            splitMenus
-            mode="horizontal"
+            // splitMenus
+            // mode="horizontal"
             layout="top"
             headerTheme="light"
             menu={{

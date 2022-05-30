@@ -280,3 +280,18 @@ export const createHJoins = (data) => {
 export const getProfile = (id) => {
     return fetcher.get(`/profile?id=${id}`).then((res) => res?.data);
 };
+
+// chats motherfucker
+export const getGroupsChats = () => {
+    return fetcher.get(`/groups-chats`).then((res) => res?.data);
+};
+
+export const sendChats = ({ id, data }) => {
+    return fetcher
+        .post(`/groups-chats/${id}/chats`, data)
+        .then((res) => res?.data);
+};
+
+export const getChats = (id) => {
+    return fetcher.get(`/groups-chats/${id}/chats`).then((res) => res?.data);
+};

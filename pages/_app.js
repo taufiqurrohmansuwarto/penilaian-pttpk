@@ -1,4 +1,4 @@
-import "@ant-design/pro-layout/dist/layout.css";
+// import "@ant-design/pro-layout/dist/layout.css";
 import { ConfigProvider, Spin } from "antd";
 import "antd/dist/antd.css";
 import id from "antd/lib/locale/id_ID";
