@@ -1,14 +1,7 @@
-import Layout from "../src/components/Layout";
-
-const { default: UserLayout } = require("../src/components/UserLayout");
+import Loading from "../src/components/Loading";
 
 const Dashboard = () => {
-    return <Layout></Layout>;
-};
-
-Dashboard.auth = {
-    roles: ["USER", "FASILITATOR"],
-    groups: ["PTTPK", "MASTER"]
+    return <Loading />;
 };
 
 export default Dashboard;

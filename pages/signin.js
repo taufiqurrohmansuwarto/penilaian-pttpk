@@ -4,7 +4,8 @@ import {
     Paper,
     Text,
     Title,
-    Space as SpaceMantine
+    Space as SpaceMantine,
+    Stack
 } from "@mantine/core";
 import { Col, Divider, Row, Space } from "antd";
 import { getProviders, signIn } from "next-auth/react";
@@ -54,9 +55,8 @@ export default function SignIn({ providers }) {
                                 {Object?.values(providers).map((provider) => (
                                     <div key={provider.name}>
                                         <Button
-                                            variant="filled"
+                                            variant="outline"
                                             fullWidth
-                                            color="yellow"
                                             leftIcon={<Login />}
                                             onClick={() => signIn(provider.id)}
                                         >
@@ -65,12 +65,28 @@ export default function SignIn({ providers }) {
                                     </div>
                                 ))}
                             </Space>
+                            <Stack spacing="xs">
+                                <Text size="xs">
+                                    <Link
+                                        href="http://bkd.jatimprov.go.id/pttpk"
+                                        passHref
+                                    >
+                                        <a target="_blank">
+                                            Lupa/Reset password akun PTT-PK
+                                        </a>
+                                    </Link>
+                                </Text>
+                                {/* <Text size="xs">
+                                    <Link href="bkd.jatimprov.go.id/pttpk">
+                                        Lupa password akun E-Master?
+                                    </Link>
+                                </Text> */}
+                            </Stack>
                             <Divider />
-
-                            <Text size="xs">
-                                @ Copyright BKD Provinsi Jawa Timur 2022
-                            </Text>
                         </Group>
+                        <Text align="center" size="xs">
+                            @ Copyright BKD Provinsi Jawa Timur 2022
+                        </Text>
                         <Text align="center" size="xs">
                             <Link href="/changelog">
                                 <a>Changelog 0.0.c</a>

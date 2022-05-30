@@ -9,6 +9,7 @@ import "semantic-ui-css/semantic.min.css";
 import "./index.css";
 import { RouterScrollProvider } from "@moxy/next-router-scroll";
 import { MantineProvider } from "@mantine/core";
+import Loading from "../src/components/Loading";
 
 export default function MyApp({
     Component,
@@ -71,7 +72,7 @@ function Auth({ children, roles, groups, isAdmin }) {
     const currentUserId = data?.user?.id;
 
     if (status === "loading") {
-        return <Spin />;
+        return <Loading />;
     }
 
     if (
