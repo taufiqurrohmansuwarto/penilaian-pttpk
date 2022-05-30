@@ -1,17 +1,16 @@
 import { Avatar, Box, Divider, Group, ScrollArea, Text } from "@mantine/core";
-import { Button, Input } from "antd";
+import { Button } from "antd";
+import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getChats, sendChats } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
-import PageContainer from "../../src/components/PageContainer";
-import moment from "moment";
-import CustomRichTextEditor from "../../src/components/CustomRichTextEditor";
+import RichTextEditor from "../../src/components/RichTextEditor";
 
 const Index = () => {
     const router = useRouter();
-    const [message, setMessage] = useState(null);
+    const [message, setMessage] = useState("");
     const { data, isLoading } = useQuery(
         ["chats", router?.query?.id],
         () => getChats(router?.query?.id),
@@ -34,7 +33,7 @@ const Index = () => {
 
     const { mutate: create } = useMutation((data) => sendChats(data), {
         onSuccess: () => {
-            setMessage("");
+            setMessage([]);
             queryClient.invalidateQueries(["chats", router?.query?.id]);
         },
         onError: () => {
@@ -59,9 +58,9 @@ const Index = () => {
 
     return (
         <>
-            {/* <ScrollArea style={{ height: "50vh" }}>
+            <ScrollArea style={{ height: "50vh" }}>
                 {data?.map((d) => (
-                    <Box>
+                    <Box key={d?.id}>
                         <Group>
                             <Avatar
                                 size="md"
@@ -79,18 +78,21 @@ const Index = () => {
                             </Box>
                         </Group>
                         <Text mt="md" size="sm">
-                            {d?.message}
+                            <div
+                                dangerouslySetInnerHTML={{ __html: d?.message }}
+                            />
                         </Text>
                         <Divider my="md" />
                     </Box>
                 ))}
                 <div ref={messagesEndRef}></div>
-            </ScrollArea> */}
-            <CustomRichTextEditor
-                text={message}
-                setText={setMessage}
-                handleSubmit={handleSubmit}
+            </ScrollArea>
+            <RichTextEditor
+                style={{ marginBottom: 10 }}
+                value={message}
+                onChange={setMessage}
             />
+            <Button onClick={handleSubmit}>Send</Button>
         </>
     );
 };
