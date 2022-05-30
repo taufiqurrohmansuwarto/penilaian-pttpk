@@ -16,9 +16,14 @@ import BadgeMail from "./BadgeMail";
 import BadgeNotificationForum from "./BadgeNotificationForum";
 import BadgeNotifications from "./BadgeNotifications";
 
-const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
-    ssr: false
-});
+const ProLayout = dynamic(
+    () => import("@ant-design/pro-layout").then((mod) => mod?.ProLayout),
+    {
+        ssr: false,
+
+        loading: () => null
+    }
+);
 
 const menuItemRender = (options, element) => {
     return (
@@ -175,7 +180,7 @@ const changeRoutes = (user) => {
     });
 };
 
-const Layout = ({ children, disableContentMargin = false }) => {
+const Layout = ({ children, splitMenus = true }) => {
     const { data } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
@@ -191,7 +196,7 @@ const Layout = ({ children, disableContentMargin = false }) => {
             layout="top"
             headerTheme="light"
             menu={{
-                defaultOpenAll: false,
+                type: "group",
                 request: async () => {
                     try {
                         const user = await changeRoutes(data?.user);
@@ -201,16 +206,40 @@ const Layout = ({ children, disableContentMargin = false }) => {
                     }
                 }
             }}
-            title={"Apps"}
+            appList={[
+                {
+                    icon: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+                    title: "PTT-PK Fasilitator",
+                    desc: "Aplikasi Kepegawaian PTT-PK untuk fasilitator",
+                    url: "bkd.jatimprov.go.id/pttpk"
+                },
+                {
+                    icon: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+                    title: "PTT-PK",
+                    desc: "Aplikasi Kepegawaian PTT-PK personal",
+                    url: "bkd.jatimprov.go.id/pttpk/personal"
+                },
+                {
+                    icon: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+                    title: "Fasilitator Master",
+                    desc: "Aplikasi Kepegawaian Master untuk fasilitator",
+                    url: "master.bkd.jatimprov.go.id/fasilitator"
+                },
+                {
+                    icon: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+                    title: "Master",
+                    desc: "Aplikasi Kepegawaian Master untuk personal",
+                    url: "master.bkd.jatimprov.go.id"
+                }
+            ]}
             // logo={null}
+            // title={() => ""}
             fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}
-            theme="dark"
             rightContentRender={() => rightContentRender(data?.user)}
-            navTheme="dark"
-            fixSiderbar
-            disableContentMargin={disableContentMargin}
+            // fixSiderbar
+            // disableContentMargin={disableContentMargin}
         >
             {children}
         </ProLayout>

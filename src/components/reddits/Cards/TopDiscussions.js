@@ -16,7 +16,7 @@ function TopDiscussions() {
 
     return (
         <Badge.Ribbon text="Paling Ramai" color="red">
-            <Card size="small" title="Diskusi" loading={isLoading}>
+            <Card size="small" title="Forum" loading={isLoading}>
                 <List
                     dataSource={data}
                     loading={isLoading}
@@ -25,7 +25,7 @@ function TopDiscussions() {
                     renderItem={(item) => (
                         <List.Item>
                             <List.Item.Meta
-                                avatar={<Avatar src={item?.user?.image} />}
+                                // avatar={<Avatar src={item?.user?.image} />}
                                 title={
                                     <div
                                         style={{ cursor: "pointer" }}
@@ -34,7 +34,7 @@ function TopDiscussions() {
                                         {item?.title}
                                     </div>
                                 }
-                                description={`oleh ${item?.user?.username}`}
+                                // description={`oleh ${item?.user?.username}`}
                             />
                         </List.Item>
                     )}

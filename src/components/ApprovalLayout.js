@@ -56,7 +56,6 @@ const ApprovalLayout = ({ children, title = "" }) => {
     return (
         <ProLayout
             menuItemRender={menuItemRender}
-            title="Pejabat Penilai"
             selectedKeys={[active]}
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
             menuHeaderRender={(logo, title) => {

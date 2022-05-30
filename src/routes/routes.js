@@ -3,7 +3,7 @@ import {
     FundViewOutlined,
     MessageOutlined,
     ShareAltOutlined,
-    TeamOutlined
+    UserAddOutlined
 } from "@ant-design/icons";
 
 export default {
@@ -27,25 +27,23 @@ export default {
             path: "/tutorial",
             name: " Tutorial Penilaian",
             icon: <FundViewOutlined />,
-            children: [
+            routes: [
                 {
                     path: "/tutorial/pttpk",
-                    name: "PTT-PK"
+                    name: "PTT-PK",
+                    icon: <UserAddOutlined />
                 },
                 {
                     path: "/tutorial/penilai",
-                    name: " Penilai"
+                    name: " Penilai",
+                    icon: <UserAddOutlined />
                 },
                 {
                     path: "/tutorial/fasilitator",
-                    name: " Fasilitator"
+                    name: " Fasilitator",
+                    icon: <UserAddOutlined />
                 }
             ]
         }
-        // {
-        //     path: "/question-answer",
-        //     name: " Hari ini",
-        //     icon: <TeamOutlined />
-        // }
     ]
 };
