@@ -5,6 +5,9 @@ import FasilitatorLayout from "../../src/components/FasilitatorLayout";
 import { useRouter } from "next/router";
 import { downloadPenilaianBulanan } from "../../services/fasilitator.service";
 import FileSaver from "file-saver";
+import PageContainer from "../../src/components/PageContainer";
+import { Alert } from "@mantine/core";
+import { ExclamationMark } from "tabler-icons-react";
 
 /** @param {import('next').InferGetServerSidePropsType<typeof getServerSideProps> } props */
 function PenilaianBulanan({ data }) {
@@ -54,8 +57,20 @@ function PenilaianBulanan({ data }) {
     };
 
     return (
-        <FasilitatorLayout title="Penilaian Bulanan">
+        <PageContainer title="Rekapan Penilaian PTT-PK" subTitle="Bulanan">
             <Card>
+                <Alert
+                    color="yellow"
+                    my="md"
+                    title="Perhatian"
+                    icon={<ExclamationMark />}
+                >
+                    Untuk melihat rekap penilaian bulanan, silahkan terlebih
+                    dahulu pilih bulan sesuai keinginan anda. Hasil dari
+                    download data adalah file excel,anda bisa menggunakan filter
+                    excel pada kolom sudah verif untuk mengetahui pegawai yang
+                    sudah mengerjakan atau belum.
+                </Alert>
                 <DatePicker.MonthPicker
                     defaultValue={bulan}
                     onChange={handleChange}
@@ -70,13 +85,17 @@ function PenilaianBulanan({ data }) {
                     Download
                 </Button>
             </Card>
-        </FasilitatorLayout>
+        </PageContainer>
     );
 }
 
 PenilaianBulanan.Auth = {
     roles: ["FASILITATOR", "ADMIN"],
     groups: ["PTTPK"]
+};
+
+PenilaianBulanan.getLayout = function getLayout(page) {
+    return <FasilitatorLayout splitMenus={true}>{page}</FasilitatorLayout>;
 };
 
 export const getServerSideProps = async (ctx) => {

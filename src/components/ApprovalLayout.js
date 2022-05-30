@@ -55,6 +55,8 @@ const ApprovalLayout = ({ children, title = "" }) => {
 
     return (
         <ProLayout
+            mode="horizontal"
+            layout="mix"
             menuItemRender={menuItemRender}
             selectedKeys={[active]}
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"

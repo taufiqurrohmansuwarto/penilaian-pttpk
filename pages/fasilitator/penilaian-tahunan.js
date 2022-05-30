@@ -1,10 +1,13 @@
+import { Alert } from "@mantine/core";
 import { Button, Card, DatePicker, Divider } from "antd";
 import FileSaver from "file-saver";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { ExclamationMark } from "tabler-icons-react";
 import { downloadPenilaianAkhir } from "../../services/fasilitator.service";
 import FasilitatorLayout from "../../src/components/FasilitatorLayout";
+import PageContainer from "../../src/components/PageContainer";
 
 /** @param {import('next').InferGetServerSidePropsType<typeof getServerSideProps> } props */
 function PenilaianTahunan({ data }) {
@@ -50,8 +53,19 @@ function PenilaianTahunan({ data }) {
     };
 
     return (
-        <FasilitatorLayout title="Penilaian Akhir/Tahunan">
+        <PageContainer title="Rekap Penilaian PTT-PK" subTitle="Tahunan">
             <Card>
+                <Alert
+                    color="yellow"
+                    my="md"
+                    title="Perhatian"
+                    icon={<ExclamationMark />}
+                >
+                    Untuk melihat rekap penilaian tahunan, silahkan terlebih
+                    dahulu pilih tahun sesuai keinginan anda. Hasil dari
+                    download data adalah file excel
+                </Alert>
+
                 <DatePicker.YearPicker
                     defaultValue={tahun}
                     onChange={handleChange}
@@ -66,13 +80,17 @@ function PenilaianTahunan({ data }) {
                     Download
                 </Button>
             </Card>
-        </FasilitatorLayout>
+        </PageContainer>
     );
 }
 
 PenilaianTahunan.Auth = {
     roles: ["FASILITATOR", "ADMIN"],
     groups: ["PTTPK"]
+};
+
+PenilaianTahunan.getLayout = function getLayout(page) {
+    return <FasilitatorLayout splitMenus={true}>{page}</FasilitatorLayout>;
 };
 
 export const getServerSideProps = async (ctx) => {

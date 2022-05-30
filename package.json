@@ -7,7 +7,7 @@
     },
     "dependencies": {
         "@ant-design/icons": "^4.7.0",
-        "@ant-design/pro-layout": "^7.0.1-beta.17",
+        "@ant-design/pro-layout": "^6.38.6",
         "@babel/preset-react": "^7.16.7",
         "@babel/runtime": "^7.17.8",
         "@mantine/core": "^4.2.7",
@@ -41,7 +41,7 @@
         "react-show-more-text": "^1.5.2",
         "semantic-ui-css": "^2.4.1",
         "semantic-ui-react": "^2.1.2",
-        "tabler-icons-react": "^1.47.0",
+        "tabler-icons-react": "^1.48.0",
         "tree-flatter": "^1.0.2"
     },
     "devDependencies": {

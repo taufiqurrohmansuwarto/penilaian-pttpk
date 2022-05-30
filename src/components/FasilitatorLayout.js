@@ -1,4 +1,5 @@
 import { LogoutOutlined } from "@ant-design/icons";
+import { Text } from "@mantine/core";
 import { Avatar, Dropdown, Menu, Space, Typography } from "antd";
 import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
@@ -28,7 +29,7 @@ const menuItemRender = (options, element) => {
 const menuUser = () => (
     <Menu>
         <Menu.Item key="logout" onClick={signOut} icon={<LogoutOutlined />}>
-            Logout
+            Keluar
         </Menu.Item>
     </Menu>
 );
@@ -37,8 +38,11 @@ const rightContentRender = (user) => {
     return (
         <Dropdown overlay={menuUser()}>
             <Space align="center">
-                <Avatar style={{ cursor: "pointer" }} src={user?.image} />
-                <Typography.Text strong>{user?.name}</Typography.Text>
+                <Avatar
+                    size="small"
+                    style={{ cursor: "pointer" }}
+                    src={user?.image}
+                />
             </Space>
         </Dropdown>
     );
@@ -55,23 +59,24 @@ const FasilitatorLayout = ({ children, title = "" }) => {
 
     return (
         <ProLayout
+            layout="mix"
+            mode="horizontal"
             menuItemRender={menuItemRender}
-            collapsed
             selectedKeys={[active]}
-            title="PTTPK"
+            title="Fasilitator PTT-PK"
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
-            menuHeaderRender={(logo, title) => {
-                return <Link href="/">{logo}</Link>;
-            }}
+            onMenuHeaderClick={() => router.push("/")}
+            // menuHeaderRender={(logo, title) => {
+            //     return <Link href="/">{logo}</Link>;
+            // }}
             rightContentRender={() => rightContentRender(data?.user)}
             route={fasilitatorRoute}
-            collapsedButtonRender={false}
+            // collapsedButtonRender={false}
             navTheme="dark"
             style={{ minHeight: "100vh" }}
             fixSiderbar
-            disableContentMargin
         >
-            <PageContainer title={title}>{children}</PageContainer>
+            {children}
         </ProLayout>
     );
 };

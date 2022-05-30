@@ -21,11 +21,11 @@ export default {
             path: "/fasilitator/penilaian-tahunan",
             name: " Penilaian Tahunan",
             icon: <BookOutlined />
-        },
-        {
-            path: "/fasilitator/data-satuan-kinerja",
-            name: " Data Satuan Kinerja",
-            icon: <DatabaseOutlined />
         }
+        // {
+        //     path: "/fasilitator/data-satuan-kinerja",
+        //     name: " Data Satuan Kinerja",
+        //     icon: <DatabaseOutlined />
+        // }
     ]
 };

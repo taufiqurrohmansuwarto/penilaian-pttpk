@@ -7,7 +7,7 @@ import UserComments from "../../src/components/UsersComments";
 
 const Feeds = ({ data }) => {
     return (
-        <PageContainer title="Beranda" subTitle="Feedback">
+        <PageContainer title="Beranda" subTitle="Berbagi">
             <Row gutter={[16, 16]}>
                 <Col lg={{ span: 12, offset: 6 }} xs={{ span: 24 }}>
                     <Card>

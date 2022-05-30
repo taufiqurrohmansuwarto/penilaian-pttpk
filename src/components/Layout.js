@@ -180,7 +180,7 @@ const changeRoutes = (user) => {
     });
 };
 
-const Layout = ({ children, splitMenus = true }) => {
+const Layout = ({ children }) => {
     const { data } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
@@ -192,8 +192,8 @@ const Layout = ({ children, splitMenus = true }) => {
     return (
         <ProLayout
             // splitMenus
-            // mode="horizontal"
-            layout="top"
+            mode="horizontal"
+            layout="mix"
             headerTheme="light"
             menu={{
                 type: "group",
@@ -232,13 +232,13 @@ const Layout = ({ children, splitMenus = true }) => {
                     url: "master.bkd.jatimprov.go.id"
                 }
             ]}
-            // logo={null}
-            // title={() => ""}
+            logo={null}
+            title={"Penilaian"}
             fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}
             rightContentRender={() => rightContentRender(data?.user)}
-            // fixSiderbar
+            fixSiderbar
             // disableContentMargin={disableContentMargin}
         >
             {children}
