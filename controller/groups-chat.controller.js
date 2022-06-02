@@ -11,11 +11,10 @@ const index = async (req, res) => {
 };
 
 const create = async (req, res) => {
-    const body = req?.body;
     try {
         await prisma.groups_chats.create({
             data: {
-                name: body?.name
+                name: req?.body?.name
             }
         });
         res.json({ code: 200, message: "Success" });
@@ -26,7 +25,7 @@ const create = async (req, res) => {
 };
 
 const remove = async (req, res) => {
-    const [id] = req?.query;
+    const { id } = req?.query;
     try {
         await prisma.groups_chats.delete({
             where: {

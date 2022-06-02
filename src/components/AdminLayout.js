@@ -55,7 +55,7 @@ const AdminLayout = ({ children }) => {
             menuItemRender={menuItemRender}
             selectedKeys={[active]}
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
-            title="Admin"
+            title="Admin "
             menuHeaderRender={(logo, title) => {
                 return <Link href="/">{logo}</Link>;
             }}

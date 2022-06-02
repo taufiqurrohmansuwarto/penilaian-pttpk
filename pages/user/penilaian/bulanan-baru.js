@@ -577,9 +577,6 @@ const BulananBaru = ({ data }) => {
     const [bulan, setBulan] = useState(data?.query?.bulan);
     const [tahun, setTahun] = useState(data?.query?.tahun);
 
-    const { data: dataPenilaianAktif, isLoading: isLoadingPenilaianAktif } =
-        useQuery(["data-penilaian-aktif"], () => getPenilaianAktif());
-
     const router = useRouter();
 
     useEffect(() => {

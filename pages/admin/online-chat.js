@@ -1,4 +1,4 @@
-import { Button, Input, Modal } from "antd";
+import { Button, Input, Modal, Table } from "antd";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -53,11 +53,32 @@ function OnlineChat() {
     const showUpdate = () => setVisbileUpdate(true);
     const cancelUpdate = () => setVisbileUpdate(false);
 
+    const handleRemove = (id) => {};
+
+    const columns = [
+        { title: "name", key: "name", dataIndex: "name" },
+        {
+            title: "Aksi",
+            key: "aksi",
+            render: (_, row) => (
+                <Button onClick={() => handleRemove(row?.id)}>Hapus</Button>
+            )
+        }
+    ];
+
     return (
         <PageContainer title="Online Chat" style={{ minHeight: "95vh" }}>
-            {JSON.stringify(data)}
+            <Table
+                loading={isLoading}
+                pagination={false}
+                columns={columns}
+                dataSource={data}
+                rowKey={(row) => row?.id}
+            />
             <CreateModal visible={visibleCreate} onCancel={cancelCreate} />
-            <Button onClick={showCreate}>Create Group Chat</Button>
+            <Button style={{ marginTop: 10 }} onClick={showCreate}>
+                Create Group Chat
+            </Button>
         </PageContainer>
     );
 }

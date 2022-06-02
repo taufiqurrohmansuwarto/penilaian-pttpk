@@ -1,22 +1,23 @@
-import { Skeleton } from "antd";
-import Link from "next/link";
-import { useQuery } from "react-query";
-import { getGroupsChats } from "../../services/main.services";
+import { Card, Col, Row } from "antd";
+import ChatLayout from "../../src/components/chats/ChatLayout";
 import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
 
 const Index = () => {
-    const { data, isLoading } = useQuery(["groups-chats"], () =>
-        getGroupsChats()
-    );
-
     return (
-        <PageContainer>
-            <Skeleton loading={isLoading}>
-                {data?.map((d) => (
-                    <Link href={`/online-chat/${d?.id}`}>{d.name}</Link>
-                ))}
-            </Skeleton>
+        <PageContainer
+            title="Group Chat"
+            subTitle="Masih Beta"
+            style={{ minHeight: "92vh" }}
+        >
+            <Row>
+                <Col span={3}>
+                    <ChatLayout />
+                </Col>
+                <Col span={21}>
+                    <Card>chat</Card>
+                </Col>
+            </Row>
         </PageContainer>
     );
 };

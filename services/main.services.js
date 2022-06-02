@@ -283,11 +283,15 @@ export const getProfile = (id) => {
 
 // chats motherfucker
 export const createGroupChats = (data) => {
-    return fetcher.post(`/group-chats`).then((res) => res?.data);
+    return fetcher.post(`/groups-chats`, data).then((res) => res?.data);
 };
 
 export const getGroupsChats = () => {
     return fetcher.get(`/groups-chats`).then((res) => res?.data);
+};
+
+export const removeGroupsChats = (id) => {
+    return fetcher.delete(`/groups-chats/${id}`).then((res) => res?.data);
 };
 
 export const sendChats = ({ id, data }) => {

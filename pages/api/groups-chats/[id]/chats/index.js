@@ -1,7 +1,7 @@
 import nc from "next-connect";
-import auth from "../../../../../middleware/auth";
 import { create, index } from "../../../../../controller/chats.controller";
+import auth from "../../../../../middleware/auth";
 
 const handler = nc();
 
-export default handler.use(auth).post(create).get(index);
+export default handler.use(auth).get(index).post(create);
