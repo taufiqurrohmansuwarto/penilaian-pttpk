@@ -192,8 +192,8 @@ const Layout = ({ children }) => {
     return (
         <ProLayout
             // splitMenus
-            mode="horizontal"
-            layout="mix"
+            // mode="horizontal"
+            layout="side"
             headerTheme="light"
             menu={{
                 type: "group",
@@ -232,7 +232,7 @@ const Layout = ({ children }) => {
                     url: "master.bkd.jatimprov.go.id"
                 }
             ]}
-            logo={null}
+            // logo={null}
             title={"Penilaian"}
             fixedHeader
             selectedKeys={[active]}

@@ -1,12 +1,14 @@
+import { Card } from "antd";
+import { useSession } from "next-auth/react";
 import AdminLayout from "../../src/components/AdminLayout";
 import PageContainer from "../../src/components/PageContainer";
 
 function Dashboard() {
+    const { data } = useSession();
     return (
-        <PageContainer
-            title="Hello mofo"
-            style={{ minHeight: "95vh" }}
-        ></PageContainer>
+        <PageContainer title="Admin Dashboard" style={{ minHeight: "95vh" }}>
+            <Card>{data?.user?.name}</Card>
+        </PageContainer>
     );
 }
 

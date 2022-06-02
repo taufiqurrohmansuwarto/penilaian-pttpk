@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getChats, sendChats } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
+import PageContainer from "../../src/components/PageContainer";
 import RichTextEditor from "../../src/components/RichTextEditor";
 
 const Index = () => {
@@ -57,8 +58,8 @@ const Index = () => {
     };
 
     return (
-        <>
-            <ScrollArea style={{ height: "50vh" }}>
+        <PageContainer>
+            <ScrollArea style={{ height: "65vh" }}>
                 {data?.map((d) => (
                     <Box key={d?.id}>
                         <Group>
@@ -93,7 +94,7 @@ const Index = () => {
                 onChange={setMessage}
             />
             <Button onClick={handleSubmit}>Send</Button>
-        </>
+        </PageContainer>
     );
 };
 

@@ -19,3 +19,17 @@ export const createPooling = (data) => {
 export const removePolling = (id) => {
     return fetcher.delete(`/poolings/${id}`).then((res) => res?.data);
 };
+
+// create pengumuman
+
+export const createAnnouncement = (data) => {
+    return fetcher.post("/announcements", data).then((res) => res?.data);
+};
+
+export const updateAnnouncement = ({ id, data }) => {
+    return fetcher.patch(`/announcements/${id}`, data).then((res) => res?.data);
+};
+
+export const getAnnouncement = () => {
+    return fetcher.get(`/announcements`).then((res) => res?.data);
+};

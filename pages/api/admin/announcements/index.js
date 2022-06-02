@@ -1,7 +1,7 @@
 import nc from "next-connect";
-import { index, create } from "../../../../controller/announcements.controller";
-import admin from "../../../../middleware/admin";
+import { create, index } from "../../../../controller/announcements.controller";
+import auth from "../../../../middleware/auth";
 
 const handler = nc();
 
-export default handler.use(admin).get(index).post(create);
+export default handler.use(auth).get(index).post(create);

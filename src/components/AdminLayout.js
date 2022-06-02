@@ -30,8 +30,12 @@ const rightContentRender = (user) => {
     return (
         <Dropdown overlay={menuUser()}>
             <Space align="center">
-                <Avatar style={{ cursor: "pointer" }} src={user?.image} />
-                <Typography.Text strong>{user?.name}</Typography.Text>
+                <Avatar
+                    size="small"
+                    style={{ cursor: "pointer" }}
+                    src={user?.image}
+                />
+                {/* <Typography.Text strong>{user?.name}</Typography.Text> */}
             </Space>
         </Dropdown>
     );
@@ -50,15 +54,14 @@ const AdminLayout = ({ children }) => {
         <ProLayout
             menuItemRender={menuItemRender}
             selectedKeys={[active]}
-            title="PTTPK"
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
+            title="Admin"
             menuHeaderRender={(logo, title) => {
                 return <Link href="/">{logo}</Link>;
             }}
-            collapsed
             rightContentRender={() => rightContentRender(data?.user)}
             route={adminRoute}
-            navTheme="dark"
+            navTheme="light"
             fixedHeader
             fixSiderbar
             disableContentMargin

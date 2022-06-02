@@ -40,9 +40,24 @@ const create = async (req, res) => {
 const update = async (req, res) => {
     const { announcementId } = req?.query;
     const { customId } = req?.user;
+    const data = req?.body;
 
     try {
-    } catch (error) {}
+        await prisma.announcements.updateMany({
+            where: {
+                id: announcementId,
+                user_custom_id: customId
+            },
+            data: {
+                title: data?.title,
+                description: data?.description
+            }
+        });
+        res.json({ code: 200, message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
 };
 
 const remove = async (req, res) => {

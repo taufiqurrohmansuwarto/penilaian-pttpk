@@ -2,6 +2,7 @@ import {
     DashboardOutlined,
     FieldTimeOutlined,
     LineChartOutlined,
+    MessageOutlined,
     UserOutlined
 } from "@ant-design/icons";
 
@@ -26,6 +27,11 @@ export default {
             path: "/admin/referensi",
             name: " Referensi",
             icon: <UserOutlined />
+        },
+        {
+            path: "/admin/online-chat",
+            name: " Online Chat",
+            icon: <MessageOutlined />
         }
     ]
 };

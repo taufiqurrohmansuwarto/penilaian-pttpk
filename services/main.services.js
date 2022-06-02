@@ -282,6 +282,10 @@ export const getProfile = (id) => {
 };
 
 // chats motherfucker
+export const createGroupChats = (data) => {
+    return fetcher.post(`/group-chats`).then((res) => res?.data);
+};
+
 export const getGroupsChats = () => {
     return fetcher.get(`/groups-chats`).then((res) => res?.data);
 };

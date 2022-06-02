@@ -59,11 +59,10 @@ const FasilitatorLayout = ({ children, title = "" }) => {
 
     return (
         <ProLayout
-            layout="mix"
-            mode="horizontal"
+            layout="side"
             menuItemRender={menuItemRender}
             selectedKeys={[active]}
-            title="Fasilitator PTT-PK"
+            title="Penilaian"
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
             onMenuHeaderClick={() => router.push("/")}
             // menuHeaderRender={(logo, title) => {
