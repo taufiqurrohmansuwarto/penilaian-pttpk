@@ -1,9 +1,17 @@
+import axios from "axios";
 import moment from "moment";
 import prisma from "../lib/prisma";
-import axios from "axios";
 import { generatePdf } from "../utils/create-pdf-bulanan";
 import { generateKinerjaTahunanFull } from "../utils/create-pdf-tahunan";
-import { totalKinerja, totalNilaiPerilaku } from "../utils/total-kinerja";
+import { totalKinerja } from "../utils/total-kinerja";
+
+const https = require("https");
+
+const instance = axios.create({
+    httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+    })
+});
 
 const fonts = {
     Roboto: {
@@ -93,7 +101,7 @@ const cetakPenilaianBulananUser = async (req, res) => {
             }
         });
 
-        const currentFoto = await axios.get(`${penilaian?.pegawai?.image}`, {
+        const currentFoto = await instace.get(`${penilaian?.pegawai?.image}`, {
             responseType: "arraybuffer"
         });
 

@@ -68,7 +68,7 @@ export default function SignIn({ providers }) {
                             <Stack spacing="xs">
                                 <Text size="xs">
                                     <Link
-                                        href="http://bkd.jatimprov.go.id/pttpk"
+                                        href="https://bkd.jatimprov.go.id/pttpk"
                                         passHref
                                     >
                                         <a target="_blank">
