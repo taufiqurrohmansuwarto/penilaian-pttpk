@@ -11,6 +11,25 @@ function Changelog() {
             </Link>
             <Divider
                 my="xs"
+                label="Versi 0.0.c 9 Juni 2022"
+                labelPosition="center"
+            />
+            <List
+                spacing="xs"
+                size="sm"
+                center
+                icon={
+                    <ThemeIcon color="teal" size={24} radius="xl">
+                        <CircleCheck size={16} />
+                    </ThemeIcon>
+                }
+            >
+                <List.Item>
+                    Penambahan halaman tutorial PTTPK, Penilai dan Fasilitator{" "}
+                </List.Item>
+            </List>
+            <Divider
+                my="xs"
                 label="Versi 0.0.b 20 Mei 2022"
                 labelPosition="center"
             />
