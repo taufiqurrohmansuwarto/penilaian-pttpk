@@ -1,18 +1,26 @@
 import { Avatar, Box, Divider, Group, ScrollArea, Text } from "@mantine/core";
-import { Button, Card, Col, message as messageAntd, Row } from "antd";
+import { Button, Card, message as messageAntd, Row } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getChats, sendChats, uploads } from "../../services/main.services";
-import ChatLayout from "../../src/components/chats/ChatLayout";
+import { getChats, sendChats } from "../../services/main.services";
 import Layout from "../../src/components/Layout";
 import PageContainer from "../../src/components/PageContainer";
-import RichTextEditor from "../../src/components/RichTextEditor";
+import Rte from "../../src/components/Rte";
 
 const Index = () => {
     const router = useRouter();
     const [message, setMessage] = useState("");
+
+    // jodit react
+    const editor = useRef();
+    const [content, setContent] = useState();
+    const config = useMemo({
+        readonly: false,
+        placeholder: "start typings.."
+    });
+
     const { data, isLoading } = useQuery(
         ["chats", router?.query?.id],
         () => getChats(router?.query?.id),
@@ -43,17 +51,6 @@ const Index = () => {
             alert("error");
         }
     });
-
-    const handleUpload = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("image", file);
-            const result = await uploads(formData);
-            return result;
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     const handleSubmit = () => {
         if (!message?.trim()) {
@@ -112,13 +109,16 @@ const Index = () => {
                         ))}
                         <div ref={messagesEndRef}></div>
                     </ScrollArea>
-                    <RichTextEditor
-                        style={{ marginBottom: 10 }}
-                        value={message}
-                        onChange={setMessage}
-                        onImageUpload={handleUpload}
+                    <Rte
+                        ref={editor}
+                        value={content}
+                        config={config}
+                        onChange={(newContent) => setContent(newContent)}
+                        onBlur={(newContent) => setContent(newContent)}
                     />
-                    <Button onClick={handleSubmit}>Send</Button>
+                    <Button style={{ marginTop: 10 }} onClick={handleSubmit}>
+                        Send
+                    </Button>
                 </Card>
             </Row>
         </PageContainer>

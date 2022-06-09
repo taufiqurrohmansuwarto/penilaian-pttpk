@@ -65,26 +65,43 @@ const FormApprovalModal = ({
                 }))
             );
         }
-    }, [status, data, visible]);
+    }, [status, data, visible, catatan]);
 
     const columns = [
+        {
+            dataIndex: "no",
+            title: "No.",
+            render: (_, row, key) => <div>{key + 1}</div>
+        },
         { dataIndex: "title", title: "Deskripsi Pekerjaan" },
+
         { dataIndex: "kuantitas", title: "Kuantitas" },
         {
             dataIndex: "start",
-            title: "Tanggal Mulai Pekerjaan",
+            title: "Tgl. Mulai Pekerjaan",
             render: (_, row) => (
                 <div>{moment(row?.start).format("DD-MM-YYYY")}</div>
             )
         },
         {
             dataIndex: "end",
-            title: "Tanggal Akhir Pekerjaan",
+            title: "Tgl. Akhir Pekerjaan",
             render: (_, row) => (
-                <div>
-                    {moment(row?.end).subtract(1, "days").format("DD-MM-YYYY")}
-                </div>
+                <div>{moment(row?.end).format("DD-MM-YYYY")}</div>
             )
+        },
+        {
+            dataIndex: "induk_pekerjaan",
+            title: "Induk Pekerjaan",
+            render: (_, row) => <div>{row?.target_penilaian?.pekerjaan}</div>
+        },
+        {
+            dataIndex: "target",
+            title: "Target",
+            render: (_, row) => <div>{row?.target_penilaian?.kuantitas}</div>
+        },
+        {
+            dataIndex: "-"
         },
         {
             key: "kualitas",
@@ -164,7 +181,7 @@ const FormApprovalModal = ({
             centered
             onCancel={onCancel}
             visible={visible}
-            width={900}
+            width={1200}
             onOk={handleSubmit}
         >
             <MantineAlert
@@ -172,10 +189,13 @@ const FormApprovalModal = ({
                 style={{ marginBottom: 8 }}
                 title="Petunjuk"
             >
-                Anda bisa memakai Nilai random dibawah ini untuk mempercepat
-                pengisian kualitas PTTPK. Misal ingin menilai PTTPK dengan range
-                nilai 88 sampai 90.
+                Anda bisa men set nilai dibawah ini untuk mempercepat pengisian
+                kualitas PTTPK. Misal ingin menilai PTTPK dengan batasan nilai
+                88 sampai 90. Nilai 88 sampai 90 bukan merupakan nilai patokan.
+                Anda bisa juga mengisi secara manual di kolom kualitas/nilai
             </MantineAlert>
+            {JSON.stringify(data?.kinerja_bulanan)}
+            <Divider />
             <Space>
                 <InputNumber
                     min={0}
@@ -192,7 +212,7 @@ const FormApprovalModal = ({
                     onChange={handleChangeHighValue}
                 />
                 <Button onClick={handleSetRandomValue}>
-                    Buat Nilai Random
+                    Set Nilai dengan batasan
                 </Button>
             </Space>
             <Divider />
@@ -270,6 +290,11 @@ function Penilaian({ data: query }) {
     }, [date, router?.isReady, query, idPtt]);
 
     const columns = [
+        {
+            key: "nomer",
+            title: "Nomer",
+            render: (_, row, index) => <div>{index + 1}</div>
+        },
         {
             key: "foto",
             title: "Foto",

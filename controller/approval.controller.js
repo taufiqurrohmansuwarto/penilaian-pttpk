@@ -54,7 +54,13 @@ const getListPenilaianBulanan = async (req, res) => {
                     include: {
                         target_penilaian: {
                             include: {
-                                ref_satuan_kinerja: true
+                                ref_satuan_kinerja: true,
+                                kinerja_bulanan: {
+                                    where: {
+                                        id_penilaian: id,
+                                        sudah_verif: true
+                                    }
+                                }
                             }
                         }
                     }

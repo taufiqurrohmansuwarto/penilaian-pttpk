@@ -11,11 +11,12 @@ const MyNavbar = () => {
     };
 
     return (
-        <Navbar height="95vh" p="xs" width={{ base: 300 }}>
+        <Navbar height="95vh" p="xs" width={{ base: 200 }}>
             <Navbar.Section>
                 <Button
                     mt="xs"
                     size="sm"
+                    color="green"
                     leftIcon={<Message2 />}
                     onClick={gotoCreate}
                 >

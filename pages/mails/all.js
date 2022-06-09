@@ -1,10 +1,10 @@
-import { Button, Typography } from "antd";
+import { Button } from "antd";
 import React from "react";
-import MailLayout from "../../src/components/CustomLayout/MaiLayout";
 import Layout from "../../src/components/Layout";
+import MailLayout from "../../src/components/MailLayout";
 
 function All() {
-    return <Button type="primary">Hello</Button>;
+    return <div>Semua</div>;
 }
 
 All.getLayout = function getLayout(page) {

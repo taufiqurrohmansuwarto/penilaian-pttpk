@@ -180,7 +180,7 @@ const changeRoutes = (user) => {
     });
 };
 
-const Layout = ({ children }) => {
+const Layout = ({ children, disableContentMargin = false }) => {
     const { data } = useSession({
         required: true,
         onUnauthenticated: () => signIn()
@@ -191,8 +191,6 @@ const Layout = ({ children }) => {
 
     return (
         <ProLayout
-            // splitMenus
-            // mode="horizontal"
             layout="side"
             headerTheme="light"
             menu={{
@@ -206,40 +204,13 @@ const Layout = ({ children }) => {
                     }
                 }
             }}
-            appList={[
-                {
-                    icon: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
-                    title: "PTT-PK Fasilitator",
-                    desc: "Aplikasi Kepegawaian PTT-PK untuk fasilitator",
-                    url: "bkd.jatimprov.go.id/pttpk"
-                },
-                {
-                    icon: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
-                    title: "PTT-PK",
-                    desc: "Aplikasi Kepegawaian PTT-PK personal",
-                    url: "bkd.jatimprov.go.id/pttpk/personal"
-                },
-                {
-                    icon: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
-                    title: "Fasilitator Master",
-                    desc: "Aplikasi Kepegawaian Master untuk fasilitator",
-                    url: "master.bkd.jatimprov.go.id/fasilitator"
-                },
-                {
-                    icon: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
-                    title: "Master",
-                    desc: "Aplikasi Kepegawaian Master untuk personal",
-                    url: "master.bkd.jatimprov.go.id"
-                }
-            ]}
-            // logo={null}
             title={"Penilaian"}
             fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}
             rightContentRender={() => rightContentRender(data?.user)}
             fixSiderbar
-            // disableContentMargin={disableContentMargin}
+            disableContentMargin={disableContentMargin}
         >
             {children}
         </ProLayout>

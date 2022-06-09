@@ -8,7 +8,6 @@ const CustomRichTextEditor = ({
     text,
     setText,
     handleSubmit,
-    submitting,
     buttonText = "Submit",
     main = false,
     onCancel,
@@ -44,7 +43,8 @@ const CustomRichTextEditor = ({
                     root: {
                         padding: 0,
                         margin: 0,
-                        // minHeight: "10px !important",
+                        minHeight: "10px !important",
+
                         width: "100%",
                         marginBottom: 14
                     }

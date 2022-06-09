@@ -30,8 +30,12 @@ const rightContentRender = (user) => {
     return (
         <Dropdown overlay={menuUser()}>
             <Space align="center">
-                <Avatar style={{ cursor: "pointer" }} src={user?.image} />
-                <Typography.Text strong>{user?.name}</Typography.Text>
+                <Avatar
+                    size="small"
+                    style={{ cursor: "pointer" }}
+                    src={user?.image}
+                />
+                {/* <Typography.Text strong>{user?.name}</Typography.Text> */}
             </Space>
         </Dropdown>
     );

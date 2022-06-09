@@ -1,4 +1,4 @@
-import { Alert } from "@mntine/core";
+import { Alert } from "@mantine/core";
 import { Card, Divider } from "antd";
 import { useSession } from "next-auth/react";
 import { ExclamationMark } from "tabler-icons-react";

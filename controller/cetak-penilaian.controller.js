@@ -101,7 +101,7 @@ const cetakPenilaianBulananUser = async (req, res) => {
             }
         });
 
-        const currentFoto = await instace.get(`${penilaian?.pegawai?.image}`, {
+        const currentFoto = await instance.get(`${penilaian?.pegawai?.image}`, {
             responseType: "arraybuffer"
         });
 
@@ -180,9 +180,12 @@ const cetakPenilaianAkhirUser = async (req, res) => {
         if (!result) {
             res.status(404).json({ code: 404, message: "Not Found" });
         } else {
-            const currentFoto = await axios.get(`${result?.pegawai?.image}`, {
-                responseType: "arraybuffer"
-            });
+            const currentFoto = await instance.get(
+                `${result?.pegawai?.image}`,
+                {
+                    responseType: "arraybuffer"
+                }
+            );
 
             const base64 = Buffer.from(currentFoto.data).toString("base64");
 

@@ -1,16 +1,15 @@
-import "@ant-design/pro-layout/dist/layout.css";
 import "@ant-design/pro-components/dist/components.css";
-import { ConfigProvider, Spin } from "antd";
+import "@ant-design/pro-layout/dist/layout.css";
+import { MantineProvider } from "@mantine/core";
+import { ConfigProvider } from "antd";
 import "antd/dist/antd.css";
 import id from "antd/lib/locale/id_ID";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import "semantic-ui-css/semantic.min.css";
-import "./index.css";
-import { RouterScrollProvider } from "@moxy/next-router-scroll";
-import { MantineProvider } from "@mantine/core";
 import Loading from "../src/components/Loading";
+import "./index.css";
 
 export default function MyApp({
     Component,
@@ -37,21 +36,17 @@ export default function MyApp({
                         }}
                     >
                         <Hydrate state={pageProps?.dehydrateState}>
-                            <RouterScrollProvider disableNextLinkScroll={false}>
-                                {Component.Auth ? (
-                                    <Auth
-                                        roles={Component?.Auth?.roles}
-                                        groups={Component?.Auth?.groups}
-                                        isAdmin={Component?.Auth?.isAdmin}
-                                    >
-                                        {getLayout(
-                                            <Component {...pageProps} />
-                                        )}
-                                    </Auth>
-                                ) : (
-                                    <Component {...pageProps} />
-                                )}
-                            </RouterScrollProvider>
+                            {Component.Auth ? (
+                                <Auth
+                                    roles={Component?.Auth?.roles}
+                                    groups={Component?.Auth?.groups}
+                                    isAdmin={Component?.Auth?.isAdmin}
+                                >
+                                    {getLayout(<Component {...pageProps} />)}
+                                </Auth>
+                            ) : (
+                                <Component {...pageProps} />
+                            )}
                         </Hydrate>
                     </MantineProvider>
                 </ConfigProvider>

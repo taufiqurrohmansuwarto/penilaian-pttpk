@@ -37,8 +37,11 @@ const rightContentRender = (user) => {
     return (
         <Dropdown overlay={menuUser()}>
             <Space align="center">
-                <Avatar style={{ cursor: "pointer" }} src={user?.image} />
-                <Typography.Text strong>{user?.name}</Typography.Text>
+                <Avatar
+                    size="small"
+                    style={{ cursor: "pointer" }}
+                    src={user?.image}
+                />
             </Space>
         </Dropdown>
     );
@@ -56,7 +59,7 @@ const ApprovalLayout = ({ children, title = "" }) => {
     return (
         <ProLayout
             mode="horizontal"
-            layout="mix"
+            layout="side"
             menuItemRender={menuItemRender}
             selectedKeys={[active]}
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
