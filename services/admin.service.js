@@ -30,6 +30,6 @@ export const updateAnnouncement = ({ id, data }) => {
     return fetcher.patch(`/announcements/${id}`, data).then((res) => res?.data);
 };
 
-export const getAnnouncement = () => {
+export const getAnnouncements = () => {
     return fetcher.get(`/announcements`).then((res) => res?.data);
 };

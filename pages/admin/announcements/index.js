@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
     createAnnouncement,
-    getAnnouncement,
+    getAnnouncements,
     updateAnnouncement
 } from "../../../services/admin.service";
 import AdminLayout from "../../../src/components/AdminLayout";
@@ -119,7 +119,7 @@ function Announcements() {
     const closeUpdateModal = () => setUpdateModal(false);
 
     const { data, isLoading } = useQuery(["announcements"], () =>
-        getAnnouncement()
+        getAnnouncements()
     );
 
     return (

@@ -16,6 +16,7 @@ import {
     updateComment
 } from "../../services/main.services";
 import CustomRichTextEditor from "./CustomRichTextEditor";
+import Pengumuman from "./Pengumuman";
 import MComment from "./semantic/MComment";
 import MListLoading from "./semantic/MListLoading";
 
@@ -170,13 +171,7 @@ const UserComments = ({ sort }) => {
 
     return (
         <>
-            <Alert my="xs" title="Perhatian" icon={<Antenna />} color="yellow">
-                Kamu bisa memention orang dengan menambahkan @ di kotak
-                komentar. Kalau sungkan bertanya di depan umum bisa japri saya
-                lewat email di pojok kanan atas. Untuk diskusi dapat ditanyakan
-                di forum
-            </Alert>
-
+            <Pengumuman />
             <Comment
                 avatar={userData?.user?.image}
                 content={
