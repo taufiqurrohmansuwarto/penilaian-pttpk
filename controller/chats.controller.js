@@ -30,11 +30,14 @@ const index = async (req, res) => {
             },
             include: {
                 user: true
-            }
+            },
+            orderBy: {
+                created_at: "asc"
+            },
+            take: 500
         });
         res.json(result);
     } catch (error) {
-        console.log(error);
         res.status(400).json({ code: 400, message: "Internal Server Error" });
     }
 };

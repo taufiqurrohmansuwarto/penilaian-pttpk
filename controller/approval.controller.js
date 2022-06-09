@@ -27,7 +27,10 @@ const dataPenilaian = async (req, res) => {
                 pegawai: true
             },
             take: limit,
-            skip: offset
+            skip: offset,
+            orderBy: {
+                created_at: "asc"
+            }
         });
         res.json(result);
     } catch (error) {
@@ -47,6 +50,9 @@ const getListPenilaianBulanan = async (req, res) => {
             },
             include: {
                 kinerja_bulanan: {
+                    orderBy: {
+                        created_at: "desc"
+                    },
                     where: {
                         bulan: parseInt(bulan),
                         tahun: parseInt(tahun)
@@ -56,6 +62,10 @@ const getListPenilaianBulanan = async (req, res) => {
                             include: {
                                 ref_satuan_kinerja: true,
                                 kinerja_bulanan: {
+                                    select: {
+                                        id: true,
+                                        kuantitas: true
+                                    },
                                     where: {
                                         id_penilaian: id,
                                         sudah_verif: true
@@ -124,12 +134,12 @@ const approvePenilaianBulanan = async (req, res) => {
             }
         });
 
-        if (currentUser && currentUser?.email) {
-            await sendEmail(
-                currentUser?.email,
-                `Penilaian Bulan ${bulan} tahun ${tahun} telah dinilai dan di acc atasan anda`
-            );
-        }
+        // if (currentUser && currentUser?.email) {
+        //     await sendEmail(
+        //         currentUser?.email,
+        //         `Penilaian Bulan ${bulan} tahun ${tahun} telah dinilai dan di acc atasan anda`
+        //     );
+        // }
 
         // ini harus diupdate
 

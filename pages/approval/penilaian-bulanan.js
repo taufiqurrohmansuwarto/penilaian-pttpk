@@ -2,6 +2,7 @@ import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import {
     Alert,
     Avatar,
+    BackTop,
     Button,
     Card,
     DatePicker,
@@ -14,7 +15,7 @@ import {
     Space,
     Table
 } from "antd";
-import { random } from "lodash";
+import { countBy, random, sumBy } from "lodash";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -35,7 +36,8 @@ const FormApprovalModal = ({
     onCancel,
     visible,
     idPtt,
-    catatanAtasanLangsung
+    catatanAtasanLangsung,
+    namaPtt
 }) => {
     const { data, isLoading, status } = useQuery(
         ["approval_penilaian_bulanan", `${id}${bulan}${tahun}`],
@@ -48,7 +50,7 @@ const FormApprovalModal = ({
     const [kualitasValue, setKualitasValue] = useState([]);
     const [lowValue, setLowValue] = useState(0);
     const [highValue, setHightValue] = useState(0);
-    const [catatan, setCatatan] = useState(catatanAtasanLangsung);
+    const [catatan, setCatatan] = useState(null);
 
     const handleChangeCatatan = (e) => {
         setCatatan(e?.target?.value);
@@ -56,6 +58,9 @@ const FormApprovalModal = ({
 
     useEffect(() => {
         if (status === "success") {
+            setLowValue(0);
+            setHightValue(0);
+            setCatatan(catatanAtasanLangsung);
             setKualitasValue(
                 data?.kinerja_bulanan?.map((k) => ({
                     id: k?.id,
@@ -65,7 +70,7 @@ const FormApprovalModal = ({
                 }))
             );
         }
-    }, [status, data, visible, catatan]);
+    }, [status, data, visible]);
 
     const columns = [
         {
@@ -101,7 +106,13 @@ const FormApprovalModal = ({
             render: (_, row) => <div>{row?.target_penilaian?.kuantitas}</div>
         },
         {
-            dataIndex: "-"
+            dataIndex: "capaian",
+            title: "Capaian",
+            render: (_, row) => (
+                <div>
+                    {sumBy(row?.target_penilaian?.kinerja_bulanan, "kuantitas")}
+                </div>
+            )
         },
         {
             key: "kualitas",
@@ -174,7 +185,7 @@ const FormApprovalModal = ({
 
     return (
         <Modal
-            title="Pekerjaan Bulanan"
+            title={`Pekerjaan Bulanan ${namaPtt}`}
             okText="Beri Nilai"
             destroyOnClose
             confirmLoading={verifMutationApproval.isLoading}
@@ -194,7 +205,7 @@ const FormApprovalModal = ({
                 88 sampai 90. Nilai 88 sampai 90 bukan merupakan nilai patokan.
                 Anda bisa juga mengisi secara manual di kolom kualitas/nilai
             </MantineAlert>
-            {JSON.stringify(data?.kinerja_bulanan)}
+            {/* {JSON.stringify(data?.kinerja_bulanan)} */}
             <Divider />
             <Space>
                 <InputNumber
@@ -276,6 +287,7 @@ function Penilaian({ data: query }) {
     const [id, setId] = useState();
     const [idPtt, setIdPtt] = useState();
     const [catatanAtasan, setCatatanAtasan] = useState("");
+    const [namaPtt, setNamaPtt] = useState("");
 
     const closeModal = () => setShowModal(false);
     const openModal = (row) => {
@@ -283,6 +295,7 @@ function Penilaian({ data: query }) {
         setId(row?.id_penilaian);
         setCatatanAtasan(row?.catatan);
         setIdPtt(row?.pegawai_id);
+        setNamaPtt(row?.pegawai?.username);
     };
 
     useEffect(() => {
@@ -292,7 +305,7 @@ function Penilaian({ data: query }) {
     const columns = [
         {
             key: "nomer",
-            title: "Nomer",
+            title: "No.",
             render: (_, row, index) => <div>{index + 1}</div>
         },
         {
@@ -351,6 +364,7 @@ function Penilaian({ data: query }) {
                 onCancel={closeModal}
                 catatanAtasanLangsung={catatanAtasan}
                 idPtt={idPtt}
+                namaPtt={namaPtt}
                 id={id}
                 bulan={moment(date).format("M")}
                 tahun={moment(date).format("YYYY")}
@@ -373,6 +387,7 @@ function Penilaian({ data: query }) {
                         loading={loadingDataPenilaianApproval}
                         pagination={false}
                     />
+                    <BackTop />
                 </Card>
             </Skeleton>
         </PageContainer>

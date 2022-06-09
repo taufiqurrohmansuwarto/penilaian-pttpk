@@ -11,15 +11,10 @@ import Rte from "../../src/components/Rte";
 
 const Index = () => {
     const router = useRouter();
-    const [message, setMessage] = useState("");
 
     // jodit react
     const editor = useRef();
     const [content, setContent] = useState();
-    const config = useMemo({
-        readonly: false,
-        placeholder: "start typings.."
-    });
 
     const { data, isLoading } = useQuery(
         ["chats", router?.query?.id],
@@ -43,7 +38,7 @@ const Index = () => {
 
     const { mutate: create } = useMutation((data) => sendChats(data), {
         onSuccess: () => {
-            setMessage("");
+            setContent("");
             queryClient.invalidateQueries(["chats", router?.query?.id]);
             messageAntd.success("Chat berhasil ditambahkan");
         },
@@ -53,18 +48,13 @@ const Index = () => {
     });
 
     const handleSubmit = () => {
-        if (!message?.trim()) {
-            return;
-        } else {
-            const data = {
-                id: router?.query?.id,
-                data: {
-                    message
-                }
-            };
-
-            create(data);
-        }
+        const data = {
+            id: router?.query?.id,
+            data: {
+                message: content
+            }
+        };
+        create(data);
     };
 
     return (
@@ -92,7 +82,7 @@ const Index = () => {
                                         </Text>
                                         <Text size="xs">
                                             {moment(d?.created_at).format(
-                                                "dddd, HH:mm"
+                                                "dddd DD-MM-YYYY, HH:mm"
                                             )}
                                         </Text>
                                     </Box>
@@ -112,7 +102,6 @@ const Index = () => {
                     <Rte
                         ref={editor}
                         value={content}
-                        config={config}
                         onChange={(newContent) => setContent(newContent)}
                         onBlur={(newContent) => setContent(newContent)}
                     />

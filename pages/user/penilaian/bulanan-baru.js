@@ -6,11 +6,10 @@ import {
 } from "@ant-design/icons";
 import {
     Alert,
+    BackTop,
     Button,
     Card,
-    Col,
     DatePicker,
-    Descriptions,
     Divider,
     Drawer,
     Form,
@@ -19,7 +18,6 @@ import {
     message,
     Modal,
     Popconfirm,
-    Row,
     Select,
     Skeleton,
     Space,
@@ -526,6 +524,7 @@ const Penilaian = ({ tahun, bulan }) => {
                 key="id"
                 rowKey={(row) => row?.id}
             />
+            <BackTop />
             <Drawer
                 key="create"
                 onClose={closeVisibleCreate}

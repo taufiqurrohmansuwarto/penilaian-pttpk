@@ -102,11 +102,11 @@ const kirimAtasan = async (req, res) => {
                 }
             });
 
-            if (penilai && currentUser) {
-                const to = penilai?.email;
-                const text = `PTTPK atas nama ${currentUser?.username} telah mengirimkan penilaian bulanan, bulan ${bulan} tahun ${tahun} ke anda. Mohon segera dilakukan ACC.`;
-                await sendEmail(to, text);
-            }
+            // if (penilai && currentUser) {
+            //     const to = penilai?.email;
+            //     const text = `PTTPK atas nama ${currentUser?.username} telah mengirimkan penilaian bulanan, bulan ${bulan} tahun ${tahun} ke anda. Mohon segera dilakukan ACC.`;
+            //     await sendEmail(to, text);
+            // }
 
             res.json({ code: 200, message: "sukses" });
         }
