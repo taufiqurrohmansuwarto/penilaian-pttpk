@@ -117,21 +117,23 @@ function Discussions() {
     };
 
     return (
-        <Layout>
-            <NotificationLayout activeKey={"discussions"}>
-                <Skeleton loading={isLoading}>
-                    <ListNotif
-                        data={data}
-                        handleReadAllNotification={handleReadAllNotification}
-                        handleReadAllNotificationById={
-                            handleReadAllNotificationById
-                        }
-                    />
-                </Skeleton>
-            </NotificationLayout>
-        </Layout>
+        <NotificationLayout activeKey={"discussions"}>
+            <Skeleton loading={isLoading}>
+                <ListNotif
+                    data={data}
+                    handleReadAllNotification={handleReadAllNotification}
+                    handleReadAllNotificationById={
+                        handleReadAllNotificationById
+                    }
+                />
+            </Skeleton>
+        </NotificationLayout>
     );
 }
+
+Discussions.getLayout = function getLayout(page) {
+    return <Layout>{page}</Layout>;
+};
 
 Discussions.Auth = {
     roles: ["USER", "FASILITATOR", "ADMIN"],

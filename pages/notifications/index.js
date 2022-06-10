@@ -139,30 +139,29 @@ function Notifications() {
     };
 
     return (
-        <Layout>
-            <PageContainer
-                title="Notif"
-                subTitle="Notifikasi Feedback dan diskusi"
-            >
-                <Row>
-                    <Col span={10} offset={6}>
-                        <Skeleton loading={isLoading}>
-                            <ListNotif
-                                handleReadAllNotification={
-                                    handleReadAllNotification
-                                }
-                                handleReadAllNotificationById={
-                                    handleReadAllNotificationById
-                                }
-                                data={data}
-                            />
-                        </Skeleton>
-                    </Col>
-                </Row>
-            </PageContainer>
-        </Layout>
+        <PageContainer title="Notif" subTitle="Notifikasi Feedback dan diskusi">
+            <Row>
+                <Col span={10} offset={6}>
+                    <Skeleton loading={isLoading}>
+                        <ListNotif
+                            handleReadAllNotification={
+                                handleReadAllNotification
+                            }
+                            handleReadAllNotificationById={
+                                handleReadAllNotificationById
+                            }
+                            data={data}
+                        />
+                    </Skeleton>
+                </Col>
+            </Row>
+        </PageContainer>
     );
 }
+
+Notifications.getLayout = function getLayout(page) {
+    return <Layout>{page}</Layout>;
+};
 
 Notifications.Auth = {
     roles: ["USER", "FASILITATOR", "ADMIN"],
