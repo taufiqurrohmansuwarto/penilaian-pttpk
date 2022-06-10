@@ -24,8 +24,11 @@ function Changelog() {
                     </ThemeIcon>
                 }
             >
+                <List.Item>Penambahan fitur chat online</List.Item>
+                <List.Item>Penambahan target dan capaian di approval</List.Item>
                 <List.Item>
-                    Penambahan halaman tutorial PTTPK, Penilai dan Fasilitator{" "}
+                    Penambahan total pegawai, pegawai sudah verif dan pegawai
+                    belum verif
                 </List.Item>
             </List>
             <Divider
