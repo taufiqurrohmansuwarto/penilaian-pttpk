@@ -272,7 +272,7 @@ function PenilaianAkhir() {
         () => batalKirimAtasanPenilaianAkhir(),
         {
             onSuccess: () => {
-                message.success("Berhasil batal kirim");
+                message.success("Turun Status Berhasil");
                 queryClient.invalidateQueries(["penilaian-aktif"]);
             }
         }

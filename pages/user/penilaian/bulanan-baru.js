@@ -65,7 +65,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
         (data) => batalKirimAtasan(data),
         {
             onSuccess: () => {
-                message.success("Batal Kirim sukses");
+                message.success("Turun Status Berhasil!");
                 queryClient.invalidateQueries(["data-request-penilaian"]);
             }
         }
@@ -101,7 +101,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
         Modal.confirm({
             title: "Perhatian",
             content:
-                "Dengan mengklik tombol batal kirim atasan anda dapat mengentri ulang data pekerjaan bulanan anda kembali. Apakah anda yakin?",
+                "Dengan mengklik tombol Turun Status anda dapat mengentri ulang data pekerjaan bulanan anda kembali.  Apakah anda yakin?",
             width: 500,
             centered: true,
             onOk: () => {
@@ -152,7 +152,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                                 onClick={handleBatalKirimAtasan}
                                 icon={<CloseOutlined />}
                             >
-                                Batal Kirim Atasan
+                                Turun Status Bulanan
                             </Button>
                             <Button
                                 disabled={!data?.sudah_verif}
