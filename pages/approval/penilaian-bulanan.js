@@ -1,4 +1,5 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { Alert as AlertMantine, Text } from "@mantine/core";
 import {
     Alert,
     Avatar,
@@ -371,6 +372,30 @@ function Penilaian({ data: query }) {
             />
             <Skeleton loading={!router?.isReady}>
                 <Card>
+                    <AlertMantine title="Detail" mb="sm">
+                        <Text size="sm">
+                            Total Pegawai {dataPenilaianApproval?.length} orang
+                        </Text>
+                        <Text size="sm">
+                            Pegawai verif{" "}
+                            {
+                                dataPenilaianApproval?.filter(
+                                    (x) => !!x?.sudah_verif
+                                )?.length
+                            }{" "}
+                            orang
+                        </Text>
+                        <Text size="sm">
+                            Pegawai belum verif{" "}
+                            {
+                                dataPenilaianApproval?.filter(
+                                    (x) => !x?.sudah_verif
+                                )?.length
+                            }{" "}
+                            orang
+                        </Text>
+                    </AlertMantine>
+
                     <DatePicker.MonthPicker
                         onChange={handleChange}
                         allowClear={false}

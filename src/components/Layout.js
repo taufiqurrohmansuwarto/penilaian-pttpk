@@ -110,7 +110,6 @@ const rightContentRender = (user) => {
                         style={{ cursor: "pointer" }}
                         src={user?.image}
                     />
-                    {/* <Typography.Text strong>{user?.name}</Typography.Text> */}
                 </Space>
             </Dropdown>
         </Space>
