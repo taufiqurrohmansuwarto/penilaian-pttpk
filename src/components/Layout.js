@@ -203,7 +203,7 @@ const Layout = ({ children, disableContentMargin = false }) => {
                     }
                 }
             }}
-            title={"Penilaian"}
+            title={"SIASN BKD"}
             fixedHeader
             selectedKeys={[active]}
             menuItemRender={menuItemRender}
