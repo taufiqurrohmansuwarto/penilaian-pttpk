@@ -40,7 +40,7 @@ const Index = () => {
         onSuccess: () => {
             setContent("");
             queryClient.invalidateQueries(["chats", router?.query?.id]);
-            messageAntd.success("Chat berhasil ditambahkan");
+            messageAntd.success("Berhasil");
         },
         onError: () => {
             alert("error");

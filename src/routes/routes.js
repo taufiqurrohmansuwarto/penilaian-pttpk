@@ -17,11 +17,6 @@ export default {
             path: "/discussions",
             name: " Forum",
             icon: <CommentOutlined />
-        },
-        {
-            path: "/online-chat",
-            name: " Online Chat",
-            icon: <MessageOutlined />
         }
         // {
         //     path: "/tutorial",
