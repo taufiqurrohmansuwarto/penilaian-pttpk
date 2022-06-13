@@ -10,7 +10,7 @@ function Index() {
         <Layout>
             <AccountDiscussionsLayout activeKey="details">
                 <Skeleton loading={status === "loading"}>
-                <MComment/>
+                    <MComment />
                 </Skeleton>
             </AccountDiscussionsLayout>
         </Layout>
@@ -18,8 +18,12 @@ function Index() {
 }
 
 Index.Auth = {
-    roles: ["USER", "FASILITATOR"],
+    roles: ["USER", "FASILITATOR", "ADMIN"],
     groups: ["MASTER", "PTTPK"]
+};
+
+Disimpan.getLayout = function getLayout({ page }) {
+    return <Layout>{page}</Layout>;
 };
 
 export default Index;

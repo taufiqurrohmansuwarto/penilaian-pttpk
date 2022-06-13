@@ -7,6 +7,11 @@ const index = async (req, res) => {
     const { customId } = req?.user;
     const type = req?.query?.type || "inbox";
 
+    //
+    const limit = parseInt(req?.query?.limit) || 10;
+    const offset = parseInt(req?.query?.offset) || 0;
+    let total = 0;
+
     // default inbox
     let query;
     const queryInbox = {
@@ -54,9 +59,23 @@ const index = async (req, res) => {
     };
 
     if (type === "inbox") {
-        query = queryInbox;
+        query = { ...queryInbox, take: limit, skip: offset };
+        const currentTotal = await prisma.users_messages_mapped.count({
+            where: {
+                user_custom_id: customId,
+                placeholder_id: "inbox"
+            }
+        });
+        total = currentTotal;
     } else if (type === "sent") {
-        query = querySent;
+        const currentTotal = await prisma.users_messages_mapped.count({
+            where: {
+                user_custom_id: customId,
+                placeholder_id: "sent"
+            }
+        });
+        query = { ...querySent, take: limit, skip: offset };
+        total = currentTotal;
     }
 
     try {
@@ -71,7 +90,16 @@ const index = async (req, res) => {
             res.json(result);
         } else {
             const result = await prisma.messages.findMany(query);
-            res.json(result);
+            const data = {
+                result,
+                total,
+                meta: {
+                    offset,
+                    limit
+                }
+            };
+
+            res.json(data);
         }
     } catch (error) {
         console.log(error);

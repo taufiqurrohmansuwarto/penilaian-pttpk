@@ -3,12 +3,19 @@ import Layout from "../../../src/components/Layout";
 
 function Upvotes() {
     return (
-        <Layout>
-            <AccountDiscussionsLayout activeKey="upvotes">
-                <div>komentar</div>
-            </AccountDiscussionsLayout>
-        </Layout>
+        <AccountDiscussionsLayout activeKey="upvotes">
+            <div>komentar</div>
+        </AccountDiscussionsLayout>
     );
 }
+
+Upvotes.Auth = {
+    roles: ["USER", "FASILITATOR", "ADMIN"],
+    groups: ["MASTER", "PTTPK"]
+};
+
+Upvotes.getLayout = function getLayout({ page }) {
+    return <Layout>{page}</Layout>;
+};
 
 export default Upvotes;

@@ -94,45 +94,46 @@ const MailTable = ({ data, loading }) => {
                 </Typography.Text>
             )
         },
-        { title: "Subyek", dataIndex: "subject", key: "subject" },
+        { title: "Subyek", dataIndex: "subject", key: "subject", width: 200 },
         {
             title: "Pesan",
             dataIndex: "body",
+            width: 600,
             render: (_, row) => (
                 <Typography.Text
                     strong={isRead(row)}
                     ellipsis
                     style={{ width: 500 }}
                 >
-                    {row?.body}
+                    <div dangerouslySetInnerHTML={{ __html: row?.body }} />
                 </Typography.Text>
             )
         },
         {
             title: "Waktu",
             dataIndex: "waktu",
-            width: 150,
+            width: 300,
             render: (_, row) => (
                 <Typography.Text strong={isRead(row)}>
-                    {moment(row?.date).format("l")}
+                    {moment(row?.date).format("lll")}
                 </Typography.Text>
             )
-        },
-        {
-            title: "Aksi",
-            dataIndex: "aksi",
-            width: 100,
-            render: (_, row) => (
-                <Space>
-                    <Typography.Link onClick={() => gotoDetail(row?.id)}>
-                        <EyeOutlined />
-                    </Typography.Link>
-                    <Typography.Link onClick={() => opeModal(row)}>
-                        Balas
-                    </Typography.Link>
-                </Space>
-            )
         }
+        // {
+        //     title: "Aksi",
+        //     dataIndex: "aksi",
+        //     width: 100,
+        //     render: (_, row) => (
+        //         <Space>
+        //             <Typography.Link onClick={() => gotoDetail(row?.id)}>
+        //                 <EyeOutlined />
+        //             </Typography.Link>
+        //             <Typography.Link onClick={() => opeModal(row)}>
+        //                 Balas
+        //             </Typography.Link>
+        //         </Space>
+        //     )
+        // }
     ];
 
     return (
@@ -143,13 +144,17 @@ const MailTable = ({ data, loading }) => {
                 userData={userData}
             />
             <Table
+                onRow={(record, rowIndex) => ({
+                    onClick: () => {
+                        alert("test");
+                    }
+                })}
                 rowKey={(row) => row?.id}
                 rowSelection
                 loading={loading}
                 columns={columns}
                 size="small"
                 dataSource={data}
-                pagination={false}
             />
         </>
     );
