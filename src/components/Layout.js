@@ -197,7 +197,6 @@ const Layout = ({ children, disableContentMargin = false }) => {
                 request: async () => {
                     try {
                         const user = await changeRoutes(data?.user);
-                        console.log(user);
                         return user;
                     } catch (e) {
                         console.log(e);

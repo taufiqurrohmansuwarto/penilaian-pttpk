@@ -1,14 +1,13 @@
 import { Table, Typography } from "antd";
+import moment from "moment";
 import { useRouter } from "next/router";
-import React from "react";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import { getMail } from "../../../services/main.services";
 import MailLayout from "../../../src/components/CustomLayout/MaiLayout";
 import Layout from "../../../src/components/Layout";
-import { capitalCase } from "../../../utils/utility";
-import moment from "moment";
 
-const MailTable = ({ data, loading }) => {
+const MailTable = ({ data, loading, handleChangePage }) => {
     const router = useRouter();
 
     const gotoDetail = (id) => {
@@ -21,8 +20,8 @@ const MailTable = ({ data, loading }) => {
             dataIndex: "name",
             width: 250,
             render: (_, row) => (
-                <Typography.Text strong ellipsis>
-                    {capitalCase(row?.users_messages_mapped[0]?.user?.username)}
+                <Typography.Text ellipsis>
+                    {row?.users_messages_mapped[0]?.user?.username}
                 </Typography.Text>
             )
         },
@@ -31,8 +30,8 @@ const MailTable = ({ data, loading }) => {
             title: "Pesan",
             dataIndex: "body",
             render: (_, row) => (
-                <Typography.Text strong ellipsis style={{ width: 500 }}>
-                    {row?.body}
+                <Typography.Text ellipsis style={{ width: 500 }}>
+                    <div dangerouslySetInnerHTML={{ __html: row?.body }} />
                 </Typography.Text>
             )
         },
@@ -41,8 +40,8 @@ const MailTable = ({ data, loading }) => {
             dataIndex: "waktu",
             width: 150,
             render: (_, row) => (
-                <Typography.Text strong>
-                    {moment(row?.date).format("l")}
+                <Typography.Text>
+                    {moment(row?.date).format("lll")}
                 </Typography.Text>
             )
         },
@@ -62,23 +61,45 @@ const MailTable = ({ data, loading }) => {
         <>
             <Table
                 rowKey={(row) => row?.id}
-                rowSelection
                 loading={loading}
                 columns={columns}
                 size="small"
-                dataSource={data}
-                pagination={false}
+                dataSource={data?.result}
             />
         </>
     );
 };
 
 function Sents() {
-    const { data, isLoading } = useQuery(["mails", "sent"], () =>
-        getMail("sent")
+    const [query, setQuery] = useState({
+        offset: 0,
+        limit: 50
+    });
+
+    const { data, isLoading } = useQuery(
+        ["mails", "sent"],
+        () =>
+            getMail({
+                type: "sent",
+                offset: query?.offset,
+                limit: query?.limit
+            }),
+        {
+            enabled: !!Boolean(query)
+        }
     );
 
-    return <MailTable loading={isLoading} data={data} />;
+    const handleChangePage = (page, pageSize) => {
+        setQuery({ ...query, offset: page * pageSize - query?.limit });
+    };
+
+    return (
+        <MailTable
+            loading={isLoading}
+            data={data}
+            handleChangePage={handleChangePage}
+        />
+    );
 }
 
 Sents.getLayout = function getLayout(page) {

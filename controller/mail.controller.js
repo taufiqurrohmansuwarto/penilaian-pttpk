@@ -8,7 +8,7 @@ const index = async (req, res) => {
     const type = req?.query?.type || "inbox";
 
     //
-    const limit = parseInt(req?.query?.limit) || 10;
+    const limit = parseInt(req?.query?.limit) || 50;
     const offset = parseInt(req?.query?.offset) || 0;
     let total = 0;
 
@@ -70,10 +70,13 @@ const index = async (req, res) => {
     } else if (type === "sent") {
         const currentTotal = await prisma.users_messages_mapped.count({
             where: {
-                user_custom_id: customId,
-                placeholder_id: "sent"
+                placeholder_id: "sent",
+                message: {
+                    user_custom_id: customId
+                }
             }
         });
+
         query = { ...querySent, take: limit, skip: offset };
         total = currentTotal;
     }
@@ -150,6 +153,7 @@ const detail = async (req, res) => {
                 id: mailId
             },
             include: {
+                author: true,
                 users_messages_mapped: {
                     include: {
                         user: true

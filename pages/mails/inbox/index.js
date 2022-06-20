@@ -63,7 +63,7 @@ const FormModal = ({ userData, visibility, closeModal }) => {
     );
 };
 
-const MailTable = ({ data, loading }) => {
+const MailTable = ({ data, loading, handleChangePage }) => {
     const router = useRouter();
 
     const [visibility, setVisibility] = useState(false);
@@ -118,22 +118,19 @@ const MailTable = ({ data, loading }) => {
                     {moment(row?.date).format("lll")}
                 </Typography.Text>
             )
+        },
+        {
+            title: "Aksi",
+            dataIndex: "aksi",
+            width: 100,
+            render: (_, row) => (
+                <Space>
+                    <Typography.Link onClick={() => gotoDetail(row?.id)}>
+                        <EyeOutlined />
+                    </Typography.Link>
+                </Space>
+            )
         }
-        // {
-        //     title: "Aksi",
-        //     dataIndex: "aksi",
-        //     width: 100,
-        //     render: (_, row) => (
-        //         <Space>
-        //             <Typography.Link onClick={() => gotoDetail(row?.id)}>
-        //                 <EyeOutlined />
-        //             </Typography.Link>
-        //             <Typography.Link onClick={() => opeModal(row)}>
-        //                 Balas
-        //             </Typography.Link>
-        //         </Space>
-        //     )
-        // }
     ];
 
     return (
@@ -144,28 +141,56 @@ const MailTable = ({ data, loading }) => {
                 userData={userData}
             />
             <Table
-                onRow={(record, rowIndex) => ({
-                    onClick: () => {
-                        alert("test");
-                    }
-                })}
+                pagination={{
+                    total: data?.total,
+                    showTotal: (total) => `Total ${total}`,
+                    defaultPageSize: 50
+                }}
                 rowKey={(row) => row?.id}
+                onChange={handleChangePage}
                 rowSelection
                 loading={loading}
                 columns={columns}
                 size="small"
-                dataSource={data}
+                dataSource={data?.result}
             />
         </>
     );
 };
 
 function Mails() {
-    const { data, isLoading } = useQuery(["mails", "inbox"], () =>
-        getMail("inbox")
+    const [pageProperty, setPageProperty] = useState({
+        limit: 50,
+        offset: 0
+    });
+
+    const { data, isLoading } = useQuery(
+        ["mails", "inbox"],
+        () =>
+            getMail({
+                type: "inbox",
+                limit: pageProperty?.limit,
+                offset: pageProperty?.offset
+            }),
+        {
+            enabled: !!pageProperty
+        }
     );
 
-    return <MailTable data={data} loading={isLoading} />;
+    const handleChangePage = (page, pageSize) => {
+        setPageProperty({
+            ...pageProperty,
+            offset: page * pageSize - pageProperty?.limit
+        });
+    };
+
+    return (
+        <MailTable
+            data={data}
+            handleChangePage={handleChangePage}
+            loading={isLoading}
+        />
+    );
 }
 
 Mails.getLayout = function getLayout(page) {

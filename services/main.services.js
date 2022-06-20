@@ -250,8 +250,10 @@ export const sendingEmail = (data) => {
     return fetcher.post(`/mails`, data).then((res) => res?.data);
 };
 
-export const getMail = (type = "inbox") => {
-    return fetcher.get(`/mails?type=${type}`).then((res) => res?.data);
+export const getMail = ({ type = "inbox", limit = 50, offset = 0 }) => {
+    return fetcher
+        .get(`/mails?type=${type}&limit=${limit}&offset=${offset}`)
+        .then((res) => res?.data);
 };
 
 export const readMail = (id) => {
