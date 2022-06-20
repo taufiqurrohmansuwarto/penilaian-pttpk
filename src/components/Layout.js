@@ -193,10 +193,11 @@ const Layout = ({ children, disableContentMargin = false }) => {
             layout="side"
             headerTheme="light"
             menu={{
-                type: "group",
+                // type: "group",
                 request: async () => {
                     try {
                         const user = await changeRoutes(data?.user);
+                        console.log(user);
                         return user;
                     } catch (e) {
                         console.log(e);
