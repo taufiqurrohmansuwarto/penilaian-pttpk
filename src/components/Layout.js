@@ -2,6 +2,7 @@ import {
     InteractionOutlined,
     LogoutOutlined,
     ReadOutlined,
+    RestOutlined,
     UserOutlined,
     VerifiedOutlined
 } from "@ant-design/icons";
@@ -133,6 +134,11 @@ const changeRoutes = (user) => {
                 path: "/approval/dashboard",
                 name: " Penilaian PTT-PK",
                 icon: <ReadOutlined />
+            },
+            {
+                path: "/esign/dashboard",
+                name: " Esign",
+                icon: <RestOutlined />
             }
         ];
 

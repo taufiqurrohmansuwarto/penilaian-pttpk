@@ -1,7 +1,6 @@
 import {
     BookOutlined,
     DashboardOutlined,
-    DatabaseOutlined,
     RadarChartOutlined
 } from "@ant-design/icons";
 
