@@ -137,7 +137,7 @@ const changeRoutes = (user) => {
             },
             {
                 path: "/esign/dashboard",
-                name: " Esign",
+                name: " E-Sign",
                 icon: <RestOutlined />
             }
         ];
