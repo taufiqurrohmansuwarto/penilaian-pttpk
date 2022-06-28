@@ -140,7 +140,7 @@ export const createRecipients = async (req, res) => {
 export const currentDashboard = async (req, res) => {
     try {
         const { fetcher } = req;
-        const result = await fetcher.get("/dashboard");
+        const result = await fetcher.get("/esign/dashboard");
         res.json(result?.data);
     } catch (error) {
         console.log(error);

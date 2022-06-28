@@ -56,7 +56,7 @@ const EsignLayout = ({ children, title = "", content = null }) => {
             selectedKeys={[active]}
             style={{ minHeight: "100vh" }}
             menuHeaderRender={() => <ButtonCreate />}
-            title="ESIGN"
+            title="E-SIGN"
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
             rightContentRender={() => rightContentRender(data?.user)}
             route={esignRoute}
