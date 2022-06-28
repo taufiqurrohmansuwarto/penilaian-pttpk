@@ -1,19 +1,25 @@
 import FormData from "form-data";
+import qs from "query-string";
 
 // all this fucking shit coming from protected resource url esign
 const checkDocument = (fetcher) => (fetcher, documentId) => {
     return fetcher.get(`/documents/${documentId}/check`);
 };
 
+const listDocumentsApi = ({ fetcher, query }) => {
+    const url = qs.stringify(query);
+    return fetcher.get(`/esign/documents?${url}`);
+};
+
 const stamps = (fetcher) => fetcher.get("/stamps");
 
 const otp = (fetcher, documentId) =>
-    fetcher.post(`/documents/${documentId}/otp`);
+    fetcher.post(`/esign/documents/${documentId}/otp`);
 
 const findEmployeeApi = (fetcher, nip) => fetcher.get(`/stamps/${nip}`);
 
 const approveSignApi = (fetcher, documentId, data) =>
-    fetcher.put(`/documents/${documentId}/sign-request`, data);
+    fetcher.put(`/esign/documents/${documentId}/sign-request`, data);
 
 export const approveSign = async (req, res) => {
     try {
@@ -62,8 +68,12 @@ export const approve = async (req, res) => {
 };
 
 export const listDocuments = async (req, res) => {
-    const result = await listDocumentsApi(req);
-    res.json(result?.data);
+    try {
+        const result = await listDocumentsApi(req);
+        res.json(result?.data);
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 // recipients
