@@ -11,12 +11,13 @@ const listDocumentsApi = ({ fetcher, query }) => {
     return fetcher.get(`/esign/documents?${url}`);
 };
 
-const stamps = (fetcher) => fetcher.get("/stamps");
+// create stamps for each individual employees
+const stamps = (fetcher) => fetcher.get("/esign/stamps");
 
 const otp = (fetcher, documentId) =>
     fetcher.post(`/esign/documents/${documentId}/otp`);
 
-const findEmployeeApi = (fetcher, nip) => fetcher.get(`/stamps/${nip}`);
+const findEmployeeApi = (fetcher, nip) => fetcher.get(`/esign/stamps/${nip}`);
 
 const approveSignApi = (fetcher, documentId, data) =>
     fetcher.put(`/esign/documents/${documentId}/sign-request`, data);

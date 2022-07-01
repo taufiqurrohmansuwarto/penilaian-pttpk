@@ -10,7 +10,7 @@ export const download = () => {
 };
 
 export const getStamps = () => {
-    return fetcher.get("/api/stamps").then((res) => res.data?.data);
+    return fetcher.get("/stamps").then((res) => res.data?.data);
 };
 
 export const getDocumentFile = (documentId, type = "initial") => {

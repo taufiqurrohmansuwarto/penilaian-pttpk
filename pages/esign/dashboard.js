@@ -98,6 +98,7 @@ function Dashboard() {
     );
 }
 
+// should be have some scope from oidc
 Dashboard.Auth = {
     roles: ["USER"],
     groups: ["MASTER"]

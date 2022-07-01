@@ -1,6 +1,8 @@
-1. perbaiki email
-2. tambahkan diservice perangkat daerah di pns atau ptt ambil 3 digit saja
+1. update the dependency
 
 
-asumsi
-orang akan lebih memakai aplikasi jika mereka dapat berinteraksi secara langsung melalui media chat : ga pasti
+
+
+today
+1. add api route for esign
+2. add components and pages

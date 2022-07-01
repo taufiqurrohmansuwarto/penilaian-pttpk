@@ -7,6 +7,7 @@ import {
     FieldTimeOutlined,
     FileOutlined,
     FolderOpenOutlined,
+    SettingOutlined,
     UnorderedListOutlined
 } from "@ant-design/icons";
 
@@ -17,6 +18,7 @@ export default {
             name: " Dashboard",
             icon: <DashboardOutlined />
         },
+
         {
             path: "/esign/documents",
             name: " Documents",
@@ -58,6 +60,11 @@ export default {
                     icon: <CloseSquareOutlined />
                 }
             ]
+        },
+        {
+            path: "/esign/settings/activity-logs",
+            name: " Settings",
+            icon: <SettingOutlined />
         }
     ]
 };
