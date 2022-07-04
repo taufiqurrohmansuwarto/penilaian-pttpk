@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import DetailDocumentLayout from "../../../../src/components/esign/DocumentDetailLayout";
-import {getSession} from 'next-auth/react';
+import { getSession } from "next-auth/react";
 
 function Discusisons({ data }) {
     const router = useRouter();
@@ -28,6 +28,7 @@ export const getServerSideProps = async (ctx) => {
             Authorization: `Bearer ${session?.accessToken}`
         }
     });
+
     const result = await data?.json();
 
     return {

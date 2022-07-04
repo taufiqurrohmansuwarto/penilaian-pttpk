@@ -1,6 +1,7 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Modal, Space } from "antd";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 const buttons = [
@@ -23,9 +24,15 @@ const buttons = [
 
 function ButtonCreate() {
     const [visible, setVisible] = useState(false);
+    const router = useRouter();
 
     const showModal = () => {
         setVisible(true);
+    };
+
+    const gotoPath = (path) => {
+        router.push(path);
+        setVisible(false);
     };
 
     return (
@@ -39,9 +46,12 @@ function ButtonCreate() {
             >
                 <Space>
                     {buttons?.map((b) => (
-                        <Link key={b?.path} href={`${b?.path}`}>
-                            <Button disabled={b?.disabled}>{b?.name}</Button>
-                        </Link>
+                        <Button
+                            disabled={b?.disabled}
+                            onClick={() => gotoPath(b?.path)}
+                        >
+                            {b?.name}
+                        </Button>
                     ))}
                 </Space>
             </Modal>
