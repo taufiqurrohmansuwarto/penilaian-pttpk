@@ -1,4 +1,4 @@
-const lebarKolomPenilaian = 35;
+const lebarKolomPenilaian = 20;
 const warnaHijau = "#78AB46";
 const warnaHijauMuda = "#bbe3ac";
 const warnaAbuAbu = "#dbd7c5";
@@ -6,7 +6,6 @@ const orange = "#e3d8ac";
 const warnaBiru = "#1919ff";
 
 import { meanBy } from "lodash";
-import moment from "moment";
 
 const renderHeader = (bulan, tahun) => {
     return {
@@ -165,7 +164,7 @@ const renderRincianPekerjaan = (listKerja, cuti) => {
     return {
         style: "informasi",
         table: {
-            widths: [20, "*", "*", 50, 50, 50, 50, lebarKolomPenilaian],
+            widths: [15, 175, 175, 30, 30, 30, 30, lebarKolomPenilaian],
             body: [
                 [
                     { rowSpan: 2, text: "No" },
@@ -187,7 +186,7 @@ const renderRincianPekerjaan = (listKerja, cuti) => {
                     },
                     {},
                     {
-                        text: "PENILAIAN",
+                        text: "NILAI",
                         rowSpan: 2,
                         style: { fillColor: warnaAbuAbu }
                     }
@@ -196,10 +195,28 @@ const renderRincianPekerjaan = (listKerja, cuti) => {
                     {},
                     {},
                     {},
-                    { text: "Kuantitas", fillColor: orange },
-                    { text: "Satuan", fillColor: orange },
-                    { text: "Kuantitas", fillColor: warnaHijauMuda },
-                    { text: "Satuan", fillColor: warnaHijauMuda },
+                    {
+                        text: "Kuantitas",
+                        fillColor: orange,
+                        style: { fontSize: 6 }
+                    },
+                    {
+                        text: "Satuan",
+                        fillColor: orange,
+
+                        style: { fontSize: 6 }
+                    },
+                    {
+                        text: "Kuantitas",
+                        fillColor: warnaHijauMuda,
+
+                        style: { fontSize: 6 }
+                    },
+                    {
+                        text: "Satuan",
+                        fillColor: warnaHijauMuda,
+                        style: { fontSize: 6 }
+                    },
                     ""
                 ],
                 // berisikan nomer, detail kegiatan, target kuantitas, capaian kuantitas dan penilaian
@@ -320,6 +337,7 @@ export const generatePdf = (currentUser) => {
                 fontSize: 8,
                 font: "OpenSans"
             },
+
             rekom: {
                 margin: [0, 1, 0, 1],
                 fontSize: 10,
