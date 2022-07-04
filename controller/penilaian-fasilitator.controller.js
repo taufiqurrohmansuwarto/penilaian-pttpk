@@ -58,6 +58,7 @@ const listPenilianBulanan = async (req, res) => {
                 sudah_verif: r?.sudah_verif,
                 penilai: r?.atasan_langsung?.label[0],
                 nip: r?.penilaian?.atasan_langsung?.label[2],
+                is_cuti: r?.is_cuti,
                 rerata_kinerja: meanBy(
                     r?.penilaian?.kinerja_bulanan,
                     "kualitas"
@@ -76,7 +77,10 @@ const listPenilianBulanan = async (req, res) => {
                 sudah_verif: groupingPenilaian[d?.id_ptt]?.sudah_verif || false,
                 rerata_kinerja:
                     groupingPenilaian[d?.id_ptt]?.rerata_kinerja || 0,
-                penilai: groupingPenilaian[d?.id_ptt]?.penilai || ""
+                penilai: groupingPenilaian[d?.id_ptt]?.penilai || "",
+                lagi_cuti: groupingPenilaian[d?.id_ptt]?.is_cuti
+                    ? "IYA CUTI"
+                    : "NGGAK"
             };
         });
 
@@ -86,6 +90,7 @@ const listPenilianBulanan = async (req, res) => {
             { header: "Perangkat Daerah", key: "perangkat_daerah" },
             { header: "Sudah Verif", key: "sudah_verif" },
             { header: "Penilai", key: "penilai" },
+            { header: "Cuti", key: "lagi_cuti" },
             { header: "Rerata Kinerja", key: "rerata_kinerja" }
         ];
 
