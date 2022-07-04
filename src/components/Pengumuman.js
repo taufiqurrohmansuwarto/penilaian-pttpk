@@ -2,7 +2,7 @@ import { Alert } from "@mantine/core";
 import React from "react";
 import { useQuery } from "react-query";
 import { Antenna } from "tabler-icons-react";
-import { getAnnouncements } from "../../services/admin.service";
+import { getAnnouncements } from "../../services/users.service";
 
 function Pengumuman() {
     const { data, isLoading } = useQuery(["announcements"], () =>

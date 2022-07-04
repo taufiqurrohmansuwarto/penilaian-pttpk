@@ -48,7 +48,9 @@ const DetailPenilaian = () => {
     const [form] = Form.useForm();
     const [editForm] = Form.useForm();
 
-    useEffect(() => {}, [initialValues]);
+    useEffect(() => {
+        editForm.setFieldsValue(initialValues);
+    }, [initialValues]);
 
     const onClose = () => setVisible(false);
     const showDrawer = () => setVisible(true);
@@ -208,6 +210,7 @@ const DetailPenilaian = () => {
                             <Form
                                 form={form}
                                 layout="vertical"
+                                name="form-target"
                                 hideRequiredMark
                             >
                                 <Row gutter={16}>
@@ -295,7 +298,11 @@ const DetailPenilaian = () => {
                                 </Button>
                             ]}
                         >
-                            <Form form={editForm} initialValues={initialValues}>
+                            <Form
+                                form={editForm}
+                                name="edit-form"
+                                initialValues={initialValues}
+                            >
                                 <Row gutter={16}>
                                     <Col span={24}>
                                         <Form.Item

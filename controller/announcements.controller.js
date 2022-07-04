@@ -15,6 +15,16 @@ const index = async (req, res) => {
     }
 };
 
+const all = async (req, res) => {
+    try {
+        const result = await prisma.announcements.findFirst();
+        res.json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
 const detail = async (req, res) => {
     try {
     } catch (error) {}
@@ -70,5 +80,6 @@ module.exports = {
     create,
     update,
     detail,
-    remove
+    remove,
+    all
 };

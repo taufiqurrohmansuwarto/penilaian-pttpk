@@ -4,6 +4,10 @@ const fetcher = axios.create({
     baseURL: "/pttpk-penilaian/api"
 });
 
+export const getAnnouncements = () => {
+    return fetcher.get(`/announcements`).then((res) => res?.data);
+};
+
 // tambahan
 export const getJabatan = () => {
     return fetcher.get("/user/jabatan").then((res) => res?.data);
