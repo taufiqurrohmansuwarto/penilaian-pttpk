@@ -12,6 +12,7 @@ const batalKirimTransaction = async (
     tahun
 ) => {
     return await prisma.$transaction(async (prisma) => {
+        // wkwkw di delete aja gpp terus diset lagi
         await prisma.acc_kinerja_bulanan.deleteMany({
             where: {
                 id_penilaian: penilaianId,

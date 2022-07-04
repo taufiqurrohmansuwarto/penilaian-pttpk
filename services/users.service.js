@@ -186,3 +186,15 @@ export const batalKirimAtasanPenilaianAkhir = () => {
         .delete(`/user/request-penilaian-akhir`)
         .then((res) => res?.data);
 };
+
+export const kirimAtasanCuti = ({ bulan, tahun }) => {
+    return fetcher
+        .put(`/user/request-penilaian-cuti?bulan=${bulan}&tahun=${tahun}`)
+        .then((res) => res?.data);
+};
+
+export const batalKirimAtasanCuti = ({ bulan, tahun }) => {
+    return fetcher
+        .delete(`/user/request-penilaian-cuti?bulan=${bulan}&tahun=${tahun}`)
+        .then((res) => res?.data);
+};

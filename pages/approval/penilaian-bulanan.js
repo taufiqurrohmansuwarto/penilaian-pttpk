@@ -1,5 +1,9 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { Alert as AlertMantine, Text } from "@mantine/core";
+import {
+    Alert as AlertMantine,
+    Alert as MantineAlert,
+    Text
+} from "@mantine/core";
 import {
     Alert,
     Avatar,
@@ -16,7 +20,7 @@ import {
     Space,
     Table
 } from "antd";
-import { countBy, random, sumBy } from "lodash";
+import { random, sumBy } from "lodash";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -28,7 +32,84 @@ import {
 } from "../../services/approval.service";
 import ApprovalLayout from "../../src/components/ApprovalLayout";
 import PageContainer from "../../src/components/PageContainer";
-import { Alert as MantineAlert } from "@mantine/core";
+
+const FormApprovalModalCutin = ({
+    id,
+    bulan,
+    tahun,
+    onCancel,
+    visible,
+    idPtt,
+    catatanAtasanLangsung,
+    namaPtt
+}) => {
+    const { data, isLoading, status } = useQuery(
+        ["approval_penilaian_bulanan", `${id}${bulan}${tahun}`],
+        () => getPenilaianBulananApproval({ id, bulan, tahun }),
+        {
+            enabled: !!id
+        }
+    );
+
+    const querClient = useQueryClient();
+
+    const verifMutationApproval = useMutation(
+        (data) => approvaPenilaianBulananApproval(data),
+        {
+            onSuccess: () => {
+                querClient.invalidateQueries(["approval_penilaian_bulanan"]);
+                message.success("berhasil");
+                onCancel();
+            }
+        }
+    );
+
+    const [catatan, setCatatan] = useState(null);
+    const handleChangeCatatan = (e) => {
+        setCatatan(e?.target?.value);
+    };
+
+    const handleSubmitCuti = () => {
+        const value = {
+            id,
+            data: {
+                list: [],
+                catatan
+            },
+            bulan,
+            tahun,
+            id_ptt: idPtt
+        };
+        verifMutationApproval.mutate(value);
+    };
+
+    useEffect(() => {
+        if (status === "success") {
+            setCatatan(catatanAtasanLangsung);
+        }
+    }, [data, status, visible]);
+
+    return (
+        <Modal
+            title={"Pegawai yang bersangkutan cuti"}
+            visible={visible}
+            onCancel={onCancel}
+            onOk={handleSubmitCuti}
+            confirmLoading={verifMutationApproval.isLoading}
+            destroyOnClose
+            width={800}
+            centered
+        >
+            <Alert
+                description={`Pegawai atas nama ${namaPtt} sedang cuti, anda tidak perlu memasukkan nilai untuk melakukan verif. Silahkan isi catatan jika ada, apabila tidak ada bisa dikosongkan dan tekan OK`}
+                message="Cuti"
+            />
+            <Divider />
+            <p>Catatan</p>
+            <Input.TextArea value={catatan} onChange={handleChangeCatatan} />
+        </Modal>
+    );
+};
 
 const FormApprovalModal = ({
     id,
@@ -290,13 +371,25 @@ function Penilaian({ data: query }) {
     const [catatanAtasan, setCatatanAtasan] = useState("");
     const [namaPtt, setNamaPtt] = useState("");
 
+    // modal untuk cuti
+    const [showModalCuti, setShowModalCuti] = useState(false);
+    const onCancelModalCuti = () => setShowModalCuti(false);
+
     const closeModal = () => setShowModal(false);
     const openModal = (row) => {
-        setShowModal(true);
-        setId(row?.id_penilaian);
-        setCatatanAtasan(row?.catatan);
-        setIdPtt(row?.pegawai_id);
-        setNamaPtt(row?.pegawai?.username);
+        if (row?.is_cuti) {
+            setShowModalCuti(true);
+            setId(row?.id_penilaian);
+            setCatatanAtasan(row?.catatan);
+            setIdPtt(row?.pegawai_id);
+            setNamaPtt(row?.pegawai?.username);
+        } else {
+            setShowModal(true);
+            setId(row?.id_penilaian);
+            setCatatanAtasan(row?.catatan);
+            setIdPtt(row?.pegawai_id);
+            setNamaPtt(row?.pegawai?.username);
+        }
     };
 
     useEffect(() => {
@@ -360,6 +453,17 @@ function Penilaian({ data: query }) {
                 />
             }
         >
+            <FormApprovalModalCutin
+                visible={showModalCuti}
+                onCancel={onCancelModalCuti}
+                bulan={moment(date).format("M")}
+                tahun={moment(date).format("YYYY")}
+                catatanAtasanLangsung={catatanAtasan}
+                idPtt={idPtt}
+                namaPtt={namaPtt}
+                id={id}
+            />
+
             <FormApprovalModal
                 visible={showModal}
                 onCancel={closeModal}

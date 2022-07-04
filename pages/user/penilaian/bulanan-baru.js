@@ -42,6 +42,7 @@ import {
 } from "../../../services/users.service";
 import FormCetakModal from "../../../src/components/FormCetakModal";
 import PageContainer from "../../../src/components/PageContainer";
+import PekerjaanBulananCuti from "../../../src/components/PegawaiCuti/PekerjaanBulananCuti";
 import UserLayout from "../../../src/components/UserLayout";
 
 const DataPenilaianAktif = () => {
@@ -500,13 +501,21 @@ const Penilaian = ({ tahun, bulan }) => {
                 title={() => (
                     <>
                         {!dataRequestPenilaian && (
-                            <Button
-                                onClick={showCreate}
-                                type="primary"
-                                icon={<FileAddOutlined />}
-                            >
-                                Pekerjaan
-                            </Button>
+                            <div>
+                                <Space>
+                                    <Button
+                                        onClick={showCreate}
+                                        type="primary"
+                                        icon={<FileAddOutlined />}
+                                    >
+                                        Pekerjaan
+                                    </Button>
+                                    <PekerjaanBulananCuti
+                                        bulan={bulan}
+                                        tahun={tahun}
+                                    />
+                                </Space>
+                            </div>
                         )}
                     </>
                 )}

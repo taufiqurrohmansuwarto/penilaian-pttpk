@@ -116,6 +116,7 @@ const cetakPenilaianBulananUser = async (req, res) => {
             jabatan: penilaian?.jabatan?.nama,
             skpd: penilaian?.skpd?.detail,
             catatan: accKinerjaBulanan?.catatan,
+            cuti: accKinerjaBulanan?.is_cuti,
             bulan,
             tahun,
             listKegiatanBulanan: listPenilaianBulanan,

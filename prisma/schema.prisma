@@ -73,6 +73,8 @@ model acc_kinerja_bulanan {
   catatan            String?
   pegawai            users?     @relation("acc_pegawai", fields: [pegawai_id], references: [custom_id])
 
+  is_cuti Boolean @default(false)
+
   @@id([id_penilaian, bulan, tahun])
 }
 
@@ -92,7 +94,6 @@ model kinerja_bulanan {
   sudah_verif         Boolean           @default(false)
   penilaian           penilaian?        @relation(fields: [id_penilaian], references: [id], onDelete: Cascade)
   target_penilaian    target_penilaian? @relation(fields: [id_target_penilaian], references: [id], onDelete: Cascade)
-
 }
 
 model penilaian {

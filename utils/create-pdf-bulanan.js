@@ -134,7 +134,7 @@ const renderTugasTambahan = (pekerjaanTambahan, total) => {
     };
 };
 
-const renderRincianPekerjaan = (listKerja) => {
+const renderRincianPekerjaan = (listKerja, cuti) => {
     let listKerjaTahunan;
 
     if (listKerja.length > 0) {
@@ -212,7 +212,7 @@ const renderRincianPekerjaan = (listKerja) => {
                     {},
                     {},
                     {},
-                    { text: meanBy(listKerja, "kualitas") }
+                    { text: cuti ? "CUTI" : meanBy(listKerja, "kualitas") }
                 ]
             ]
         }
@@ -376,7 +376,10 @@ export const generatePdf = (currentUser) => {
         content: [
             renderHeader(currentUser.bulan, currentUser.tahun),
             renderInformasi(currentUser),
-            renderRincianPekerjaan(currentUser?.listKegiatanBulanan),
+            renderRincianPekerjaan(
+                currentUser?.listKegiatanBulanan,
+                currentUser?.cuti
+            ),
             renderCatatanAtasan(currentUser?.catatan),
             renderPerjanjian(currentUser)
         ]
