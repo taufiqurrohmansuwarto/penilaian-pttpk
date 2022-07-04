@@ -33,6 +33,28 @@ function Changelog() {
             </List>
             <Divider
                 my="xs"
+                label="Versi 0.0.c 9 Juni 2022"
+                labelPosition="center"
+            />
+            <List
+                spacing="xs"
+                size="sm"
+                center
+                icon={
+                    <ThemeIcon color="teal" size={24} radius="xl">
+                        <CircleCheck size={16} />
+                    </ThemeIcon>
+                }
+            >
+                <List.Item>Penambahan fitur chat online</List.Item>
+                <List.Item>Penambahan target dan capaian di approval</List.Item>
+                <List.Item>
+                    Penambahan total pegawai, pegawai sudah verif dan pegawai
+                    belum verif
+                </List.Item>
+            </List>
+            <Divider
+                my="xs"
                 label="Versi 0.0.b 20 Mei 2022"
                 labelPosition="center"
             />
