@@ -11,7 +11,7 @@ function Changelog() {
             </Link>
             <Divider
                 my="xs"
-                label="Versi 0.0.c 9 Juni 2022"
+                label="Versi 0.0.d 4 Juli 2022"
                 labelPosition="center"
             />
             <List
@@ -24,12 +24,8 @@ function Changelog() {
                     </ThemeIcon>
                 }
             >
-                <List.Item>Penambahan fitur chat online</List.Item>
-                <List.Item>Penambahan target dan capaian di approval</List.Item>
-                <List.Item>
-                    Penambahan total pegawai, pegawai sudah verif dan pegawai
-                    belum verif
-                </List.Item>
+                <List.Item>Penambahan fitur untuk cuti (Meliputi user, approval, dan fasilitator)</List.Item>
+                <List.Item>Perbaikan dokumen laporan bulanan yang kadang terpotong</List.Item>
             </List>
             <Divider
                 my="xs"
