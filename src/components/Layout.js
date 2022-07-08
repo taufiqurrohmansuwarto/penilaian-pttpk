@@ -1,4 +1,5 @@
 import {
+    FileOutlined,
     InteractionOutlined,
     LogoutOutlined,
     ReadOutlined,
@@ -127,6 +128,12 @@ const changeRoutes = (user) => {
         const userPttFasilitator =
             (role === "FASILITATOR" && group === "PTTPK") ||
             (role === "ADMIN" && group === "PTTPK");
+
+        // todo tambahkan master fasilitator
+        const userMasterFasilitator =
+            (role === "FASILITATOR" && group === "MASTER") ||
+            (role === "ADMIN" && group === "MASTER");
+
         const isAdmin = id === "master|56543";
 
         const userMasterRoutes = [
@@ -158,6 +165,14 @@ const changeRoutes = (user) => {
             }
         ];
 
+        const masterFasilitatorRotes = [
+            {
+                path: "/fasilitator-master/esign/dashboard",
+                name: " Dashboard Esign",
+                icon: <FileOutlined />
+            }
+        ];
+
         const adminRoutes = [
             {
                 path: "/admin/dashboard",
@@ -179,6 +194,10 @@ const changeRoutes = (user) => {
         }
         if (isAdmin) {
             currentRoutes.push(...adminRoutes);
+        }
+
+        if (userMasterFasilitator) {
+            currentRoutes.push(...masterFasilitatorRotes);
         }
 
         resolve(uniqBy(currentRoutes, "path"));
