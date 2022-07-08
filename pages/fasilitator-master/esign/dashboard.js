@@ -1,5 +1,21 @@
+import EsignFasilitatorLayout from "../../../src/components/Layout/EsignFasilitatorLayout";
+import PageContainer from "../../../src/components/PageContainer";
+
 const DashboardEsign = () => {
-    return <div>hello world</div>;
+    return (
+        <PageContainer>
+            <div>ini adalah dashboard</div>
+        </PageContainer>
+    );
+};
+
+DashboardEsign.Auth = {
+    roles: ["FASILITATOR"],
+    groups: ["MASTER"]
+};
+
+DashboardEsign.getLayout = function getLayout(page) {
+    return <EsignFasilitatorLayout>{page}</EsignFasilitatorLayout>;
 };
 
 export default DashboardEsign;
