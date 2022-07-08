@@ -108,46 +108,7 @@ export default NextAuth({
                 return currentUser;
             }
         },
-        {
-            name: "E-MASTER FASILITATOR",
-            id: "master-fasilitator",
-            type: "oauth",
-            wellKnown: masterFasilitatorWellKnown,
-            clientId: masterFasilitatorClientId,
-            clientSecret: masterFasilitatorClientSecret,
-            authorization: {
-                params: {
-                    scope: masterFasilitatorScope,
-                    prompt: "login"
-                }
-            },
-            httpOptions: {
-                timeout: 10000
-            },
-            idToken: true,
-            checks: ["pkce", "state"],
-            profile: async (profile, token) => {
-                const currentToken = token.id_token;
-                const { role, group, employee_number } =
-                    jsonwebtoken.decode(currentToken);
 
-                const currentUser = {
-                    id: profile.sub,
-                    name: profile.name,
-                    email: profile.email,
-                    image: profile.picture,
-                    employee_number: employee_number || "",
-                    birthdate: profile?.birthdate || null,
-                    email: profile?.email || null,
-                    role,
-                    group
-                };
-
-                await upsert(currentUser);
-
-                return currentUser;
-            }
-        },
         {
             name: "PTTPK",
             id: "pttpk",
@@ -226,6 +187,46 @@ export default NextAuth({
                 } catch (error) {
                     console.log(error);
                 }
+            }
+        },
+        {
+            name: "E-MASTER FASILITATOR",
+            id: "master-fasilitator",
+            type: "oauth",
+            wellKnown: masterFasilitatorWellKnown,
+            clientId: masterFasilitatorClientId,
+            clientSecret: masterFasilitatorClientSecret,
+            authorization: {
+                params: {
+                    scope: masterFasilitatorScope,
+                    prompt: "login"
+                }
+            },
+            httpOptions: {
+                timeout: 10000
+            },
+            idToken: true,
+            checks: ["pkce", "state"],
+            profile: async (profile, token) => {
+                const currentToken = token.id_token;
+                const { role, group, employee_number } =
+                    jsonwebtoken.decode(currentToken);
+
+                const currentUser = {
+                    id: profile.sub,
+                    name: profile.name,
+                    email: profile.email,
+                    image: profile.picture,
+                    employee_number: employee_number || "",
+                    birthdate: profile?.birthdate || null,
+                    email: profile?.email || null,
+                    role,
+                    group
+                };
+
+                await upsert(currentUser);
+
+                return currentUser;
             }
         }
     ],
