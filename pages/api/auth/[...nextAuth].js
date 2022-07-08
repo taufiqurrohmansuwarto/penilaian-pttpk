@@ -18,6 +18,11 @@ const pttpkFasilitatorClientSecret = process.env.PTTPKFASILITATOR_SECRET;
 const pttpkFasilitatorWellKnown = process.env.PTTPKFASILITATOR_WELLKNOWN;
 const pttpkFasilitatorScope = process.env.PTTPKFASILITATOR_SCOPE;
 
+const masterFasilitatorClientId = process.env.MASTERFASILITATOR_ID;
+const masterFasilitatorClientSecret = process.env.MASTERFASILITATOR_SECRET;
+const masterFasilitatorWellKnown = process.env.MASTERFASILITATOR_WELLKNOWN;
+const masterFasilitatorScope = process.env.MASTERFASILITATOR_SCOPE;
+
 const upsert = async (currentUser) => {
     try {
         const [from, currentId] = currentUser?.id?.split("|");
@@ -73,6 +78,46 @@ export default NextAuth({
             authorization: {
                 params: {
                     scope: masterScope,
+                    prompt: "login"
+                }
+            },
+            httpOptions: {
+                timeout: 10000
+            },
+            idToken: true,
+            checks: ["pkce", "state"],
+            profile: async (profile, token) => {
+                const currentToken = token.id_token;
+                const { role, group, employee_number } =
+                    jsonwebtoken.decode(currentToken);
+
+                const currentUser = {
+                    id: profile.sub,
+                    name: profile.name,
+                    email: profile.email,
+                    image: profile.picture,
+                    employee_number: employee_number || "",
+                    birthdate: profile?.birthdate || null,
+                    email: profile?.email || null,
+                    role,
+                    group
+                };
+
+                await upsert(currentUser);
+
+                return currentUser;
+            }
+        },
+        {
+            name: "E-MASTER FASILITATOR",
+            id: "master-fasilitator",
+            type: "oauth",
+            wellKnown: masterFasilitatorWellKnown,
+            clientId: masterFasilitatorClientId,
+            clientSecret: masterFasilitatorClientSecret,
+            authorization: {
+                params: {
+                    scope: masterFasilitatorScope,
                     prompt: "login"
                 }
             },

@@ -6,6 +6,7 @@ import {
     DashboardOutlined,
     FieldTimeOutlined,
     FileOutlined,
+    FilePptOutlined,
     FolderOpenOutlined,
     SettingOutlined,
     UnorderedListOutlined
@@ -18,7 +19,6 @@ export default {
             name: " Dashboard",
             icon: <DashboardOutlined />
         },
-
         {
             path: "/esign/documents",
             name: " Documents",
@@ -58,6 +58,28 @@ export default {
                     path: "/esign/documents/list/rejected",
                     name: "Rejected",
                     icon: <CloseSquareOutlined />
+                }
+            ]
+        },
+        {
+            path: "/esign/dokumen-massal",
+            name: " Dokumen Massal",
+            icon: <FilePptOutlined />,
+            routes: [
+                {
+                    path: "/esign/dokumen-massal/permintaan",
+                    name: "Permintaan",
+                    icon: <FilePptOutlined />
+                },
+                {
+                    path: "/esign/dokumen-massal/surat-keputusan",
+                    name: " Surat Keputusan",
+                    icon: <FilePptOutlined />
+                },
+                {
+                    path: "/esign/dokumen-massal/sertifikat",
+                    name: " Sertifikat",
+                    icon: <FilePptOutlined />
                 }
             ]
         },
