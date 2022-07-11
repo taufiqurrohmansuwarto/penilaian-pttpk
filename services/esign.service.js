@@ -99,3 +99,7 @@ export const approveSign = (data) => {
     const { documentId, ...result } = data;
     return fetcher.put(`/documents/${documentId}/sign`, result);
 };
+
+export const status = () => {
+    return fetcher.get(`/status`);
+};

@@ -1,4 +1,4 @@
-import { DashboardOutlined } from "@ant-design/icons";
+import { DashboardOutlined, FormOutlined } from "@ant-design/icons";
 
 export default {
     routes: [
@@ -6,6 +6,11 @@ export default {
             path: "/fasilitator-master/esign/dashboard",
             name: " Dashboard",
             icon: <DashboardOutlined />
+        },
+        {
+            path: "/fasilitator-master/esign/request",
+            name: " Permohonan Dokumen Kolektif",
+            icon: <FormOutlined />
         }
     ]
 };

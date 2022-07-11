@@ -10,7 +10,7 @@ const DashboardEsign = () => {
 };
 
 DashboardEsign.Auth = {
-    roles: ["FASILITATOR"],
+    roles: ["FASILITATOR", "ADMIN"],
     groups: ["MASTER"]
 };
 

@@ -168,7 +168,7 @@ const changeRoutes = (user) => {
         const masterFasilitatorRotes = [
             {
                 path: "/fasilitator-master/esign/dashboard",
-                name: " Dashboard Esign",
+                name: " Esign",
                 icon: <FileOutlined />
             }
         ];

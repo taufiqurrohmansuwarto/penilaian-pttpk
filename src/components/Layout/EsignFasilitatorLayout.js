@@ -4,7 +4,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import esignRoute from "../../routes/esign.route";
+import esignFasilitatorRoute from "../../routes/esign-fasilitator.route";
 import ButtonCreate from "../esign/ButtonCreate";
 
 const ProLayout = dynamic(() => import("@ant-design/pro-layout"), {
@@ -55,11 +55,10 @@ const EsignFasilitatorLayout = ({ children, title = "", content = null }) => {
             menuItemRender={menuItemRender}
             selectedKeys={[active]}
             style={{ minHeight: "100vh" }}
-            menuHeaderRender={() => <ButtonCreate />}
-            title="E-SIGN"
+            title="E-SIGN FASILITATOR"
             logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
             rightContentRender={() => rightContentRender(data?.user)}
-            route={esignRoute}
+            route={esignFasilitatorRoute}
             navTheme="dark"
             collapsed
             collapsedButtonRender={false}

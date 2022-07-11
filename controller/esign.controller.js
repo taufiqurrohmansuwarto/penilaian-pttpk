@@ -14,6 +14,8 @@ const listDocumentsApi = ({ fetcher, query }) => {
 // create stamps for each individual employees
 const stamps = (fetcher) => fetcher.get("/esign/stamps");
 
+const checkStatusEsign = (fetcher) => fetcher.get("/esign/status");
+
 const otp = (fetcher, documentId) =>
     fetcher.post(`/esign/documents/${documentId}/otp`);
 
@@ -200,6 +202,16 @@ export const requestOtp = async (req, res) => {
 export const fetchSingleDocuments = async (req, res) => {
     try {
         const result = await fetchSingleDocument(req.fetcher, req.query);
+        res.json(result?.data);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: "Internal Server Error" });
+    }
+};
+
+export const checkStatus = async (req, res) => {
+    try {
+        const result = await checkStatusEsign(req?.fetcher);
         res.json(result?.data);
     } catch (error) {
         console.log(error);
