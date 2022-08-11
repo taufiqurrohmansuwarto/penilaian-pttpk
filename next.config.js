@@ -19,6 +19,11 @@ function getBasePath() {
 }
 
 module.exports = withAntdLess({
+    reactStrictMode: true,
+    images: {
+        domains: ["siasn.bkd.jatimprov.go.id"],
+        formats: ["image/webp"]
+    },
     experimental: {
         scrollRestoration: true
     },
