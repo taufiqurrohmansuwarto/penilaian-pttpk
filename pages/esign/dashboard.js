@@ -4,6 +4,7 @@ import {
     FileSyncOutlined,
     MailOutlined
 } from "@ant-design/icons";
+import { Alert } from "@mantine/core";
 import {
     Col,
     Card,
@@ -16,7 +17,7 @@ import {
 } from "antd";
 import { useSession } from "next-auth/react";
 import { useQuery } from "react-query";
-import { getDashboard } from "../../services/esign.service";
+import { getDashboard, getStatusEsign } from "../../services/esign.service";
 import EsignLayout from "../../src/components/Layout/EsignLayout";
 import PageContainer from "../../src/components/PageContainer";
 
@@ -82,16 +83,35 @@ function Dashboard() {
         getDashboard()
     );
 
+    const { data: dataStatus, isLoading: isLoadingStatus } = useQuery(
+        "esign-status",
+        () => getStatusEsign()
+    );
+
     const { status, data: userData } = useSession();
 
     return (
         <PageContainer title="Dashboard" subTitle="Demo E-Sign">
             <Card>
+                <Alert
+                    color="red"
+                    title="Perhatian"
+                    style={{ marginBottom: 10 }}
+                >
+                    Esign masih dalam tahapan pengembangan. Data dan dokumen
+                    akan dihapus secara berkala.
+                </Alert>
                 <Skeleton loading={isLoading || status === "loading"}>
                     <Greetings user={userData?.user} />
                     <Divider />
                     <DashboardStatistic data={data?.data} loading={isLoading} />
                     <Divider />
+                </Skeleton>
+                <Skeleton loading={isLoadingStatus}>
+                    {dataStatus?.message !==
+                        "User tidak terdaftar dalam bsre" && (
+                        <Button>Create Sign</Button>
+                    )}
                 </Skeleton>
             </Card>
         </PageContainer>

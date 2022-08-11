@@ -100,6 +100,6 @@ export const approveSign = (data) => {
     return fetcher.put(`/documents/${documentId}/sign`, result);
 };
 
-export const status = () => {
-    return fetcher.get(`/status`);
+export const getStatusEsign = () => {
+    return fetcher.get(`/check/status`).then((res) => res?.data);
 };

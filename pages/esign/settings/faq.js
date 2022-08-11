@@ -4,7 +4,7 @@ import PageContainer from "../../../src/components/PageContainer";
 function ActivityLogs() {
     return (
         <PageContainer title="Log Aktivitas">
-            <div>ini adalah faq</div>
+            <div>Test</div>
         </PageContainer>
     );
 }
