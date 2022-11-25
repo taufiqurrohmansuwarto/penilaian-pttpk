@@ -12,6 +12,7 @@
         "@babel/preset-react": "^7.16.7",
         "@babel/runtime": "^7.17.8",
         "@emotion/react": "^11.10.5",
+        "@emotion/server": "^11.10.0",
         "@mantine/core": "^5.1.1",
         "@mantine/hooks": "^5.1.1",
         "@mantine/next": "^5.1.1",
