@@ -50,8 +50,15 @@ export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
     }
     const totalKegiatanTambahan = totalPekerjaanTambahanFn(kegiatanTambahan);
 
+    // kalau reratanya lebih 100 maka tetap 100
+    const totalPenilaianPekerjaan =
+        Number(total) * 100 > 100 ? 100 : Number(total) * 100;
+
+    const nilaiRincianPekerjaan =
+        Number(totalPenilaianPekerjaan) / kegiatanTahunan?.length;
+
     return {
         totalKegiatanTambahan,
-        totalPenilaianPekerjaan: total * 100 > 100 ? 100 : total * 100
+        totalPenilaianPekerjaan: Number(nilaiRincianPekerjaan)
     };
 };

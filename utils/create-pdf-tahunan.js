@@ -202,6 +202,7 @@ const renderRincianPekerjaan = (listKerja) => {
     };
 
     if (listKerja?.length > 0) {
+        let current = [];
         listKerjaTahunan = listKerja?.map((x, index) => {
             const satuanKuantitas = x?.ref_satuan_kinerja?.nama;
             const kuantitas = x?.kuantitas;
@@ -213,7 +214,11 @@ const renderRincianPekerjaan = (listKerja) => {
                     : presentaseCapaian?.toFixed(2);
 
             const presentase = newPresentase > 100 ? 100 : newPresentase;
-            total = total + presentase;
+
+            // parse presentase to number
+            const presentaseNumber = Number(presentase);
+
+            total = total + presentaseNumber;
 
             return [
                 `${index + 1}.`,
@@ -258,16 +263,38 @@ const renderRincianPekerjaan = (listKerja) => {
                     {
                         text: "PENILAIAN",
                         rowSpan: 2,
-                        style: { fillColor: warnaAbuAbu }
+                        style: { fillColor: warnaAbuAbu, fontSize: 6 }
                     }
                 ],
                 [
                     {},
                     {},
-                    { text: "Kuantitas", fillColor: orange },
-                    { text: "Satuan", fillColor: orange },
-                    { text: "Kuantitas", fillColor: warnaHijauMuda },
-                    { text: "Satuan", fillColor: warnaHijauMuda },
+                    {
+                        text: "Kuantitas",
+                        fillColor: orange,
+                        style: { fontSize: 6 }
+                    },
+                    {
+                        text: "Satuan",
+                        fillColor: orange,
+                        style: {
+                            fontSize: 6
+                        }
+                    },
+                    {
+                        text: "Kuantitas",
+                        fillColor: warnaHijauMuda,
+                        style: {
+                            fontSize: 6
+                        }
+                    },
+                    {
+                        text: "Satuan",
+                        fillColor: warnaHijauMuda,
+                        style: {
+                            fontSize: 6
+                        }
+                    },
                     ""
                 ],
                 // berisikan nomer, detail kegiatan, target kuantitas, capaian kuantitas dan penilaian

@@ -40,8 +40,6 @@ const cetakPenilaianBulananUser = async (req, res) => {
     const queryTahun = req.query?.tahun || moment(new Date()).format("YYYY");
     const { body } = req;
 
-    console.log("query", { queryBulan, queryTahun });
-
     const bulan = parseInt(queryBulan);
     const tahun = parseInt(queryTahun);
 
@@ -253,11 +251,13 @@ const cetakPenilaianAkhirUser = async (req, res) => {
                 result?.tugas_tambahan
             );
 
-            const totalNilaiCapaianKinerja =
-                nilai.totalKegiatanTambahan + nilai.totalPenilaianPekerjaan;
+            const totalNilaiCapaianKinerja = Number(
+                Number(nilai.totalKegiatanTambahan) +
+                    Number(nilai.totalPenilaianPekerjaan)
+            );
 
             const rekom =
-                parseFloat(totalNilaiCapaianKinerja).toFixed(2) > 70 &&
+                totalNilaiCapaianKinerja?.toFixed(2) > 70 &&
                 totalNilaiPerilaku > 70;
 
             const {
@@ -305,7 +305,7 @@ const cetakPenilaianAkhirUser = async (req, res) => {
                 },
                 totalKegiatanBulanan: nilai?.totalPenilaianPekerjaan,
                 rekom,
-                totalNilaiCapaianKinerja,
+                totalNilaiCapaianKinerja: totalNilaiCapaianKinerja?.toFixed(2),
                 currentPerilaku,
                 totalPerilaku: totalNilaiPerilaku
             };
