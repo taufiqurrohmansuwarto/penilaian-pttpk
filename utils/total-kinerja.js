@@ -57,6 +57,8 @@ export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
     const nilaiRincianPekerjaan =
         Number(totalPenilaianPekerjaan) / kegiatanTahunan?.length;
 
+    console.log({ totalPenilaianPekerjaan, nilaiRincianPekerjaan });
+
     const hasil = {
         totalKegiatanTambahan: round(totalKegiatanTambahan, 2),
         totalPenilaianPekerjaan: round(nilaiRincianPekerjaan, 2)
