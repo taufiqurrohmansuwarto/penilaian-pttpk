@@ -46,6 +46,9 @@ export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
 
             return capaian / target;
         });
+
+        console.log(result);
+
         total = sum(result);
     }
     const totalKegiatanTambahan = totalPekerjaanTambahanFn(kegiatanTambahan);
