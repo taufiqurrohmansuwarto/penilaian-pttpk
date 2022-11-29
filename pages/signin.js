@@ -86,7 +86,7 @@ export default function SignIn({ providers }) {
                     </Text>
                     <Text align="center" size="xs">
                         <Link href="/changelog">
-                            <a>Changelog 0.0.d</a>
+                            <a>Changelog 0.0.g</a>
                         </Link>
                     </Text>
                 </Paper>
