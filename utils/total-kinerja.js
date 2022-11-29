@@ -44,27 +44,17 @@ export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
             const target = kegiatan?.kuantitas;
             const capaian = sumBy(kegiatan?.kinerja_bulanan, "kuantitas");
 
-            return capaian / target;
+            return round(capaian / target, 2) * 100;
         });
 
-        console.log(result);
-
-        total = sum(result);
+        total = sum(result) / result.length;
     }
+
     const totalKegiatanTambahan = totalPekerjaanTambahanFn(kegiatanTambahan);
-
-    // kalau reratanya lebih 100 maka tetap 100
-    const totalPenilaianPekerjaan =
-        Number(total) * 100 > 100 ? 100 : Number(total) * 100;
-
-    const nilaiRincianPekerjaan =
-        Number(totalPenilaianPekerjaan) / kegiatanTahunan?.length;
-
-    console.log({ totalPenilaianPekerjaan, nilaiRincianPekerjaan, total });
 
     const hasil = {
         totalKegiatanTambahan: round(totalKegiatanTambahan, 2),
-        totalPenilaianPekerjaan: round(nilaiRincianPekerjaan, 2)
+        totalPenilaianPekerjaan: round(total, 2)
     };
 
     return hasil;
