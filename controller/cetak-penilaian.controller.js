@@ -207,11 +207,11 @@ const cetakPenilaianAkhirUser = async (req, res) => {
             };
 
             const totalNilaiPerilaku =
-                nilaiPerilaku.integritas +
-                nilaiPerilaku.kedisiplinan +
-                nilaiPerilaku.orientasi_pelayanan +
-                nilaiPerilaku.kerjasama_koordinasi +
-                nilaiPerilaku.pemanfaatan_alat_dan_media_kerja;
+                Number(nilaiPerilaku.integritas) +
+                Number(nilaiPerilaku.kedisiplinan) +
+                Number(nilaiPerilaku.orientasi_pelayanan) +
+                Number(nilaiPerilaku.kerjasama_koordinasi) +
+                Number(nilaiPerilaku.pemanfaatan_alat_dan_media_kerja);
 
             const currentPerilaku = [
                 {

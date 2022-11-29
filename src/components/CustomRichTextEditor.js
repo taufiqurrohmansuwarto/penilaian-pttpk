@@ -44,7 +44,7 @@ const CustomRichTextEditor = ({
                         padding: 0,
                         margin: 0,
                         minHeight: "10px !important",
-
+                        height: 300,
                         width: "100%",
                         marginBottom: 14
                     }

@@ -64,7 +64,7 @@ const renderPerilakuKerja = (perilakuKerja, total) => {
         a?.name,
         a?.nilaiSekarang,
         a?.bobot,
-        a?.nilai
+        Number(a?.nilai)
     ]);
 
     return {
