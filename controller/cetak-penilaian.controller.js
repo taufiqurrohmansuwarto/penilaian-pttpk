@@ -1,4 +1,5 @@
 import axios from "axios";
+import { round } from "lodash";
 import moment from "moment";
 import prisma from "../lib/prisma";
 import { generatePdf } from "../utils/create-pdf-bulanan";
@@ -198,20 +199,22 @@ const cetakPenilaianAkhirUser = async (req, res) => {
 
             // terdapat 4 macam perilaku
             const nilaiPerilaku = {
-                integritas: integritas * 0.25,
-                kedisiplinan: kedisiplinan * 0.25,
-                orientasi_pelayanan: orientasi_pelayanan * 0.2,
-                kerjasama_koordinasi: kerjasama_koordinasi * 0.2,
-                pemanfaatan_alat_dan_media_kerja:
-                    pemanfaatan_alat_dan_media_kerja * 0.1
+                integritas: round(integritas * 0.25, 2),
+                kedisiplinan: round(kedisiplinan * 0.25, 2),
+                orientasi_pelayanan: round(orientasi_pelayanan * 0.2, 2),
+                kerjasama_koordinasi: round(kerjasama_koordinasi * 0.2, 2),
+                pemanfaatan_alat_dan_media_kerja: round(
+                    pemanfaatan_alat_dan_media_kerja * 0.1,
+                    2
+                )
             };
 
             const totalNilaiPerilaku =
-                Number(nilaiPerilaku.integritas) +
-                Number(nilaiPerilaku.kedisiplinan) +
-                Number(nilaiPerilaku.orientasi_pelayanan) +
-                Number(nilaiPerilaku.kerjasama_koordinasi) +
-                Number(nilaiPerilaku.pemanfaatan_alat_dan_media_kerja);
+                round(nilaiPerilaku.integritas, 2) +
+                round(nilaiPerilaku.kedisiplinan, 2) +
+                round(nilaiPerilaku.orientasi_pelayanan, 2) +
+                round(nilaiPerilaku.kerjasama_koordinasi, 2) +
+                round(nilaiPerilaku.pemanfaatan_alat_dan_media_kerja, 2);
 
             const currentPerilaku = [
                 {
@@ -251,10 +254,9 @@ const cetakPenilaianAkhirUser = async (req, res) => {
                 result?.tugas_tambahan
             );
 
-            const totalNilaiCapaianKinerja = Number(
-                Number(nilai.totalKegiatanTambahan) +
-                    Number(nilai.totalPenilaianPekerjaan)
-            );
+            const totalNilaiCapaianKinerja =
+                round(nilai.totalKegiatanTambahan, 2) +
+                round(nilai?.totalPenilaianPekerjaan, 2);
 
             const rekom =
                 totalNilaiCapaianKinerja?.toFixed(2) > 70 &&
@@ -305,7 +307,7 @@ const cetakPenilaianAkhirUser = async (req, res) => {
                 },
                 totalKegiatanBulanan: nilai?.totalPenilaianPekerjaan,
                 rekom,
-                totalNilaiCapaianKinerja: totalNilaiCapaianKinerja?.toFixed(2),
+                totalNilaiCapaianKinerja: round(totalNilaiCapaianKinerja, 2),
                 currentPerilaku,
                 totalPerilaku: totalNilaiPerilaku
             };

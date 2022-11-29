@@ -1,4 +1,4 @@
-import { sum, sumBy } from "lodash";
+import { round, sum, sumBy } from "lodash";
 
 const PENGALI_NILAI_INTEGRITAS = 0.25;
 const PENGALI_KEDISIPLINAN = 0.25;
@@ -57,8 +57,10 @@ export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
     const nilaiRincianPekerjaan =
         Number(totalPenilaianPekerjaan) / kegiatanTahunan?.length;
 
-    return {
-        totalKegiatanTambahan,
-        totalPenilaianPekerjaan: Number(nilaiRincianPekerjaan)
+    const hasil = {
+        totalKegiatanTambahan: round(totalKegiatanTambahan, 2),
+        totalPenilaianPekerjaan: round(nilaiRincianPekerjaan, 2)
     };
+
+    return hasil;
 };

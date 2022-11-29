@@ -1,4 +1,4 @@
-import { sumBy } from "lodash";
+import { round, sumBy } from "lodash";
 
 const lebarKolomPenilaian = 35;
 const warnaHijau = "#78AB46";
@@ -64,7 +64,7 @@ const renderPerilakuKerja = (perilakuKerja, total) => {
         a?.name,
         a?.nilaiSekarang,
         a?.bobot,
-        Number(a?.nilai)
+        round(a?.nilai, 2)
     ]);
 
     return {
@@ -216,7 +216,7 @@ const renderRincianPekerjaan = (listKerja) => {
             const presentase = newPresentase > 100 ? 100 : newPresentase;
 
             // parse presentase to number
-            const presentaseNumber = Number(presentase);
+            const presentaseNumber = round(presentase, 2);
 
             total = total + presentaseNumber;
 
