@@ -169,7 +169,7 @@ const renderInformasi = (currentUser) => {
                         [
                             { text: "MASA KERJA" },
                             { text: ":" },
-                            { text: `${currentUser?.pengalaman}` }
+                            { text: `${currentUser?.pengalaman} TAHUN` }
                         ],
                         [
                             { text: "PERIODE" },
