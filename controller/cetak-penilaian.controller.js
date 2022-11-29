@@ -258,6 +258,8 @@ const cetakPenilaianAkhirUser = async (req, res) => {
                 round(nilai.totalKegiatanTambahan, 2) +
                 round(nilai?.totalPenilaianPekerjaan, 2);
 
+            console.log(totalNilaiCapaianKinerja);
+
             const rekom =
                 totalNilaiCapaianKinerja?.toFixed(2) > 70 &&
                 totalNilaiPerilaku > 70;
@@ -309,7 +311,7 @@ const cetakPenilaianAkhirUser = async (req, res) => {
                 rekom,
                 totalNilaiCapaianKinerja: round(totalNilaiCapaianKinerja, 2),
                 currentPerilaku,
-                totalPerilaku: totalNilaiPerilaku
+                totalPerilaku: round(totalNilaiPerilaku, 2)
             };
 
             const dd = generateKinerjaTahunanFull(data);

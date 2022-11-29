@@ -106,7 +106,7 @@ const renderPerilakuKerja = (perilakuKerja, total) => {
                     {},
                     {},
                     { text: 100, style: "totalNilai" },
-                    { text: total, style: "totalNilai" }
+                    { text: round(total, 2), style: "totalNilai" }
                 ]
             ]
         }
@@ -311,7 +311,7 @@ const renderRincianPekerjaan = (listKerja) => {
                     {},
                     {
                         // text: `${total}%`,
-                        text: `${currentTotal}`,
+                        text: `${round(currentTotal, 2)}`,
                         style: { fillColor: warnaAbuAbu }
                     }
                 ]
