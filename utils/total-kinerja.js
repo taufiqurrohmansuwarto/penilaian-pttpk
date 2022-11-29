@@ -42,7 +42,10 @@ export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
     } else {
         const result = kegiatanTahunan?.map((kegiatan) => {
             const target = kegiatan?.kuantitas;
-            const capaian = sumBy(kegiatan?.kinerja_bulanan, "kuantitas");
+            const capaian =
+                sumBy(kegiatan?.kinerja_bulanan, "kuantitas") > 100
+                    ? 100
+                    : sumBy(kegiatan?.kinerja_bulanan, "kuantitas");
 
             return round(capaian / target, 2) * 100;
         });
