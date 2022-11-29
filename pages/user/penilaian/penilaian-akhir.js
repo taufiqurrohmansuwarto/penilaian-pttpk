@@ -2,6 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import {
     Alert,
     Button,
+    Card,
     Divider,
     Form,
     Input,
@@ -13,7 +14,7 @@ import {
     Table,
     Typography
 } from "antd";
-import { sumBy } from "lodash";
+import { round, sumBy } from "lodash";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
@@ -230,19 +231,18 @@ const DataTargetPenilaian = ({ data }) => {
             render: (text, record, index) => {
                 return (
                     <div>
-                        {(sumBy(record?.kinerja_bulanan, "kuantitas") /
-                            record?.kuantitas) *
-                            100}{" "}
+                        {round(
+                            (sumBy(record?.kinerja_bulanan, "kuantitas") /
+                                record?.kuantitas) *
+                                100,
+                            2
+                        )}{" "}
                         %
                     </div>
                 );
             }
         }
     ];
-
-    const Warning = () => {
-        return <div>Header</div>;
-    };
 
     return (
         <>
@@ -332,6 +332,7 @@ function PenilaianAkhir() {
             title="Penilaian Akhir"
             subTitle="PTTPK"
             fixedHeader
+            style={{ minHeight: "90vh" }}
             content={
                 <Alert
                     type="warning"
@@ -341,44 +342,47 @@ function PenilaianAkhir() {
                 />
             }
         >
-            <Skeleton loading={isLoadingDataPenilaianAktif}>
-                <FormCetakPenilaianAkhir
-                    visible={visible}
-                    onCancel={handleCancelModal}
-                />
-                <div style={{ marginBottom: 8 }}>
-                    Status : {dataPenilaianAktif?.status?.toUpperCase()}
-                </div>
-                <Space>
-                    {dataPenilaianAktif?.status === "dikerjakan" ? (
-                        <Button onClick={handleKirimAtasan}>
-                            Kirim Atasan
-                        </Button>
-                    ) : (
-                        <Space>
-                            <Button onClick={handleBatalKirimAtasan}>
-                                Batal Kirim
+            <Card>
+                <Skeleton loading={isLoadingDataPenilaianAktif}>
+                    <FormCetakPenilaianAkhir
+                        visible={visible}
+                        onCancel={handleCancelModal}
+                    />
+                    <div style={{ marginBottom: 8 }}>
+                        Status : {dataPenilaianAktif?.status?.toUpperCase()}
+                    </div>
+                    <Space>
+                        {dataPenilaianAktif?.status === "dikerjakan" ? (
+                            <Button onClick={handleKirimAtasan}>
+                                Kirim Atasan
                             </Button>
-                            <Button
-                                onClick={cetakPenilaianAkhir}
-                                disabled={
-                                    dataPenilaianAktif?.status !== "diverif"
-                                }
-                            >
-                                Cetak
-                            </Button>
-                        </Space>
-                    )}
-                </Space>
-                <Divider />
-                <DataTargetPenilaian
-                    data={dataPenilaianAktif?.target_penilaian}
-                />
-                <DataPekerjaanTambahan
-                    penilaianId={dataPenilaianAktif?.id}
-                    status={dataPenilaianAktif?.status}
-                />
-            </Skeleton>
+                        ) : (
+                            <Space>
+                                <Button onClick={handleBatalKirimAtasan} danger>
+                                    Batal Kirim
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    onClick={cetakPenilaianAkhir}
+                                    disabled={
+                                        dataPenilaianAktif?.status !== "diverif"
+                                    }
+                                >
+                                    Cetak Form Penilaian
+                                </Button>
+                            </Space>
+                        )}
+                    </Space>
+                    <Divider />
+                    <DataTargetPenilaian
+                        data={dataPenilaianAktif?.target_penilaian}
+                    />
+                    <DataPekerjaanTambahan
+                        penilaianId={dataPenilaianAktif?.id}
+                        status={dataPenilaianAktif?.status}
+                    />
+                </Skeleton>
+            </Card>
         </PageContainer>
     );
 }
