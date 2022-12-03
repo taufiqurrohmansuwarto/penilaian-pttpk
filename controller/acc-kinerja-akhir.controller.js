@@ -92,6 +92,7 @@ const listKinerjaApproval = async (req, res) => {
                     status: "dikerjakan"
                 }
             },
+            take: 200,
             include: {
                 pegawai: true,
                 target_penilaian: {
