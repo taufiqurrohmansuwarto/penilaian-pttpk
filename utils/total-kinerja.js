@@ -47,7 +47,9 @@ export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
                     ? 100
                     : sumBy(kegiatan?.kinerja_bulanan, "kuantitas");
 
-            return round(capaian / target, 2) * 100;
+            const hasil = round((capaian / target) * 100, 2);
+            console.log({ hasil, capaian, target });
+            return hasil;
         });
 
         console.log({ result, kegiatanTahunan });
