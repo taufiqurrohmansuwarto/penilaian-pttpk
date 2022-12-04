@@ -50,6 +50,7 @@ export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
             return round(capaian / target, 2) * 100;
         });
 
+        console.log({ result, kegiatanTahunan });
         total = sum(result) / result.length;
     }
 
