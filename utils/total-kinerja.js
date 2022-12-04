@@ -54,6 +54,7 @@ export const totalKinerja = (kegiatanTahunan, kegiatanTambahan) => {
     }
 
     const totalKegiatanTambahan = totalPekerjaanTambahanFn(kegiatanTambahan);
+    console.log({ kegiatanTambahan, totalKegiatanTambahan });
 
     const hasil = {
         totalKegiatanTambahan: round(totalKegiatanTambahan, 2),
