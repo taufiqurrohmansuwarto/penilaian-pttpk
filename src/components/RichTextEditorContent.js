@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 export default dynamic(
-    () => import("@mantine/tiptap").then((r) => r?.RichTextEditor),
+    () => import("@mantine/tiptap").then((r) => r?.RichTextEditor.Content),
     {
         // Disable during server side rendering
         ssr: false,

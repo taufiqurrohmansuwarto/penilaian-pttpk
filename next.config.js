@@ -24,9 +24,6 @@ module.exports = withAntdLess({
         domains: ["siasn.bkd.jatimprov.go.id"],
         formats: ["image/webp"]
     },
-    experimental: {
-        scrollRestoration: true
-    },
     basePath: "/pttpk-penilaian",
     publicRuntimeConfig: {
         basePath: getBasePath()

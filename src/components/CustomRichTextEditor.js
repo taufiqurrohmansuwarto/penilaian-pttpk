@@ -1,71 +1,28 @@
-import { Button } from "@mantine/core";
-import { Space } from "antd";
-import { useMemo } from "react";
-import { findUsers, uploads } from "../../services/main.services";
+import { Button, Space } from "antd";
 import RichTextEditor from "./RichTextEditor";
+import RichTextEditorContent from "./RichTextEditorContent";
 
 const CustomRichTextEditor = ({
-    text,
-    setText,
+    editor,
     handleSubmit,
     buttonText = "Submit",
     main = false,
-    onCancel,
-    placeholder = ""
+    onCancel
 }) => {
-    const handleUpload = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("image", file);
-            const result = await uploads(formData);
-            return result;
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const mentions = useMemo(
-        () => ({
-            allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
-            mentionDenotationChars: ["@", "#"],
-            source: async (searchTerm, renderList) => {
-                const values = await findUsers(searchTerm);
-                renderList(values);
-            }
-        }),
-        []
-    );
-
     return (
         <>
             <RichTextEditor
-                styles={{
-                    root: {
-                        padding: 0,
-                        margin: 0,
-                        minHeight: "10px !important",
-                        height: 300,
-                        width: "100%",
-                        marginBottom: 14
-                    }
+                style={{
+                    minHeight: "100px",
+                    marginBottom: 10,
+                    width: "100%"
                 }}
-                sx={(theme) => ({
-                    "&:hover": {
-                        borderColor: theme.colors.indigo
-                    }
-                })}
-                placeholder={placeholder}
-                onImageUpload={handleUpload}
-                value={text}
-                onChange={setText}
-                mentions={mentions}
-                controls={[
-                    ["image", "video", "link", "unorderedList", "orderedList"]
-                ]}
-                radius={10}
-            />
+                editor={editor}
+            >
+                <RichTextEditorContent />
+            </RichTextEditor>
             <Space>
-                <Button color="grape" onClick={handleSubmit}>
+                <Button type="primary" onClick={handleSubmit}>
                     {buttonText}
                 </Button>
                 {!main && (

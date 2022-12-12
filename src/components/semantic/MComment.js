@@ -1,3 +1,5 @@
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import { message, Popconfirm } from "antd";
 import moment from "moment";
 import "moment/locale/id";
@@ -48,17 +50,21 @@ function MComment({
     const router = useRouter();
     const queryClient = useQueryClient();
 
+    const editor = useEditor({
+        extensions: [StarterKit],
+        content: ""
+    });
+
     const [editId, setEditId] = useState(null);
-    const [editText, setEditText] = useState(null);
 
     const showEdit = () => {
         setEditId(id);
-        setEditText(comment);
+        editor.commands.setContent(comment);
     };
 
     const closeEdit = () => {
         setEditId(null);
-        setEditText(null);
+        editor.commands.setContent("");
     };
 
     const { mutate: remove } = useMutation((id) => removeComment(id), {
@@ -164,12 +170,12 @@ function MComment({
             message.success("Komentar berhasil diedit");
 
             setEditId(null);
-            setEditText(null);
+            editor.commands.setContent("");
         }
     });
 
     const handleSubmitEdit = () => {
-        const data = { id, comment: editText };
+        const data = { id, comment: editor.getHTML() };
         editComment(data);
     };
 
@@ -183,12 +189,11 @@ function MComment({
 
     return (
         <Comment.Group>
-            <Comment>
+            <Comment className="comment-item">
                 {editId === id ? (
                     <MCreateComment
                         handleClose={closeEdit}
-                        text={editText}
-                        setText={setEditText}
+                        editor={editor}
                         handleSubmit={handleSubmitEdit}
                         buttonText="Edit"
                     />

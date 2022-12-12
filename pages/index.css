@@ -11,6 +11,10 @@
     to {opacity: 1;}
 }
 
+.comment-item {
+    width: 100%;
+}
+
 .doodle { 
     position: relative; 
     height: 100vh;

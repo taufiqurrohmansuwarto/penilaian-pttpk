@@ -1,7 +1,6 @@
 import { SendOutlined } from "@ant-design/icons";
 import { Alert } from "@mantine/core";
 import {
-    BackTop,
     Button,
     Card,
     Comment,
@@ -27,7 +26,6 @@ import {
 } from "../../../services/main.services";
 import CustomRichTextEditor from "../CustomRichTextEditor";
 import RichTextEditor from "../RichTextEditor";
-import RichTextEditorNew from "../RichTextEditorNew";
 
 const MyComment = ({ comment, user, id }) => {
     const handleUpload = async (file) => {

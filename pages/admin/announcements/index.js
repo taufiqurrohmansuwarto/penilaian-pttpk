@@ -1,4 +1,7 @@
-import { Button, Card, Input, Modal, Skeleton } from "antd";
+import Link from "@tiptap/extension-link";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { Button, Card, Form, Input, message, Modal, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
@@ -7,6 +10,7 @@ import {
     updateAnnouncement
 } from "../../../services/admin.service";
 import AdminLayout from "../../../src/components/AdminLayout";
+import CustomRichEditorBiasa from "../../../src/components/CustomRichEditorBiasa";
 import PageContainer from "../../../src/components/PageContainer";
 import RichTextEditor from "../../../src/components/RichTextEditor";
 
@@ -57,53 +61,66 @@ const ModalPengumuman = ({ visible, onCancel }) => {
 };
 
 const EditPengumuman = ({ visible, onCancel, data }) => {
-    const [text, setText] = useState(data?.description);
-    const [title, setTitle] = useState(data?.title);
+    const [form] = Form.useForm();
+
+    const editor = useEditor({
+        content: "",
+        extensions: [StarterKit, Link]
+    });
 
     useEffect(() => {
-        setText(data?.description);
-        setTitle(data?.title);
-    }, [data]);
+        form.setFieldsValue({
+            title: data?.title,
+            description: data?.description
+        });
+        if (editor) {
+            editor?.commands?.setContent(data?.description);
+        }
+    }, [data, form, editor]);
 
     const client = useQueryClient();
 
-    const { mutate: update } = useMutation((data) => updateAnnouncement(data), {
-        onSuccess: () => {
-            client.invalidateQueries(["announcements"]);
-            setText("");
-            setTitle("");
-            onCancel();
+    const { mutate: update, isLoading } = useMutation(
+        (data) => updateAnnouncement(data),
+        {
+            onSuccess: () => {
+                client.invalidateQueries(["announcements"]);
+                onCancel();
+                message.success("Berhasil mengubah pengumuman");
+            }
         }
-    });
+    );
 
-    const handleUpdate = () => {
+    const handleUpdate = async () => {
+        const values = await form.validateFields();
+        const description = editor?.getHTML();
         update({
             id: data?.id,
             data: {
-                title: title,
-                description: text
+                title: values?.title,
+                description
             }
         });
     };
 
     return (
         <Modal
+            centered
             visible={visible}
-            width={800}
+            confirmLoading={isLoading}
+            width={900}
             onCancel={onCancel}
             onOk={handleUpdate}
             title="Edit Pengumuman"
         >
-            <Input
-                value={title}
-                onChange={(e) => setTitle(e?.target?.value)}
-                style={{ marginBottom: 10 }}
-            />
-            <RichTextEditor
-                style={{ minHeight: 400 }}
-                value={text}
-                onChange={setText}
-            />
+            <Form form={form}>
+                <Form.Item name="title">
+                    <Input style={{ marginBottom: 10 }} />
+                </Form.Item>
+                <Form.Item name="description">
+                    <CustomRichEditorBiasa editor={editor} />
+                </Form.Item>
+            </Form>
         </Modal>
     );
 };
@@ -147,8 +164,9 @@ function Announcements() {
                             <Button
                                 style={{ marginTop: 10 }}
                                 onClick={openUpdateModal}
+                                type="primary"
                             >
-                                Edit
+                                Ubah Pengumuman
                             </Button>
                         </div>
                     ) : (

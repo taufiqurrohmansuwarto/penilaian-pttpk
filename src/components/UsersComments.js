@@ -1,4 +1,5 @@
-import { Alert } from "@mantine/core";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import { Comment, Divider, List, message, Spin } from "antd";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 import { useSession } from "next-auth/react";
@@ -6,7 +7,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
-import { Antenna } from "tabler-icons-react";
 import {
     createComments,
     dislikes,
@@ -62,7 +62,10 @@ const UserComments = ({ sort }) => {
 
     const [selectedFilter, setSelectedFilter] = useState(sort);
 
-    const [comment, setComment] = useState("");
+    const editor = useEditor({
+        extensions: [StarterKit],
+        content: ""
+    });
 
     const { data: userData } = useSession();
     const {
@@ -122,14 +125,8 @@ const UserComments = ({ sort }) => {
     useEffect(() => {}, [sort]);
 
     const handleSubmit = () => {
-        const data = { comment, parent_id: null };
-
-        const hasil = comment.replace(/<(.|\n)*?>/g, "").trim();
-        if (hasil.length === 0) {
-            return;
-        } else {
-            createCommentMutation.mutate(data);
-        }
+        const data = { comment: editor.getHTML(), parent_id: null };
+        createCommentMutation.mutate(data);
     };
 
     const likeMutation = useMutation((data) => likes(data), {
@@ -177,10 +174,8 @@ const UserComments = ({ sort }) => {
                 content={
                     <>
                         <CustomRichTextEditor
-                            placeholder="Apa yang ingin kamu bagikan hari ini??"
-                            text={comment}
+                            editor={editor}
                             main={true}
-                            setText={setComment}
                             handleSubmit={handleSubmit}
                         />
                     </>
