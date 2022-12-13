@@ -202,3 +202,7 @@ export const batalKirimAtasanCuti = ({ bulan, tahun }) => {
         .delete(`/user/request-penilaian-cuti?bulan=${bulan}&tahun=${tahun}`)
         .then((res) => res?.data);
 };
+
+export const listPenilaian = () => {
+    return fetcher.get(`/user/riwayat-penilaian-ptt`).then((res) => res?.data);
+};

@@ -27,6 +27,7 @@ import {
     updateTugasTambahan
 } from "../../../services/users.service";
 import FormCetakPenilaianAkhir from "../../../src/components/FormCetakPenilaianAkhir";
+import ListPenilaianTahunan from "../../../src/components/ListPenilaianTahunan";
 import PageContainer from "../../../src/components/PageContainer";
 import UserLayout from "../../../src/components/UserLayout";
 
@@ -382,6 +383,10 @@ function PenilaianAkhir() {
                         status={dataPenilaianAktif?.status}
                     />
                 </Skeleton>
+            </Card>
+
+            <Card style={{ marginTop: 10 }} title="List Penilaian Tahunan">
+                <ListPenilaianTahunan />
             </Card>
         </PageContainer>
     );
