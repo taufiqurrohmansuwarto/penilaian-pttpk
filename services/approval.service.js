@@ -45,3 +45,9 @@ export const approvePenilaianAkhir = ({ tahun, id_ptt, data }) => {
         )
         .then((res) => res?.data);
 };
+
+export const getPenilaianAkhirDetail = ({ tahun, id }) => {
+    return fetcher
+        .get(`penilaian-akhir/${id}/realisasi-akhir?tahun=${tahun}`)
+        .then((res) => res?.data);
+};

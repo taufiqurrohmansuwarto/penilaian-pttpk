@@ -24,8 +24,25 @@ import {
     getPenilaianAkhir
 } from "../../services/approval.service";
 import PageContainer from "../../src/components/PageContainer";
+import DataRealisasiPekerjaanAkhir from "../../src/components/DataRealisasiPekerjaanAkhir";
 
-//
+const DetailPenilaianAkhir = ({ visible, onCancel, row, tahun }) => {
+    return (
+        <Modal
+            visible={visible}
+            title="Detail Penilaian Akhir"
+            centered
+            footer={null}
+            width={1200}
+            onCancel={onCancel}
+        >
+            <DataRealisasiPekerjaanAkhir
+                id={row?.user_custom_id}
+                tahun={tahun}
+            />
+        </Modal>
+    );
+};
 
 const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
     const [form] = Form.useForm();
@@ -53,18 +70,18 @@ const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
     });
 
     const handleSubmit = async () => {
-        try {
-            const result = await form.validateFields();
-            const data = { tahun, id_ptt: row?.user_custom_id, data: result };
-            approveMutation.mutate(data);
-        } catch (error) {}
+        const result = await form.validateFields();
+        const data = { tahun, id_ptt: row?.user_custom_id, data: result };
+        approveMutation.mutate(data);
     };
 
     return (
         <Modal
             okText="Beri Nilai dan Verif"
             visible={visible}
-            title="Detail Penilaian Akhir"
+            title="Penilaian Akhir"
+            centered
+            width={1200}
             onOk={handleSubmit}
             confirmLoading={approveMutation.isLoading}
             onCancel={onCancel}
@@ -113,6 +130,16 @@ const TablePenilaianAkhir = ({ data, tahun }) => {
         setCurrentRow(row);
     };
 
+    const [visibleDetail, setVisibleDetail] = useState(false);
+    const [currentRowDetail, setCurrentRowDetail] = useState();
+
+    const handleCancelDetail = () => setVisibleDetail(false);
+
+    const handleDetailDetail = (row) => {
+        setVisibleDetail(true);
+        setCurrentRowDetail(row);
+    };
+
     const columns = [
         {
             key: "foto",
@@ -143,7 +170,16 @@ const TablePenilaianAkhir = ({ data, tahun }) => {
             title: "Aksi",
             render: (_, row) => (
                 <Space>
-                    <Button onClick={() => handleDetail(row)}>Lihat</Button>
+                    <Button
+                        onClick={() => handleDetail(row)}
+                        type="dashed"
+                        danger
+                    >
+                        Nilai
+                    </Button>
+                    <Button onClick={() => handleDetailDetail(row)}>
+                        Detail
+                    </Button>
                 </Space>
             )
         }
@@ -162,6 +198,12 @@ const TablePenilaianAkhir = ({ data, tahun }) => {
                 visible={visible}
                 onCancel={handleCancel}
                 row={currentRow}
+                tahun={tahun}
+            />
+            <DetailPenilaianAkhir
+                visible={visibleDetail}
+                onCancel={handleCancelDetail}
+                row={currentRowDetail}
                 tahun={tahun}
             />
         </>
@@ -195,13 +237,14 @@ function PenilaianTahunan({ data }) {
     return (
         <PageContainer
             title="Daftar Penilaian Tahunan"
+            style={{ minHeight: "95vh" }}
             subTitle="PTTPK"
             content={
                 <Alert
                     type="info"
                     message="Perhatian"
                     showIcon
-                    description="Jika PTTPK dirasa sudah memilih anda sebagai atasan langsung akan tetapi tidak muncul, pastikan PTTPK yang bersangkutan mengaktifkan penilaiannya. Anda bisa memilih berdasarkan bulan dengan memilih Pilihan tanggal dibawah ini."
+                    description="Jika PTTPK dirasa sudah memilih anda sebagai atasan langsung akan tetapi tidak muncul, pastikan PTTPK yang bersangkutan mengaktifkan penilaiannya. Anda bisa memilih berdasarkan tahun dengan memilih Pilihan tanggal dibawah ini."
                 />
             }
         >
