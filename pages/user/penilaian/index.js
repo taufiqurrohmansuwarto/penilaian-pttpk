@@ -133,7 +133,13 @@ const Penilaian = () => {
             content={<PeringatanPenilaian />}
         >
             <Card>
-                <Divider />
+                <Alert
+                    style={{ marginBottom: 10 }}
+                    message="Perlu diingat"
+                    description="Nilai yang dicetak di penilaian akhir adalah penilaian yang sudah diaktifkan. Untuk itu pastikan kembali penilaian yang akan dicetak sudah diaktifkan"
+                    type="error"
+                    showIcon
+                />
                 <Table
                     title={() => (
                         <Button

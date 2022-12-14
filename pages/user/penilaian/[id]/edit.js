@@ -11,6 +11,7 @@ import {
 } from "../../../../services/users.service";
 import { useEffect, useState } from "react";
 import {
+    Alert,
     Breadcrumb,
     Button,
     Card,
@@ -92,6 +93,13 @@ const EditFormPenilaian = ({
 
     return (
         <Card>
+            <Alert
+                style={{ marginBottom: 10 }}
+                showIcon
+                type="warning"
+                message="Perlu diperhatikan"
+                description="Jika PNS yang dientri tidak terupdate, ulangi dengan nip lain kemudian submit, kemudian ulangi lagi dengan nip yang sebenarnya."
+            />
             <Form
                 form={form}
                 onFinish={handleSubmit}
@@ -101,6 +109,7 @@ const EditFormPenilaian = ({
                 <Form.Item
                     name="tahun"
                     label="Tahun"
+                    help="Tahun penilaian 4 digit / contoh : 2022"
                     rules={[{ required: true, message: "tidak boleh kosong" }]}
                 >
                     <InputNumber />
@@ -115,19 +124,19 @@ const EditFormPenilaian = ({
                 <FormPegawaiPNS
                     name="atasan_langsung"
                     label="Penilai"
-                    help="Ketik NIP untuk mencari PNS"
+                    help="Ketik NIP tanpa spasi"
                     rules={[{ required: true, message: "tidak boleh kosong" }]}
                 />
                 <FormPegawaiPNS
                     name="atasan_banding"
                     label="Atasan Banding Eselon III"
-                    help="Ketik NIP untuk mencari PNS"
+                    help="Ketik NIP tanpa spasi"
                     rules={[{ required: true, message: "tidak boleh kosong" }]}
                 />
                 <FormPegawaiPNS
                     name="eselon_ii"
                     label="Eselon II"
-                    help="Ketik NIP untuk mencari PNS"
+                    help="Ketik NIP tanpa spasi"
                     rules={[{ required: true, message: "tidak boleh kosong" }]}
                 />
                 <Form.Item

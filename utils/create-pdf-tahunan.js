@@ -398,7 +398,7 @@ export const generateKinerjaTahunanFull = (currentUser) => {
                 font: "OpenSans"
             },
             perjanjian: {
-                margin: [0, 30, 0, 0],
+                margin: [0, parseInt(currentUser?.spasi), 0, 0],
                 fontSize: 8,
                 font: "OpenSans"
             },

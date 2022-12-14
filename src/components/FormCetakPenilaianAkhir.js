@@ -4,6 +4,7 @@ import {
     DatePicker,
     Form,
     Input,
+    InputNumber,
     message,
     Modal,
     Select,
@@ -48,7 +49,8 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
                 jabatan_penilai,
                 is_having_atasnama,
                 pejabat_penandatangan,
-                jabatan_penandatangan
+                jabatan_penandatangan,
+                spasi
             } = result;
 
             const currentTanggal = moment(tanggal).format("DD MMMM YYYY");
@@ -64,7 +66,8 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
                 golongan_penandatangan: golongan,
                 pangkat_penandatangan: pangkat,
                 jabatan_penandatangan,
-                jabatan_penilai
+                jabatan_penilai,
+                spasi
             };
 
             const hasil = await cetakPenilaianAkhir({
@@ -107,7 +110,10 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
                 >
                     <DatePicker format="DD-MM-YYYY" />
                 </Form.Item>
-                <Form.Item name="jabatan_penilai" label="Jabatan Penilai">
+                <Form.Item
+                    name="jabatan_penilai"
+                    label="Jabatan Penilai - Ketik Manual"
+                >
                     <Input />
                 </Form.Item>
                 <Form.Item
@@ -118,9 +124,9 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
                     <Checkbox>Pakai</Checkbox>
                 </Form.Item>
                 <Form.Item
-                    label="Penandata tangan/PNS"
+                    label="NIP Penandatangan (Eselon II)"
                     name="pejabat_penandatangan"
-                    help="Ketik NIP untuk mencari nama PNS"
+                    help="Ketik NIP tanpa spasi"
                     rules={[{ required: true, message: "Tidak boleh kosong" }]}
                 >
                     <Select
@@ -148,12 +154,32 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
                     </Select>
                 </Form.Item>
                 <Form.Item
-                    label="Jabatan Penanda tangan"
+                    label="Jabatan Penanda tangan (Eselon II) - Ketik manual"
                     name="jabatan_penandatangan"
                     help="Contoh. Kepala Badan Kepegawaian Daerah / Kepala Bidang P3DASI / Sekretaris BKD Provinsi Jawa Timur"
                     rules={[{ required: true, message: "Tidak boleh kosong" }]}
                 >
                     <Input />
+                </Form.Item>
+                <Form.Item
+                    label="Spasi"
+                    name="spasi"
+                    help="Gunakan setting spasi apabila pdf terpotong, jika tidak mengerti artinya, abaikan saja"
+                    initialValue={30}
+                    rules={[
+                        {
+                            required: true,
+                            message: "Tidak boleh kosong"
+                        },
+                        {
+                            type: "number",
+                            min: 20,
+                            max: 500,
+                            message: "Format angka minimal 10 dan maksimal 20"
+                        }
+                    ]}
+                >
+                    <InputNumber />
                 </Form.Item>
             </Form>
         </Modal>

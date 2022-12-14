@@ -125,8 +125,15 @@ const UserComments = ({ sort }) => {
     useEffect(() => {}, [sort]);
 
     const handleSubmit = () => {
-        const data = { comment: editor.getHTML(), parent_id: null };
-        createCommentMutation.mutate(data);
+        const value = editor.getHTML();
+
+        // check if empty using regex
+        if (!value.replace(/<[^>]*>?/gm, "").trim()) {
+            return;
+        } else {
+            const data = { comment: editor.getHTML(), parent_id: null };
+            createCommentMutation.mutate(data);
+        }
     };
 
     const likeMutation = useMutation((data) => likes(data), {
@@ -175,6 +182,7 @@ const UserComments = ({ sort }) => {
                     <>
                         <CustomRichTextEditor
                             editor={editor}
+                            buttonText="Buat Komentar"
                             main={true}
                             handleSubmit={handleSubmit}
                         />

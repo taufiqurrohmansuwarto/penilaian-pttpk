@@ -334,14 +334,14 @@ function PenilaianAkhir() {
             subTitle="PTTPK"
             fixedHeader
             style={{ minHeight: "90vh" }}
-            content={
-                <Alert
-                    type="warning"
-                    showIcon
-                    message="Perhatian"
-                    description="Untuk dapat mencetak penilaian tahunan/akhir. Pastikan kembali atasan langsung anda masuk pada aplikasi dan menilai penilaian akhir tahunan anda. Perlu diingat, Capaian pada penilaian akhir merupakan pekerjaan bulanan yang sudah dinilai dan diacc atasan langsung"
-                />
-            }
+            // content={
+            //     <Alert
+            //         type="warning"
+            //         showIcon
+            //         message="Perhatian"
+            //         description="Untuk dapat mencetak penilaian tahunan/akhir. Pastikan kembali atasan langsung anda masuk pada aplikasi dan menilai penilaian akhir tahunan anda. Perlu diingat, Capaian pada penilaian akhir merupakan pekerjaan bulanan yang sudah dinilai dan diacc atasan langsung"
+            //     />
+            // }
         >
             <Card>
                 <Skeleton loading={isLoadingDataPenilaianAktif}>
@@ -352,6 +352,13 @@ function PenilaianAkhir() {
                     <div style={{ marginBottom: 8 }}>
                         Status : {dataPenilaianAktif?.status?.toUpperCase()}
                     </div>
+                    <Alert
+                        style={{ marginTop: 10, marginBottom: 10 }}
+                        showIcon
+                        type="warning"
+                        message="Perhatian"
+                        description="Jika ingin merubah nilai aspek teknis pekerjaan, batal kirim terlebih dahulu kemudian nilaikan kembali. Presentase nilai capaian kerja adalah pekerjaan bulanan yang sudah diverifikasi oleh atasan langsung/penilai. Jika belum diverif maka tidak dihitung"
+                    />
                     <Space>
                         {dataPenilaianAktif?.status === "dikerjakan" ? (
                             <Button onClick={handleKirimAtasan}>
