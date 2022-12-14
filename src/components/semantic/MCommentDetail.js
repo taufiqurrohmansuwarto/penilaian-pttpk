@@ -1,4 +1,6 @@
 import { Blockquote, Button, TypographyStylesProvider } from "@mantine/core";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import { message, Popconfirm } from "antd";
 import moment from "moment";
 import { useSession } from "next-auth/react";
@@ -24,6 +26,16 @@ const SubComment = ({ subComment }) => {
     const [textEditSubComment, setTextEditSubComment] = useState(null);
     const router = useRouter();
 
+    const editorCreate = useEditor({
+        extensions: [StarterKit],
+        content: ""
+    });
+
+    const editorEdit = useEditor({
+        extensions: [StarterKit],
+        content: ""
+    });
+
     const queryClient = useQueryClient();
     const { mutate: addSubComment } = useMutation(
         (data) => createComments(data),
@@ -37,6 +49,7 @@ const SubComment = ({ subComment }) => {
                 message.success("Berhasil menambahkan komentar");
                 setTextReplySubComment(null);
                 setIdReplySubComment(null);
+                editorCreate.commands.setContent("");
             }
         }
     );
@@ -47,20 +60,24 @@ const SubComment = ({ subComment }) => {
             message.success("Komentar berhasil diedit");
             setIdEditSubComment(null);
             setTextEditSubComment(null);
+            editorEdit.commands.setContent("");
         }
     });
 
     const handleSubmitEdit = (comment) => {
-        const data = { id: comment?.id, comment: textEditSubComment };
+        const currentComment = editorEdit.getHTML();
+        const data = { id: comment?.id, comment: currentComment };
         editComment(data);
     };
 
     const showEdit = (comment) => {
         setIdEditSubComment(comment?.id);
         setTextEditSubComment(comment?.comment);
+
+        editorEdit.commands.setContent(comment?.comment);
     };
 
-    const closeEdit = (comment) => {
+    const closeEdit = () => {
         setIdEditSubComment(null);
         setTextEditSubComment(null);
     };
@@ -76,10 +93,11 @@ const SubComment = ({ subComment }) => {
         remove(id);
     };
 
-    const handleAddSubComment = (comment) => {
+    const handleAddSubComment = (parent_id) => {
+        const comment = editorCreate.getHTML();
         const data = {
-            parent_id: comment?.parent_id,
-            comment: textReplySubComment
+            parent_id,
+            comment
         };
         addSubComment(data);
     };
@@ -106,6 +124,7 @@ const SubComment = ({ subComment }) => {
                 <Comment key={comment?.id}>
                     {idEditSubComment === comment?.id ? (
                         <MCreateComment
+                            editor={editorEdit}
                             text={textEditSubComment}
                             setText={setTextEditSubComment}
                             handleClose={() => closeEdit(comment)}
@@ -162,11 +181,12 @@ const SubComment = ({ subComment }) => {
                             </Comment.Content>
                             {idReplySubComment === comment?.id && (
                                 <MCreateComment
+                                    editor={editorCreate}
                                     handleClose={closeReplySubComment}
                                     text={textReplySubComment}
                                     setText={setTextReplySubComment}
                                     handleSubmit={() =>
-                                        handleAddSubComment(comment)
+                                        handleAddSubComment(comment?.parent_id)
                                     }
                                 />
                             )}
@@ -215,6 +235,16 @@ function MCommentDetail({
     const [editId, setEditId] = useState(null);
     const [editText, setEditText] = useState(null);
 
+    const editorCreate = useEditor({
+        extensions: [StarterKit],
+        content: ""
+    });
+
+    const editorEdit = useEditor({
+        extensions: [StarterKit],
+        content: ""
+    });
+
     const handleCloseEdit = () => {
         setEditId(null);
         setEditText(null);
@@ -228,6 +258,7 @@ function MCommentDetail({
     const handleEdit = () => {
         setEditId(id);
         setEditText(comment);
+        editorEdit.commands.setContent(comment);
     };
 
     const { mutate: remove } = useMutation((id) => removeComment(id), {
@@ -265,12 +296,14 @@ function MCommentDetail({
     });
 
     const handleSubmitEdit = () => {
-        const data = { id, comment: editText };
+        const comment = editorEdit.getHTML();
+        const data = { id, comment };
         update(data);
     };
 
     const handleAddComment = () => {
-        const data = { parent_id: replyId, comment: text };
+        const comment = editorCreate.getHTML();
+        const data = { parent_id: replyId, comment };
         addComment(data);
     };
 
@@ -295,9 +328,8 @@ function MCommentDetail({
                 <Comment>
                     {editId === id ? (
                         <MCreateComment
-                            text={editText}
+                            editor={editorEdit}
                             buttonText="Edit"
-                            setText={setEditText}
                             handleClose={handleCloseEdit}
                             handleSubmit={handleSubmitEdit}
                         />
@@ -351,8 +383,7 @@ function MCommentDetail({
                     <Comment.Group size="small">
                         {replyId === id && (
                             <MCreateComment
-                                text={text}
-                                setText={setText}
+                                editor={editorCreate}
                                 handleSubmit={handleAddComment}
                                 handleClose={handleClose}
                             />
