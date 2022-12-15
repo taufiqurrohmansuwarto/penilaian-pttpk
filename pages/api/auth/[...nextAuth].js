@@ -13,13 +13,6 @@ const pttpkClientSecret = process.env.PTTPK_SECRET;
 const pttpkWellKnowon = process.env.PTTPK_WELLKNOWN;
 const pttpkScope = process.env.PTTPK_SCOPE;
 
-console.log({
-    pttpkClientId,
-    pttpkClientSecret,
-    pttpkWellKnowon,
-    pttpkScope
-});
-
 const pttpkFasilitatorClientId = process.env.PTTPKFASILITATOR_ID;
 const pttpkFasilitatorClientSecret = process.env.PTTPKFASILITATOR_SECRET;
 const pttpkFasilitatorWellKnown = process.env.PTTPKFASILITATOR_WELLKNOWN;
@@ -118,7 +111,7 @@ export default NextAuth({
 
         {
             name: "PTTPK",
-            id: "pttpk",
+            id: "pttpk-penilaian",
             type: "oauth",
             wellKnown: pttpkWellKnowon,
             clientId: pttpkClientId,
@@ -128,6 +121,9 @@ export default NextAuth({
                     scope: pttpkScope,
                     prompt: "login"
                 }
+            },
+            httpOptions: {
+                timeout: 10000
             },
             idToken: true,
             checks: ["pkce", "state"],
@@ -142,10 +138,10 @@ export default NextAuth({
                     email: profile.email,
                     image: profile.picture,
                     employee_number: employee_number || "",
-                    role,
-                    group,
                     birthdate: profile?.birthdate || null,
-                    email: profile?.email || null
+                    email: profile?.email || null,
+                    role,
+                    group
                 };
 
                 await upsert(currentUser);
@@ -276,8 +272,5 @@ export default NextAuth({
     secret: process.env.SECRET,
     jwt: {
         secret: process.env.SECRET
-    },
-    logger: {
-        level: "debug"
     }
 });
