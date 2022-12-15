@@ -272,7 +272,8 @@ const cetakPenilaianAkhirUser = async (req, res) => {
                 golongan_penandatangan,
                 tempat,
                 waktu,
-                spasi = 30
+                spasi = 30,
+                font_scaling = 1
             } = req?.body?.data;
 
             const data = {
@@ -307,6 +308,7 @@ const cetakPenilaianAkhirUser = async (req, res) => {
                     waktu
                 },
                 spasi,
+                font_scaling,
                 totalKegiatanBulanan: nilai?.totalPenilaianPekerjaan,
                 rekom,
                 totalNilaiCapaianKinerja: round(totalNilaiCapaianKinerja, 2),

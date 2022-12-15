@@ -110,46 +110,6 @@ export default NextAuth({
         },
 
         {
-            name: "PTTPK",
-            id: "pttpk-penilaian",
-            type: "oauth",
-            wellKnown: pttpkWellKnowon,
-            clientId: pttpkClientId,
-            clientSecret: pttpkClientSecret,
-            authorization: {
-                params: {
-                    scope: pttpkScope,
-                    prompt: "login"
-                }
-            },
-            httpOptions: {
-                timeout: 10000
-            },
-            idToken: true,
-            checks: ["pkce", "state"],
-            profile: async (profile, token) => {
-                const currentToken = token.id_token;
-                const { role, group, employee_number } =
-                    jsonwebtoken.decode(currentToken);
-
-                const currentUser = {
-                    id: profile.sub,
-                    name: profile.name,
-                    email: profile.email,
-                    image: profile.picture,
-                    employee_number: employee_number || "",
-                    birthdate: profile?.birthdate || null,
-                    email: profile?.email || null,
-                    role,
-                    group
-                };
-
-                await upsert(currentUser);
-
-                return currentUser;
-            }
-        },
-        {
             name: "PTTPK FASILITATOR",
             id: "pttpk-fasilitator",
             type: "oauth",
@@ -231,6 +191,46 @@ export default NextAuth({
 
                 return currentUser;
             }
+        },
+        {
+            name: "USER PTTPK",
+            id: "skp_pttpk",
+            type: "oauth",
+            wellKnown: pttpkWellKnowon,
+            clientId: pttpkClientId,
+            clientSecret: pttpkClientSecret,
+            authorization: {
+                params: {
+                    scope: pttpkScope,
+                    prompt: "login"
+                }
+            },
+            httpOptions: {
+                timeout: 10000
+            },
+            idToken: true,
+            checks: ["pkce", "state"],
+            profile: async (profile, token) => {
+                const currentToken = token.id_token;
+                const { role, group, employee_number } =
+                    jsonwebtoken.decode(currentToken);
+
+                const currentUser = {
+                    id: profile.sub,
+                    name: profile.name,
+                    email: profile.email,
+                    image: profile.picture,
+                    employee_number: employee_number || "",
+                    birthdate: profile?.birthdate || null,
+                    email: profile?.email || null,
+                    role,
+                    group
+                };
+
+                await upsert(currentUser);
+
+                return currentUser;
+            }
         }
     ],
     callbacks: {
@@ -269,6 +269,9 @@ export default NextAuth({
         }
     },
     theme: "light",
+    logger: {
+        level: "debug"
+    },
     secret: process.env.SECRET,
     jwt: {
         secret: process.env.SECRET

@@ -50,7 +50,8 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
                 is_having_atasnama,
                 pejabat_penandatangan,
                 jabatan_penandatangan,
-                spasi
+                spasi,
+                font_scaling
             } = result;
 
             const currentTanggal = moment(tanggal).format("DD MMMM YYYY");
@@ -67,7 +68,8 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
                 pangkat_penandatangan: pangkat,
                 jabatan_penandatangan,
                 jabatan_penilai,
-                spasi
+                spasi,
+                font_scaling
             };
 
             const hasil = await cetakPenilaianAkhir({
@@ -180,6 +182,26 @@ function FormCetakPenilaianAkhir({ visible, onCancel }) {
                     ]}
                 >
                     <InputNumber />
+                </Form.Item>
+                <Form.Item
+                    label="Font Scaling"
+                    name="font_scaling"
+                    help="Gunakan font scaling, untuk memperkecil font jika pdf anda terpotong. Value jika ditambah semakin kecil. Jika tidak mengerti artinya, abaikan saja"
+                    initialValue={1}
+                    rules={[
+                        {
+                            required: true,
+                            message: "Tidak boleh kosong"
+                        },
+                        {
+                            type: "number",
+                            min: 1,
+                            max: 5,
+                            message: "Format angka minimal 1 dan maksimal 5"
+                        }
+                    ]}
+                >
+                    <InputNumber step={0.1} />
                 </Form.Item>
             </Form>
         </Modal>

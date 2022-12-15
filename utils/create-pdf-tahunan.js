@@ -21,11 +21,7 @@ const renderCatatanAtasanLangsung = (currentUser) => {
                     {
                         text: "Catatan Atasan Langsung",
                         colSpan: 2,
-                        style: {
-                            alignment: "center",
-                            font: "OpenSans",
-                            fontSize: 8
-                        }
+                        style: "catatanAtasanLangsung"
                     },
                     {}
                 ],
@@ -370,6 +366,7 @@ const renderTugasTambahan = (pekerjaanTambahan, total) => {
 };
 
 export const generateKinerjaTahunanFull = (currentUser) => {
+    const { font_scaling = 1 } = currentUser;
     const docDefinition = {
         pageSize: "FOLIO",
         footer: {
@@ -389,30 +386,30 @@ export const generateKinerjaTahunanFull = (currentUser) => {
         styles: {
             informasi: {
                 margin: [0, 1, 0, 1],
-                fontSize: 8,
+                fontSize: 8 / round(font_scaling, 2),
                 font: "OpenSans"
             },
             rekom: {
                 margin: [0, 1, 0, 1],
-                fontSize: 10,
+                fontSize: 10 / round(font_scaling, 2),
                 font: "OpenSans"
             },
             perjanjian: {
                 margin: [0, parseInt(currentUser?.spasi), 0, 0],
-                fontSize: 8,
+                fontSize: 8 / round(font_scaling, 2),
                 font: "OpenSans"
             },
             headerTtd: {
-                fontSize: 8,
+                fontSize: 8 / round(font_scaling, 2),
                 margin: [0, 0, 0, 40],
                 font: "OpenSans"
             },
             namaAtasan: {
-                fontSize: 8,
+                fontSize: 8 / round(font_scaling, 2),
                 font: "OpenSans"
             },
             namaTerang: {
-                fontSize: 8,
+                fontSize: 8 / round(font_scaling, 2),
                 font: "OpenSans",
                 decoration: "underline"
             },
@@ -420,21 +417,28 @@ export const generateKinerjaTahunanFull = (currentUser) => {
                 margin: [0, 18, 0, 0],
                 alignment: "center",
                 fillColor: warnaHijau,
-                font: "OpenSans"
+                font: "OpenSans",
+                fontSize: 12 / round(font_scaling, 2)
             },
             headerSatu: {
                 alignment: "center",
                 font: "OpenSans",
-                fillColor: warnaBiru
+                fillColor: warnaBiru,
+                fontSize: 12 / round(font_scaling, 2)
             },
             headerDua: {
                 alignment: "center",
                 font: "OpenSans",
-                fontSize: 9,
+                fontSize: 9 / round(font_scaling, 2),
                 fillColor: "#ffff00"
             },
             totalNilai: {
                 fillColor: "#ffff00"
+            },
+            catatanAtasanLangsung: {
+                alignment: "center",
+                font: "OpenSans",
+                fontSize: 8 / round(font_scaling, 2)
             }
         },
         info: {
@@ -496,8 +500,11 @@ const renderHasil = (rekom) => {
             width: ["40%", "20%"],
             body: [
                 [
-                    { text: "REKOMENDASI" },
-                    { text: rekom ? "DILANJUTKAN" : "TIDAK DILANJUTKAN" }
+                    { text: "REKOMENDASI", style: "rekom" },
+                    {
+                        text: rekom ? "DILANJUTKAN" : "TIDAK DILANJUTKAN",
+                        style: "rekom"
+                    }
                 ]
             ]
         }
