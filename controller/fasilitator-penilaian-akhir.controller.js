@@ -5,7 +5,6 @@ const detailPenilaianAkhirPTT = async (req, res) => {
     try {
         const { niptt } = req?.query;
         const tahun = req?.query?.tahun || new Date().getFullYear();
-        console.log(niptt, tahun);
 
         const result = await prisma.penilaian.findFirst({
             where: {
@@ -49,6 +48,28 @@ const detailPenilaianAkhirPTT = async (req, res) => {
     }
 };
 
+const riwayatPenilaianPTTPK = async (req, res) => {
+    try {
+        const { niptt } = req?.query;
+        const employeeNumber = niptt?.split("|")[1];
+
+        const { fetcher } = req;
+
+        const result = await fetcher.get(
+            `/master/pttpk/${employeeNumber}/riwayat-penilaian-pttpk`
+        );
+
+        res.json(result?.data);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
-    detailPenilaianAkhirPTT
+    detailPenilaianAkhirPTT,
+    riwayatPenilaianPTTPK
 };

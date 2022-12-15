@@ -25,6 +25,7 @@ import {
 } from "../../services/approval.service";
 import PageContainer from "../../src/components/PageContainer";
 import DataRealisasiPekerjaanAkhir from "../../src/components/DataRealisasiPekerjaanAkhir";
+import RiwayatPenilaianByNIPTT from "../../src/components/RiwayatPenilaianByNIPTT";
 
 const DetailPenilaianAkhir = ({ visible, onCancel, row, tahun }) => {
     return (
@@ -36,6 +37,7 @@ const DetailPenilaianAkhir = ({ visible, onCancel, row, tahun }) => {
             width={1200}
             onCancel={onCancel}
         >
+            <RiwayatPenilaianByNIPTT id={row?.user_custom_id} />
             <DataRealisasiPekerjaanAkhir
                 id={row?.user_custom_id}
                 tahun={tahun}

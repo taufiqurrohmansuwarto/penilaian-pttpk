@@ -51,3 +51,9 @@ export const getPenilaianAkhirDetail = ({ tahun, id }) => {
         .get(`penilaian-akhir/${id}/realisasi-akhir?tahun=${tahun}`)
         .then((res) => res?.data);
 };
+
+export const riwayatPenilaianByNIPTT = (niptt) => {
+    return fetcher
+        .get(`/penilaian-akhir/${niptt}/riwayat-penilaian`)
+        .then((res) => res?.data);
+};
