@@ -13,6 +13,13 @@ const pttpkClientSecret = process.env.PTTPK_SECRET;
 const pttpkWellKnowon = process.env.PTTPK_WELLKNOWN;
 const pttpkScope = process.env.PTTPK_SCOPE;
 
+console.log({
+    pttpkClientId,
+    pttpkClientSecret,
+    pttpkWellKnowon,
+    pttpkScope
+});
+
 const pttpkFasilitatorClientId = process.env.PTTPKFASILITATOR_ID;
 const pttpkFasilitatorClientSecret = process.env.PTTPKFASILITATOR_SECRET;
 const pttpkFasilitatorWellKnown = process.env.PTTPKFASILITATOR_WELLKNOWN;
