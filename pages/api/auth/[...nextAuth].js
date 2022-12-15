@@ -276,5 +276,8 @@ export default NextAuth({
     secret: process.env.SECRET,
     jwt: {
         secret: process.env.SECRET
+    },
+    logger: {
+        level: "debug"
     }
 });
