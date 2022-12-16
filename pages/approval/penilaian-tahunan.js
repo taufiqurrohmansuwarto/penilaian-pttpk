@@ -14,7 +14,8 @@ import {
     Modal,
     Skeleton,
     Space,
-    Table
+    Table,
+    Typography
 } from "antd";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -48,6 +49,17 @@ const DetailPenilaianAkhir = ({ visible, onCancel, row, tahun }) => {
 
 const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
     const [form] = Form.useForm();
+    const nilaiIntegritas = Form.useWatch("integritas", form);
+    const nilaiKedisiplinan = Form.useWatch("kedisiplinan", form);
+    const nilaiOrientasiPelayanan = Form.useWatch("orientasi_pelayanan", form);
+    const nilaiKerjasamaKoordinasi = Form.useWatch(
+        "kerjasama_koordinasi",
+        form
+    );
+    const nilaiPemanfaatanAlatDanMediaKerja = Form.useWatch(
+        "pemanfaatan_alat_dan_media_kerja",
+        form
+    );
 
     useEffect(() => {
         form.setFieldsValue({
@@ -83,25 +95,49 @@ const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
             visible={visible}
             title="Penilaian Akhir"
             centered
+            footer={row?.status === "diverif" ? false : true}
             width={1200}
             onOk={handleSubmit}
             confirmLoading={approveMutation.isLoading}
             onCancel={onCancel}
         >
+            <>
+                {row?.status === "diverif" ? (
+                    <Alert
+                        style={{ marginBottom: 10 }}
+                        description="Jika anda ingin mengubah nilai yang sudah diverifikasi, silahkan hubungi pegawai yang bersangkutan harus melakukan batal kirim penilaian"
+                        message="Perhatian"
+                        type="warning"
+                        showIcon
+                    />
+                ) : (
+                    <Alert />
+                )}
+            </>
             <Form form={form} layout="vertical">
-                <Form.Item name="integritas" label="Integritas">
-                    <InputNumber min={0} max={100} />
-                </Form.Item>
-                <Form.Item name="kedisiplinan" label="Kedisiplinan">
+                <Form.Item
+                    help="Bobot penilaian 25%"
+                    name="integritas"
+                    label="Integritas"
+                >
                     <InputNumber min={0} max={100} />
                 </Form.Item>
                 <Form.Item
+                    help="Bobot penilaian 25%"
+                    name="kedisiplinan"
+                    label="Kedisiplinan"
+                >
+                    <InputNumber min={0} max={100} />
+                </Form.Item>
+                <Form.Item
+                    help="Bobot penilaian 20%"
                     name="orientasi_pelayanan"
                     label="Orientasi Pelayanan"
                 >
                     <InputNumber min={0} max={100} />
                 </Form.Item>
                 <Form.Item
+                    help="Bobot penilaian 20%"
                     name="kerjasama_koordinasi"
                     label="Kerjasama Koordinasi"
                 >
@@ -110,9 +146,11 @@ const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
                 <Form.Item
                     name="pemanfaatan_alat_dan_media_kerja"
                     label="Pemanfaatan Alat dan Media Kerja"
+                    help="Bobot penilaian 10%"
                 >
                     <InputNumber min={0} max={100} />
                 </Form.Item>
+                <Divider>Catatan Penilaian Akhir</Divider>
                 <Form.Item name="catatan" label="Catatan">
                     <Input.TextArea />
                 </Form.Item>
