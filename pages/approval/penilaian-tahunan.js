@@ -1,10 +1,9 @@
-import ApprovalLayout from "../../src/components/ApprovalLayout";
-import moment from "moment";
 import {
     Alert,
     Avatar,
     Button,
     Card,
+    Collapse,
     DatePicker,
     Divider,
     Form,
@@ -15,20 +14,49 @@ import {
     Skeleton,
     Space,
     Table,
+    Tag,
     Typography
 } from "antd";
-import { useEffect, useState } from "react";
+import { round } from "lodash";
+import moment from "moment";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
     approvePenilaianAkhir,
-    getPenilaianAkhir
+    getPenilaianAkhir,
+    getPenilaianAkhirDetail,
+    riwayatPenilaianByNIPTT
 } from "../../services/approval.service";
-import PageContainer from "../../src/components/PageContainer";
+import ApprovalLayout from "../../src/components/ApprovalLayout";
 import DataRealisasiPekerjaanAkhir from "../../src/components/DataRealisasiPekerjaanAkhir";
+import PageContainer from "../../src/components/PageContainer";
 import RiwayatPenilaianByNIPTT from "../../src/components/RiwayatPenilaianByNIPTT";
 
 const DetailPenilaianAkhir = ({ visible, onCancel, row, tahun }) => {
+    const { data: dataPenilaianAkhir, isLoading: loadingPenilaianAkhir } =
+        useQuery(["detail-penilaian-akhir", row?.id, tahun], () =>
+            getPenilaianAkhirDetail({ id: row?.user_custom_id, tahun })
+        );
+
+    const {
+        data: dataRiwayatPenilaianByNiptt,
+        isLoading: loadingDataRiwayatPenilaian
+    } = useQuery(["riwayat-penilaian", row?.id], () =>
+        riwayatPenilaianByNIPTT(row?.user_custom_id)
+    );
+
+    const totalAkhir = (data) => {
+        const presentaseCapaianAkhir = round(
+            data?.nilai?.totalPenilaianPekerjaan,
+            2
+        );
+
+        const nilaiTugasTambahan = round(data?.nilai?.totalKegiatanTambahan, 2);
+
+        return presentaseCapaianAkhir + nilaiTugasTambahan;
+    };
+
     return (
         <Modal
             visible={visible}
@@ -38,16 +66,55 @@ const DetailPenilaianAkhir = ({ visible, onCancel, row, tahun }) => {
             width={1200}
             onCancel={onCancel}
         >
-            <RiwayatPenilaianByNIPTT id={row?.user_custom_id} />
-            <DataRealisasiPekerjaanAkhir
-                id={row?.user_custom_id}
-                tahun={tahun}
-            />
+            <Skeleton
+                loading={loadingDataRiwayatPenilaian || loadingPenilaianAkhir}
+            >
+                <Collapse>
+                    <Collapse.Panel header="Riwayat Penilaian PTT" showArrow>
+                        <RiwayatPenilaianByNIPTT
+                            data={dataRiwayatPenilaianByNiptt}
+                        />
+                    </Collapse.Panel>
+
+                    <Collapse.Panel
+                        header={`Total Nilai Realisasi Akhir dan Tugas Tambahan =  ${totalAkhir(
+                            dataPenilaianAkhir
+                        )}`}
+                    >
+                        <DataRealisasiPekerjaanAkhir
+                            data={dataPenilaianAkhir}
+                        />
+                    </Collapse.Panel>
+                </Collapse>
+            </Skeleton>
         </Modal>
     );
 };
 
 const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
+    const { data: dataPenilaianAkhir, isLoading: loadingPenilaianAkhir } =
+        useQuery(["detail-penilaian-akhir", row?.id, tahun], () =>
+            getPenilaianAkhirDetail({ id: row?.user_custom_id, tahun })
+        );
+
+    const {
+        data: dataRiwayatPenilaianByNiptt,
+        isLoading: loadingDataRiwayatPenilaian
+    } = useQuery(["riwayat-penilaian", row?.id], () =>
+        riwayatPenilaianByNIPTT(row?.user_custom_id)
+    );
+
+    const totalAkhir = (data) => {
+        const presentaseCapaianAkhir = round(
+            data?.nilai?.totalPenilaianPekerjaan,
+            2
+        );
+
+        const nilaiTugasTambahan = round(data?.nilai?.totalKegiatanTambahan, 2);
+
+        return presentaseCapaianAkhir + nilaiTugasTambahan;
+    };
+
     const [form] = Form.useForm();
     const nilaiIntegritas = Form.useWatch("integritas", form);
     const nilaiKedisiplinan = Form.useWatch("kedisiplinan", form);
@@ -60,6 +127,13 @@ const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
         "pemanfaatan_alat_dan_media_kerja",
         form
     );
+
+    const totalNilaiAspekPekerjaan =
+        nilaiIntegritas * 0.25 +
+        nilaiKedisiplinan * 0.25 +
+        nilaiOrientasiPelayanan * 0.2 +
+        nilaiKerjasamaKoordinasi * 0.2 +
+        nilaiPemanfaatanAlatDanMediaKerja * 0.1;
 
     useEffect(() => {
         form.setFieldsValue({
@@ -91,11 +165,11 @@ const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
 
     return (
         <Modal
-            okText="Beri Nilai dan Verif"
+            okText="Submit"
             visible={visible}
-            title="Penilaian Akhir"
+            title="Aspek Teknis Pekerjaan"
             centered
-            footer={row?.status === "diverif" ? false : true}
+            // footer={row?.status === "diverif" ? false : true}
             width={1200}
             onOk={handleSubmit}
             confirmLoading={approveMutation.isLoading}
@@ -105,56 +179,121 @@ const FormUpdatePenilaian = ({ visible, onCancel, row, tahun }) => {
                 {row?.status === "diverif" ? (
                     <Alert
                         style={{ marginBottom: 10 }}
-                        description="Jika anda ingin mengubah nilai yang sudah diverifikasi, silahkan hubungi pegawai yang bersangkutan harus melakukan batal kirim penilaian"
+                        description="Status PTTPK sudah diverifi dan dinilai. Jika anda ingin mengubah nilai yang sudah diverifikasi, silahkan hubungi pegawai yang bersangkutan untuk melakukan batal kirim penilaian"
                         message="Perhatian"
                         type="warning"
                         showIcon
                     />
-                ) : (
-                    <Alert />
-                )}
+                ) : null}
             </>
-            <Form form={form} layout="vertical">
-                <Form.Item
-                    help="Bobot penilaian 25%"
-                    name="integritas"
-                    label="Integritas"
-                >
-                    <InputNumber min={0} max={100} />
-                </Form.Item>
-                <Form.Item
-                    help="Bobot penilaian 25%"
-                    name="kedisiplinan"
-                    label="Kedisiplinan"
-                >
-                    <InputNumber min={0} max={100} />
-                </Form.Item>
-                <Form.Item
-                    help="Bobot penilaian 20%"
-                    name="orientasi_pelayanan"
-                    label="Orientasi Pelayanan"
-                >
-                    <InputNumber min={0} max={100} />
-                </Form.Item>
-                <Form.Item
-                    help="Bobot penilaian 20%"
-                    name="kerjasama_koordinasi"
-                    label="Kerjasama Koordinasi"
-                >
-                    <InputNumber min={0} max={100} />
-                </Form.Item>
-                <Form.Item
-                    name="pemanfaatan_alat_dan_media_kerja"
-                    label="Pemanfaatan Alat dan Media Kerja"
-                    help="Bobot penilaian 10%"
-                >
-                    <InputNumber min={0} max={100} />
-                </Form.Item>
-                <Divider>Catatan Penilaian Akhir</Divider>
-                <Form.Item name="catatan" label="Catatan">
-                    <Input.TextArea />
-                </Form.Item>
-            </Form>
+
+            <Skeleton
+                loading={loadingDataRiwayatPenilaian || loadingPenilaianAkhir}
+            >
+                <Collapse>
+                    <Collapse.Panel header="Riwayat Penilaian PTT" showArrow>
+                        <RiwayatPenilaianByNIPTT
+                            data={dataRiwayatPenilaianByNiptt}
+                        />
+                    </Collapse.Panel>
+
+                    <Collapse.Panel
+                        header={`Total Nilai Realisasi Akhir dan Tugas Tambahan =  ${totalAkhir(
+                            dataPenilaianAkhir
+                        )}`}
+                    >
+                        <DataRealisasiPekerjaanAkhir
+                            data={dataPenilaianAkhir}
+                        />
+                    </Collapse.Panel>
+                </Collapse>
+
+                <Divider>Form Aspek Teknis Pekerjaan</Divider>
+                <Form form={form} layout="vertical">
+                    <Form.Item
+                        help="Bobot penilaian 25%"
+                        name="integritas"
+                        label="Integritas"
+                    >
+                        <InputNumber
+                            readOnly={row?.status === "diverif"}
+                            min={0}
+                            max={100}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        help="Bobot penilaian 25%"
+                        name="kedisiplinan"
+                        label="Kedisiplinan"
+                    >
+                        <InputNumber
+                            min={0}
+                            max={100}
+                            readOnly={row?.status === "diverif"}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        help="Bobot penilaian 20%"
+                        name="orientasi_pelayanan"
+                        label="Orientasi Pelayanan"
+                    >
+                        <InputNumber
+                            readOnly={row?.status === "diverif"}
+                            min={0}
+                            max={100}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        help="Bobot penilaian 20%"
+                        name="kerjasama_koordinasi"
+                        label="Kerjasama Koordinasi"
+                    >
+                        <InputNumber
+                            readOnly={row?.status === "diverif"}
+                            min={0}
+                            max={100}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        name="pemanfaatan_alat_dan_media_kerja"
+                        label="Pemanfaatan Alat dan Media Kerja"
+                        help="Bobot penilaian 10%"
+                    >
+                        <InputNumber
+                            readOnly={row?.status === "diverif"}
+                            min={0}
+                            max={100}
+                        />
+                    </Form.Item>
+                    <Form.Item name="catatan" label="Catatan">
+                        <Input.TextArea readOnly={row?.status === "diverif"} />
+                    </Form.Item>
+                </Form>
+                <div>
+                    <Typography.Title level={5}>
+                        Total Nilai Aspek Teknis Pekerjaan ={" "}
+                        {totalNilaiAspekPekerjaan}
+                    </Typography.Title>
+                    <Typography.Title level={5}>
+                        Total Nilai Capaian Kinerja ={" "}
+                        {totalAkhir(dataPenilaianAkhir)}
+                    </Typography.Title>
+                    {totalNilaiAspekPekerjaan > 70 &&
+                    totalAkhir(dataPenilaianAkhir) > 70 ? (
+                        <div>
+                            <Tag color="green">Rekomendasi Dilanjutkan</Tag>
+                        </div>
+                    ) : (
+                        <div>
+                            <Tag color="red">
+                                Rekomendasi Tidak Dilanjutkan karena nilai
+                                capaian kinerja dan nilai aspek teknis Pekerjaan
+                                kurang dari 70
+                            </Tag>
+                        </div>
+                    )}
+                </div>
+            </Skeleton>
         </Modal>
     );
 };
@@ -170,24 +309,17 @@ const TablePenilaianAkhir = ({ data, tahun }) => {
         setCurrentRow(row);
     };
 
-    const [visibleDetail, setVisibleDetail] = useState(false);
-    const [currentRowDetail, setCurrentRowDetail] = useState();
-
-    const handleCancelDetail = () => setVisibleDetail(false);
-
-    const handleDetailDetail = (row) => {
-        setVisibleDetail(true);
-        setCurrentRowDetail(row);
-    };
-
     const columns = [
+        {
+            key: "no",
+            title: "No.",
+            render: (_, row, index) => <div>{index + 1}</div>
+        },
         {
             key: "foto",
             title: "Foto",
             render: (_, row) => (
-                <div>
-                    <Avatar src={row?.pegawai?.image} />
-                </div>
+                <Avatar src={row?.pegawai?.image} size="large" shape="square" />
             )
         },
         {
@@ -202,12 +334,12 @@ const TablePenilaianAkhir = ({ data, tahun }) => {
         },
         {
             key: "status",
-            title: "Status",
+            title: "STATUS",
             render: (_, row) => <div>{row?.status?.toUpperCase()}</div>
         },
         {
             key: "aksi",
-            title: "Aksi",
+            title: "AKSI",
             render: (_, row) => (
                 <Space>
                     <Button
@@ -215,10 +347,7 @@ const TablePenilaianAkhir = ({ data, tahun }) => {
                         type="dashed"
                         danger
                     >
-                        Nilai
-                    </Button>
-                    <Button onClick={() => handleDetailDetail(row)}>
-                        Detail
+                        Nilai Aspek Teknis Pekerjaan
                     </Button>
                 </Space>
             )
@@ -238,12 +367,6 @@ const TablePenilaianAkhir = ({ data, tahun }) => {
                 visible={visible}
                 onCancel={handleCancel}
                 row={currentRow}
-                tahun={tahun}
-            />
-            <DetailPenilaianAkhir
-                visible={visibleDetail}
-                onCancel={handleCancelDetail}
-                row={currentRowDetail}
                 tahun={tahun}
             />
         </>
