@@ -6,6 +6,7 @@ import {
     Divider,
     Form,
     Input,
+    InputNumber,
     message,
     Modal,
     Popconfirm,
@@ -24,12 +25,14 @@ import {
     getTugasTambahan,
     kirimAtasanPenilaianAkhir,
     removeTugasTambahan,
+    resultPenilaian,
     updateTugasTambahan
 } from "../../../services/users.service";
 import FormCetakPenilaianAkhir from "../../../src/components/FormCetakPenilaianAkhir";
 import ListPenilaianTahunan from "../../../src/components/ListPenilaianTahunan";
 import PageContainer from "../../../src/components/PageContainer";
 import UserLayout from "../../../src/components/UserLayout";
+import { totalNilaiAspekPekerjaan } from "../../../src/utils/util";
 
 const DataPekerjaanTambahan = ({ penilaianId, status }) => {
     const { data, isLoading } = useQuery(
@@ -262,6 +265,9 @@ function PenilaianAkhir() {
     const { data: dataPenilaianAktif, isLoading: isLoadingDataPenilaianAktif } =
         useQuery(["penilaian-aktif"], () => getPenilaianAktif(), {});
 
+    const { data: dataRekapPenilaian, isLoading: isLoadingDataRekapPenilaian } =
+        useQuery(["rekap-penilaian"], () => resultPenilaian());
+
     const kirimAtasanMutation = useMutation(() => kirimAtasanPenilaianAkhir(), {
         onSuccess: () => {
             message.success("Berhasil Kirim");
@@ -328,20 +334,14 @@ function PenilaianAkhir() {
         setVisible(true);
     };
 
+    const [formAspekTeknis] = Form.useForm();
+
     return (
         <PageContainer
             title="Penilaian Akhir"
             subTitle="PTTPK"
             fixedHeader
             style={{ minHeight: "90vh" }}
-            // content={
-            //     <Alert
-            //         type="warning"
-            //         showIcon
-            //         message="Perhatian"
-            //         description="Untuk dapat mencetak penilaian tahunan/akhir. Pastikan kembali atasan langsung anda masuk pada aplikasi dan menilai penilaian akhir tahunan anda. Perlu diingat, Capaian pada penilaian akhir merupakan pekerjaan bulanan yang sudah dinilai dan diacc atasan langsung"
-            //     />
-            // }
         >
             <Card>
                 <Skeleton loading={isLoadingDataPenilaianAktif}>
@@ -381,7 +381,27 @@ function PenilaianAkhir() {
                             </Space>
                         )}
                     </Space>
-                    <Divider />
+                    {dataPenilaianAktif?.status === "diverif" && (
+                        <Skeleton loading={isLoadingDataPenilaianAktif}>
+                            <Typography.Title level={4}>
+                                Nilai Akhir (
+                                {dataRekapPenilaian?.totalNilaiCapaianKinerja})
+                                = Total Capaian Kinerja (
+                                {dataRekapPenilaian?.totalPenilaianPekerjaan}) +
+                                Aspek Teknis Pekerjaan (
+                                {dataRekapPenilaian?.totalNilaiAspekPekerjaan})
+                            </Typography.Title>
+                            <Typography>
+                                Rekom{" "}
+                                {dataRekapPenilaian?.rekom
+                                    ? "Dilanjutkan"
+                                    : "Tidak Dilanjutkan"}
+                            </Typography>
+                        </Skeleton>
+                    )}
+                    <Divider>
+                        Realisasi Pekerjaan dan Pekerjaan Tambahan
+                    </Divider>
                     <DataTargetPenilaian
                         data={dataPenilaianAktif?.target_penilaian}
                     />
@@ -389,6 +409,75 @@ function PenilaianAkhir() {
                         penilaianId={dataPenilaianAktif?.id}
                         status={dataPenilaianAktif?.status}
                     />
+                    {dataPenilaianAktif?.status === "diverif" && (
+                        <>
+                            <Divider>Nilai Aspek Teknis Pekerjaan</Divider>
+                            <Form
+                                form={formAspekTeknis}
+                                initialValues={dataPenilaianAktif}
+                                layout="vertical"
+                            >
+                                <Form.Item
+                                    help="Bobot penilaian 25%"
+                                    name="integritas"
+                                    label="Integritas"
+                                >
+                                    <InputNumber
+                                        readOnly={true}
+                                        min={0}
+                                        max={100}
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    help="Bobot penilaian 25%"
+                                    name="kedisiplinan"
+                                    label="Kedisiplinan"
+                                >
+                                    <InputNumber
+                                        min={0}
+                                        max={100}
+                                        readOnly={true}
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    help="Bobot penilaian 20%"
+                                    name="orientasi_pelayanan"
+                                    label="Orientasi Pelayanan"
+                                >
+                                    <InputNumber
+                                        readOnly={true}
+                                        min={0}
+                                        max={100}
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    help="Bobot penilaian 20%"
+                                    name="kerjasama_koordinasi"
+                                    label="Kerjasama Koordinasi"
+                                >
+                                    <InputNumber
+                                        readOnly={true}
+                                        min={0}
+                                        max={100}
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    name="pemanfaatan_alat_dan_media_kerja"
+                                    label="Pemanfaatan Alat dan Media Kerja"
+                                    help="Bobot penilaian 10%"
+                                >
+                                    <InputNumber
+                                        readOnly={true}
+                                        min={0}
+                                        max={100}
+                                    />
+                                </Form.Item>
+                                <Form.Item name="catatan" label="Catatan">
+                                    <Input.TextArea readOnly={true} />
+                                </Form.Item>
+                            </Form>
+                        </>
+                    )}
                 </Skeleton>
             </Card>
 

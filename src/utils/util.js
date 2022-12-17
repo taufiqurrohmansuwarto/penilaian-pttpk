@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import "dayjs/locale/id";
+import { round } from "lodash";
 
 export const formatTime = (time) => {
     return dayjs(time).locale("id").format("DD MMM, YYYY HH:mm");
@@ -223,4 +224,28 @@ export const isNoRecipientsForRequestFromOthers = (data) => {
     } else {
         return false;
     }
+};
+
+export const totalNilaiAspekPekerjaan = (data) => {
+    // integritas
+    // kedisiplinan
+    // orientasi_pelayanan
+    // kerjasama_koordinasi
+    // pemanfaatan_alat_media_kerj
+
+    const integritas = round(data?.integritas, 2) * 0.25;
+    const kedisiplinan = round(data?.kedisiplinan, 2) * 0.25;
+    const orientasiPelayanan = round(data?.orientasi_pelayanan, 2) * 0.2;
+    const kerjasamaKoordinasi = round(data?.kerjasama_koordinasi, 2) * 0.2;
+    const pemanfaatanAlatMediaKerja =
+        round(data?.pemanfaatan_alat_dan_media_kerja, 2) * 0.1;
+
+    const total =
+        integritas +
+        kedisiplinan +
+        orientasiPelayanan +
+        kerjasamaKoordinasi +
+        pemanfaatanAlatMediaKerja;
+
+    return total;
 };
