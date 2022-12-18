@@ -135,7 +135,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                             onClick={handleKirimAtasan}
                             icon={<SendOutlined />}
                         >
-                            Kirim pekerjaan ke penilai
+                            Kirim ke penilai
                         </Button>
                     </Space>
                 ) : (
@@ -153,7 +153,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                                 onClick={handleBatalKirimAtasan}
                                 icon={<CloseOutlined />}
                             >
-                                Turun Status Bulanan
+                                Turun Status
                             </Button>
                             <Button
                                 disabled={!data?.sudah_verif}
@@ -161,7 +161,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                                 onClick={handleCetak}
                                 icon={<PrinterOutlined />}
                             >
-                                Penilaian Bulanan
+                                Cetak
                             </Button>
                         </Space>
                     </>
