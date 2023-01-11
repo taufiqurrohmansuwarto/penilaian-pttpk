@@ -144,6 +144,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                             <div>
                                 <p>Catatan : </p>
                                 <p>{data?.catatan}</p>
+                                {JSON.stringify(data)}
                                 <Divider />
                             </div>
                         )}

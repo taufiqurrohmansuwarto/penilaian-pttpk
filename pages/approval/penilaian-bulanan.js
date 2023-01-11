@@ -10,12 +10,14 @@ import {
     BackTop,
     Button,
     Card,
+    Collapse,
     DatePicker,
     Divider,
     Input,
     InputNumber,
     message,
     Modal,
+    Select,
     Skeleton,
     Space,
     Table
@@ -111,6 +113,57 @@ const FormApprovalModalCutin = ({
     );
 };
 
+const valueBerakhlak = [
+    "DI ATAS EKSPETASI",
+    "SESUAI EKSPETASI",
+    "DI BAWAH EKSPETASI"
+];
+
+const berakhlak = [
+    {
+        title: "Berorientasi Pelayanan",
+        description:
+            "Memahami dan memenuhi kebutuhan masyarakat. Ramah, cekatan, solutif, dan dapat diandalkan, serta melakukan perbaikan tiada henti.",
+        key: "berorientasi_pelayanan"
+    },
+    {
+        title: "Akuntabel",
+        description:
+            "Melaksanakan tugas dengan jujur, bertanggung jawab, cermat, serta disiplin dan berintegritas tinggi. Menggunakan kekayaan dan barang milik negara secara bertanggung jawab, efektif dan efisien, dan tidak menyalahgunakan kewenangan jabatan.",
+        key: "akuntabel"
+    },
+    {
+        title: "Kompeten",
+        description:
+            "Meningkatkan kompetensi diri untuk menjawab tantangan yang selalu berubah. Membantu orang lain belajar, dan melaksanakan tugas dengan kualitas terbaik.",
+        key: "kompeten"
+    },
+    {
+        title: "Harmonis",
+        description:
+            "Menghargai setiap orang apapun latar belakangnya. Suka menolong orang lain, dan membangun lingkungan kerja yang kondusif.",
+        key: "harmonis"
+    },
+    {
+        title: "Loyal",
+        description:
+            "Memegang teguh ideologi Pancasila dan Undang-Undang Dasar Negara Republik Indonesia Tahun 1945, setia kepada NKRI serta pemerintahan yang sah, menjaga nama baik sesama ASN, pimpinan, instansi dan negara, serta menjaga rahasia jabatan dan negara.",
+        key: "loyal"
+    },
+    {
+        title: "Adaptif",
+        description:
+            "Cepat menyesuaikan diri menghadapi perubahan. Terus berinovasi dan mengembangkan kreativitas, dan bertindak proaktif.",
+        key: "adaptif"
+    },
+    {
+        title: "Kolaboratif",
+        description:
+            "Memberi kesempatan kepada berbagai pihak untuk berkontribusi, terbuka dalam bekerja sama untuk menghasilkan nilai tambah, dan menggerakkan pemanfaatan berbagai sumber daya untuk tujuan bersama.",
+        key: "kolaboratif"
+    }
+];
+
 const FormApprovalModal = ({
     id,
     bulan,
@@ -153,6 +206,72 @@ const FormApprovalModal = ({
             );
         }
     }, [status, data, visible]);
+
+    const [dataCoreValue, setDataCoreValue] = useState([
+        {
+            key: "berorientasi_pelayanan",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "akuntabel",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "kompeten",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "harmonis",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "loyal",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "adaptif",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "kolaboratif",
+            value: "SESUAI EKSPETASI"
+        }
+    ]);
+
+    const handleChangeCoreValue = (value, key) => {
+        const newData = [...dataCoreValue];
+        const index = newData.findIndex((item) => item.key === key);
+        newData[index].value = value;
+        setDataCoreValue(newData);
+    };
+
+    const columnsBerakhlak = [
+        { title: "Core Values", dataIndex: "title", key: "title" },
+        {
+            title: "Deskripsi",
+            dataIndex: "description",
+            key: "description"
+        },
+        {
+            title: "Nilai",
+            dataIndex: "Nilai",
+            width: 300,
+            key: "description",
+            render: (_, row) => (
+                <Select
+                    onChange={(value) => handleChangeCoreValue(value, row.key)}
+                    style={{ width: 300 }}
+                    value={dataCoreValue.find((v) => v.key === row.key)?.value}
+                >
+                    {valueBerakhlak.map((v) => (
+                        <Option value={v} key={v}>
+                            {v}
+                        </Option>
+                    ))}
+                </Select>
+            )
+        }
+    ];
 
     const columns = [
         {
@@ -238,16 +357,31 @@ const FormApprovalModal = ({
                 "Masih ada yang belum dinilai. Sepertinya ada kualitas yang masih 0"
             );
         } else {
+            // to object with attribute key
+            const newDataCoreValue = dataCoreValue.map((d) => {
+                return {
+                    [d?.key]: d.value
+                };
+            });
+
+            // newDataCoreValue to single object
+            const dataCoreValueToObject = Object.assign(
+                {},
+                ...newDataCoreValue
+            );
+
             const value = {
                 id,
                 data: {
                     list: kualitasValue,
+                    ...dataCoreValueToObject,
                     catatan
                 },
                 bulan,
                 tahun,
                 id_ptt: idPtt
             };
+
             verifMutationApproval.mutate(value);
         }
     };
@@ -317,6 +451,17 @@ const FormApprovalModal = ({
                 rowKey={(row) => row?.id}
             />
             <Divider />
+            <Collapse>
+                <Collapse.Panel header="Core Value ASN">
+                    <Table
+                        pagination={false}
+                        columns={columnsBerakhlak}
+                        dataSource={berakhlak}
+                        rowKey={(row) => row?.key}
+                    />
+                </Collapse.Panel>
+            </Collapse>
+            <Divider>Catatan</Divider>
             <p>Catatan : </p>
             <Input.TextArea value={catatan} onChange={handleChangeCatatan} />
         </Modal>
