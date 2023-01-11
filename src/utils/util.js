@@ -300,3 +300,8 @@ export const nilaiCoreValues = [
     "SESUAI EKSPETASI",
     "DIATAS EKSPETASI"
 ];
+
+export const getDataAtasanLangsung = (data) => {
+    const atasan = data?.atasan_langsung?.label;
+    return atasan;
+};

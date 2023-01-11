@@ -44,6 +44,7 @@ import FormCetakModal from "../../../src/components/FormCetakModal";
 import PageContainer from "../../../src/components/PageContainer";
 import PekerjaanBulananCuti from "../../../src/components/PegawaiCuti/PekerjaanBulananCuti";
 import UserLayout from "../../../src/components/UserLayout";
+import { getDataAtasanLangsung, listCoreValues } from "../../../src/utils/util";
 
 const DataPenilaianAktif = () => {
     const { data: dataPenilaianAktif } = useQuery(["penilaian_aktif"], () =>
@@ -111,6 +112,36 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
         });
     };
 
+    // find value by key
+    const coreValue = (key) => {
+        return data?.core_values_asn?.find((v) => v?.key === key)?.value;
+    };
+
+    const coreValuesASNColumns = [
+        {
+            title: "No",
+            dataIndex: "no",
+            render: (text, record, index) => index + 1
+        },
+        {
+            title: "Core Values",
+            dataIndex: "title",
+            key: "title"
+        },
+        {
+            title: "Deskripsi",
+            dataIndex: "description",
+            key: "description"
+        },
+        {
+            title: "Nilai",
+            dataIndex: "nilai",
+            render: (_, record) => {
+                return <div>{coreValue(record.key)}</div>;
+            }
+        }
+    ];
+
     return (
         <>
             <FormCetakModal
@@ -141,10 +172,18 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                 ) : (
                     <>
                         {data?.sudah_verif && (
-                            <div>
+                            <div style={{ marginBottom: 14 }}>
+                                <Divider>Core Value ASN </Divider>
+                                <Table
+                                    pagination={false}
+                                    dataSource={listCoreValues}
+                                    rowKey={(row) => row?.key}
+                                    columns={coreValuesASNColumns}
+                                />
                                 <p>Catatan : </p>
                                 <p>{data?.catatan}</p>
-                                <Divider />
+                                <Divider>Penilai</Divider>
+                                <p>{getDataAtasanLangsung(data)}</p>
                             </div>
                         )}
                         <Space>
