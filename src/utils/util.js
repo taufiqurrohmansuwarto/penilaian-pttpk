@@ -288,7 +288,7 @@ export const listCoreValues = [
             "Cepat menyesuaikan diri menghadapi perubahan. Terus berinovasi dan mengembangkan kreativitas, dan bertindak proaktif."
     },
     {
-        key: "kolobaratif",
+        key: "kolaboratif",
         title: "Kolaboratif",
         description:
             "Memberi kesempatan kepada berbagai pihak untuk berkontribusi, terbuka dalam bekerja sama untuk menghasilkan nilai tambah, dan menggerakkan pemanfaatan berbagai sumber daya untuk tujuan bersama."

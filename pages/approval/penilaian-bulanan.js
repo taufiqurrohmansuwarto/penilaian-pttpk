@@ -163,7 +163,7 @@ const FormApprovalModal = ({
             value: "SESUAI EKSPETASI"
         },
         {
-            key: "kolobaratif",
+            key: "kolaboratif",
             value: "SESUAI EKSPETASI"
         }
     ];
