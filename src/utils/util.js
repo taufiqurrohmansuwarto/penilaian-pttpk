@@ -249,3 +249,54 @@ export const totalNilaiAspekPekerjaan = (data) => {
 
     return total;
 };
+
+export const listCoreValues = [
+    {
+        key: "berorientasi_pelayanan",
+        title: "Berorientasi Pelayanan",
+        description:
+            "Memahami dan memenuhi kebutuhan masyarakat. Ramah, cekatan, solutif, dan dapat diandalkan, serta melakukan perbaikan tiada henti"
+    },
+    {
+        key: "akuntabel",
+        title: "Akuntabel",
+        description:
+            "Melaksanakan tugas dengan jujur, bertanggung jawab, cermat, serta disiplin dan berintegritas tinggi. Menggunakan kekayaan dan barang milik negara secara bertanggung jawab, efektif dan efisien, dan tidak menyalahgunakan kewenangan jabatan."
+    },
+    {
+        key: "kompeten",
+        title: "Kompeten",
+        description:
+            "Meningkatkan kompetensi diri untuk menjawab tantangan yang selalu berubah. Membantu orang lain belajar, dan melaksanakan tugas dengan kualitas terbaik."
+    },
+    {
+        key: "harmonis",
+        title: "Harmonis",
+        description:
+            "Menghargai setiap orang apapun latar belakangnya. Suka menolong orang lain, dan membangun lingkungan kerja yang kondusif."
+    },
+    {
+        key: "loyal",
+        title: "Loyal",
+        description:
+            "Memegang teguh ideologi Pancasila dan Undang-Undang Dasar Negara Republik Indonesia Tahun 1945, setia kepada NKRI serta pemerintahan yang sah, menjaga nama baik sesama ASN, pimpinan, instansi dan negara, serta menjaga rahasia jabatan dan negara."
+    },
+    {
+        key: "adaptif",
+        title: "Adaptif",
+        description:
+            "Cepat menyesuaikan diri menghadapi perubahan. Terus berinovasi dan mengembangkan kreativitas, dan bertindak proaktif."
+    },
+    {
+        key: "kolobaratif",
+        title: "Kolaboratif",
+        description:
+            "Memberi kesempatan kepada berbagai pihak untuk berkontribusi, terbuka dalam bekerja sama untuk menghasilkan nilai tambah, dan menggerakkan pemanfaatan berbagai sumber daya untuk tujuan bersama."
+    }
+];
+
+export const nilaiCoreValues = [
+    "DIBAWAH EKSPETASI",
+    "SESUAI EKSPETASI",
+    "DIATAS EKSPETASI"
+];

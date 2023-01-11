@@ -16,6 +16,7 @@ import {
     InputNumber,
     message,
     Modal,
+    Select,
     Skeleton,
     Space,
     Table
@@ -32,6 +33,7 @@ import {
 } from "../../services/approval.service";
 import ApprovalLayout from "../../src/components/ApprovalLayout";
 import PageContainer from "../../src/components/PageContainer";
+import { listCoreValues, nilaiCoreValues } from "../../src/utils/util";
 
 const FormApprovalModalCutin = ({
     id,
@@ -112,6 +114,7 @@ const FormApprovalModalCutin = ({
 };
 
 const FormApprovalModal = ({
+    currentData,
     id,
     bulan,
     tahun,
@@ -134,12 +137,59 @@ const FormApprovalModal = ({
     const [highValue, setHightValue] = useState(0);
     const [catatan, setCatatan] = useState(null);
 
+    const initialValueCoreASN = [
+        {
+            key: "berorientasi_pelayanan",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "akuntabel",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "kompeten",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "harmonis",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "loyal",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "adaptif",
+            value: "SESUAI EKSPETASI"
+        },
+        {
+            key: "kolobaratif",
+            value: "SESUAI EKSPETASI"
+        }
+    ];
+
+    const [coreValuesASN, setCoreValuesASN] = useState();
+
+    const handleChangeCoreValue = (e, key) => {
+        const index = coreValuesASN.findIndex((x) => x?.key === key);
+        const newArray = [...coreValuesASN];
+        newArray[index].value = e;
+        setCoreValuesASN(newArray);
+    };
+
     const handleChangeCatatan = (e) => {
         setCatatan(e?.target?.value);
     };
 
     useEffect(() => {
         if (status === "success") {
+            const currentCoreValues =
+                currentData?.core_values_asn?.length === 0 ||
+                currentData?.core_values_asn === null
+                    ? initialValueCoreASN
+                    : currentData?.core_values_asn;
+
+            setCoreValuesASN(currentCoreValues);
             setLowValue(0);
             setHightValue(0);
             setCatatan(catatanAtasanLangsung);
@@ -152,7 +202,7 @@ const FormApprovalModal = ({
                 }))
             );
         }
-    }, [status, data, visible]);
+    }, [status, data, visible, currentData]);
 
     const columns = [
         {
@@ -231,6 +281,7 @@ const FormApprovalModal = ({
             }
         }
     );
+
     const handleSubmit = () => {
         const hasZero = kualitasValue?.some((x) => x?.kualitas === 0);
         if (hasZero) {
@@ -242,15 +293,57 @@ const FormApprovalModal = ({
                 id,
                 data: {
                     list: kualitasValue,
-                    catatan
+                    catatan,
+                    core_values_asn: coreValuesASN
                 },
                 bulan,
                 tahun,
                 id_ptt: idPtt
             };
+
             verifMutationApproval.mutate(value);
         }
     };
+
+    const columnCoreValueASN = [
+        {
+            title: "No",
+            dataIndex: "no",
+            render: (_, row, key) => <div>{key + 1}</div>
+        },
+        {
+            title: "Nilai",
+            dataIndex: "title",
+            key: "title"
+        },
+        {
+            title: "Deskripsi",
+            dataIndex: "description",
+            key: "description"
+        },
+        {
+            title: "Nilai",
+            dataIndex: "nilai",
+            width: 300,
+            render: (_, row) => (
+                <Select
+                    style={{ width: "100%" }}
+                    value={
+                        coreValuesASN?.find((x) => x?.key === row?.key)?.value
+                    }
+                    onChange={(e) => handleChangeCoreValue(e, row?.key)}
+                >
+                    {nilaiCoreValues?.map((d) => {
+                        return (
+                            <Select.Option key={d} value={d}>
+                                {d}
+                            </Select.Option>
+                        );
+                    })}
+                </Select>
+            )
+        }
+    ];
 
     const handleChangeLowValue = (e) => setLowValue(e);
     const handleChangeHighValue = (e) => setHightValue(e);
@@ -287,7 +380,7 @@ const FormApprovalModal = ({
                 88 sampai 90. Nilai 88 sampai 90 bukan merupakan nilai patokan.
                 Anda bisa juga mengisi secara manual di kolom kualitas/nilai
             </MantineAlert>
-            {/* {JSON.stringify(data?.kinerja_bulanan)} */}
+            {JSON.stringify(coreValuesASN)}
             <Divider />
             <Space>
                 <InputNumber
@@ -316,6 +409,12 @@ const FormApprovalModal = ({
                 dataSource={data?.kinerja_bulanan}
                 rowKey={(row) => row?.id}
             />
+            <Table
+                pagination={false}
+                columns={columnCoreValueASN}
+                dataSource={listCoreValues}
+                rowKey={(row) => row?.key}
+            />
             <Divider />
             <p>Catatan : </p>
             <Input.TextArea value={catatan} onChange={handleChangeCatatan} />
@@ -324,7 +423,6 @@ const FormApprovalModal = ({
 };
 
 // hehe patut di contoh
-/** @param {import('next').InferGetServerSidePropsType<typeof getServerSideProps> } props */
 function Penilaian({ data: query }) {
     const [date, setDate] = useState(
         moment(`${query?.tahun}-${query?.bulan}-01`)
@@ -375,6 +473,8 @@ function Penilaian({ data: query }) {
     const [showModalCuti, setShowModalCuti] = useState(false);
     const onCancelModalCuti = () => setShowModalCuti(false);
 
+    const [currentData, setCurrentData] = useState();
+
     const closeModal = () => setShowModal(false);
     const openModal = (row) => {
         if (row?.is_cuti) {
@@ -387,6 +487,7 @@ function Penilaian({ data: query }) {
             setShowModal(true);
             setId(row?.id_penilaian);
             setCatatanAtasan(row?.catatan);
+            setCurrentData(row);
             setIdPtt(row?.pegawai_id);
             setNamaPtt(row?.pegawai?.username);
         }
@@ -463,11 +564,11 @@ function Penilaian({ data: query }) {
                 namaPtt={namaPtt}
                 id={id}
             />
-
             <FormApprovalModal
                 visible={showModal}
                 onCancel={closeModal}
                 catatanAtasanLangsung={catatanAtasan}
+                currentData={currentData}
                 idPtt={idPtt}
                 namaPtt={namaPtt}
                 id={id}
