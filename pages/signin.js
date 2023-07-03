@@ -74,7 +74,8 @@ export default function SignIn({ providers }) {
                                     passHref
                                 >
                                     <a target="_blank">
-                                        Lupa/Reset password akun PTT-PK
+                                        Lupa/Reset password akun PTT-PK Silahkan
+                                        klik disini
                                     </a>
                                 </Link>
                             </Text>
