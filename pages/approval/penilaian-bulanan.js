@@ -287,13 +287,6 @@ const FormApprovalModal = ({
         }
     ]);
 
-    const handleChangeCoreValue = (value, key) => {
-        const newData = [...dataCoreValue];
-        const index = newData.findIndex((item) => item.key === key);
-        newData[index].value = value;
-        setDataCoreValue(newData);
-    };
-
     const columnsBerakhlak = [
         { title: "Core Values", dataIndex: "title", key: "title" },
         {
@@ -424,13 +417,8 @@ const FormApprovalModal = ({
                 id,
                 data: {
                     list: kualitasValue,
-<<<<<<< HEAD
-                    ...dataCoreValueToObject,
-                    catatan
-=======
                     catatan,
                     core_values_asn: coreValuesASN
->>>>>>> 59b7abfd974506383dd0fbea3905c25836644982
                 },
                 bulan,
                 tahun,
