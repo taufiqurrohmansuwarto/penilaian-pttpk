@@ -75,7 +75,7 @@ export default function SignIn({ providers }) {
                                 >
                                     <a target="_blank">
                                         Lupa/Reset password akun PTT-PK Silahkan
-                                        klik disini!!
+                                        klik disini!!!
                                     </a>
                                 </Link>
                             </Text>
