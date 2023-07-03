@@ -71,6 +71,7 @@ model acc_kinerja_bulanan {
   catatan            String?
   pegawai            users?     @relation("acc_pegawai", fields: [pegawai_id], references: [custom_id])
 
+<<<<<<< HEAD
   // tambahan nilai asn berakhlak
   berorientasi_pelayanan String?
   akuntabel              String?
@@ -79,6 +80,9 @@ model acc_kinerja_bulanan {
   loyal                  String?
   adaptif                String?
   kolaboratif            String?
+=======
+  core_values_asn Json?
+>>>>>>> 59b7abfd974506383dd0fbea3905c25836644982
 
   is_cuti Boolean @default(false)
 

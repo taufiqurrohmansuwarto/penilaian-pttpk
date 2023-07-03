@@ -1,14 +1,7 @@
-import { Divider, Table, Typography } from "antd";
+import { Table, Typography } from "antd";
 import { round, sumBy } from "lodash";
-import { useQuery } from "react-query";
-import { getPenilaianAkhirDetail } from "../../services/approval.service";
 
-function DataRealisasiPekerjaanAkhir({ id, tahun }) {
-    const { data, isLoading: loading } = useQuery(
-        ["detail-penilaian-akhir", id, tahun],
-        () => getPenilaianAkhirDetail({ id, tahun })
-    );
-
+function DataRealisasiPekerjaanAkhir({ data }) {
     const columnsTugasTambahan = [
         { dataIndex: "title", title: "Judul Pekerjaan", key: "title" }
     ];
@@ -51,12 +44,9 @@ function DataRealisasiPekerjaanAkhir({ id, tahun }) {
     return (
         <>
             <Table
-                bordered
-                title={() => "Data Realisasi Pekerjaan Akhir"}
                 dataSource={data?.listKegiatanTahunan}
                 columns={columns}
                 rowKey={(row) => row?.id}
-                loading={loading}
                 pagination={false}
                 summary={() => (
                     <>
@@ -75,11 +65,8 @@ function DataRealisasiPekerjaanAkhir({ id, tahun }) {
             />
             <Table
                 style={{ marginTop: 20 }}
-                bordered
                 columns={columnsTugasTambahan}
-                title={() => "Pekerjaan Tambahan"}
                 dataSource={data?.listPekerjaanTambahan}
-                loading={loading}
                 rowKey={(row) => row?.id}
                 pagination={false}
                 summary={() => (
@@ -87,21 +74,13 @@ function DataRealisasiPekerjaanAkhir({ id, tahun }) {
                         <Table.Summary.Row>
                             <Table.Summary.Cell index={0}>
                                 <Typography.Title strong level={3}>
-                                    Total {data?.nilai?.totalKegiatanTambahan}
+                                    {data?.nilai?.totalKegiatanTambahan}
                                 </Typography.Title>
                             </Table.Summary.Cell>
                         </Table.Summary.Row>
                     </>
                 )}
             />
-            <Divider>Total Nilai Capaian Kinerja</Divider>
-            <Typography.Title strong level={3} style={{ color: "green" }}>
-                {round(
-                    data?.nilai?.totalPenilaianPekerjaan +
-                        data?.nilai?.totalKegiatanTambahan,
-                    2
-                )}
-            </Typography.Title>
         </>
     );
 }

@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import "dayjs/locale/id";
+import { round } from "lodash";
 
 export const formatTime = (time) => {
     return dayjs(time).locale("id").format("DD MMM, YYYY HH:mm");
@@ -225,6 +226,7 @@ export const isNoRecipientsForRequestFromOthers = (data) => {
     }
 };
 
+<<<<<<< HEAD
 export const listBerakhlak = [
     {
         title: "Berorientasi Pelayanan",
@@ -269,3 +271,84 @@ export const listBerakhlak = [
         key: "kolaboratif"
     }
 ];
+=======
+export const totalNilaiAspekPekerjaan = (data) => {
+    // integritas
+    // kedisiplinan
+    // orientasi_pelayanan
+    // kerjasama_koordinasi
+    // pemanfaatan_alat_media_kerj
+
+    const integritas = round(data?.integritas, 2) * 0.25;
+    const kedisiplinan = round(data?.kedisiplinan, 2) * 0.25;
+    const orientasiPelayanan = round(data?.orientasi_pelayanan, 2) * 0.2;
+    const kerjasamaKoordinasi = round(data?.kerjasama_koordinasi, 2) * 0.2;
+    const pemanfaatanAlatMediaKerja =
+        round(data?.pemanfaatan_alat_dan_media_kerja, 2) * 0.1;
+
+    const total =
+        integritas +
+        kedisiplinan +
+        orientasiPelayanan +
+        kerjasamaKoordinasi +
+        pemanfaatanAlatMediaKerja;
+
+    return total;
+};
+
+export const listCoreValues = [
+    {
+        key: "berorientasi_pelayanan",
+        title: "Berorientasi Pelayanan",
+        description:
+            "Memahami dan memenuhi kebutuhan masyarakat. Ramah, cekatan, solutif, dan dapat diandalkan, serta melakukan perbaikan tiada henti"
+    },
+    {
+        key: "akuntabel",
+        title: "Akuntabel",
+        description:
+            "Melaksanakan tugas dengan jujur, bertanggung jawab, cermat, serta disiplin dan berintegritas tinggi. Menggunakan kekayaan dan barang milik negara secara bertanggung jawab, efektif dan efisien, dan tidak menyalahgunakan kewenangan jabatan."
+    },
+    {
+        key: "kompeten",
+        title: "Kompeten",
+        description:
+            "Meningkatkan kompetensi diri untuk menjawab tantangan yang selalu berubah. Membantu orang lain belajar, dan melaksanakan tugas dengan kualitas terbaik."
+    },
+    {
+        key: "harmonis",
+        title: "Harmonis",
+        description:
+            "Menghargai setiap orang apapun latar belakangnya. Suka menolong orang lain, dan membangun lingkungan kerja yang kondusif."
+    },
+    {
+        key: "loyal",
+        title: "Loyal",
+        description:
+            "Memegang teguh ideologi Pancasila dan Undang-Undang Dasar Negara Republik Indonesia Tahun 1945, setia kepada NKRI serta pemerintahan yang sah, menjaga nama baik sesama ASN, pimpinan, instansi dan negara, serta menjaga rahasia jabatan dan negara."
+    },
+    {
+        key: "adaptif",
+        title: "Adaptif",
+        description:
+            "Cepat menyesuaikan diri menghadapi perubahan. Terus berinovasi dan mengembangkan kreativitas, dan bertindak proaktif."
+    },
+    {
+        key: "kolaboratif",
+        title: "Kolaboratif",
+        description:
+            "Memberi kesempatan kepada berbagai pihak untuk berkontribusi, terbuka dalam bekerja sama untuk menghasilkan nilai tambah, dan menggerakkan pemanfaatan berbagai sumber daya untuk tujuan bersama."
+    }
+];
+
+export const nilaiCoreValues = [
+    "DIBAWAH EKSPETASI",
+    "SESUAI EKSPETASI",
+    "DIATAS EKSPETASI"
+];
+
+export const getDataAtasanLangsung = (data) => {
+    const atasan = data?.atasan_langsung?.label;
+    return atasan;
+};
+>>>>>>> 59b7abfd974506383dd0fbea3905c25836644982

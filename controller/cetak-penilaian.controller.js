@@ -116,6 +116,7 @@ const cetakPenilaianBulananUser = async (req, res) => {
             skpd: penilaian?.skpd?.detail,
             catatan: accKinerjaBulanan?.catatan,
             cuti: accKinerjaBulanan?.is_cuti,
+            core_values_asn: accKinerjaBulanan?.core_values_asn,
             bulan,
             tahun,
             listKegiatanBulanan: listPenilaianBulanan,

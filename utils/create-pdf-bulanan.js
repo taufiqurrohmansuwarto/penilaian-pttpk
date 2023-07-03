@@ -5,9 +5,17 @@ const warnaAbuAbu = "#dbd7c5";
 const orange = "#e3d8ac";
 const warnaBiru = "#1919ff";
 
-import { meanBy } from "lodash";
+import { meanBy, round } from "lodash";
 
-const renderHeader = (bulan, tahun) => {
+const renderHeader = (bulan, tahun, type = "standard") => {
+    let currentText;
+
+    if (type === "standard") {
+        currentText = `FORMULIR EVALUASI KINERJA TAHUN ${tahun}`;
+    } else if (type === "asn") {
+        currentText = `Nilai Dasar Aparatur Sipil Negara BerAKHLAK ${tahun}`;
+    }
+
     return {
         table: {
             widths: ["*", 200],
@@ -17,7 +25,7 @@ const renderHeader = (bulan, tahun) => {
                         rowSpan: 2,
                         stack: [
                             {
-                                text: `FORMULIR EVALUASI KINERJA TAHUN ${tahun}`
+                                text: `${currentText}`
                             },
                             { text: `BULAN ${bulan}` }
                         ],
@@ -34,6 +42,108 @@ const renderHeader = (bulan, tahun) => {
                 ]
             ]
         }
+    };
+};
+
+const renderCoreValues = (data, headerTitle, userInfo) => {
+    const hasil = (key) => {
+        return data?.find((d) => d?.key === key)?.value;
+    };
+
+    return {
+        pageBreak: "before",
+        columns: [
+            {
+                stack: [
+                    headerTitle,
+                    userInfo,
+                    {
+                        style: "informasi2",
+                        table: {
+                            widths: [15, 100, "*", 100],
+                            body: [
+                                [
+                                    { text: "No." },
+                                    { text: "Nilai Dasar" },
+                                    { text: "Deskripsi" },
+                                    { text: "Nilai" }
+                                ],
+                                [
+                                    { text: "1" },
+                                    { text: "Berorientasi Pelayanan" },
+                                    {
+                                        text: "Memahami dan memenuhi kebutuhan masyarakat. Ramah, cekatan, solutif, dan dapat diandalkan, serta melakukan perbaikan tiada henti"
+                                    },
+                                    {
+                                        text: hasil("berorientasi_pelayanan")
+                                    }
+                                ],
+                                [
+                                    { text: "2" },
+                                    { text: "Akuntabel" },
+                                    {
+                                        text: "Melaksanakan tugas dengan jujur, bertanggung jawab, cermat, serta disiplin dan berintegritas tinggi. Menggunakan kekayaan dan barang milik negara secara bertanggung jawab, efektif dan efisien, dan tidak menyalahgunakan kewenangan jabatan."
+                                    },
+                                    {
+                                        text: hasil("akuntabel")
+                                    }
+                                ],
+                                [
+                                    { text: "3" },
+                                    { text: "Kompeten" },
+                                    {
+                                        text: "Meningkatkan kompetensi diri untuk menjawab tantangan yang selalu berubah. Membantu orang lain belajar, dan melaksanakan tugas dengan kualitas terbaik."
+                                    },
+                                    {
+                                        text: hasil("kompeten")
+                                    }
+                                ],
+                                [
+                                    { text: "4" },
+                                    { text: "Harmonis" },
+                                    {
+                                        text: "Menghargai setiap orang apapun latar belakangnya. Suka menolong orang lain, dan membangun lingkungan kerja yang kondusif."
+                                    },
+                                    {
+                                        text: hasil("harmonis")
+                                    }
+                                ],
+                                [
+                                    { text: "5" },
+                                    { text: "Loyal" },
+                                    {
+                                        text: "Memegang teguh ideologi Pancasila dan Undang-Undang Dasar Negara Republik Indonesia Tahun 1945, setia kepada NKRI serta pemerintahan yang sah, menjaga nama baik sesama ASN, pimpinan, instansi dan negara, serta menjaga rahasia jabatan dan negara."
+                                    },
+                                    {
+                                        text: hasil("loyal")
+                                    }
+                                ],
+                                [
+                                    { text: "6" },
+                                    { text: "Adaptif" },
+                                    {
+                                        text: "Cepat menyesuaikan diri menghadapi perubahan. Terus berinovasi dan mengembangkan kreativitas, dan bertindak proaktif."
+                                    },
+                                    {
+                                        text: hasil("adaptif")
+                                    }
+                                ],
+                                [
+                                    { text: "7" },
+                                    { text: "Kolaboratif" },
+                                    {
+                                        text: "Memberi kesempatan kepada berbagai pihak untuk berkontribusi, terbuka dalam bekerja sama untuk menghasilkan nilai tambah, dan menggerakkan pemanfaatan berbagai sumber daya untuk tujuan bersama."
+                                    },
+                                    {
+                                        text: hasil("kolaboratif")
+                                    }
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
     };
 };
 
@@ -222,14 +332,19 @@ const renderRincianPekerjaan = (listKerja, cuti) => {
                 // berisikan nomer, detail kegiatan, target kuantitas, capaian kuantitas dan penilaian
                 ...listKerjaTahunan,
                 [
-                    { colSpan: 7, text: "Rerata" },
+                    { colSpan: 7, text: "Rerata", style: { fontSize: 6 } },
                     {},
                     {},
                     {},
                     {},
                     {},
                     {},
-                    { text: cuti ? "CUTI" : meanBy(listKerja, "kualitas") }
+                    {
+                        text: cuti
+                            ? "CUTI"
+                            : round(meanBy(listKerja, "kualitas"), 1),
+                        style: { fontSize: 6 }
+                    }
                 ]
             ]
         }
@@ -337,6 +452,11 @@ export const generatePdf = (currentUser) => {
                 fontSize: 8,
                 font: "OpenSans"
             },
+            informasi2: {
+                margin: [0, 3, 0, 1],
+                fontSize: 8,
+                font: "OpenSans"
+            },
 
             rekom: {
                 margin: [0, 1, 0, 1],
@@ -399,7 +519,12 @@ export const generatePdf = (currentUser) => {
                 currentUser?.cuti
             ),
             renderCatatanAtasan(currentUser?.catatan),
-            renderPerjanjian(currentUser)
+            renderPerjanjian(currentUser),
+            renderCoreValues(
+                currentUser?.core_values_asn,
+                renderHeader(currentUser.bulan, currentUser.tahun, "asn"),
+                renderInformasi(currentUser)
+            )
         ]
     };
 

@@ -123,25 +123,11 @@ const approvePenilaianBulanan = async (req, res) => {
                 data: {
                     sudah_verif: true,
                     catatan: body?.catatan,
+                    core_values_asn: body?.core_values_asn,
                     updated_at: new Date()
                 }
             })
         ]);
-
-        const currentUser = await prisma.users.findUnique({
-            where: {
-                custom_id: id_ptt
-            }
-        });
-
-        // if (currentUser && currentUser?.email) {
-        //     await sendEmail(
-        //         currentUser?.email,
-        //         `Penilaian Bulan ${bulan} tahun ${tahun} telah dinilai dan di acc atasan anda`
-        //     );
-        // }
-
-        // ini harus diupdate
 
         res.json({ code: 200, message: "ok" });
     } catch (error) {

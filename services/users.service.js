@@ -206,3 +206,9 @@ export const batalKirimAtasanCuti = ({ bulan, tahun }) => {
 export const listPenilaian = () => {
     return fetcher.get(`/user/riwayat-penilaian-ptt`).then((res) => res?.data);
 };
+
+export const resultPenilaian = () => {
+    return fetcher
+        .get("/user/penilaian/rekap-penilaian-akhir")
+        .then((res) => res?.data);
+};

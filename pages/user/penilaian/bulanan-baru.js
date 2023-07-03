@@ -44,6 +44,7 @@ import FormCetakModal from "../../../src/components/FormCetakModal";
 import PageContainer from "../../../src/components/PageContainer";
 import PekerjaanBulananCuti from "../../../src/components/PegawaiCuti/PekerjaanBulananCuti";
 import UserLayout from "../../../src/components/UserLayout";
+import { getDataAtasanLangsung, listCoreValues } from "../../../src/utils/util";
 
 const DataPenilaianAktif = () => {
     const { data: dataPenilaianAktif } = useQuery(["penilaian_aktif"], () =>
@@ -111,6 +112,36 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
         });
     };
 
+    // find value by key
+    const coreValue = (key) => {
+        return data?.core_values_asn?.find((v) => v?.key === key)?.value;
+    };
+
+    const coreValuesASNColumns = [
+        {
+            title: "No",
+            dataIndex: "no",
+            render: (text, record, index) => index + 1
+        },
+        {
+            title: "Core Values",
+            dataIndex: "title",
+            key: "title"
+        },
+        {
+            title: "Deskripsi",
+            dataIndex: "description",
+            key: "description"
+        },
+        {
+            title: "Nilai",
+            dataIndex: "nilai",
+            render: (_, record) => {
+                return <div>{coreValue(record.key)}</div>;
+            }
+        }
+    ];
+
     return (
         <>
             <FormCetakModal
@@ -135,17 +166,29 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                             onClick={handleKirimAtasan}
                             icon={<SendOutlined />}
                         >
-                            Kirim pekerjaan ke penilai
+                            Kirim ke penilai
                         </Button>
                     </Space>
                 ) : (
                     <>
                         {data?.sudah_verif && (
-                            <div>
+                            <div style={{ marginBottom: 14 }}>
+                                <Divider>Core Value ASN </Divider>
+                                <Table
+                                    pagination={false}
+                                    dataSource={listCoreValues}
+                                    rowKey={(row) => row?.key}
+                                    columns={coreValuesASNColumns}
+                                />
                                 <p>Catatan : </p>
                                 <p>{data?.catatan}</p>
+<<<<<<< HEAD
                                 {JSON.stringify(data)}
                                 <Divider />
+=======
+                                <Divider>Penilai</Divider>
+                                <p>{getDataAtasanLangsung(data)}</p>
+>>>>>>> 59b7abfd974506383dd0fbea3905c25836644982
                             </div>
                         )}
                         <Space>
@@ -154,7 +197,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                                 onClick={handleBatalKirimAtasan}
                                 icon={<CloseOutlined />}
                             >
-                                Turun Status Bulanan
+                                Turun Status
                             </Button>
                             <Button
                                 disabled={!data?.sudah_verif}
@@ -162,7 +205,7 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                                 onClick={handleCetak}
                                 icon={<PrinterOutlined />}
                             >
-                                Penilaian Bulanan
+                                Cetak
                             </Button>
                         </Space>
                     </>
