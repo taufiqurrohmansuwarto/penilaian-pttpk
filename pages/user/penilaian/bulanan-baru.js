@@ -182,13 +182,8 @@ const Footer = ({ data, bulan, tahun, dataBulanan }) => {
                                 />
                                 <p>Catatan : </p>
                                 <p>{data?.catatan}</p>
-<<<<<<< HEAD
-                                {JSON.stringify(data)}
-                                <Divider />
-=======
                                 <Divider>Penilai</Divider>
                                 <p>{getDataAtasanLangsung(data)}</p>
->>>>>>> 59b7abfd974506383dd0fbea3905c25836644982
                             </div>
                         )}
                         <Space>
